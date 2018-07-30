@@ -15,7 +15,7 @@ if [ -z "$1" ]; then
    echo "endpoint       : https://<hostname>:8443/automation-api"
    echo "user           : Control-M user name"
    echo "password       : Control-M password"
-   echo "application    : name of the applition or \"*\""
+   echo "application    : name of the application or \"*\""
    echo "outputfile     : file to store the output (optional)"
    echo ""
    exit 1
