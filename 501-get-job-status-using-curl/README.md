@@ -8,7 +8,7 @@ This script can be used to get the Control-M job status in json format. The outp
 
 Parameter|Comment
 ---------|-------
-endpoint|https://<hostname>:8443/automation-api
+endpoint|https://\<hostname\>:8443/automation-api
 user|Control-M user name
 password|Control-M password
 application|name of the application or "*"
