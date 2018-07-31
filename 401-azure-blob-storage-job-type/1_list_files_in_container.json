@@ -1,0 +1,24 @@
+{
+	"Defaults" : {
+		"Application" : "AZURE",
+        "SubApplication" : "AZURE_LIST",
+        "RunAs" : "ctmag",
+        "Host" : "tmoctm.bmci2t.com"
+    },
+      
+	"Azure_List": {
+        "Type": "Folder",
+        
+	     "Azure blob List job" : {
+    	    "Type" : "Job:ApplicationIntegrator:Azure blob storage",
+        	"ConnectionProfile" : "AZURE",
+        	
+        	"AI-Action" : "List",
+        	"AI-Public Access" : "Off",
+	        "AI-Output" : "table",
+     		"Variables" : [ {
+          		"UCM-LIST_CONTAINER" : "ctm"
+        	} ]
+      	}
+     }
+    }
