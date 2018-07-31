@@ -1,9 +1,8 @@
 {
   "Defaults" : {
     "Application" : "AZURE",
-    "SubApplication" : "AZURE_LIST",
-    "RunAs" : "ctmag",
-    "Host" : "tmoctm.bmci2t.com"
+    "RunAs" : "<USERNAME>",
+    "Host" : "<HOSTNAME>"
   },
 
   "Azure_Download": {
@@ -15,11 +14,11 @@
         	
       "AI-Action" : "Download",
       "Variables" : [ {
-        "UCM-UP_DO_BLOBNAME" : "installed-versions.txt"
+        "UCM-UP_DO_BLOBNAME" : "<AZURE BLOB NAME>"
       }, {
-        "UCM-UP_DO_CONTAINER" : "ctm"
+        "UCM-UP_DO_CONTAINER" : "<AZURE BLOB CONTAINER NAME>"
       } ],
-      "AI-File path" : "/home/ctmag/installed-versions_dl.txt"
+      "AI-File path" : "<PATH TO FILE ON AGENT FILE SYSTEM>"
     }
   }
 }
