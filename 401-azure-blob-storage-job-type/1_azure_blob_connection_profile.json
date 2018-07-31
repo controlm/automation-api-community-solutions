@@ -1,0 +1,9 @@
+{
+  "<CONNECTION_PROFILE NAME>" : {
+    "Type" : "ConnectionProfile:ApplicationIntegrator:Azure blob storage",
+    "AI-Account name" : "<AZURE STORAGE ACCOUNT NAME>",
+    "AI-Account key" : "<AZURE STORAGE ACCOUNT KEY>",
+    "TargetAgent" : "<HOST WHERE THE AZURE CLI IS INSTALLED ON",
+    "TargetCTM" : "<CONTROL-M SERVER>"
+  }
+}

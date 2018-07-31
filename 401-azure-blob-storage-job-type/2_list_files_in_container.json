@@ -14,8 +14,6 @@
       "ConnectionProfile" : "AZURE",
         	
       "AI-Action" : "List",
-      "AI-Public Access" : "Off",
-      "AI-Output" : "table",
       "Variables" : [ {
         "UCM-LIST_CONTAINER" : "ctm"
       } ]
