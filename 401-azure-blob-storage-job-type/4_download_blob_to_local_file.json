@@ -1,0 +1,25 @@
+{
+  "Defaults" : {
+    "Application" : "AZURE",
+    "SubApplication" : "AZURE_LIST",
+    "RunAs" : "ctmag",
+    "Host" : "tmoctm.bmci2t.com"
+  },
+      
+  "Azure_Download": {
+    "Type": "Folder",
+        
+    "Azure blob Download job" : {
+      "Type" : "Job:ApplicationIntegrator:Azure blob storage",
+      "ConnectionProfile" : "AZURE",
+        	
+      "AI-Action" : "Download",
+      "Variables" : [ {
+        "UCM-UP_DO_BLOBNAME" : "installed-versions.txt"
+      }, {
+        "UCM-UP_DO_CONTAINER" : "ctm"
+      } ],
+      "AI-File path" : "/home/ctmag/installed-versions_dl.txt"
+    }
+  }
+}

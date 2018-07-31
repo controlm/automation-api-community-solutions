@@ -5,18 +5,16 @@
     "Host" : "<HOSTNAME>"
   },
       
-  "Azure_List": {
+  "Azure_Create_Container": {
     "Type": "Folder",
         
-    "Azure blob List job" : {
+    "Azure blob Create Container job" : {
       "Type" : "Job:ApplicationIntegrator:Azure blob storage",
       "ConnectionProfile" : "AZURE",
         	
-      "AI-Action" : "List",
-      "AI-Output" : "table",
-      "Variables" : [ {
-        "UCM-LIST_CONTAINER" : "new2"
-      } ]
+      "AI-Action" : "Create container",
+	  "AI-Container name" : "new2",
+	  "AI-Public Access" : "Off"
     }
   }
 }

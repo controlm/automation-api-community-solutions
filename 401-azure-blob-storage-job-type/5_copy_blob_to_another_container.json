@@ -5,18 +5,17 @@
     "Host" : "<HOSTNAME>"
   },
       
-  "Azure_List": {
+  "Azure_Copy": {
     "Type": "Folder",
         
-    "Azure blob List job" : {
+    "Azure blob Copy job" : {
       "Type" : "Job:ApplicationIntegrator:Azure blob storage",
       "ConnectionProfile" : "AZURE",
         	
-      "AI-Action" : "List",
-      "AI-Output" : "table",
-      "Variables" : [ {
-        "UCM-LIST_CONTAINER" : "new2"
-      } ]
+      "AI-Action" : "Copy",
+	  "AI-Source-uri" : "https://tmonte.blob.core.windows.net/ctm/installed-versions.txt",
+	  "AI-Destination container" : "new2",
+      "AI-Destination blob name" : "new_blob_name"
     }
   }
 }

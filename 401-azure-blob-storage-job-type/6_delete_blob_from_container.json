@@ -5,17 +5,18 @@
     "Host" : "<HOSTNAME>"
   },
       
-  "Azure_List": {
+  "Azure_Delete": {
     "Type": "Folder",
         
-    "Azure blob List job" : {
+    "Azure blob Delete job" : {
       "Type" : "Job:ApplicationIntegrator:Azure blob storage",
       "ConnectionProfile" : "AZURE",
         	
-      "AI-Action" : "List",
-      "AI-Output" : "table",
+      "AI-Action" : "Delete",
       "Variables" : [ {
-        "UCM-LIST_CONTAINER" : "new2"
+        "UCM-DEL_BLOBNAME" : "installed-versions.txt"
+      }, {
+        "UCM-DEL_CONTAINER" : "ctm"
       } ]
     }
   }
