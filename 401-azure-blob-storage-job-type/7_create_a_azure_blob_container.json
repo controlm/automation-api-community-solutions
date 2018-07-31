@@ -13,8 +13,8 @@
       "ConnectionProfile" : "<CONNECTION_PROFILE NAME>",
         	
       "AI-Action" : "Create container",
-	  "AI-Container name" : "<AZURE BLOB CONTAINER NAME>",
-	  "AI-Public Access" : "Off"
+      "AI-Container name" : "<AZURE BLOB CONTAINER NAME>",
+      "AI-Public Access" : "Off"
     }
   }
 }
