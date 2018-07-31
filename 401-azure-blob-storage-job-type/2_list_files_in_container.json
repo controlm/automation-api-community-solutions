@@ -10,12 +10,12 @@
         
     "Azure blob List job" : {
       "Type" : "Job:ApplicationIntegrator:Azure blob storage",
-      "ConnectionProfile" : "AZURE",
+      "ConnectionProfile" : "<CONNECTION_PROFILE NAME>",
         	
       "AI-Action" : "List",
       "AI-Output" : "table",
       "Variables" : [ {
-        "UCM-LIST_CONTAINER" : "new2"
+        "UCM-LIST_CONTAINER" : "<AZURE BLOB CONTAINER NAME>"
       } ]
     }
   }

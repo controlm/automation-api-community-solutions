@@ -10,12 +10,12 @@
         
     "Azure blob Copy job" : {
       "Type" : "Job:ApplicationIntegrator:Azure blob storage",
-      "ConnectionProfile" : "AZURE",
+      "ConnectionProfile" : "<CONNECTION_PROFILE NAME>",
         	
       "AI-Action" : "Copy",
-	  "AI-Source-uri" : "https://tmonte.blob.core.windows.net/ctm/installed-versions.txt",
-	  "AI-Destination container" : "new2",
-      "AI-Destination blob name" : "new_blob_name"
+	  "AI-Source-uri" : "<AZURE SOURCE-URI FOR SOURCE BLOB>",
+	  "AI-Destination container" : "<AZURE BLOB CONTAINER NAME>",
+      "AI-Destination blob name" : "<AZURE BLOB BLOB NAME>"
     }
   }
 }
