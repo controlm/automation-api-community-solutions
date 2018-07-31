@@ -13,8 +13,8 @@
       "ConnectionProfile" : "<CONNECTION_PROFILE NAME>",
         	
       "AI-Action" : "Copy",
-	  "AI-Source-uri" : "<AZURE SOURCE-URI FOR SOURCE BLOB>",
-	  "AI-Destination container" : "<AZURE BLOB CONTAINER NAME>",
+      "AI-Source-uri" : "<AZURE SOURCE-URI FOR SOURCE BLOB>",
+      "AI-Destination container" : "<AZURE BLOB CONTAINER NAME>",
       "AI-Destination blob name" : "<AZURE BLOB BLOB NAME>"
     }
   }
