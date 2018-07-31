@@ -49,6 +49,7 @@ Before we can run any job, we need to create a connection profile. Below an exam
   }
 }
 ```
+See file [1_azure_blob_connection_profile.json](1_azure_blob_connection_profile.json) for an example connection profile definition.
 
 __Note:__ Remember to authenticate the agent for the ___run as user___ in case of multi-factor (default) authentication by using Azure's az login command as prerequisites. See Prerequisites and installation notes above.
 
@@ -84,7 +85,7 @@ This action will list all blobs in a specific container. We set the AI-Action to
     "UCM-LIST_CONTAINER" : "<AZURE BLOB CONTAINER NAME>"
   } ]
 ```
-See file [2_list_files_in_container.json](401-azure-blob-storage-job-type/2_list_files_in_container.json) for an example job definition for a job using the List action.
+See file [2_list_files_in_container.json](2_list_files_in_container.json) for an example job definition for a job using the List action.
 
 ### Upload / Download action
 
@@ -98,7 +99,7 @@ The action Upload will let you upload a blob into a container. Download will dow
   } ],
   "AI-File path" : "<PATH TO FILE ON AGENT FILE SYSTEM>"
 ```
-See files [3_upload_file_into_container.json](401-azure-blob-storage-job-type/3_upload_file_into_container.json) and [4_download_blob_to_local_file.json](401-azure-blob-storage-job-type/4_download_blob_to_local_file.json) for an example job definition for a job using the Upload and Download action.
+See files [3_upload_file_into_container.json](3_upload_file_into_container.json) and [4_download_blob_to_local_file.json](4_download_blob_to_local_file.json) for an example job definition for a job using the Upload and Download action.
 
 ### Delete action
 
@@ -111,7 +112,7 @@ The action Delete will remove a blob from a container. We set the AI-Action to "
     "UCM-DEL_CONTAINER" : "<AZURE BLOB CONTAINER NAME>"
   } ],
 ```
-See file [5_delete_blob_from_container.json](401-azure-blob-storage-job-type/5_delete_blob_from_container.json) for an example job definition for a job using the List action.
+See file [5_delete_blob_from_container.json](5_delete_blob_from_container.json) for an example job definition for a job using the List action.
 ### Copy action
 
 The action Copy will copy a blob to another container. We set the AI-Action to "Copy" and in addition to the generic job attributes, we need to specify the source and destination blob and container:
@@ -121,7 +122,7 @@ The action Copy will copy a blob to another container. We set the AI-Action to "
   "AI-Destination container" : "<DESTINATION AZURE BLOB CONTAINER NAME>",
   "AI-Destination blob name" : "<DESTINATION AZURE BLOB NAME>"
 ```
-See file [6_delete_blob_from_container.json](401-azure-blob-storage-job-type/6_delete_blob_from_container.json) for an example job definition for a job using the List action.
+See file [6_delete_blob_from_container.json](6_delete_blob_from_container.json) for an example job definition for a job using the List action.
 
 ### Create container action
 
@@ -133,4 +134,4 @@ The action Create container will create a new container. We set the AI-Action to
 ```
 The Public Access parameter is controlling the level of public access. It can contain Blob, Container or Off. If left empty, it is set to the defailt value Off. Please see the Azure CLI documentation for more details
 
-See file [7_create_a_azure_blob_container.json](401-azure-blob-storage-job-type/7_create_a_azure_blob_container.json) for an example job definition for a job using the List action.
+See file [7_create_a_azure_blob_container.json](7_create_a_azure_blob_container.json) for an example job definition for a job using the List action.
