@@ -7,7 +7,7 @@
 
   "Azure_Download": {
     "Type": "Folder",
-        
+       
     "Azure blob Download job" : {
       "Type" : "Job:ApplicationIntegrator:Azure blob storage",
       "ConnectionProfile" : "AZURE",
