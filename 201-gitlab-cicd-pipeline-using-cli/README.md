@@ -25,4 +25,5 @@ For the production environment, similar variables need to be defined:
 This file holds a job flow purely to demonstrate the CI/CD integration. In real life, this would be the workflow definition that is being updated as part of a project.
 The flow grabs data from 3 different sources. These data sources are merged into one file and printed. In addition there is a job that fails bevause the command does not exist.
 
-## __DeployDescriptorStaging.json
+## DeployDescriptorStaging.json
+This file updates the 
