@@ -3,11 +3,11 @@
   [
     {
       "Property" :"RunAs",
-      "Assign" : "ctmaapi"
+      "Assign" : "<RUN_AS_USER>"
     },
     {
       "Property" :"Host",
-      "Assign" : "tmoctm.bmci2t.com"
+      "Assign" : "<HOST>"
     },
     {
       "ApplyOn" : {
