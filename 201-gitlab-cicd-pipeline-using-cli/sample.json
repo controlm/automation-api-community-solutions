@@ -4,9 +4,8 @@
         "SubApplication" : "EXAMPLE_CICD",
         "RunAs" : "workbench",
         "Host" : "workbench"
-        }
     },
-
+ 
     "WorkbenchSampleFlow": {
         "Type": "Folder",
    
