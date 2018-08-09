@@ -1,0 +1,35 @@
+{
+"DeployDescriptor":
+  [
+    {
+      "Property" :"RunAs",
+      "Assign" : "<RUN_AS_USER>"
+    },
+    {
+      "Property" :"Host",
+      "Assign" : "<HOST>"
+    },
+    {
+      "ApplyOn" : {
+       "Type":"Job", 
+		"@" : "CleanUpTheMess.*"
+      },
+      "Property" :"Command",
+      "Replace" : [ {"(.*)/home/workbench/ctm/runtime/(.*)/home/workbench/ctm/runtime/(.*)/home/workbench/ctm/runtime/(.*)" : "$1<WORKING_DIR>$2<WORKING_DIR>$3<WORKING_DIR>$4"} ]
+    },
+    {
+      "ApplyOn" : {
+       "Type":"Job",
+		"@" : "DoSometingWithIt.*"
+      },
+      "Property" :"Command",
+      "Replace" : [ {"(.*)/home/workbench/ctm/runtime/(.*)/home/workbench/ctm/runtime/(.*)/home/workbench/ctm/runtime/(.*)/home/workbench/ctm/runtime/(.*)/home/workbench/ctm/runtime/(.*)/home/workbench/ctm/runtime/(.*)" : "$1<WORKING_DIR>$2<WORKING_DIR>$3<WORKING_DIR>$4<WORKING_DIR>$5<WORKING_DIR>$6<WORKING_DIR>$7"} ]
+    },
+        
+    {
+      "Property" :"Command",
+      "Replace" : [ {"(.*)/home/workbench/ctm/runtime/(.*)" : "$1<WORKING_DIR>$2"} ]
+    }
+  ]
+}
+

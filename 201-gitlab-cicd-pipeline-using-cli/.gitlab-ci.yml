@@ -1,0 +1,106 @@
+image: ruby:2.1
+
+stages:
+  - prep
+  - build
+  - test
+  - deploy
+
+1.1 Configure staging environment:
+  stage: prep
+  allow_failure: true
+  script:
+      - ctm env add staging "$STAGING_ENDPOINT" $STAGING_USER $STAGING_PASSWORD
+  only:
+    - staging
+  tags:
+    - ctm
+    
+1.1 Configure production environment:
+  stage: prep
+  allow_failure: true
+  script:
+      - ctm env add production "$PRODUCTION_ENDPOINT" $PRODUCTION_USER $PRODUCTION_PASSWORD
+  only:
+    - master
+  tags:
+    - ctm
+
+2.1 Build json files for staging:
+  stage: build
+  script:
+    - ctm build sample.json DeployDescriptorStaging.json -e staging
+  only:
+    - staging
+  tags:
+    - ctm
+
+2.1 Build json files for master:
+  stage: build
+  script:
+    - ctm build sample.json DeployDescriptorMaster.json -e production
+  only:
+    - master
+  tags:
+    - ctm
+
+3.1 Print Transformation for staging:
+  stage: test
+  script:
+    - ctm deploy transform sample.json DeployDescriptorStaging.json -e staging
+  only:
+    - staging
+  tags:
+    - ctm
+
+3.1 Print Transformation for master:
+  stage: test
+  script:
+    - ctm deploy transform sample.json DeployDescriptorMaster.json -e production
+  only:
+    - master
+  tags:
+    - ctm
+
+3.2 Run json files on staging:
+  stage: test
+  script:
+    - ctm run sample.json DeployDescriptorStaging.json -e staging
+  only:
+    - staging
+  tags:
+    - ctm
+    
+3.2 Run json files on master:
+  stage: test
+  script:
+    - ctm run sample.json DeployDescriptorMaster.json -e production
+  only:
+    - master
+  tags:
+    - ctm
+
+3.3 Check result:
+  stage: test
+  script:
+    - echo 'All good'
+  tags:
+    - ctm
+
+4.1 Deploy jobs for staging:
+  stage: deploy
+  script:
+    - ctm deploy sample.json DeployDescriptorStaging.json -e staging
+  only:
+    - staging
+  tags:
+    - ctm
+    
+4.1 Deploy jobs for master:
+  stage: deploy
+  script:
+    - ctm deploy sample.json DeployDescriptorMaster.json -e production
+  only:
+    - master
+  tags:
+    - ctm

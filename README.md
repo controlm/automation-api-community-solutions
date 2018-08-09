@@ -15,7 +15,7 @@ To contribute, please follow these guidelines.
 1. Every sample and its associated files must be contained in its own **folder**. Name this folder something that describes what your sample does. Usually this naming pattern looks like **level-sample-purpose** (e.g. 201-automate-corrective-flow). Numbering should start at 101. 100 is reserved for things that need to be at the top.
 
       For consistent categorization, please comply to the following folder structure:
-      + 1xx AAPI usage examples
+      + 1xx General Automation API usage examples
       + 2xx CI/CD tooling integration
       + 3xx infrastructure-as-code examples
       + 4xx AI job type examples

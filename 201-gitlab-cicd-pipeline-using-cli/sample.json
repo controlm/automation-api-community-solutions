@@ -1,0 +1,91 @@
+{
+    "Defaults" : {
+        "Application" : "EXAMPLE",
+        "SubApplication" : "EXAMPLE_CICD",
+        "RunAs" : "workbench",
+        "Host" : "workbench"
+    },
+
+    "WorkbenchSampleFlow": {
+        "Type": "Folder",
+   
+        "GetPosts": {
+            "Type": "Job:Command",
+            "Command": "curl https://jsonplaceholder.typicode.com/posts/1>/home/workbench/ctm/runtime/posts.json"
+           
+        },
+
+        "GetComments": {
+            "Type": "Job:Command",
+          	"Command": "curl https://jsonplaceholder.typicode.com/comments/1>/home/workbench/ctm/runtime/comments.json"
+         },
+
+		"GetPhotos": {
+            "Type": "Job:Command",
+          	"Command": "curl https://jsonplaceholder.typicode.com/photos/1>/home/workbench/ctm/runtime/photos.json"
+         },
+
+
+		"DoSometingWithIt" :{
+			"Type": "Job:Command",
+          	"Command": "cat /home/workbench/ctm/runtime/posts.json>>/home/workbench/ctm/runtime/all_in_one_file.json|cat /home/workbench/ctm/runtime/comments.json>>/home/workbench/ctm/runtime/all_in_one_file.json|cat /home/workbench/ctm/runtime/photos.json>>/home/workbench/ctm/runtime/all_in_one_file.json"
+         },
+
+		"CleanUpTheMess" :{
+			"Type": "Job:Command",
+          	"Command": "rm /home/workbench/ctm/runtime/posts.json|rm /home/workbench/ctm/runtime/comments.json|rm /home/workbench/ctm/runtime/photos.json"
+         },
+         
+         "DoSometingElse" :{
+         	"Type": "Job:Command",
+			"Description": "This will take a bit longer.",
+          	"Command": "sleep 120"
+         },
+         
+		"ShowResult" :{
+			"Type": "Job:Command",
+          	"Command": "cat /home/workbench/ctm/runtime/all_in_one_file.json"
+         },
+         
+		"ThisOneWillFail" :{
+			"Type": "Job:Command",
+          	"Command": "sleep 15"
+         },
+         			
+        "Flow1": {
+            "Type": "Flow",
+            "Sequence": ["GetPosts", "DoSometingWithIt"]
+        },
+        
+        "Flow2": {
+            "Type": "Flow",
+        	"Sequence": ["GetComments", "DoSometingWithIt"]
+        },
+        
+        "Flow3": {
+            "Type": "Flow",
+        	"Sequence": ["GetPhotos", "DoSometingWithIt"]
+        },
+              
+
+        "Flow4": {
+            "Type": "Flow",
+        	"Sequence": ["DoSometingWithIt", "CleanUpTheMess"]
+        },
+             
+  		"Flow5": {
+            "Type": "Flow",
+        	"Sequence": ["DoSometingWithIt", "DoSometingElse"]
+        },        
+		
+		"Flow6": {
+            "Type": "Flow",
+        	"Sequence": ["DoSometingElse", "ShowResult"]
+        },
+        
+		"Flow7": {
+            "Type": "Flow",
+        	"Sequence": ["DoSometingElse", "ShowResult"]
+        }
+    }
+}
