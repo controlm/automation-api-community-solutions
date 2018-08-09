@@ -28,13 +28,13 @@ For the production environment, similar variables need to be defined:
 
 ## sample.json
 
-This file holds a job flow purely to demonstrate the CI/CD integration. In real life, this would be the workflow definition that is being updated as part of a project.
+The [sample.json](sample.json) file holds a job flow purely to demonstrate the CI/CD integration. In real life, this would be the workflow definition that is being updated as part of a project.
 The flow grabs data from 3 different sources. These data sources are merged into one file and printed. In addition there is a job that is intended to fail because the command does not exist. The job DoSometingElse is doing a sleep for 2 minutes to demonstrate the graphical monitoring capabilities of the Workbench.
 
 This sample will run without any modification in a Control-M workbench. 
 
 ## DeployDescriptorStaging.json
-This file updates the specific attributes of the sample.json to match the staging environment. This file is used during the deployment of the sample.json file to the staging environment.
+The [DeployDescriptorStaging.json](DeployDescriptorStaging.json) file updates the specific attributes of the sample.json to match the staging environment. This file is used during the deployment of the sample.json file to the staging environment.
 
 You will need to replace the following strings with a value that are applicable for the staging environment
 * __<RUN_AS_USER>:__ Sets the Run As user name
@@ -42,7 +42,7 @@ You will need to replace the following strings with a value that are applicable 
 * __<WORKING_DIR>:__ Set the working dir for the  jobs defined in the sample.json file. Best is to do a find and replace since this value is used multiple times.
 
 ## DeployDescriptorMaster.json
-This file updates the specific attributes of the sample.json to match the production environment. This file is used during the deployment of the sample.json file to the staging environment.
+The [DeployDescriptorMaster.json](DeployDescriptorMaster.json)  file updates the specific attributes of the sample.json to match the production environment. This file is used during the deployment of the sample.json file to the staging environment.
 
 You will need to replace the following strings with a value that are applicable for the production environment
 * __<RUN_AS_USER>:__ Sets the Run As user name
@@ -50,7 +50,7 @@ You will need to replace the following strings with a value that are applicable 
 * __<WORKING_DIR>:__ Set the working dir for the  jobs defined in the sample.json file. Best is to do a find and replace since this value is used multiple times.
 
 ## .gitlab-ci.yml
-The	.gitlab-ci.yml file specifies the Gitlab pipeline.
+The	[.gitlab-ci.yml](.gitlab-ci.yml) file specifies the Gitlab pipeline.
 
 First, we specify the different stages of the pipeline. This helps to track the progress of a pipeline. 
 
@@ -88,6 +88,8 @@ The prep stages prepares sets the correct pre-conditions for the pipeline. In th
 
 ### build stage
 The build stage validates if the json format is correct. We use the ```only:``` attribute again to execute this step for each environment. The ```-e``` attribute is used to specify the environment in the Automation API CLI, 
+
+
 ```
 2.1 Build json files for staging:
   stage: build
@@ -108,8 +110,12 @@ The build stage validates if the json format is correct. We use the ```only:``` 
     - ctm
 ```
 
+Note that we use the deploy descriptor file to update the sample.json with environment specific:
+
+```ctm build sample.json DeployDescriptorStaging.json -e staging```
+
 ### test stage
-The test stage is used to run the actual job and "validate" the output. The first job prints the transformation using the deploy descriptor file. This job is purely for debugging issues. It will show the json that will actually get deployed. Printing the transformed job will help debugging any errors found in the test stage.
+The test stage is used to run the actual job and "validate" the output. The first job prints the transformation using the ```ctm deploy transform``` service with the deploy descriptor file. This job is purely for debugging issues. It will show the json that will actually get deployed. Printing the transformed job will help debugging any errors found in the test stage.
 
 ```
 3.1 Print Transformation for staging:
@@ -153,6 +159,9 @@ ___Note: You should always validate if the jobs can be executed in a real produc
   tags:
     - ctm
 ```
+Note that we use the deploy descriptor file to update the sample.json with environment specific:
+
+```ctm run sample.json DeployDescriptorStaging.json -e staging```
 
 The next job validates the result of the previous step. In this example, we just print "All good". In real life, you would probably call a test automation solution in this step or build a custom script that validates the output.
 
@@ -185,4 +194,9 @@ We can now actually deploy the jobs on the staging or production environment onc
   only:
     - master
   tags:
-    - ctm```
+    - ctm
+```
+    
+Note that we use the deploy descriptor file to update the sample.json with environment specific:
+
+```ctm deploy sample.json DeployDescriptorStaging.json -e staging```
