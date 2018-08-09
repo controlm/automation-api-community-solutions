@@ -1,0 +1,16 @@
+{
+	"Defaults" : { "SiteStandard" : "JGO_Std", "Application" : "JGO",
+		"SubApplication" : "Utilities",
+		"Description" : "Delete Control-M agents that were running in containers that are no longer running according to Docker ps output"
+	},
+
+	"JGO_SysUtilities" : {"Type":  "Folder", "SiteStandard" : "JGO_Std", "Application" : "JGO", 
+		"AgentCleanup" : { "Type" : "Job:Script",
+			"FileName" : "cleanup_terminated_agents.sh",
+			"FilePath" : "/home/ec2-user",
+			"Host" : "engagelinux",
+			"RunAs" : "ec2-user"
+		}
+	}
+}
+		

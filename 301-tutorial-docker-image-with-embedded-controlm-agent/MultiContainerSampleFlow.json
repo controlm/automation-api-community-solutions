@@ -1,0 +1,31 @@
+{
+    "Defaults" : {
+        "Application" : "SampleApp",
+        "SubApplication" : "SampleSubApp",
+		"SiteStandard" : "WideOpen",
+        "RunAs" : "ec2-user",
+        "Host" : "appgroup01"
+    },
+
+    "AutomationAPISampleFlow": {
+        "Type": "Folder",
+        "Comment" : "Code reviewed by John",
+
+        "Job1": {
+            "Type": "Job:Command",
+            "Command": "echo Job 1"
+        },
+		
+		"Job2": {"Type": "Job:Command", "Command": "sleep 600"},
+		"Job3": {"Type": "Job:Command", "Command": "sleep 600"},
+		"Job4": {"Type": "Job:Command", "Command": "sleep 600"},
+		"Job5": {"Type": "Job:Command", "Command": "sleep 600"},
+		"Job6": {"Type": "Job:Command", "Command": "sleep 600"},
+
+
+        "Flow1": {"Type": "Flow", "Sequence": ["Job1", "Job2", "Job6"]},
+		"Flow2": {"Type": "Flow", "Sequence": ["Job1", "Job3", "Job6"]},
+		"Flow3": {"Type": "Flow", "Sequence": ["Job1", "Job4", "Job6"]},
+		"Flow4": {"Type": "Flow", "Sequence": ["Job1", "Job5", "Job6"]}
+    }
+}
