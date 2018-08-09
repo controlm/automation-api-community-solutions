@@ -1,0 +1,38 @@
+{
+"DeployDescriptor":
+  [
+    {
+      "Property" :"RunAs",
+      "Assign" : "ctmaapi"
+    },
+    {
+      "Property" :"Host",
+      "Assign" : "tmoctm.bmci2t.com"
+    },
+    {
+      "ApplyOn" : {
+       "Type":"Job", 
+		"@" : "CleanUpTheMess.*"
+      },
+      "Property" :"Command",
+      "Replace" : [ {"(.*)/home/workbench/ctm/runtime/(.*)/home/workbench/ctm/runtime/(.*)/home/workbench/ctm/runtime/(.*)" : "$1<WORKING_DIR>$2<WORKING_DIR>$3<WORKING_DIR>$4"} ]
+    },
+    {
+      "ApplyOn" : {
+       "Type":"Job",
+		"@" : "DoSometingWithIt.*"
+      },
+      "Property" :"Command",
+      "Replace" : [ {"(.*)/home/workbench/ctm/runtime/(.*)/home/workbench/ctm/runtime/(.*)/home/workbench/ctm/runtime/(.*)/home/workbench/ctm/runtime/(.*)/home/workbench/ctm/runtime/(.*)/home/workbench/ctm/runtime/(.*)" : "$1<WORKING_DIR>$2<WORKING_DIR>$3<WORKING_DIR>$4<WORKING_DIR>$5<WORKING_DIR>$6<WORKING_DIR>$7"} ]
+    },
+        
+    {
+      "Property" :"Command",
+      "Replace" : [ {"(.*)/home/workbench/ctm/runtime/(.*)" : "$1<WORKING_DIR>$2"} ]
+    }
+  ]
+}
+	
+
+
+ 

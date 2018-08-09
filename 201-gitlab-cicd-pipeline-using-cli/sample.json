@@ -1,7 +1,7 @@
 {
     "Defaults" : {
-        "Application" : "TMO_DEMO",
-        "SubApplication" : "TMO_DEMO_CICD",
+        "Application" : "EXAMPLE",
+        "SubApplication" : "EXAMPLE_CICD",
         "RunAs" : "workbench",
         "Host" : "workbench"
         }
@@ -9,7 +9,6 @@
 
     "WorkbenchSampleFlow": {
         "Type": "Folder",
-        "Comment" : "Folder with command jobs placed in a flow",
    
         "GetPosts": {
             "Type": "Job:Command",
