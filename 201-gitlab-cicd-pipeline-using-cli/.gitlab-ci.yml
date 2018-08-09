@@ -91,9 +91,6 @@ stages:
   stage: deploy
   script:
     - ctm deploy sample.json DeployDescriptorStaging.json -e staging
-  environment:
-    name: staging
-    url: https://tmoctm.bmci2t.com:8443/
   only:
     - staging
   tags:
@@ -103,9 +100,6 @@ stages:
   stage: deploy
   script:
     - ctm deploy sample.json DeployDescriptorMaster.json -e production
-  environment:
-    name: production
-    url: https://tmoctm.bmci2t.com:8443/
   only:
     - master
   tags:
