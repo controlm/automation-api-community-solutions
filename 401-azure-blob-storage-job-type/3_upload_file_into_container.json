@@ -1,0 +1,24 @@
+{
+  "Defaults" : {
+    "Application" : "AZURE",
+    "RunAs" : "<USERNAME>",
+    "Host" : "<HOSTNAME>"
+  },
+
+  "Azure_Upload": {
+    "Type": "Folder",
+        
+    "Azure blob Upload job" : {
+      "Type" : "Job:ApplicationIntegrator:Azure blob storage",
+      "ConnectionProfile" : "<CONNECTION_PROFILE NAME>",
+        	
+      "AI-Action" : "Upload",
+      "Variables" : [ {
+        "UCM-UP_DO_BLOBNAME" : "<AZURE BLOB NAME>"
+      }, {
+        "UCM-UP_DO_CONTAINER" : "<AZURE BLOB CONTAINER NAME>"
+      } ],
+      "AI-File path" : "<PATH TO FILE ON AGENT FILE SYSTEM>"
+    }
+  }
+}

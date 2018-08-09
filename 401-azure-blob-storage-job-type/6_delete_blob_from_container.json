@@ -1,0 +1,23 @@
+{
+  "Defaults" : {
+    "Application" : "AZURE",
+    "RunAs" : "<USERNAME>",
+    "Host" : "<HOSTNAME>"
+  },
+
+  "Azure_Delete": {
+    "Type": "Folder",
+        
+    "Azure blob Delete job" : {
+      "Type" : "Job:ApplicationIntegrator:Azure blob storage",
+      "ConnectionProfile" : "<CONNECTION_PROFILE NAME>",
+        	
+      "AI-Action" : "Delete",
+      "Variables" : [ {
+        "UCM-DEL_BLOBNAME" : "<AZURE BLOB BLOB NAME>"
+      }, {
+        "UCM-DEL_CONTAINER" : "<AZURE BLOB CONTAINER NAME>"
+      } ]
+    }
+  }
+}

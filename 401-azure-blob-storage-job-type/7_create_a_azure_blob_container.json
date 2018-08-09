@@ -1,0 +1,20 @@
+{
+  "Defaults" : {
+    "Application" : "AZURE",
+    "RunAs" : "<USERNAME>",
+    "Host" : "<HOSTNAME>"
+  },
+
+  "Azure_Create_Container": {
+    "Type": "Folder",
+        
+    "Azure blob Create Container job" : {
+      "Type" : "Job:ApplicationIntegrator:Azure blob storage",
+      "ConnectionProfile" : "<CONNECTION_PROFILE NAME>",
+        	
+      "AI-Action" : "Create container",
+      "AI-Container name" : "<AZURE BLOB CONTAINER NAME>",
+      "AI-Public Access" : "Off"
+    }
+  }
+}
