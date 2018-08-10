@@ -66,6 +66,7 @@ stages:
 The prep stages prepares sets the correct pre-conditions for the pipeline. In this example, we add the environment to the Automation-API CLI. We use the ```only:``` attribute to specify this action for the staging branch en master branch (production). The ```allow_failure: true``` attribute is used to ignore any failure in this step. This is done to suppress an error that the environment already exists. 
 
 ```
+1.1 Configure staging environment:
   stage: prep
   allow_failure: true
   script:
