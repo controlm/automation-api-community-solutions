@@ -1,0 +1,8 @@
+# Runjob request from Windows
+aws sqs send-message --queue-url "https://us-west-2.queue.amazonaws.com/623469066856/ctmrequests" --message-body "{\"Request\": [{\"Environment\" : \"ctmprod\",  \"RequestAttributes\" : { \"ControlmServer\" : \"controlm\", \"Type\" : \"runjob\", \"Jobname\" : \"ALL\",   \"Folder\" : \"JGO_Payroll\" }}]}"
+
+# Runjob request from Linux
+aws sqs send-message --queue-url "https://us-west-2.queue.amazonaws.com/623469066856/ctmrequests" --message-body '{"Request": [{"Environment" : "ctmprod",  "RequestAttributes" : { "ControlmServer" : "controlm", "Type" : "runjob", "Jobname" : "ALL",   "Folder" : "JGO_Payroll" }}]}'
+
+# Createjob request from Linux
+aws sqs send-message --queue-url "https://us-west-2.queue.amazonaws.com/623469066856/ctmrequests" --message-body '{"Request": [{"Environment" : "ctmprod",  "RequestAttributes" : { "ControlmServer" : "controlm", "Type" : "createjob", "Jobname" : "JGO_JobPFX",   "Folder" : "JGO_VarFolder", "Template" : "JGO_Std" }}]}'
