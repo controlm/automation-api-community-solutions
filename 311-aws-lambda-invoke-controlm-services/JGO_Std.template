@@ -1,0 +1,25 @@
+{
+	"Defaults" : {
+		"RunAs" : "emuser", "Application" : "JGO", "SubApplication" : "JGO_AAPI MegaFlow", "When" : { "WeekDays":["ALL"]},
+		"Description" : "Something is better than nothing",
+		"ControlmServer":"controlm", "OrderMethod": "Manual",  "SiteStandard" : "JGO_Std",
+		"Job": {"actionIfSuccess" : {"Type": "If", "CompletionStatus":"OK", "mailTeam": 
+			{"Type": "Mail", "Message": "Job %%JOBNAME succeeded", "Subject": "Success", "To": "joe_goldberg@bmc.com"}}},
+		"Job": {"actionIfError" : {"Type": "If", "CompletionStatus":"NOTOK", "mailTeam": 
+			{"Type": "Mail", "Message": "Job %%JOBNAME failed", "Subject": "Error occurred", "To": "joe_goldberg@bmc.com"}}}
+	},
+
+	"$$FOLDER$$" : {	"Type" : "Folder",
+			"$$JOBPFX$$1": {"Type" : "Job:Command", "Command" : "echo hello job 1"},    
+			"$$JOBPFX$$2": {"Type" : "Job:Command", "Command" : "echo hello job 2"},    
+			"$$JOBPFX$$3": {"Type" : "Job:Command", "Command" : "echo hello job 3"}, 
+			"$$JOBPFX$$4": {"Type" : "Job:Command", "Command" : "echo hello job 4"}, 
+			"$$JOBPFX$$5": {"Type" : "Job:Command", "Command" : "echo hello job 5"}, 		
+			
+		"flow00": {"Type":"Flow", "Sequence":["$$JOBPFX$$1", "$$JOBPFX$$2"]},
+		"flow01": {"Type":"Flow", "Sequence":["$$JOBPFX$$1", "$$JOBPFX$$3"]},
+		"flow02": {"Type":"Flow", "Sequence":["$$JOBPFX$$1", "$$JOBPFX$$4"]},
+		"flow03": {"Type":"Flow", "Sequence":["$$JOBPFX$$1", "$$JOBPFX$$5"]}
+
+	}
+}
