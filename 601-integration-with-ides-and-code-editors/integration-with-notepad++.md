@@ -22,9 +22,9 @@
 
 9. If you right click on the file (“contextMenu.xml”) you will see the current format of the context menu, and in the file itself you can check the code that defines the text to be shown and the actions/plugins to invoke when each item is selected. The lines with “<Item id="0"/>“ are separators.
 
-```
+   ```
 	<!--
-    <!--Control-M Automation API integration
+	Control-M Automation API integration
     -->
     <Item FolderName="Control-M Automation API" PluginEntryName="NppExec"
     PluginCommandItemName="Build jobs in json file" />
@@ -33,7 +33,7 @@
     <Item FolderName="Control-M Automation API" PluginEntryName="NppExec"
     PluginCommandItemName="Deploy jobs in json file" />
     <Item id="0"/>
-```
+   ```
 
 10. Go to any part of the file where you want to include your new sub-menu for Control-M Automation API, and include the following lines (change the content of “PluginCommandItemName” on each line according to your values defined in step 8, and add more lines for more menu options if required).
 
