@@ -8,7 +8,7 @@
 
    ```cmd /c ctm build "$(FULL_CURRENT_PATH)"```
 
-4. Repeat the last step to define any additional operations (*See below for more examples*).
+4. Repeat the last step to define any additional operations (*see below for more examples*).
 
 5. Go to “Plugins” > “NppExec” and make sure you have the following options selected:
 
@@ -24,6 +24,8 @@
 
 9. If you right click on the file (“contextMenu.xml”) you will see the current format of the context menu, and in the file itself you can check the code that defines the text to be shown and the actions/plugins to invoke when each item is selected. The lines with “<Item id="0"/>“ are separators.
 
+10. Go to any part of the file where you want to include your new sub-menu for Control-M Automation API, and include the following lines (change the content of “PluginCommandItemName” on each line according to your values defined in step 8, and add more lines for more menu options if required).
+
    ```
 	<!--
 	Control-M Automation API integration
@@ -37,10 +39,7 @@
     <Item id="0"/>
    ```
 
-10. Go to any part of the file where you want to include your new sub-menu for Control-M Automation API, and include the following lines (change the content of “PluginCommandItemName” on each line according to your values defined in step 8, and add more lines for more menu options if required).
-
 11. Restart Notepad++. Now you can right click on a json file and use the previously defined actions directly from the tool. A console window will open at the bottom showing the results of the operation.
 
-*Integration tested with Notepad++ 7.5.1 (32-bit) and NppExec plugin 0.6.*
 
-Test
+*Integration tested with Notepad++ 7.5.1 (32-bit) and NppExec plugin 0.6.*
