@@ -10,9 +10,9 @@
 
 5. Go to “Plugins” > “NppExec” and make sure you have the following options selected:
 
-⋅⋅⋅- Show Console Dialog
-⋅⋅⋅- Console Command History
-⋅⋅⋅- No internal messages
+   - Show Console Dialog
+   - Console Command History
+   - No internal messages
 
 6. Go to “Plugins” > “NppExec” > “Advanced Options” and select the “Place to the Macros submenu” option, and “[Console]” > “Visible (on start)” = “No”.
 
@@ -33,7 +33,7 @@
     <Item FolderName="Control-M Automation API" PluginEntryName="NppExec"
     PluginCommandItemName="Deploy jobs in json file" />
     <Item id="0"/>
-    ```
+```
 
 10. Go to any part of the file where you want to include your new sub-menu for Control-M Automation API, and include the following lines (change the content of “PluginCommandItemName” on each line according to your values defined in step 8, and add more lines for more menu options if required).
 
