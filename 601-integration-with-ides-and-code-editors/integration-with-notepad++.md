@@ -4,7 +4,8 @@
 
 2. From the main menu, go to “Plugins” > “Plugin Manager” > “Show Plugin Manager”. In “Available Plugins”, search for “NppExec”, select it and click on “Install”.
 
-3. Once installed, go to “Plugins” > “NppExec” > “Execute”. Type the command for the Control-M Automation API service you want to invoke,  then save and assign a name. E.g. for the "build" service the full command line would be: ```cmd /c ctm build "$(FULL_CURRENT_PATH)"```
+3. Once installed, go to “Plugins” > “NppExec” > “Execute”. Type the command for the Control-M Automation API service you want to invoke,  then save and assign a name. E.g. for the "build" service the full command line would be:
+   ```cmd /c ctm build "$(FULL_CURRENT_PATH)"```
 
 4. Repeat the last step to define any additional operations (*See below for more examples*).
 
