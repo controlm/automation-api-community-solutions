@@ -11,9 +11,9 @@ search for “NppExec”, select it and click on “Install”.
 
 5. Go to “Plugins” > “NppExec” and make sure you have the following options selected:
 
-- Show Console Dialog
-- Console Command History
-- No internal messages
+⋅⋅⋅- Show Console Dialog
+⋅⋅⋅- Console Command History
+⋅⋅⋅- No internal messages
 
 6. Go to “Plugins” > “NppExec” > “Advanced Options” and select the “Place to the Macros submenu” option,
 and “[Console]” > “Visible (on start)” = “No”.
