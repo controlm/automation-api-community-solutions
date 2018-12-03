@@ -1,16 +1,16 @@
-# Integration with IntelliJ IDEA
+# Integration with Eclipse
 
-1. From the main menu, select “File” > “Settings” and then go to “Tools” > “External Tools”.
+1. From the main menu, select “Run” > “External Tools” > “External Tools Configurations”.
 
-2. Click on the **“+”** icon to add a new item and fill in all parameters and options as in the following screenshot (which shows an example for the “*build*” service):
+2.	In the left panel, right click on “Program” and select “New Configuration”.
+
+3. Type a “Name” on the top and fill in all parameters as in the following screenshot (which shows an example for the “*build*” service):
 
    ![IntelliJ IDEA > External Tools](/601-integration-with-ides-and-code-editors/images/intellij_ext_tools.png) 
 
-   * Name : ```Build jobs in json file```
-   * Group : ```Control-M Automation API```
-   * Program : ```C:\Windows\System32\cmd.exe```
-   * Arguments : ```/c ctm build "$FilePath$"```
-   * Working directory : ```$ProjectFileDir$```
+   * Name : ```Control-M - Build jobs in json file```
+   * Location : ```C:\Windows\System32\cmd.exe```
+   * Arguments : ```/c ctm build ${resource_loc}```
    
 3. Repeat the last step to add any additional services - you can use the "copy" icon on the top to duplicate an existing item. Just type the required command in “Arguments” and update “Name” and “Description” accordingly (keep the rest of parameters as they are). Some examples:
 
