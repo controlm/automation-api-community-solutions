@@ -6,10 +6,10 @@
 
    ![IntelliJ IDEA > External Tools](/601-integration-with-ides-and-code-editors/images/intellij_ext_tools.png) 
 
-   * Name : ```Build jobs in json file```\
-   * Group : ```Control-M Automation API```\
-   * Program : ```C:\Windows\System32\cmd.exe```\
-   * Arguments : ```/c ctm build "$FilePath$"```\
+   * Name : ```Build jobs in json file```
+   * Group : ```Control-M Automation API```
+   * Program : ```C:\Windows\System32\cmd.exe```
+   * Arguments : ```/c ctm build "$FilePath$"```
    * Working directory : ```$ProjectFileDir$```
    
 3. Repeat the last step to add any additional services - you can use the "copy" icon on the top to duplicate an existing item. Just type the required command in the “Arguments” field and update the “Name” and “Description” accordingly (keep the rest of parameters as they are). Some examples:
