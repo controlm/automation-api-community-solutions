@@ -8,7 +8,7 @@
 
    ```cmd /c ctm build "$(FULL_CURRENT_PATH)"```
 
-   ![Notepad++ > NppExec > Eecute](/601-integration-with-ides-and-code-editors/images/notepad_execute.png) 
+   ![IntelliJ IDEA > External Tools](/601-integration-with-ides-and-code-editors/images/intellij_ext_tools.png) 
 
 4. Repeat the last step to define any additional operations (*see below for more examples*).
 
