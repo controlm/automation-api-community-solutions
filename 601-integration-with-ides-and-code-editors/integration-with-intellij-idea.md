@@ -21,4 +21,5 @@
 
    ![IntelliJ IDEA > Menu](/601-integration-with-ides-and-code-editors/images/intellij_menu.png) 
 
-```*Integration tested with IntelliJ IDEA (Community Edition) 2018.2.5 running on Windows 10*```
+
+***Integration tested with IntelliJ IDEA (Community Edition) 2018.2.5 running on Windows 10***
