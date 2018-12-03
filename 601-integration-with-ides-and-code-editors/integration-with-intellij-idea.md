@@ -1,8 +1,8 @@
-# Integration with Notepad++
+# Integration with IntelliJ IDEA
 
-1. Open Notepad++ and check under the “Plugins” menu that you have the “Plugin Manager” installed. If not, install it by following this [instructions](https://bruderste.in/npp/pm/#install).
+1. From the main menu, go to “File” > “Settings”.
 
-2. From the main menu, go to “Plugins” > “Plugin Manager” > “Show Plugin Manager”. In “Available Plugins”, search for “NppExec”, select it and click on “Install”.
+2. Now go to “Tools” > “External Tools”.
 
 3. Once installed, go to “Plugins” > “NppExec” > “Execute”. Type the command for the Control-M Automation API service you want to invoke,  then save and assign a name. E.g. for the "build" service the full command line would be:
 
