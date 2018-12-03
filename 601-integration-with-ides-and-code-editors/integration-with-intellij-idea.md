@@ -12,7 +12,7 @@
    * Arguments : ```/c ctm build "$FilePath$"```
    * Working directory : ```$ProjectFileDir$```
    
-3. Repeat the last step to add any additional services - you can use the "copy" icon on the top to duplicate an existing item. Just type the required command in the “Arguments” field and update the “Name” and “Description” accordingly (keep the rest of parameters as they are). Some examples:
+3. Repeat the last step to add any additional services - you can use the "copy" icon on the top to duplicate an existing item. Just type the required command in “Arguments” and update “Name” and “Description” accordingly (keep the rest of parameters as they are). Some examples:
 
    ```/c ctm run "$FilePath$" -i```   run jobs and monitor via Control-M Workbench\
    ```/c ctm deploy "$FilePath$"```   deploy jobs to Control-M
