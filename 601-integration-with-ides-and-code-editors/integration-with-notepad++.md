@@ -8,6 +8,8 @@
 
    ```cmd /c ctm build "$(FULL_CURRENT_PATH)"```
 
+   ![Notepad++ > NppExec > Eecute](/601-integration-with-ides-and-code-editors/images/notepad_execute.png) 
+
 4. Repeat the last step to define any additional operations (*see below for more examples*).
 
 5. Go to “Plugins” > “NppExec” and make sure you have the following options selected:
