@@ -4,7 +4,7 @@
 
 2. Click on the **“+”** icon to add a new item and fill in all parameters and options as in the following screenshot (which shows an example for the “*build*” service):
 
-   ![IntelliJ IDEA > External Tools](/601-integration-with-ides-and-code-editors/images/intellij_ext_tools.png) 
+   ![IntelliJ IDEA > External Tools](/601-integration-with-ides-and-code-editors/images/intellij_config.png) 
 
    * Name : ```Build jobs in json file```
    * Group : ```Control-M Automation API```
