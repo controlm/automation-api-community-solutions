@@ -26,7 +26,7 @@
 
 10. Go to any part of the file where you want to include your new sub-menu for Control-M Automation API, and include the following lines (change the content of “PluginCommandItemName” on each line according to your values defined in step 8, and add more lines for more menu options if required).
 
-   ```
+      ```
 	<!--
 	Control-M Automation API integration
     -->
@@ -37,7 +37,7 @@
     <Item FolderName="Control-M Automation API" PluginEntryName="NppExec"
     PluginCommandItemName="Deploy jobs in json file" />
     <Item id="0"/>
-   ```
+      ```
 
 11. Restart Notepad++. Now you can right click on a json file and use the previously defined actions directly from the tool. A console window will open at the bottom showing the results of the operation.
 
