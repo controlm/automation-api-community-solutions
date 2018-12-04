@@ -14,7 +14,7 @@
    
 3. Repeat the last step to add any additional services - you can use the "copy" icon at the top to duplicate an existing item. Just type the required command in "Arguments" and update "Name" and "Description" accordingly (keep the rest of parameters as they are). Some examples:
 
-   * Run jobs and monitor via Control-M Workbench : ```/c ctm run "$FilePath$" -i```
+   * Run jobs and monitor via Control-M Workbench : ```/c ctm run "$FilePath$" -i -e workbench```
    * Deploy jobs to default Control-M environment : ```/c ctm deploy "$FilePath$"```
    * Deploy jobs to Control-M environment "PreProd" : ```/c ctm deploy "$FilePath$" -e PreProd```
 
