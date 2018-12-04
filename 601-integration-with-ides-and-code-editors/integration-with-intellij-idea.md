@@ -1,6 +1,6 @@
 # Integration with IntelliJ IDEA
 
-1. From the main menu, select “File” > “Settings” and then go to “Tools” > “External Tools”.
+1. From the main menu, select "File" > "Settings" and then go to "Tools" > “External Tools”.
 
 2. Click on the **“+”** icon to add a new item and fill in all parameters and options as in the following screenshot (which shows an example for the “*build*” service):
 
