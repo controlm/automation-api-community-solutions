@@ -4,7 +4,7 @@
 
 2.	In the left panel, right click on "Program" and select "New Configuration".
 
-3. Type a "Name" on the top and fill in all parameters as in the following screenshot (which shows an example for the "*build*" service):
+3. Type a "Name" at the top and fill in all parameters as in the following screenshot (which shows an example for the "*build*" service):
 
    ![Eclipse Config](/601-integration-with-ides-and-code-editors/images/eclipse_config.png) 
 
@@ -18,14 +18,14 @@
    * "Allocate console"
    * "Launch in background"
 
-5. Repeat the last steps to add any additional services - you can use the "duplicate" icon on the top. Just type the required command in "Arguments" and update "Name" accordingly (keep the rest of parameters as they are). Some examples:
+5. Repeat the last steps to add any additional services - you can use the "duplicate" icon at the top. Just type the required command in "Arguments" and update "Name" accordingly (keep the rest of parameters as they are). Some examples:
 
    * Run jobs and monitor via Control-M Workbench : ```/c ctm run "${resource_loc}" -i```
    * Deploy jobs to Control-M : ```/c ctm deploy "${resource_loc}"```
 
 6. That´s it. After clicking on "Apply" and closing the window, you can now select a json file containing Control-M job definitions and use any of the previously defined actions via "Run" > "External Tools". A console window will open showing the results of the operation.
 
-   As we also added those operations as favorites, you can launch them too from the “Run external commands” icon on the top, as shown in the following screenshot.
+   As we also added those operations as favorites, you can launch them too from the “Run external commands” icon at the top, as shown in the following screenshot.
 
    ![Eclipse Menu](/601-integration-with-ides-and-code-editors/images/eclipse_menu.png) 
 
