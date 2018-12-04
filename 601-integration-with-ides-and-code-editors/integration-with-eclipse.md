@@ -20,7 +20,7 @@
 
 5. Repeat the last steps to add any additional services - you can use the "duplicate" icon at the top. Just type the required command in "Arguments" and update "Name" accordingly (keep the rest of parameters as they are). Some examples:
 
-   * Run jobs and monitor via Control-M Workbench : ```/c ctm run "${resource_loc}" -i```
+   * Run jobs and monitor via Control-M Workbench : ```/c ctm run "${resource_loc}" -i -e workbench```
    * Deploy jobs to default Control-M environment : ```/c ctm deploy "${resource_loc}"```
    * Deploy jobs to Control-M environment "PreProd" : ```/c ctm deploy "${resource_loc}" -e PreProd```
       
