@@ -21,8 +21,9 @@
 5. Repeat the last steps to add any additional services - you can use the "duplicate" icon at the top. Just type the required command in "Arguments" and update "Name" accordingly (keep the rest of parameters as they are). Some examples:
 
    * Run jobs and monitor via Control-M Workbench : ```/c ctm run "${resource_loc}" -i```
-   * Deploy jobs to Control-M : ```/c ctm deploy "${resource_loc}"```
-
+   * Deploy jobs to default Control-M environment : ```/c ctm deploy "${resource_loc}"```
+   * Deploy jobs to Control-M environment "PreProd" : ```/c ctm deploy "${resource_loc}" -e PreProd```
+      
 6. That´s it. After clicking on "Apply" and closing the window, you can now select a json file containing Control-M job definitions and use any of the previously defined actions via "Run" > "External Tools". A console window will open showing the results of the operation.
 
    As we also added those operations as favorites, you can launch them too from the “Run external commands” icon at the top, as shown in the following screenshot.
