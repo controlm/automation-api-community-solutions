@@ -23,9 +23,9 @@
    * Run jobs and monitor via Control-M Workbench : ```/c ctm run "${resource_loc}" -i```
    * Deploy jobs to Control-M : ```/c ctm deploy "${resource_loc}"```
 
-6. After clicking on "Apply" and closing the window, you can now select a json file containing Control-M job definitions and use any of the previously defined actions via "Run" > "External Tools". A console window will open showing the results of the operation.
+6. That´s it. After clicking on "Apply" and closing the window, you can now select a json file containing Control-M job definitions and use any of the previously defined actions via "Run" > "External Tools". A console window will open showing the results of the operation.
 
-   As we have also added those operations as favorites, you can also launch them from the “Run external commands” icon on the top, as shown in the following screenshot.
+   As we also added those operations as favorites, you can launch them too from the “Run external commands” icon on the top, as shown in the following screenshot.
 
    ![Eclipse Menu](/601-integration-with-ides-and-code-editors/images/eclipse_menu.png) 
 
