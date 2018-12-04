@@ -15,7 +15,8 @@
 3. Repeat the last step to add any additional services - you can use the "copy" icon at the top to duplicate an existing item. Just type the required command in "Arguments" and update "Name" and "Description" accordingly (keep the rest of parameters as they are). Some examples:
 
    * Run jobs and monitor via Control-M Workbench : ```/c ctm run "$FilePath$" -i```
-   * Deploy jobs to Control-M : ```/c ctm deploy "$FilePath$"```
+   * Deploy jobs to default Control-M environment : ```/c ctm deploy "$FilePath$"```
+   * Deploy jobs to Control-M environment "PreProd" : ```/c ctm deploy "$FilePath$" -e PreProd```
 
 4. That´s it. You can now right click on a json file containing Control-M job definitions and use the previously defined actions directly from the tool. A console window will open at the bottom showing the results of the operation.
 
