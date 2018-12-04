@@ -44,4 +44,4 @@
 11. Restart Notepad++. Now you can right click on a json file and use the previously defined actions directly from the tool. A console window will open at the bottom showing the results of the operation.
 
 
-*Integration tested with Notepad++ 7.5.1 (32-bit) and NppExec plugin 0.6.*
+   *Integration tested with Notepad++ 7.5.9 (64-bit) and NppExec plugin 0.6 running on Windows 10*
