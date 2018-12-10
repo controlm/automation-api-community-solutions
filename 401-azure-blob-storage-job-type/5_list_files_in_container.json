@@ -1,0 +1,20 @@
+{
+	"Defaults": {
+		"Application": "AZURE",
+		"RunAs": "<USERNAME>",
+		"Host": "<HOSTNAME>"
+	},
+	
+	"Azure_List": {
+		"Type": "Folder",
+		
+		"Azure blob List job": {
+			"Type": "Job:ApplicationIntegrator:Azure blob storage",
+			"ConnectionProfile": "<CONNECTION_PROFILE NAME>",
+			
+			"AI-Action": "List",
+			"AI-Output": "table",
+			"AI-Container (List)": "<AZURE BLOB CONTAINER NAME>"
+		}
+	}
+}
