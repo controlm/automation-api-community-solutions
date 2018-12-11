@@ -6,7 +6,7 @@
 
 3. Go to “Plugins” > “NppExec” > “Execute”. Type the command for the Control-M Automation API service you want to invoke, then save and assign a name as in the following screenshot (which shows an example for the "*build*" service):
 
-   ![Notepad++ > NppExec > Eecute](/601-integration-with-ides-and-code-editors/images/notepad_execute.png)
+   ![Notepad++ > Config 1](/601-integration-with-ides-and-code-editors/images/notepad_config1.png)
 
    * Name : ```ctm_build```
    * Command : ```cmd /c ctm build "$(FULL_CURRENT_PATH)"```
@@ -16,15 +16,11 @@
    * Run jobs and monitor via Control-M Workbench : ```/c ctm run "$(FULL_CURRENT_PATH)" -i -e workbench```
    * Deploy jobs to default Control-M environment : ```cmd /c ctm deploy "$(FULL_CURRENT_PATH)"```
    
-5. Go to “Plugins” > “NppExec” and make sure you have the following options selected:
-
-   - Show Console Dialog
-   - Console Command History
-   - No internal messages
+5. Go to “Plugins” > “NppExec” and make sure you have the options "Console Command History" and "No internal messages" selected.
 
 6. Go to “Plugins” > “NppExec” > “Advanced Options” and select the “Place to the Macros submenu” option, and “[Console]” > “Visible (on start)” = “No”.
 
-7. From the same window, select each script, type the name you want to appear in the menus (e.g. “Build jobs in json file” for “ctm_build”) and click on “Add/Modify”. Repeat the same steps for any additional item you want to add to the menu.
+7. From the same window, select each script, type the name you want to appear in the menus and click on “Add/Modify”. Repeat the same steps for any additional item you want to add to the menu.
 
 8. At this point, you can already access all these functions by clicking on “Macro” in the main menu. To add all these functions to a context menu (accessible via right-click directly on the json file), go to “Settings” > “Edit Popup ContextMenu”. A new file is opened which contains the details for the appearance of the context menu.
 
