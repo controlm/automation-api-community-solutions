@@ -6,7 +6,7 @@
 
 3. Go to “Plugins” > “NppExec” > “Execute”. Type the command for the Control-M Automation API service you want to invoke, then save and assign a name as in the following screenshot (which shows an example for the "*build*" service):
 
-   ![Notepad++ > Config 1](/601-integration-with-ides-and-code-editors/images/notepad_config1.png)
+   ![Notepad++ > Config 1](/601-integration-with-ides-and-code-editors/images/notepad_config_1.png)
 
    * Name : ```ctm_build```
    * Command : ```cmd /c ctm build "$(FULL_CURRENT_PATH)"```
