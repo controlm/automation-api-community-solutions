@@ -1,17 +1,21 @@
 # Integration with Notepad++
 
-1. Open Notepad++ and check under the “Plugins” menu that you have the “Plugin Manager” installed. If not, install it by following this [instructions](https://bruderste.in/npp/pm/#install).
+1. From the main menu, check under “Plugins” that you have the “Plugin Manager” installed. If not, install it by following this [instructions](https://bruderste.in/npp/pm/#install).
 
-2. From the main menu, go to “Plugins” > “Plugin Manager” > “Show Plugin Manager”. In “Available Plugins”, search for “NppExec”, select it and click on “Install”.
+2. Go to “Plugins” > “Plugin Manager” > “Show Plugin Manager”. In the “Available” tab, search for “NppExec”, select it and click on “Install”.
 
-3. Once installed, go to “Plugins” > “NppExec” > “Execute”. Type the command for the Control-M Automation API service you want to invoke,  then save and assign a name. E.g. for the "build" service the full command line would be:
+3. Go to “Plugins” > “NppExec” > “Execute”. Type the command for the Control-M Automation API service you want to invoke, then save and assign a name as in the following screenshot (which shows an example for the "*build*" service):
 
-   ```cmd /c ctm build "$(FULL_CURRENT_PATH)"```
+   ![Notepad++ > NppExec > Eecute](/601-integration-with-ides-and-code-editors/images/notepad_execute.png)
 
-   ![Notepad++ > NppExec > Eecute](/601-integration-with-ides-and-code-editors/images/notepad_execute.png) 
+   * Name : ```ctm_build```
+   * Command : ```cmd /c ctm build "$(FULL_CURRENT_PATH)"```
+   
+4. Repeat the last step to add any additional services - some examples:
 
-4. Repeat the last step to define any additional operations (*see below for more examples*).
-
+   * Run jobs and monitor via Control-M Workbench : ```/c ctm run "$(FULL_CURRENT_PATH)" -i -e workbench```
+   * Deploy jobs to default Control-M environment : ```cmd /c ctm deploy "$(FULL_CURRENT_PATH)"```
+   
 5. Go to “Plugins” > “NppExec” and make sure you have the following options selected:
 
    - Show Console Dialog
