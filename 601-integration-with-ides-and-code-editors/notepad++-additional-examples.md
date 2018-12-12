@@ -98,7 +98,7 @@ NPP_OPEN $(TMP_FILE)
 cmd /c del $(TMP_FILE)
 ```
 * Highlight the **jobId** before running the operation (*e.g. “ctmsrv:0018z”*)
-* This operation could be executed from the temp file generated via "**Check workflow status**" or "**Check folder status**"
+* This operation could be executed from the temp file generated via "*Check workflow status*" or "*Check folder status*"
 * It will open a temp file containing the job status
 
 ### Show job log
@@ -111,7 +111,7 @@ NPP_OPEN $(TMP_FILE)
 cmd /c del $(TMP_FILE)
 ```
 * Highlight the **jobId** before running the operation (*e.g. “ctmsrv:0018z”*)
-* This operation could be executed from the temp file generated via "**Check workflow status**", "**Check folder status**" or "**Check job status**"
+* This operation could be executed from the temp file generated via "*Check workflow status*", "*Check folder status*" or "*Check job status*"
 * It will open a temp file containing the job log
 
 ### Show job output
@@ -124,7 +124,7 @@ NPP_OPEN $(TMP_FILE)
 cmd /c del $(TMP_FILE)
 ```
 * Highlight the **jobId** before running the operation (*e.g. “ctmsrv:0018z”*)
-* This operation could be executed from the temp file generated via "**Check workflow status**", "**Check folder status**" or "**Check job status**"
+* This operation could be executed from the temp file generated via "*Check workflow status*", "*Check folder status*" or "*Check job status*"
 * It will open a temp file containing the job output
 
 ### Import selected folder
