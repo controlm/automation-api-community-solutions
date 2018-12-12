@@ -6,7 +6,7 @@
 
 3. Go to “Plugins” > “NppExec” > “Execute”. Type the command for the Control-M Automation API service you want to invoke, then save and assign a name as in the following screenshot (which shows an example for the "*build*" service):
 
-   ![Notepad++ > Config 1](/601-integration-with-ides-and-code-editors/images/notepad_config_1.png)
+   ![Notepad++ > Config 1](/601-integration-with-ides-and-code-editors/images/notepad++_config_1.png)
 
    * Name : ```ctm_build```
    * Command : ```cmd /c ctm build "$(FULL_CURRENT_PATH)"```
@@ -22,7 +22,7 @@
 
 7. From the same window, select each "Associated script", type the "Item name" you want to show in the menus and click on “Add/Modify”. Repeat the same steps for any additional item you want to add to the menu.
 
-   ![Notepad++ > Config 2](/601-integration-with-ides-and-code-editors/images/notepad_config_2.png)
+   ![Notepad++ > Config 2](/601-integration-with-ides-and-code-editors/images/notepad++_config_2.png)
 
    At this point, you can already access all these operations by clicking on “Macro” in the main menu.
 
@@ -48,6 +48,6 @@
 
 9. Restart Notepad++. You can now access any of the defined operations either via “Macro” in the main menu or by right clicking on a file. A console window will open at the bottom showing the results of the operation.
 
-   ![Notepad++ > Menu](/601-integration-with-ides-and-code-editors/images/notepad_menu.png)
+   ![Notepad++ > Menu](/601-integration-with-ides-and-code-editors/images/notepad++_menu.png)
 
    *Integration tested with Notepad++ 7.5.9 (64-bit) and NppExec plugin 0.6 running on Windows 10*
