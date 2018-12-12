@@ -8,14 +8,14 @@ To integrate them with Notepad++ you have two options:
    
    2. Do it via downloading the following ZIP FILE
 
-# Build workflow
+## Build workflow
 ```cmd /c ctm build "$(FULL_CURRENT_PATH)"```
 
-# Deploy workflow
+## Deploy workflow
 
 ```cmd /c ctm deploy "$(FULL_CURRENT_PATH)"```
 
-# Run workflow
+## Run workflow
 
 NPP_CONSOLE 0
 set local TMP_FILE="$(CURRENT_DIRECTORY)\$(NAME_PART)_runid.tmp"
