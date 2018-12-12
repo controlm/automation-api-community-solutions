@@ -141,10 +141,9 @@ cmd /c del $(TMP_FILE)
 ### Delete selected folder
 ```
 set local FOLDER="$(CURRENT_WORD)"
-INPUTBOX "Please confirm you want to delete the Folder by typing the Control-M/Server
-name" : "CTM/Server = " : ctmsrv
+INPUTBOX "Please confirm you want to delete the Folder by typing the Control-M/Server name" : "CTM/Server  = " : ctmsrv
 cmd /c ctm deploy folder::delete $(INPUT) "$(FOLDER)"
 ```
-* Replace ```ctmsrv``` in the code above with your Control-M/Server name (to have its default value)
+* Replace ```ctmsrv``` in the code above with your Control-M/Server name (to store its default value)
 * Highlight the **folder** name before running the operation
 * A popup will appear asking for confirmation, where you have to type the Control-M/Server name
