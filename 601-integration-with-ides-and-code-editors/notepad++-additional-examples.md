@@ -27,5 +27,5 @@ NPP_OPEN $(TMP_FILE)
 cmd /c del $(TMP_FILE)
 ```
 
-* After completion, it will open a temp file containing the command output (which includes the **runId**).
+* After completion, it will open a temp file containing the command output (which includes the "**runId**").
 
