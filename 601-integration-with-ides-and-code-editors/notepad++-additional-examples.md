@@ -30,7 +30,7 @@ cmd /c ctm run "$(FULL_CURRENT_PATH)" > $(TMP_FILE) 2>&1
 NPP_OPEN $(TMP_FILE)
 cmd /c del $(TMP_FILE)
 ```
-* After completion, it will open a temp file containing the command output (which includes the **runId**).
+* It will open a temp file containing the command output (which includes the **runId**)
 
 ### Build on Control-M Workbench
 ```
@@ -41,7 +41,7 @@ cmd /c ctm build "$(FULL_CURRENT_PATH)" -e workbench
 ```
 cmd /c ctm run "$(FULL_CURRENT_PATH)" -i -e workbench
 ```
-* After completion it will open a browser with the Workbench web interface to monitor the execution.
+* It will open a browser with the Workbench web interface to monitor the execution
 
 ### Test Deploy Descriptor
 ```
@@ -51,16 +51,16 @@ cmd /c ctm deploy transform "$(FULL_CURRENT_PATH)" "$(#2)" > $(TMP_FILE) 2>&1
 NPP_OPEN $(TMP_FILE)
 cmd /c del $(TMP_FILE)
 ```
-* You should have two files open (in two tabs): first the workflow and second the deploy descriptor.
-* Run the action from the workflow tab.
-* It will open a temp file containing how the workflow will look after applying the deploy descriptor.
+* You should have two files opened: first the workflow and then the deploy descriptor (in a tab at the right of the workflow)
+* Run the operation from the workflow tab
+* It will open a temp file containing how the workflow will look after applying the deploy descriptor
 
-### Deploy workflow using a Deploy Descriptor
+### Deploy workflow applying a Deploy Descriptor
 ```
 cmd /c ctm deploy "$(FULL_CURRENT_PATH)" "$(#2)"
 ```
-* You should have two files open (in two tabs): first the workflow and second the deploy descriptor.
-* Run the action from the workflow tab.
+* You should have two files opened: first the workflow and then the deploy descriptor (in a tab at the right of the workflow)
+* Run the operation from the workflow tab
 
 ### Check workflow status
 ```
@@ -71,9 +71,9 @@ cmd /c ctm run status $(CURRENT_WORD) > $(TMP_FILE) 2>&1
 NPP_OPEN $(TMP_FILE)
 cmd /c del $(TMP_FILE)
 ```
-* Select the runId before running the action (e.g. “1a708abc-fbc2-4802-a385-8b2311177275”).
-* This action is usually executed from the temp file generated when running a workflow.
-* It will open a temp file containing the workflow status.
+* Highlight the **runId** before running the operation (*e.g. “1a708abc-fbc2-4802-a385-8b2311177275”*)
+* This operation could be executed from the temp file generated via "**Run workflow**"
+* It will open a temp file containing the workflow status
 
 ### Check folder status
 ```
@@ -83,10 +83,10 @@ cmd /c ctm run jobs:status::get -s "folder=$(CURRENT_WORD)" > $(TMP_FILE) 2>&1
 NPP_OPEN $(TMP_FILE)
 cmd /c del $(TMP_FILE)
 ```
-* Select the folder name before running the action.
-* It will open a temp file containing the folder status.
-* If several instances of the folder have been ordered, it will include the statuses for all of them.
-* If no text is selected, it will retrieve the status for all active folders and jobs.
+* Highlight the **folder** name before running the operation
+* It will open a temp file containing the folder status
+* If several instances of the folder have been ordered, it will include the statuses for all of them
+* **Warning**: if no text is highlighted, it will retrieve the statuses for all active folders and jobs
 
 ### Check job status
 ```
@@ -97,9 +97,9 @@ cmd /c ctm run jobs:status::get -s "jobid=$(CURRENT_WORD)" >> $(TMP_FILE) 2>&1
 NPP_OPEN $(TMP_FILE)
 cmd /c del $(TMP_FILE)
 ```
-* Select the jobId before running the action (e.g. “ctmsrv: 0018z”).
-* This action is usually executed from the temp file generated when showing a workflow or folder status.
-* It will open a temp file containing the job status.
+* Highlight the **jobId** before running the operation (*e.g. “ctmsrv:0018z”*)
+* This operation could be executed from the temp file generated via "**Check workflow status**" or "**Check folder status**"
+* It will open a temp file containing the job status
 
 ### Show job log
 ```
@@ -110,9 +110,9 @@ cmd /c ctm run job:log::get $(CURRENT_WORD) > $(TMP_FILE) 2>&1
 NPP_OPEN $(TMP_FILE)
 cmd /c del $(TMP_FILE)
 ```
-* Select the jobId before running the action (e.g. “ctmsrv: 0018z”).
-* This action is usually executed from the temp file generated when showing a workflow, folder or job status.
-* It will open a temp file containing the job log.
+* Highlight the **jobId** before running the operation (*e.g. “ctmsrv:0018z”*)
+* This operation could be executed from the temp file generated via "**Check workflow status**", "**Check folder status**" or "**Check job status**"
+* It will open a temp file containing the job log
 
 ### Show job output
 ```
@@ -123,9 +123,9 @@ cmd /c ctm run job:output::get $(CURRENT_WORD) > $(TMP_FILE) 2>&1
 NPP_OPEN $(TMP_FILE)
 cmd /c del $(TMP_FILE)
 ```
-* Select the jobId before running the action (e.g. “ctmsrv: 0018z”).
-* This action is usually executed from the temp file generated when showing a workflow, folder or job status.
-* It will open a temp file containing the job output.
+* Highlight the **jobId** before running the operation (*e.g. “ctmsrv:0018z”*)
+* This operation could be executed from the temp file generated via "**Check workflow status**", "**Check folder status**" or "**Check job status**"
+* It will open a temp file containing the job output
 
 ### Import selected folder
 ```
@@ -135,9 +135,8 @@ cmd /c ctm deploy jobs::get -s "ctm=*&folder=$(CURRENT_WORD)" > $(TMP_FILE) 2>&1
 NPP_OPEN $(TMP_FILE)
 cmd /c del $(TMP_FILE)
 ```
-* Select the folder name before running the action.
-* It will open a temp file containing the imported folder.
-* Import could also be retrieved in XML format (ctm deploy jobs::get XML -s “…”).
+* Highlight the **folder** name before running the operation
+* It will open a temp file containing the imported folder in JSON format
 
 ### Delete selected folder
 ```
@@ -146,6 +145,6 @@ INPUTBOX "Please confirm you want to delete the Folder by typing the Control-M/S
 name" : "CTM/Server = " : ctmsrv
 cmd /c ctm deploy folder::delete $(INPUT) "$(FOLDER)"
 ```
-* Select the folder name before running the action.
-* A popup will appear asking for confirmation, where you have to type the Control-M/Server name.
-* Replace “ctmsrv” below with your Control-M/Server name to have its value by default.
+* Replace ```ctmsrv``` in the code above with your Control-M/Server name (to have its default value)
+* Highlight the **folder** name before running the operation
+* A popup will appear asking for confirmation, where you have to type the Control-M/Server name
