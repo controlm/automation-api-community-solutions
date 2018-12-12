@@ -51,6 +51,6 @@
    ![Notepad++ > Menu](/601-integration-with-ides-and-code-editors/images/notepad++_menu.png)
 
    *Integration tested with Notepad++ 7.5.9 (64-bit) and NppExec plugin 0.6 running on Windows 10*
-   
-> test one
-> test two
+
+
+> If you want to add additional Automation API operations as those in the screenhost above, check the "notepad++-additional-examples.md" file.
