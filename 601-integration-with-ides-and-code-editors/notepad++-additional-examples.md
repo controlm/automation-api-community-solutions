@@ -10,10 +10,6 @@ To integrate them with Notepad++ you have two options:
 
 <br>
 
-> Note that all operations are performed by default on the current Automation API environment (as displayed via "**ctm env show**"). If you want to create operations for multiple environments, you can use the "**-e \<environment>**" option.
-
-<br>
-
 ### Build workflow
 ```
 cmd /c ctm build "$(FULL_CURRENT_PATH)"
@@ -149,3 +145,5 @@ cmd /c ctm deploy folder::delete $(INPUT) "$(FOLDER)"
 * Replace ```ctmsrv``` in the code above with your Control-M/Server name (to store its default value)
 * Highlight the **folder** name before running the operation
 * A popup will appear asking for confirmation, where you have to type the Control-M/Server name
+
+> Note that all operations are performed by default on the current Automation API environment (as displayed via "**ctm env show**"). If you want to create operations for multiple environments, you can use the "**-e \<environment>**" option.
