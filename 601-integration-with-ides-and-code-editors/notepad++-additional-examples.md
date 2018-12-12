@@ -1,6 +1,6 @@
 # Notepad++ additional examples
 
-Here are additional examples of commands to invoke the Control-M Automation API. These have been created and configured for Notepad++, but could potentially be adapted for any IDE tool or code/text editor.
+Here are additional examples of commands to invoke the Control-M Automation API. These have been created and configured for Notepad++, but could potentially be adapted for other IDE tools or code/text editors.
    
 To integrate them with Notepad++ you have two options:
 
