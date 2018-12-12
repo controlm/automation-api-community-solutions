@@ -43,7 +43,7 @@
 				"FileTransfers" : [
 					{
 						"Src" : "<SOURCE FILE>",
-						"Dest" : "<DESTINATION FILE PATH + FILE>",
+						"Dest" : "<DESTINATION FILE PATH INCL. FILENAME>",
 						"TransferOption": "SrcToDest"
 					} 
 				]
@@ -91,7 +91,7 @@
 				"Type" : "Job:Command",
 				"Description": "Deletes a file to trigger the demo flow",
 				"Confirm" : true,
-				"Command" : "rm <DESTINATION FILE PATH>"
+				"Command" : "rm <DESTINATION FILE PATH INCL. FILENAME>"
 			},
 			
 			"ListFilesAfterDelete": {
