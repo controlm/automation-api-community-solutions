@@ -46,8 +46,11 @@
    * ```PluginCommandItemName``` corresponds to each "Item name" previously defined via NppExec
    * The lines ```<Item id="0"/>``` are menu separators
 
-9. Restart Notepad++. You can now access any of the defined operations either via “Macro” in the main menu or by right clicking on a file. A console window will open at the bottom showing the results of the operation.
+9. Restart Notepad++. You can now access any of the previously defined operations either via “Macro” in the main menu or by right clicking on a file. A console window will open at the bottom showing the results of the operation.
 
    ![Notepad++ > Menu](/601-integration-with-ides-and-code-editors/images/notepad++_menu.png)
 
    *Integration tested with Notepad++ 7.5.9 (64-bit) and NppExec plugin 0.6 running on Windows 10*
+   
+> test one
+> test two
