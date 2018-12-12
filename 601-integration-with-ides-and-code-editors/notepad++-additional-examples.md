@@ -2,7 +2,7 @@
 
 Here are additional examples of commands to invoke the Control-M Automation API. These have been created and configured for **Notepad++**, but could potentially be adapted for other IDE tools or code/text editors.
    
-To integrate them with Notepad++ you have two options:
+To integrate them in Notepad++ you have two options:
 
    1. Do it manually for each operation, following the instructions in the [**integration-with-notepad++.md**](/601-integration-with-ides-and-code-editors/integration-with-notepad++.md) file. 
    
