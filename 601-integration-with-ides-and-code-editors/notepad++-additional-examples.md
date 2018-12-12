@@ -1,4 +1,15 @@
-# XXX
+# Notepad++ additional examples
+
+Here are additional examples of operations to invoke the Control-M Automation API. These have been created for Notepad++, but could potentially be adapted for any IDE tool or code/text editor.
+
+To integrate them with Notepad++ you have two options:
+
+   1. Do it manually, following the instructions in the [**integration-with-notepad++.md**](/601-integration-with-ides-and-code-editors/integration-with-notepad++.md) file. 
+   
+   2. Do it via DOWNLOAD ZIP FILE
+
+
+
 
 1. From the main menu, check under “Plugins” that you have the “Plugin Manager” installed. If not, install it by following this [instructions](https://bruderste.in/npp/pm/#install).
 
