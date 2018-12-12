@@ -20,24 +20,31 @@
 
 6. Go to “Plugins” > “NppExec” > “Advanced Options” and select the “Place to the Macros submenu” option, and “[Console]” > “Visible (on start)” = “No”.
 
-7. From the same window, select each script, type the name you want to appear in the menus and click on “Add/Modify”. Repeat the same steps for any additional item you want to add to the menu.
+7. From the same window, select each "Associated script", type the "Item name" you want to show in the menus and click on “Add/Modify”. Repeat the same steps for any additional item you want to add to the menu.
 
-8. At this point, you can already access all these functions by clicking on “Macro” in the main menu. To add all these functions to a context menu (accessible via right-click directly on the json file), go to “Settings” > “Edit Popup ContextMenu”. A new file is opened which contains the details for the appearance of the context menu.
+   ![Notepad++ > Config 2](/601-integration-with-ides-and-code-editors/images/notepad_config_2.png)
 
-9. If you right click on the file (“contextMenu.xml”) you will see the current format of the context menu, and in the file itself you can check the code that defines the text to be shown and the actions/plugins to invoke when each item is selected. The lines with “<Item id="0"/>“ are separators.
+8. At this point, you can already access all these operations by clicking on “Macro” in the main menu.
 
-10. Go to any part of the file where you want to include your new sub-menu for Control-M Automation API, and include the following lines (change the content of “PluginCommandItemName” on each line according to your values defined in step 8, and add more lines for more menu options if required).
+9. If you want to add all these functions to a context menu (accessible via right-click on a file), go to “Settings” > “Edit Popup ContextMenu”. A new file is opened which contains the details for the appearance of the context menu.
+
+   Go to any part of the file where you want to include your new sub-menu for Control-M Automation API, and include the following lines (change the content of “PluginCommandItemName” on each line according to your values defined in step 8, and add more lines for more menu options if required).
+
+
+If you right click on the file (“contextMenu.xml”) you will see the current format of the context menu, and in the file itself you can check the code that defines the text to be shown and the actions/plugins to invoke when each item is selected. The lines with “<Item id="0"/>“ are separators.
+
+1Go to any part of the file where you want to include your new sub-menu for Control-M Automation API, and include the following lines (change the content of “PluginCommandItemName” on each line according to your values defined in step 8, and add more lines for more menu options if required).
 
       ```
 	<!--
 	Control-M Automation API integration
     -->
     <Item FolderName="Control-M Automation API" PluginEntryName="NppExec"
-    PluginCommandItemName="Build jobs in json file" />
+    PluginCommandItemName="Build workflow" />
     <Item FolderName="Control-M Automation API" PluginEntryName="NppExec"
-    PluginCommandItemName="Run jobs in json file" />
+    PluginCommandItemName="Run workflow" />
     <Item FolderName="Control-M Automation API" PluginEntryName="NppExec"
-    PluginCommandItemName="Deploy jobs in json file" />
+    PluginCommandItemName="Deploy workflow" />
     <Item id="0"/>
       ```
 
