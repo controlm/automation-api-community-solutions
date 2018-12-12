@@ -12,6 +12,8 @@ To integrate them with Notepad++ you have two options:
 
 > Note that all operations are performed by default on the current Automation API environment (as displayed via "**ctm env show**"). If you want to create operations for multiple environments, you can use the "**-e \<environment>**" option.
 
+<br>
+
 ### Build workflow
 ```
 cmd /c ctm build "$(FULL_CURRENT_PATH)"
