@@ -44,7 +44,7 @@
    
    * "FolderName" is the name of the common sub-menu for all our items
    * "PluginCommandItemName" corresponds to each "Item name" previously defined via NppExec
-   * The lines ""<Item id="0"/>"" are menu separators
+   * The lines ```<Item id="0"/>``` are menu separators
 
 9. Restart Notepad++. Now you can right click on a json file and use the previously defined actions directly from the tool. A console window will open at the bottom showing the results of the operation.
 
