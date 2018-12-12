@@ -2,6 +2,8 @@
 
 Here are additional examples of commands to invoke the Control-M Automation API. These have been created and configured for Notepad++, but could potentially be adapted for any IDE tool or code/text editor.
 
+> Please note that all operations are performed on the current Automation API environment (as shown via ```ctm env show```). If you want to create operations for different environments, you can use ```-e <environment>``` at the end of each "ctm" command.
+   
 To integrate them with Notepad++ you have two options:
 
    1. Do it manually, following the instructions in the [**integration-with-notepad++.md**](/601-integration-with-ides-and-code-editors/integration-with-notepad++.md) file. 
