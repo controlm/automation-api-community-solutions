@@ -1,0 +1,113 @@
+{
+	"Defaults" : {
+		"Application": "<APPLICATION>",
+		"SubApplication": "<SUB APPLICATION>",
+		"ControlmServer": "<CONTROLM SERVER>",
+		"RunAs": "<RUN AS USER>",
+		"Host": "<HOSTNAME OF MFT AGENT>"
+	},
+	
+
+	"FILE_WATCHER_EXAMPLE": {
+		"Type": "Folder",
+		
+		"FTP_WATCH_CREATE": {
+			"Type": "SubFolder",
+			"Description": "Sample folder to watch for a file",
+					
+			"ListFilesFirst": {
+				"Type" : "Job:Command",
+				"Command" : "ls -l <DESTINATION FILE PATH>"
+			},
+			
+			"WatchForFileCreation" : {
+				"Type" : "Job:FileWatcher:Create",
+				"Description": "Watch for a file. If file arrives, job will end ok.",
+			 	"Path" : "<DESTINATION FILE PATH>",
+				"SearchInterval" : "45",
+				"TimeLimit" : "22",
+				"MinimumSize" : "10B"
+			},
+				
+			"ListFilesAgain": {
+				"Type" : "Job:Command",
+				"Command" : "ls -l <DESTINATION FILE PATH>"
+			},
+			
+			"DownloadFiles" : {
+				"Type" : "Job:FileTransfer",
+				"Description": "File transfer job to trigger the file watcher example",
+				"Confirm" : true,
+				"ConnectionProfileSrc" : "<SOURCE CONNECTION PROFILE>",
+				"ConnectionProfileDest" : "<DESTINATION CONNECTION PROFILE>",
+				"FileTransfers" : [
+					{
+						"Src" : "<SOURCE FILE>",
+						"Dest" : "<DESTINATION FILE PATH + FILE>",
+						"TransferOption": "SrcToDest"
+					} 
+				]
+			},
+			
+			"ListFilesAfterDownload": {
+				"Type" : "Job:Command",
+				"Command" : "ls -l <DESTINATION CONNECTION PROFILE>"
+			},
+			
+			"flow1": {
+				"Type":"Flow",
+				"Sequence":["ListFilesFirst","WatchForFileCreation","ListFilesAgain"]
+			},
+			
+			"flow2": {
+				"Type":"Flow",
+				"Sequence":["DownloadFiles", "ListFilesAfterDownload"]
+			}		
+		},
+		
+		"FTP_WATCH_DELETE": {
+			"Type": "SubFolder",
+			"Description": "Sample folde with FTP jobs",
+			
+			"ListFilesFirst": {
+				"Type" : "Job:Command",
+				"Command" : "ls -l <DESTINATION FILE PATH>"
+			},
+			
+			"WatchForFileDeletion" : {
+				"Type" : "Job:FileWatcher:Delete",
+				"Description": "Watch for a file to be deleted. If the file gets deleted, this job will end ok.",
+			 	"Path" : "<DESTINATION FILE PATH>",
+				"SearchInterval" : "45",
+				"TimeLimit" : "22"
+			},
+			
+			"ListFilesAgain": {
+				"Type" : "Job:Command",
+				"Command" : "ls -l <DESTINATION FILE PATH>"
+			},
+			
+			"DeleteFile": {
+				"Type" : "Job:Command",
+				"Description": "Deletes a file to trigger the demo flow",
+				"Confirm" : true,
+				"Command" : "rm <DESTINATION FILE PATH>"
+			},
+			
+			"ListFilesAfterDelete": {
+				"Type" : "Job:Command",
+				"Command" : "ls -l <DESTINATION FILE PATH>"
+			},
+		
+			"flow3": {
+				"Type":"Flow",
+				"Sequence":["ListFilesFirst","WatchForFileDeletion","ListFilesAgain"]
+			},
+			
+			"flow4": {
+				"Type":"Flow",
+				"Sequence":["DeleteFile", "ListFilesAfterDelete"]
+			}		
+		}
+	}
+}
