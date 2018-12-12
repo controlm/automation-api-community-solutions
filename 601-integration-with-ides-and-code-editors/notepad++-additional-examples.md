@@ -8,8 +8,6 @@ To integrate them with Notepad++ you have two options:
    
    2. Do it via downloading the following ZIP FILE
 
-<br>
-
 ### Build workflow
 ```
 cmd /c ctm build "$(FULL_CURRENT_PATH)"
