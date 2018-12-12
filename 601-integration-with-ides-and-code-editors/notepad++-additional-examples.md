@@ -72,7 +72,7 @@ NPP_OPEN $(TMP_FILE)
 cmd /c del $(TMP_FILE)
 ```
 * Highlight the **runId** before running the operation (*e.g. “1a708abc-fbc2-4802-a385-8b2311177275”*)
-* This operation could be executed from the temp file generated via "**Run workflow**"
+* This operation could be executed from the temp file generated via "*Run workflow*"
 * It will open a temp file containing the workflow status
 
 ### Check folder status
