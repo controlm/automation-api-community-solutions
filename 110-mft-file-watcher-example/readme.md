@@ -4,6 +4,10 @@ A File Watcher job enables you to detect the successful completion of a file tra
 
 ## Example
 
+Below a screenshot of the example from the web gui:
+
+![Screenshot](/images/file-watcher-flow.png)
+
 The following attributes need to be updated and tailored to your own environment in order to implement this example: 
 
 * ```<APPLICATION>```
