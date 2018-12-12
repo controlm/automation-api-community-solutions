@@ -86,7 +86,7 @@ cmd /c del $(TMP_FILE)
 * Highlight the **folder** name before running the operation
 * It will open a temp file containing the folder status
 * If several instances of the folder have been ordered, it will include the statuses for all of them
-* **Warning**: if no text is highlighted, it will retrieve the statuses for all active folders and jobs
+* **Warning** : if no text is highlighted, it will retrieve the statuses for all active folders and jobs
 
 ### Check job status
 ```
