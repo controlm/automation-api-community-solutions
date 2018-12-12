@@ -14,11 +14,9 @@ To integrate them with Notepad++ you have two options:
 ```cmd /c ctm build "$(FULL_CURRENT_PATH)"```
 
 ### Deploy workflow
-
 ```cmd /c ctm deploy "$(FULL_CURRENT_PATH)"```
 
 ### Run workflow
-
 ```
 NPP_CONSOLE 0
 set local TMP_FILE="$(CURRENT_DIRECTORY)\$(NAME_PART)_runid.tmp"
@@ -26,6 +24,11 @@ cmd /c ctm run "$(FULL_CURRENT_PATH)" > $(TMP_FILE) 2>&1
 NPP_OPEN $(TMP_FILE)
 cmd /c del $(TMP_FILE)
 ```
+* After completion, it will open a temp file containing the command output (which includes the **runId**).
 
-* After completion, it will open a temp file containing the command output (which includes the "**runId**").
+### Build on Control-M Workbench
+```cmd /c ctm build "$(FULL_CURRENT_PATH)" -e workbench```
 
+### Run on Control-; Workbench
+```cmd /c ctm run "$(FULL_CURRENT_PATH)" -i -e workbench```
+* It will also open a browser with the Workbench web interface to monitor the execution.
