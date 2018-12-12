@@ -19,14 +19,15 @@ To integrate them with Notepad++ you have two options:
 
 ### Run workflow
 
-```NPP_CONSOLE 0
+```
+NPP_CONSOLE 0
 set local TMP_FILE="$(CURRENT_DIRECTORY)\$(NAME_PART)_runid.tmp"
 cmd /c ctm run "$(FULL_CURRENT_PATH)" > $(TMP_FILE) 2>&1
 NPP_OPEN $(TMP_FILE)
-cmd /c del $(TMP_FILE)```
+cmd /c del $(TMP_FILE)
+```
 
-* It will open a temp file containing the command output (which includes the runId).
-* Remember that when you run a workflow, you also deploy it.
+* After completion, it will open a temp file containing the command output (which includes the ***runId***).
 
 
 *Integration tested with Notepad++ 7.5.9 (64-bit) and NppExec plugin 0.6 running on Windows 10*
