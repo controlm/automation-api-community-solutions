@@ -52,6 +52,6 @@
 
    > If you want to add additional Automation API operations as shown in the screenshot above, check the "**notepad++-additional-examples.md**" file. 
    
-   [fichero](/601-integration-with-ides-and-code-editors/notepad++-additional-examples.md)
+   [**notepad++-additional-examples.md**](/601-integration-with-ides-and-code-editors/notepad++-additional-examples.md)
    
    *Integration tested with Notepad++ 7.5.9 (64-bit) and NppExec plugin 0.6 running on Windows 10*
