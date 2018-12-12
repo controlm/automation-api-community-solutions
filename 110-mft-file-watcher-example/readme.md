@@ -6,17 +6,16 @@ A File Watcher job enables you to detect the successful completion of a file tra
 
 The following attributes need to be updated and tailored to your own environment in order to implement this example: 
 
-
-* <APPLICATION>
-* <SUB APPLICATION>
-* <CONTROLM SERVER>
-* <RUN AS USER>
-* <HOSTNAME OF MFT AGENT>
-* <DESTINATION FILE PATH
-* <SOURCE CONNECTION PROFILE>
-* <DESTINATION CONNECTION PROFILE>
-* <SOURCE FILE>
-* <DESTINATION FILE PATH INCL. FILENAME>	
+* ```<APPLICATION>```
+* ```<SUB APPLICATION>```
+* ```<CONTROLM SERVER>```
+* ```<RUN AS USER>```
+* ```<HOSTNAME OF MFT AGENT>```
+* ```<DESTINATION FILE PATH>```
+* ```<SOURCE CONNECTION PROFILE>```
+* ```<DESTINATION CONNECTION PROFILE>```
+* ```<SOURCE FILE>```
+* ```<DESTINATION FILE PATH INCL. FILENAME>```	
 
 Look for these tags in the example and update the value to match your control-m environment.
 
