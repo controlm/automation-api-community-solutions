@@ -8,8 +8,8 @@ To integrate them in Notepad++ you have two options:
    
    2. Download the [**notepad++-nppexec-files.zip**](/601-integration-with-ides-and-code-editors/notepad++-nppexec-files.zip) file and follow these instructions - but *please be aware that it will overwrite any previous configuration you may have added for the Notepad++ context menus and the NppExec plugin*.
    
-      * after installing Notepad++ and the NppExec plugin (as explained in [integration-with-notepad++.md](/601-integration-with-ides-and-code-editors/integration-with-notepad++.md)), close Notepad++
-      * unzip the attached “NppExec Files” and copy (overwrite) the existing “contextMenu.xml” in your “%APPDATA%\Notepad++” folder
+      * make sure the NppExec plugin is installed (as explained in [integration-with-notepad++.md](/601-integration-with-ides-and-code-editors/integration-with-notepad++.md)) and then close Notepad++
+      * unzip the file and copy (overwrite) the existing “contextMenu.xml” in your “%APPDATA%\Notepad++” folder
       * copy the other two files to “%APPDATA%\Notepad++\plugins\config”
 
 <br>
