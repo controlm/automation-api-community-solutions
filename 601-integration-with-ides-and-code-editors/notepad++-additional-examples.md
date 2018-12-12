@@ -13,10 +13,14 @@ To integrate them with Notepad++ you have two options:
 > Note that all operations are performed by default on the current Automation API environment (as displayed via "**ctm env show**"). If you want to create operations for multiple environments, you can use the "**-e \<environment>**" option.
 
 ### Build workflow
-```cmd /c ctm build "$(FULL_CURRENT_PATH)"```
+```
+cmd /c ctm build "$(FULL_CURRENT_PATH)"
+```
 
 ### Deploy workflow
-```cmd /c ctm deploy "$(FULL_CURRENT_PATH)"```
+```
+cmd /c ctm deploy "$(FULL_CURRENT_PATH)"
+```
 
 ### Run workflow
 ```
@@ -29,10 +33,14 @@ cmd /c del $(TMP_FILE)
 * After completion, it will open a temp file containing the command output (which includes the **runId**).
 
 ### Build on Control-M Workbench
-```cmd /c ctm build "$(FULL_CURRENT_PATH)" -e workbench```
+```
+cmd /c ctm build "$(FULL_CURRENT_PATH)" -e workbench
+```
 
 ### Run on Control-M Workbench
-```cmd /c ctm run "$(FULL_CURRENT_PATH)" -i -e workbench```
+```
+cmd /c ctm run "$(FULL_CURRENT_PATH)" -i -e workbench
+```
 * After completion it will open a browser with the Workbench web interface to monitor the execution.
 
 ### Test Deploy Descriptor
@@ -48,7 +56,9 @@ cmd /c del $(TMP_FILE)
 * It will open a temp file containing how the workflow will look after applying the deploy descriptor.
 
 ### Deploy workflow using a Deploy Descriptor
-```cmd /c ctm deploy "$(FULL_CURRENT_PATH)" "$(#2)"```
+```
+cmd /c ctm deploy "$(FULL_CURRENT_PATH)" "$(#2)"
+```
 * You should have two files open (in two tabs): first the workflow and second the deploy descriptor.
 * Run the action from the workflow tab.
 
