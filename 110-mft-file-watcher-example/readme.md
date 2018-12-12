@@ -2,6 +2,9 @@
 
 A File Watcher job enables you to detect the successful completion of a file transfer activity that creates or deletes a file. Once the file is arrived or deleted, the successor job can be triggered. For more information, see the code reference on the [Automation API Code Reference documentation page](https://docs.bmc.com/docs/display/public/workloadautomation/Control-M+Automation+API+-+Code+Reference).
 
+## Prerequisites  
+The file watcher job type requires Control-M V9.0.18.100 (fixpack 1). This flow was created and tested against V9.0.18.200.  
+
 ## Example
 
 Below a screenshot of the example from the web gui:
