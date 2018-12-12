@@ -48,8 +48,9 @@
 
 9. Restart Notepad++. You can now access any of the previously defined operations either via “Macro” in the main menu or by right clicking on a file. A console window will open at the bottom showing the results of the operation.
 
-   > If you want to add additional Automation API operations as those in the following screenshot, check the "notepad++-additional-examples.md" file.
-   >
+   > If you want to add additional Automation API operations as shown in the following screenshot, check the "notepad++-additional-examples.md" file.
+   
+   <br>
    
    ![Notepad++ > Menu](/601-integration-with-ides-and-code-editors/images/notepad++_menu.png)
 
