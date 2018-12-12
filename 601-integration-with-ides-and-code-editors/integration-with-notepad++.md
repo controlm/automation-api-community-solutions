@@ -24,31 +24,29 @@
 
    ![Notepad++ > Config 2](/601-integration-with-ides-and-code-editors/images/notepad_config_2.png)
 
-8. At this point, you can already access all these operations by clicking on “Macro” in the main menu.
+   At this point, you can already access all these operations by clicking on “Macro” in the main menu.
 
-9. If you want to add all these functions to a context menu (accessible via right-click on a file), go to “Settings” > “Edit Popup ContextMenu”. A new file is opened which contains the details for the appearance of the context menu.
+8. If you want to add all these functions to a context menu (accessible via right-click on a file), go to “Settings” > “Edit Popup ContextMenu”. A new file is opened which contains the details for the appearance of the context menu.
 
-   Go to any part of the file where you want to include your new sub-menu for Control-M Automation API, and include the following lines (change the content of “PluginCommandItemName” on each line according to your values defined in step 8, and add more lines for more menu options if required).
-
-
-If you right click on the file (“contextMenu.xml”) you will see the current format of the context menu, and in the file itself you can check the code that defines the text to be shown and the actions/plugins to invoke when each item is selected. The lines with “<Item id="0"/>“ are separators.
-
-1Go to any part of the file where you want to include your new sub-menu for Control-M Automation API, and include the following lines (change the content of “PluginCommandItemName” on each line according to your values defined in step 8, and add more lines for more menu options if required).
-
-      ```
-	<!--
-	Control-M Automation API integration
+   Go to any part of the file where you want to include your new sub-menu for Control-M Automation API, and add a line for each "Item name" defined before following the format shown in this example:
+   
+    ```
+    <!--
+    Control-M Automation API integration (via NppExec plugin)
     -->
-    <Item FolderName="Control-M Automation API" PluginEntryName="NppExec"
-    PluginCommandItemName="Build workflow" />
-    <Item FolderName="Control-M Automation API" PluginEntryName="NppExec"
-    PluginCommandItemName="Run workflow" />
-    <Item FolderName="Control-M Automation API" PluginEntryName="NppExec"
-    PluginCommandItemName="Deploy workflow" />
+    <Item FolderName="Control-M Automation API" PluginEntryName="NppExec" PluginCommandItemName="Build workflow" />
+    <Item FolderName="Control-M Automation API" PluginEntryName="NppExec" PluginCommandItemName="Run workflow" />
+    <Item FolderName="Control-M Automation API" PluginEntryName="NppExec" PluginCommandItemName="Deploy workflow" />
     <Item id="0"/>
-      ```
+    ```
+   
+   where:
+   
+   * "FolderName" is the name of the common sub-menu for all our items
+   * "PluginCommandItemName" corresponds to each "Item name" defined before
+   * The lines "<Item id="0"/>" are menu separators
 
-11. Restart Notepad++. Now you can right click on a json file and use the previously defined actions directly from the tool. A console window will open at the bottom showing the results of the operation.
+9. Restart Notepad++. Now you can right click on a json file and use the previously defined actions directly from the tool. A console window will open at the bottom showing the results of the operation.
 
 
    *Integration tested with Notepad++ 7.5.9 (64-bit) and NppExec plugin 0.6 running on Windows 10*
