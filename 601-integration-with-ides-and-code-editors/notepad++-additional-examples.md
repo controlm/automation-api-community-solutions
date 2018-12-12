@@ -4,7 +4,7 @@ Here are additional examples of commands to invoke the Control-M Automation API.
    
 To integrate them with Notepad++ you have two options:
 
-   1. Do it manually, following the instructions in the [**integration-with-notepad++.md**](/601-integration-with-ides-and-code-editors/integration-with-notepad++.md) file. 
+   1. Do it manually for each operation, following the instructions in the [**integration-with-notepad++.md**](/601-integration-with-ides-and-code-editors/integration-with-notepad++.md) file. 
    
    2. Download the [**notepad++-nppexec-files.zip**](/601-integration-with-ides-and-code-editors/notepad++-nppexec-files.zip) file and follow these instructions - but please be aware that it will overwrite any previous configuration you may have added for the Notepad++ context menus and the NppExec plugin.
    
