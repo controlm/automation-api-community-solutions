@@ -1,0 +1,31 @@
+.input-name{
+    font-size: 14px;
+    float: left;
+    margin-bottom: 1%;
+}
+
+.inactive{
+    display: none;
+}
+
+.active{
+    display: flex;
+}
+
+.input-error-text{
+    font-size: 12px;
+    color: red;
+}
+
+.border-error{
+    border-color: red !important;
+}
+
+.border-default{
+    border-color: #dee2e6 !important;;
+}
+
+.input-title-container{
+    justify-content: space-between;
+    display: flex;
+}

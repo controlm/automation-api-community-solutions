@@ -1,0 +1,44 @@
+.delete-environment-modal {
+    text-align: center;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 45%;
+    height: 20%;
+    min-width: 500px;
+    min-height: 180px;
+    border-radius: .5rem;
+    position: absolute;
+    background-color: white;
+}
+
+.Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #41404280;
+}
+
+.delete-environment-modal-container{
+    margin: 0 auto;
+    width: 380px;
+    height: 140px;
+}
+
+.del-env-modal-title{
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+    display: block;
+}
+
+.cancel-btn{
+    margin-top: 25px;
+    padding: 1.5% 7% 1.5% 7%;
+    background-color: transparent;
+    color: #fe5000;
+    border: 0;
+}
+

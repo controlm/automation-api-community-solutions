@@ -1,0 +1,114 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="alexa-skeleton:war exploded">
+    <output-path>$PROJECT_DIR$/target/alexa-skeleton-0.0.1-SNAPSHOT</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="alexa-skeleton" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-data-jpa:2.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter:2.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot:2.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-logging:2.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: ch.qos.logback:logback-classic:1.2.3" />
+          <element id="library" level="project" name="Maven: ch.qos.logback:logback-core:1.2.3" />
+          <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-to-slf4j:2.10.0" />
+          <element id="library" level="project" name="Maven: org.apache.logging.log4j:log4j-api:2.10.0" />
+          <element id="library" level="project" name="Maven: org.slf4j:jul-to-slf4j:1.7.25" />
+          <element id="library" level="project" name="Maven: javax.annotation:javax.annotation-api:1.3.2" />
+          <element id="library" level="project" name="Maven: org.yaml:snakeyaml:1.19" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-aop:2.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-aop:5.0.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.aspectj:aspectjweaver:1.8.13" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-jdbc:2.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: com.zaxxer:HikariCP:2.7.9" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:5.0.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.hibernate:hibernate-core:5.2.17.Final" />
+          <element id="library" level="project" name="Maven: org.jboss.logging:jboss-logging:3.3.2.Final" />
+          <element id="library" level="project" name="Maven: org.hibernate.javax.persistence:hibernate-jpa-2.1-api:1.0.0.Final" />
+          <element id="library" level="project" name="Maven: org.javassist:javassist:3.22.0-GA" />
+          <element id="library" level="project" name="Maven: antlr:antlr:2.7.7" />
+          <element id="library" level="project" name="Maven: org.jboss:jandex:2.0.3.Final" />
+          <element id="library" level="project" name="Maven: com.fasterxml:classmate:1.3.4" />
+          <element id="library" level="project" name="Maven: dom4j:dom4j:1.6.1" />
+          <element id="library" level="project" name="Maven: org.hibernate.common:hibernate-commons-annotations:5.0.1.Final" />
+          <element id="library" level="project" name="Maven: javax.transaction:javax.transaction-api:1.2" />
+          <element id="library" level="project" name="Maven: org.springframework.data:spring-data-jpa:2.0.7.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.data:spring-data-commons:2.0.7.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-orm:5.0.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-tx:5.0.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-beans:5.0.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.25" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-aspects:5.0.6.RELEASE" />
+          <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.46" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-core:5.0.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-jcl:5.0.6.RELEASE" />
+          <element id="library" level="project" name="Maven: com.amazon.alexa:ask-sdk:2.3.4" />
+          <element id="library" level="project" name="Maven: com.amazon.alexa:ask-sdk-core:2.3.4" />
+          <element id="library" level="project" name="Maven: com.amazon.alexa:ask-sdk-model:1.3.3" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.5" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-log4j12:1.7.25" />
+          <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
+          <element id="library" level="project" name="Maven: com.amazon.alexa:ask-sdk-lambda-support:2.3.4" />
+          <element id="library" level="project" name="Maven: com.amazonaws:aws-lambda-java-core:1.0.0" />
+          <element id="library" level="project" name="Maven: commons-io:commons-io:2.6" />
+          <element id="library" level="project" name="Maven: com.amazon.alexa:ask-sdk-servlet-support:2.3.4" />
+          <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.1.0" />
+          <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.11" />
+          <element id="library" level="project" name="Maven: com.amazon.alexa:ask-sdk-dynamodb-persistence-adapter:2.3.4" />
+          <element id="library" level="project" name="Maven: com.amazonaws:aws-java-sdk-dynamodb:1.11.301" />
+          <element id="library" level="project" name="Maven: com.amazonaws:aws-java-sdk-s3:1.11.301" />
+          <element id="library" level="project" name="Maven: com.amazonaws:aws-java-sdk-kms:1.11.301" />
+          <element id="library" level="project" name="Maven: com.amazonaws:aws-java-sdk-core:1.11.301" />
+          <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.1.3" />
+          <element id="library" level="project" name="Maven: software.amazon.ion:ion-java:1.0.2" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.9.5" />
+          <element id="library" level="project" name="Maven: joda-time:joda-time:2.9.9" />
+          <element id="library" level="project" name="Maven: com.amazonaws:jmespath-java:1.11.301" />
+          <element id="library" level="project" name="Maven: com.amazon.alexa:ask-sdk-apache-client:2.3.4" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient:4.5.5" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.4.9" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.5" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.0" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.5" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-thymeleaf:2.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.thymeleaf:thymeleaf-spring5:3.0.9.RELEASE" />
+          <element id="library" level="project" name="Maven: org.thymeleaf:thymeleaf:3.0.9.RELEASE" />
+          <element id="library" level="project" name="Maven: org.attoparser:attoparser:2.0.4.RELEASE" />
+          <element id="library" level="project" name="Maven: org.unbescape:unbescape:1.1.5.RELEASE" />
+          <element id="library" level="project" name="Maven: org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.1.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-mail:2.0.1.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-context:5.0.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-expression:5.0.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-context-support:5.0.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-web:2.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-json:2.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.5" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.5" />
+          <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-tomcat:2.0.2.RELEASE" />
+          <element id="library" level="project" name="Maven: org.apache.tomcat.embed:tomcat-embed-core:8.5.31" />
+          <element id="library" level="project" name="Maven: org.apache.tomcat.embed:tomcat-embed-el:8.5.31" />
+          <element id="library" level="project" name="Maven: org.apache.tomcat.embed:tomcat-embed-websocket:8.5.31" />
+          <element id="library" level="project" name="Maven: org.hibernate.validator:hibernate-validator:6.0.9.Final" />
+          <element id="library" level="project" name="Maven: javax.validation:validation-api:2.0.1.Final" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-web:5.0.6.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:5.0.6.RELEASE" />
+          <element id="library" level="project" name="Maven: com.sun.mail:javax.mail:1.5.4" />
+          <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
+          <element id="library" level="project" name="Maven: com.squareup.okhttp3:okhttp:3.11.0" />
+          <element id="library" level="project" name="Maven: com.squareup.okio:okio:1.14.0" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.6" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.5" />
+          <element id="library" level="project" name="Maven: org.codehaus.woodstox:stax2-api:3.1.4" />
+          <element id="library" level="project" name="Maven: com.fasterxml.woodstox:woodstox-core:5.0.3" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/target/alexa-skeleton-0.0.1-SNAPSHOT/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="alexa-skeleton/web/Web" />
+    </root>
+  </artifact>
+</component>
