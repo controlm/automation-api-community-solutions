@@ -40,7 +40,7 @@ This means I have a group of hosts named **centos** and in this group I have onl
 
 When you are done you can check if Ansible is configured right by running the following:
 
-ansible -m ping all
+> ansible -m ping all
 
 This – at this moment – <span class="underline">will fail</span> as we did not set up ssh connection with no password between our servers.
 
@@ -48,7 +48,7 @@ This – at this moment – <span class="underline">will fail</span> as we did n
 
 To make Ansible with no problems to reach to managed hosts, it is needed to create trusted connection between the servers. It means we should be able to do:
 
-ssh root@osboxes130
+> ssh root@osboxes130
 
 and we should be able to enter the system with no password.
 
