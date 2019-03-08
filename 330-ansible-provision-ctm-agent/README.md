@@ -63,13 +63,13 @@ To achieve this, on Ansible host (Ansible\_SRV):
 > ssh-copy-id root@osboxes130
 >
 > This logs into the host (as root), and copies keys to the server, and configures them to grant access by adding them to the authorized\_keys file. The copying will ask for a password for root@osboxes130.
->
-> You can check finally that all works fine:
+
+You can check finally that all works fine:
 >
 > ssh root@osboxes130
->
-> **If you will use password for the key**, you will be asked for this password at this connection – and remember, that Ansible will be asked as well. There is a solution for that – tool called ssh-agent.
->
+
+**If you will use password for the key**, you will be asked for this password at this connection – and remember, that Ansible will be asked as well. There is a solution for that – tool called ssh-agent.
+
 > Run the following (once per session):
 >
 > ssh-agent bash
@@ -105,6 +105,7 @@ Example of my Agent.Linux file:
 \]
 
 }
+
 
 **Ansible playbooks**
 
