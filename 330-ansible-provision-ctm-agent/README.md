@@ -258,9 +258,9 @@ Uninstall:
 
 **Application Integrator job**
 
-    I also include a simple Application Integrator job to play Ansible playbooks. This job must be deployed on ANSIBLE\_SRV server, and this will trigger Ansible to run playbooks.
+I also include a simple Application Integrator job to play Ansible playbooks. This job must be deployed on ANSIBLE\_SRV server, and this will trigger Ansible to run playbooks.
 
-    How to run:
+How to run:
 
 -   Deploy AI job to specific hosts:
 
