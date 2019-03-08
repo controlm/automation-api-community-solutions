@@ -56,7 +56,7 @@ Example of the Login call is below - in Python:
 
 ```python
 import requests
-url = "https://ctmem.tlvlab.ctm.bmc.com:8443/automation-api/session/login"
+url = "https://tlvlab.example.com:8443/automation-api/session/login"
 payload = "{\"username\": \"user\", \"password\": \"password\"}"
 headers = {'Content-Type': 'application/json'}
 response = requests.request("POST", url, data=payload, headers=headers)
