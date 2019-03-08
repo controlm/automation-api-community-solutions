@@ -1,0 +1,81 @@
+---
+# Created by Wojciech Zaremba wzaremba@bmc.com
+
+- name: install CTM Agent
+  gather_facts: yes
+  hosts: all
+  remote_user: root
+  become: yes
+  
+  tasks:
+    - name:
+      include_vars: vars.yml
+ 
+    - name: Create the controlm user
+      user: 
+       name: controlm
+       groups: 
+       state: present
+       shell: /bin/bash       # Defaults to /bin/bash
+       system: no             # Defaults to no
+       createhome: yes        # Defaults to yes
+       home: /home/controlm   # Defaults to /home/<username>
+ 
+    - name: add repo
+      get_url:
+        url: https://rpm.nodesource.com/setup_6.x 
+        dest: /tmp/setup_6.sh
+        mode: 0755
+        force: yes
+
+    - name: execute repo
+      shell: /tmp/setup_6.sh
+
+    - name: install java-1.8.0-openjdk
+      yum: 
+        name: java-1.8.0-openjdk
+        state: present
+      
+    - name: install node.js
+      yum: 
+        name: nodejs
+        state: present
+
+    - name: check node
+      shell: node -v
+      register: node
+    
+    - debug: var=node.stdout_lines 
+    
+    - name: Creates directory
+      file: path=~/ctm-automation-api state=directory
+           
+    - name: download ctm-automation-api
+      get_url: url="https://{{server_ip}}:8443/automation-api/ctm-cli.tgz" dest=~/ctm-automation-api/ctm-cli.tgz validate_certs=no 
+            
+    - name: install ctm-automation-api
+      shell: npm install -g ~/ctm-automation-api/ctm-cli.tgz
+      register: out
+            
+    - debug: var=out.stdout_lines  
+    
+    - name: Add endpoint
+      shell: ctm env add endpoint https://{{server_ip}}:8443/automation-api {{user}} {{password}}
+      changed_when: False
+      become_user: controlm
+    
+    - name: set default endpoint
+      shell: ctm env set endpoint
+      changed_when: False
+      become_user: controlm
+      
+    - name: install agent
+      shell: ctm prov install Agent.Linux {{CTM_server_name}} {{inventory_hostname}} 7005
+      args:
+       chdir: /home/controlm
+      become_user: controlm
+      
+      
+      
+      
+      
