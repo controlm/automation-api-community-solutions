@@ -255,19 +255,6 @@ Uninstall:
 
     osboxes130 : ok=4 changed=2 unreachable=0 failed=0
 
-**Extras**
-
-    There is a bug in Control-M EM 9.18.1, which generates an error while trying to install Control-M Agent via AAPI. To fix it, you need to change one file at:
-
-    \<EM\_HOME\>\\emweb\\automation-api\\downloads\\silent\\agent.linux.xml
-
-    There is a line with:
-
-    \<target.product\>Control-M/Agent 9.0.00\</target.product\>
-
-    Please replace it with the product you are using - Agent 9.0.18 or Agent 9.0.18.100.
-
-    On version 9.0 (FP X) it works with no error.
 
 **Application Integrator job**
 
