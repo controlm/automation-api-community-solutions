@@ -1,0 +1,622 @@
+{
+	"info": {
+		"_postman_id": "0fc6e480-1e60-481f-a057-b189c2845ca6",
+		"name": "Control-M Automation API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Config",
+			"item": [
+				{
+					"name": "Get Servers (ctm config servers::get)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{endpoint}}:8443/automation-api/config/servers",
+							"protocol": "https",
+							"host": [
+								"{{endpoint}}"
+							],
+							"port": "8443",
+							"path": [
+								"automation-api",
+								"config",
+								"servers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Agents (ctm config server:agents::get)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer 6271FC9BF881FA3E2FCACC73B0AF830CCBFC8CF0AF42B382F1677B85711434DA7B211F856A140F32AE90CE351F46D91247CF4D6274D2BA88D28B1DF91A839134_C3F62EBFC4A9692559E32EC5125AF45E30B35EE3782D41C8DAA2AA786AA6262E6A51D2575A756F4E996BCFDD2BB6418A25250260CD2A311557B91FEB95CB5CDE"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{endpoint}}:8443/automation-api/config/server/{{ctm}}/agents",
+							"protocol": "https",
+							"host": [
+								"{{endpoint}}"
+							],
+							"port": "8443",
+							"path": [
+								"automation-api",
+								"config",
+								"server",
+								"{{ctm}}",
+								"agents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Agent (ctm config config server:agent::delete <ctm> <agent>)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer 6271FC9BF881FA3E2FCACC73B0AF830CCBFC8CF0AF42B382F1677B85711434DA7B211F856A140F32AE90CE351F46D91247CF4D6274D2BA88D28B1DF91A839134_C3F62EBFC4A9692559E32EC5125AF45E30B35EE3782D41C8DAA2AA786AA6262E6A51D2575A756F4E996BCFDD2BB6418A25250260CD2A311557B91FEB95CB5CDE"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{endpoint}}:8443/automation-api/config/server/{{ctm}}/agent/{{agent}}",
+							"protocol": "https",
+							"host": [
+								"{{endpoint}}"
+							],
+							"port": "8443",
+							"path": [
+								"automation-api",
+								"config",
+								"server",
+								"{{ctm}}",
+								"agent",
+								"{{agent}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Session",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a2f1ae8c-edd4-48d3-90cb-2f968852bb6e",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"token\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\": \"{{username}}\", \"password\": \"{{password}}\"}"
+						},
+						"url": {
+							"raw": "https://{{endpoint}}:8443/automation-api/session/login",
+							"protocol": "https",
+							"host": [
+								"{{endpoint}}"
+							],
+							"port": "8443",
+							"path": [
+								"automation-api",
+								"session",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a2f1ae8c-edd4-48d3-90cb-2f968852bb6e",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{endpoint}}:8443/automation-api/session/logout?token={{token}}",
+							"protocol": "https",
+							"host": [
+								"{{endpoint}}"
+							],
+							"port": "8443",
+							"path": [
+								"automation-api",
+								"session",
+								"logout"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{token}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Run",
+			"item": [
+				{
+					"name": "Build from file",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "889FE4BAFE320C84325D5282E5E4C1815DCB6F1ABD4CAAD2E2C734E3296EE7BDAB0719A00F1A9F95FEC8846134FB5012A5D38C0865AAFF75A33B68F6124836CE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "bearer 085478306FC998ED75C867BFD561078C2B05E9F8D6D824FDC4F496862CD6417381F6D8FF06120B89516A4BE2B685FE4019C47404ED012B458A8729F310F6A74F",
+								"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "definitionsFile",
+									"type": "file",
+									"src": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{endpoint}}:8443/automation-api/build",
+							"protocol": "https",
+							"host": [
+								"{{endpoint}}"
+							],
+							"port": "8443",
+							"path": [
+								"automation-api",
+								"build"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deploy from file",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "889FE4BAFE320C84325D5282E5E4C1815DCB6F1ABD4CAAD2E2C734E3296EE7BDAB0719A00F1A9F95FEC8846134FB5012A5D38C0865AAFF75A33B68F6124836CE",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "bearer 085478306FC998ED75C867BFD561078C2B05E9F8D6D824FDC4F496862CD6417381F6D8FF06120B89516A4BE2B685FE4019C47404ED012B458A8729F310F6A74F",
+								"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "definitionsFile",
+									"type": "file",
+									"src": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{endpoint}}:8443/automation-api/deploy",
+							"protocol": "https",
+							"host": [
+								"{{endpoint}}"
+							],
+							"port": "8443",
+							"path": [
+								"automation-api",
+								"deploy"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Run from file",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "483644d1-1fd7-4b99-b5df-235a6f1f894d",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"runId\", jsonData.runId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "jobDefinitionsFile",
+									"type": "file",
+									"src": ""
+								}
+							]
+						},
+						"url": {
+							"raw": "https://{{endpoint}}:8443/automation-api/run",
+							"protocol": "https",
+							"host": [
+								"{{endpoint}}"
+							],
+							"port": "8443",
+							"path": [
+								"automation-api",
+								"run"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "bed7fe6b-f145-4f49-8c44-f5ff73948dcc",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{endpoint}}:8443/automation-api/run/status/{{runId}}?token={{token}}&runId={{runId}}",
+							"protocol": "https",
+							"host": [
+								"{{endpoint}}"
+							],
+							"port": "8443",
+							"path": [
+								"automation-api",
+								"run",
+								"status",
+								"{{runId}}"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{token}}"
+								},
+								{
+									"key": "runId",
+									"value": "{{runId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Job Status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{endpoint}}:8443/automation-api/run/job/{{jobId}}/status",
+							"protocol": "https",
+							"host": [
+								"{{endpoint}}"
+							],
+							"port": "8443",
+							"path": [
+								"automation-api",
+								"run",
+								"job",
+								"{{jobId}}",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Job Output",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{endpoint}}:8443/automation-api/run/job/{{jobId}}/output",
+							"protocol": "https",
+							"host": [
+								"{{endpoint}}"
+							],
+							"port": "8443",
+							"path": [
+								"automation-api",
+								"run",
+								"job",
+								"{{jobId}}",
+								"output"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Job Log",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "https://{{endpoint}}:8443/automation-api/run/job/{{jobId}}/log",
+							"protocol": "https",
+							"host": [
+								"{{endpoint}}"
+							],
+							"port": "8443",
+							"path": [
+								"automation-api",
+								"run",
+								"job",
+								"{{jobId}}",
+								"log"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order from folder",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e9437564-71b3-418d-b8a4-e607daf2b23a",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"runId\", jsonData.runId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"ctm\": \"{{ctm}}\", \"folder\": \"WZA_AAPI_STUFF\"}"
+						},
+						"url": {
+							"raw": "https://{{endpoint}}:8443/automation-api/run/order",
+							"protocol": "https",
+							"host": [
+								"{{endpoint}}"
+							],
+							"port": "8443",
+							"path": [
+								"automation-api",
+								"run",
+								"order"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

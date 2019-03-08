@@ -1,0 +1,38 @@
+---
+# Created by Wojciech Zaremba wzaremba@bmc.com
+
+- name: Remove Control-M Agent
+  gather_facts: yes
+  hosts: all
+  remote_user: root
+  
+  tasks:
+    - name:
+      include_vars: vars.yml
+      
+    - name: Stop agent
+      shell: . /home/controlm/.bash_profile && /home/controlm/ctm/scripts/shut-ag -u controlm -p ALL    
+      ignore_errors: yes
+      become: yes
+      become_user: controlm
+      
+    - name: unregister
+      shell:  ctm conf server:agent::delete {{CTM_server_name}} {{inventory_hostname}}   
+      ignore_errors: yes
+      become: yes
+      become_user: controlm 
+    
+    - name: Uninstall Agent
+      shell: . /home/controlm/.bash_profile && /home/controlm/BMCINSTALL/uninstall/DRKAI.9.0.18.100/uninstall.sh -silent
+      ignore_errors: yes
+      become: yes
+      become_user: controlm
+      register: shell_result
+      
+    - debug: var=shell_result.stdout_lines 
+    
+    - name: Remove user
+      user: 
+       name: controlm
+       state: absent
+       remove: yes
