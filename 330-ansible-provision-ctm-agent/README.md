@@ -1,4 +1,4 @@
-** Introduction **
+**Introduction**
 
 Ansible is an open source software that automates software provisioning (including cloud), configuration management, and application deployment. It uses no agents and no additional custom security infrastructure, so it's easy to deploy. It uses a very simple language (YAML) to describe automation jobs.
 
@@ -6,7 +6,7 @@ More and more companies are using Ansible as easy and free configuration managem
 
 This document will show, how Ansible and Control-M, using Automation API, can work together. The attached example allows to install Control-M Agent (using Control-M Automation API) on Linux host that is managed by Ansible.
 
-<span id="_Toc519166753" class="anchor"></span>Architecture
+**Architecture**
 
 The Architecture of the example is as follows:
 
@@ -18,7 +18,7 @@ Ansible\_SRV – Centos7, Ansible controlling machine, IP 192.168.200.110
 
 osboxes130 – Centos7, Ansible node (no Ansible installed), IP 192.168.200.130
 
-<span id="_Toc519166754" class="anchor"></span>prerequisites
+**Prerequisites**
 
 All servers see each other (ping and other ports open), and each can be reached via hostname (not only IP – so check hosts if needed).
 
@@ -26,7 +26,7 @@ Ansible Controlling Machine (Ansible\_SRV) must be able to **ssh** to osboxes130
 
 When we run Ansible Playbook on Ansible Controlling Machine, it will ssh into osboxes130 and performs steps (tasks) from playbook. These steps are explained in the later part of the document, but this step is critical for Ansible itself to run.
 
-**Install and configure Ansible (on Ansible Controlling Machine – in this example Ansible\_SRV) **
+**Install and configure Ansible (on Ansible Controlling Machine – in this example Ansible\_SRV)**
 
 Ansible can be installed from yum (sudo yum install ansible), and this is the easiest way.
 
