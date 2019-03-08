@@ -13,7 +13,7 @@ To use Postman you have to download and install it. Please note, that there was 
 
 After installing you can to import provided files - TLV.postman_environment.json and Control-M_Automation_API.postman_collection.json.
 Once imported it will populate a list of available operations that can be selected and easily called from within the Postman UI.
-It will add as well environment definition (upper right corner) - the TLV Lab one. You can copy it later on and add your own definitions to match your environments. 
+It will add as well environment definition (upper right corner) - the TLV Lab example one. You can copy it later on and add your own definitions to match your environments. 
 
 
 ![Images/postman-import1.png](Images/postman-import1.png)
@@ -66,7 +66,7 @@ print(response.text)
 
 **Error 405**
 
-Our Enterprise Managers usually don't have SSL certificate or they are Self-Signed. 
+Demo Control-M Enterprise Managers usually don't have SSL certificate or they are Self-Signed. 
 
 Postman is checking by default this, and you can turn this off in Settings:
 
