@@ -106,7 +106,7 @@ Example of my Agent.Linux file:
 
 }
 
-1.  <span id="_Toc519166755" class="anchor"></span>Ansible playbooks
+**Ansible playbooks**
 
 Attached are 2 playbooks and variables file. The first one (CTM\_Install.yml) installs and registers Control-M agent, and the second one (CTM\_Uninstall.yml) will do the opposite (uninstall).
 
@@ -132,7 +132,7 @@ Uninstall:
 
 -   Uninstall Agent (this step can be omitted if i.e. VM or image will be destroyed)
 
-1.  <span id="_Toc519166756" class="anchor"></span>How to run
+**How to run**
 
     On Ansible\_SRV (as controlm) run ansible-playbook \<playbook\> so, for example:
 
@@ -254,7 +254,7 @@ Uninstall:
 
     osboxes130 : ok=4 changed=2 unreachable=0 failed=0
 
-2.  <span id="_Toc519166757" class="anchor"></span>Extras
+**Extras**
 
     There is a bug in Control-M EM 9.18.1, which generates an error while trying to install Control-M Agent via AAPI. To fix it, you need to change one file at:
 
@@ -268,7 +268,7 @@ Uninstall:
 
     On version 9.0 (FP X) it works with no error.
 
-3.  <span id="_Toc519166758" class="anchor"></span>Application Integrator job
+**Application Integrator job**
 
     I also include a simple Application Integrator job to play Ansible playbooks. This job must be deployed on ANSIBLE\_SRV server, and this will trigger Ansible to run playbooks.
 
@@ -276,32 +276,31 @@ Uninstall:
 
 -   Deploy AI job to specific hosts:
 
-    <img src="/media/image3.png" style="width:5.41667in;height:3.95284in" />
+![images/image3.jpeg](images/image3.jpeg)
 
 -   Restart Control-M Client
 
 -   Create connection profile:
 
-    <img src="/media/image4.png" style="width:4.46875in;height:2.03125in" />
+![images/image4.jpeg](images/image4.jpeg)
 
-    <img src="/media/image5.png" style="width:5.55208in;height:2.3125in" />
+![images/image5.jpeg](images/image5.jpeg)
 
-    <img src="/media/image6.png" style="width:5.58333in;height:2.51042in" />
+![images/image6.jpeg](images/image6.jpeg)
 
     This is very important, this is user that will run the Ansible jobs!
 
--   Create and run Ansible job:
+-   Create and run Ansible job: 
 
-    <img src="/media/image7.png" style="width:6in;height:5.23958in" />
+	![images/image7.jpeg](images/image7.jpeg)
 
-    <img src="/media/image8.png" style="width:2.57292in;height:2.77083in" />
+	![images/image8.jpeg](images/image8.jpeg)
 
 -   You can check the agent was installed and registered in Control-M Configuration Manager:
 
-    <img src="/media/image9.png" style="width:2.67708in;height:1.66667in" />
-
--   The same way you can uninstall Control-M Agent:
-
-    <img src="/media/image10.png" style="width:2.86458in;height:1.73958in" />
+![images/image9.jpeg](images/image9.jpeg)
+ 
+-   The same way you can uninstall Control-M Agent: 
+![images/image10.jpeg](images/image10.jpeg)
 
 
