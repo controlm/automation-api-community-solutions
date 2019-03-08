@@ -10,7 +10,7 @@ This document will show, how Ansible and Control-M, using Automation API, can wo
 
 The Architecture of the example is as follows:
 
-![media/image2.jpeg](/media/image2.jpeg)
+![images/image2.jpeg](images/image2.jpeg)
 
 WIN-EM18 – Windows Control-M server running Control-M 9.18.1 (9.18 FP1), IP 192.168.200.118
 
