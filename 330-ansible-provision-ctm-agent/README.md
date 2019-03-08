@@ -1,20 +1,4 @@
-[Introduction](#_Toc519166752)
-
-[Architecture](#_Toc519166753)
-
-[prerequisites](#_Toc519166754)
-
-[Ansible playbooks](#_Toc519166755)
-
-[How to run](#_Toc519166756)
-
-[Extras](#_Toc519166757)
-
-[Application Integrator job](#_Toc519166758)
-
-
-
-<span id="_Toc519166752" class="anchor"></span>Introduction
+** Introduction **
 
 Ansible is an open source software that automates software provisioning (including cloud), configuration management, and application deployment. It uses no agents and no additional custom security infrastructure, so it's easy to deploy. It uses a very simple language (YAML) to describe automation jobs.
 
@@ -26,7 +10,7 @@ This document will show, how Ansible and Control-M, using Automation API, can wo
 
 The Architecture of the example is as follows:
 
-<img src="/media/image2.jpeg" alt="C:\Users\wzaremba\AppData\Local\Microsoft\Windows\INetCache\Content.Word\Untitled Diagram (1).jpg" style="width:3.03333in;height:3.49167in" />
+<img src="/media/image2.jpeg"  style="width:3.03333in;height:3.49167in" />
 
 WIN-EM18 – Windows Control-M server running Control-M 9.18.1 (9.18 FP1), IP 192.168.200.118
 
