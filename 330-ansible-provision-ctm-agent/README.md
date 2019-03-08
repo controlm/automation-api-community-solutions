@@ -277,31 +277,31 @@ Uninstall:
 
 -   Deploy AI job to specific hosts:
 
-![images/image3.jpeg](images/image3.jpeg)
+![images/image3.png](images/image3.png)
 
 -   Restart Control-M Client
 
 -   Create connection profile:
 
-![images/image4.jpeg](images/image4.jpeg)
+![images/image4.png](images/image4.png)
 
-![images/image5.jpeg](images/image5.jpeg)
+![images/image5.png](images/image5.png)
 
-![images/image6.jpeg](images/image6.jpeg)
+![images/image6.png](images/image6.png)
 
     This is very important, this is user that will run the Ansible jobs!
 
 -   Create and run Ansible job: 
 
-	![images/image7.jpeg](images/image7.jpeg)
+	![images/image7.png](images/image7.png)
 
-	![images/image8.jpeg](images/image8.jpeg)
+	![images/image8.png](images/image8.png)
 
 -   You can check the agent was installed and registered in Control-M Configuration Manager:
 
-![images/image9.jpeg](images/image9.jpeg)
+![images/image9.png](images/image9.png)
  
 -   The same way you can uninstall Control-M Agent: 
-![images/image10.jpeg](images/image10.jpeg)
+![images/image10.png](images/image10.png)
 
 
