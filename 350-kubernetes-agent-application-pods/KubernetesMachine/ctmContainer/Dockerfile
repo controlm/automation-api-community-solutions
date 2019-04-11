@@ -50,10 +50,6 @@ RUN useradd -d /home/ec2-user -p ec2-user -m ec2-user \
 USER ec2-user
 WORKDIR /home/ec2-user
 
-# Copy cluster configuration for Kubernetes API from build context
-RUN mkdir .kube
-COPY admin.conf /home/ec2-user/.kube/config
-
 # Copy secrets from Docker build context - The next version will be updated to use Kubernetes secrets
 # and create a default environment with the secret info
 RUN mkdir /tmp/.ctm

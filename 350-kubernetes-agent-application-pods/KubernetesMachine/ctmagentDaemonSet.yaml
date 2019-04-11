@@ -32,6 +32,8 @@ spec:
           value: "k8sgroup19"
         - name: CTM_AGPORT
           value: "7317"
+        - name: KUBE_CONFIG
+          value: "/home/ec2-user/ctmDocker/admin.conf"
         volumeMounts:
         - mountPath: /home/ec2-user/ctmDocker
           name: test-volume
