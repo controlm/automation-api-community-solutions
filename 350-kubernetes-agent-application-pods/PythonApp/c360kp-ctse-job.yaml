@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: c360kp-ctse-job
+spec:
+  template:
+    metadata:
+      name: c360kp-ctse
+    spec:
+      hostNetwork: true
+      containers:
+      - name: c360kp-ctse
+        image: joegoldberg/controlm:bmctwitter
+        env:
+        - name: BTCONF
+          value: "ctse.yaml"
+      restartPolicy: Never

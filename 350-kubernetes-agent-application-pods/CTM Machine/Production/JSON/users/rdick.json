@@ -1,0 +1,14 @@
+{ 
+    "Name": "rdick",   
+    "FullName": "Robby Dick",   
+    "Description": "Solution Marketing",   
+    "Authentication": {
+        "ControlM": {     
+            "Password": "Bamaman12#$",     
+            "PasswordExpirationDays": 0,     
+            "ChangePasswordAtNextLogin": false,     
+            "LockAccount": false
+        }   
+    },
+    "Roles": ["AdminGroup"]
+}

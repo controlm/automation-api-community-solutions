@@ -1,0 +1,382 @@
+{
+  "SNOWFLAKE": {
+    "Type": "Folder",
+    "ControlmServer": "ctm",
+    "OrderMethod": "Manual",
+    "ActiveRetentionPolicy": "CleanEndedOK",
+    "SiteStandard": "None",
+    "SubApplication": "TEST",
+    "CreatedBy": "emuser",
+    "Application": "SNOWFLAKE",
+    "When": {
+      "RuleBasedCalendars": {
+        "Included": [
+          "EVERYDAY"
+        ],
+        "EVERYDAY": {
+          "Type": "Calendar:RuleBased",
+          "When": {
+            "DaysRelation": "OR",
+            "WeekDays": [
+              "NONE"
+            ],
+            "MonthDays": [
+              "ALL"
+            ]
+          }
+        }
+      }
+    },
+    "CM_DB_CreateEmployeeDB": {
+      "Type": "Job:Database:SQLScript",
+      "SQLScript": "C:\\Program Files\\Snowflake SnowSQL\\SQL\\create.sql",
+      "OutputSQLOutput": "Y",
+      "ConnectionProfile": "SNOWFLAKE",
+      "SubApplication": "TEST",
+      "EndFolder": false,
+      "CreatedBy": "emuser",
+      "RunAs": "SNOWFLAKE",
+	  "Confirm": true,
+      "Application": "SNOWFLAKE",
+      "Variables": [
+        {
+          "DB-SSIS_PACKAGE_SOURCE": "SQL Server"
+        },
+        {
+          "DB-STP_PACKAGE": "*"
+        },
+        {
+          "DB-DB_TYPE": "SFLAKE"
+        },
+        {
+          "DB-DB_VERSION": "Any"
+        }
+      ],
+      "When": {
+        "WeekDays": [
+          "NONE"
+        ],
+        "MonthDays": [
+          "ALL"
+        ],
+        "SpecificDates": [],
+        "DaysRelation": "OR"
+      },
+      "eventsToAdd": {
+        "Type": "AddEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_CrateEmployeeDB-TO-CM_DB_LoadWarehouse"
+          }
+        ]
+      }
+    },
+    "SnowSQLExampleJob": {
+      "Type": "Job:Command",
+      "SubApplication": "TEST",
+      "EndFolder": false,
+      "CreatedBy": "emuser",
+      "RunAs": "Administrator",
+	  "Confirm": true,
+      "Application": "SNOWFLAKE",
+      "Command": "snowsql -c example -f \"C:\\Program Files\\Snowflake SnowSQL\\SQL\\dbs.sql\"",
+      "When": {
+        "WeekDays": [
+          "NONE"
+        ],
+        "MonthDays": [
+          "ALL"
+        ],
+        "SpecificDates": [],
+        "DaysRelation": "OR"
+      }
+    },
+    "CM_DB_LoadWarehouse": {
+      "Type": "Job:Database:SQLScript",
+      "SQLScript": "C:\\Program Files\\Snowflake SnowSQL\\SQL\\load_warehoues.sql",
+	  "OutputSQLOutput": "Y",
+      "ConnectionProfile": "SNOWFLAKE",
+      "SubApplication": "TEST",
+      "EndFolder": false,
+      "CreatedBy": "emuser",
+      "RunAs": "SNOWFLAKE",
+      "Application": "SNOWFLAKE",
+      "Variables": [
+        {
+          "DB-SSIS_PACKAGE_SOURCE": "SQL Server"
+        },
+        {
+          "DB-STP_PACKAGE": "*"
+        },
+        {
+          "DB-DB_TYPE": "SFLAKE"
+        },
+        {
+          "DB-DB_VERSION": "Any"
+        }
+      ],
+      "When": {
+        "WeekDays": [
+          "NONE"
+        ],
+        "MonthDays": [
+          "ALL"
+        ],
+        "SpecificDates": [],
+        "DaysRelation": "OR"
+      },
+      "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_CrateEmployeeDB-TO-CM_DB_LoadWarehouse"
+          }
+        ]
+      },
+      "eventsToAdd": {
+        "Type": "AddEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_LoadWarehouse-TO-CM_DB_CopyToProdDataSet"
+          }
+        ]
+      },
+      "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_CrateEmployeeDB-TO-CM_DB_LoadWarehouse"
+          }
+        ]
+      }
+    },
+    "CM_DB_CopyToProdDataSet": {
+      "Type": "Job:Database:SQLScript",
+      "SQLScript": "C:\\Program Files\\Snowflake SnowSQL\\SQL\\copy2proddataset.sql",
+	  "OutputSQLOutput": "Y",
+      "ConnectionProfile": "SNOWFLAKE",
+      "SubApplication": "TEST",
+      "EndFolder": false,
+      "CreatedBy": "emuser",
+      "RunAs": "SNOWFLAKE",
+      "Application": "SNOWFLAKE",
+      "Variables": [
+        {
+          "DB-SSIS_PACKAGE_SOURCE": "SQL Server"
+        },
+        {
+          "DB-STP_PACKAGE": "*"
+        },
+        {
+          "DB-DB_TYPE": "SFLAKE"
+        },
+        {
+          "DB-DB_VERSION": "Any"
+        }
+      ],
+      "When": {
+        "WeekDays": [
+          "NONE"
+        ],
+        "MonthDays": [
+          "ALL"
+        ],
+        "SpecificDates": [],
+        "DaysRelation": "OR"
+      },
+      "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_LoadWarehouse-TO-CM_DB_CopyToProdDataSet"
+          }
+        ]
+      },
+      "eventsToAdd": {
+        "Type": "AddEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_CopyToProdDataSet-TO-CM_DB_InsertEmployees"
+          }
+        ]
+      },
+      "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_LoadWarehouse-TO-CM_DB_CopyToProdDataSet"
+          }
+        ]
+      }
+    },
+    "CM_DB_InsertEmployees": {
+      "Type": "Job:Database:SQLScript",
+      "SQLScript": "C:\\Program Files\\Snowflake SnowSQL\\SQL\\insert_emp.sql",
+	  "OutputSQLOutput": "Y",
+      "ConnectionProfile": "SNOWFLAKE",
+      "SubApplication": "TEST",
+      "EndFolder": false,
+      "CreatedBy": "emuser",
+      "RunAs": "SNOWFLAKE",
+      "Application": "SNOWFLAKE",
+      "Variables": [
+        {
+          "DB-SSIS_PACKAGE_SOURCE": "SQL Server"
+        },
+        {
+          "DB-STP_PACKAGE": "*"
+        },
+        {
+          "DB-DB_TYPE": "SFLAKE"
+        },
+        {
+          "DB-DB_VERSION": "Any"
+        }
+      ],
+      "When": {
+        "WeekDays": [
+          "NONE"
+        ],
+        "MonthDays": [
+          "ALL"
+        ],
+        "SpecificDates": [],
+        "DaysRelation": "OR"
+      },
+      "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_CopyToProdDataSet-TO-CM_DB_InsertEmployees"
+          }
+        ]
+      },
+      "eventsToAdd": {
+        "Type": "AddEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_InsertEmployees-TO-CM_DB_Select_UK_EmployeeEmails"
+          }
+        ]
+      },
+      "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_CopyToProdDataSet-TO-CM_DB_InsertEmployees"
+          }
+        ]
+      }
+    },
+    "CM_DB_Select_UK_EmployeeEmails": {
+      "Type": "Job:Database:SQLScript",
+      "SQLScript": "C:\\Program Files\\Snowflake SnowSQL\\SQL\\get_uk_emails.sql",
+	  "OutputSQLOutput": "Y",
+      "ConnectionProfile": "SNOWFLAKE",
+      "SubApplication": "TEST",
+      "EndFolder": false,
+      "CreatedBy": "emuser",
+      "RunAs": "SNOWFLAKE",
+      "Application": "SNOWFLAKE",
+      "Variables": [
+        {
+          "DB-SSIS_PACKAGE_SOURCE": "SQL Server"
+        },
+        {
+          "DB-STP_PACKAGE": "*"
+        },
+        {
+          "DB-DB_TYPE": "SFLAKE"
+        },
+        {
+          "DB-DB_VERSION": "Any"
+        }
+      ],
+      "When": {
+        "WeekDays": [
+          "NONE"
+        ],
+        "MonthDays": [
+          "ALL"
+        ],
+        "SpecificDates": [],
+        "DaysRelation": "OR"
+      },
+      "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_InsertEmployees-TO-CM_DB_Select_UK_EmployeeEmails"
+          }
+        ]
+      },
+      "eventsToAdd": {
+        "Type": "AddEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_Select_UK_EmployeeEmails-TO-CM_DB_SelectAdd90ToStartDate"
+          }
+        ]
+      },
+      "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_InsertEmployees-TO-CM_DB_Select_UK_EmployeeEmails"
+          }
+        ]
+      }
+    },
+    "CM_DB_SelectAdd90ToStartDate": {
+      "Type": "Job:Database:SQLScript",
+      "SQLScript": "C:\\Program Files\\Snowflake SnowSQL\\SQL\\select_add_90.sql",
+	  "OutputSQLOutput": "Y",
+      "ConnectionProfile": "SNOWFLAKE",
+      "SubApplication": "TEST",
+      "EndFolder": false,
+      "CreatedBy": "emuser",
+      "RunAs": "SNOWFLAKE",
+      "Application": "SNOWFLAKE",
+      "Variables": [
+        {
+          "DB-SSIS_PACKAGE_SOURCE": "SQL Server"
+        },
+        {
+          "DB-STP_PACKAGE": "*"
+        },
+        {
+          "DB-DB_TYPE": "SFLAKE"
+        },
+        {
+          "DB-DB_VERSION": "Any"
+        }
+      ],
+      "When": {
+        "WeekDays": [
+          "NONE"
+        ],
+        "MonthDays": [
+          "ALL"
+        ],
+        "SpecificDates": [],
+        "DaysRelation": "OR"
+      },
+      "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_Select_UK_EmployeeEmails-TO-CM_DB_SelectAdd90ToStartDate"
+          }
+        ]
+      },
+      "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [
+          {
+            "Event": "CM_DB_Select_UK_EmployeeEmails-TO-CM_DB_SelectAdd90ToStartDate"
+          }
+        ]
+      }
+    }
+  }
+}

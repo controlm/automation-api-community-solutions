@@ -1,0 +1,14 @@
+{ 
+    "Name": "bfaruqui",   
+    "FullName": "Basil Faruqui",   
+    "Description": "Control-M Solutions Marketing",   
+    "Authentication": {
+        "ControlM": {     
+            "Password": "Houman12#$",     
+            "PasswordExpirationDays": 0,     
+            "ChangePasswordAtNextLogin": false,     
+            "LockAccount": false
+        }   
+    },
+    "Roles": ["AdminGroup"]
+}

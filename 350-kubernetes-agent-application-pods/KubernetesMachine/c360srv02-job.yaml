@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: c360srv02-job
+spec:
+  template:
+    metadata:
+      name: c360srv02
+    spec:
+      containers:
+      - name: c360srv02
+        image: joegoldberg/controlm:appimage
+        env:
+        - name: LOOPCTR
+          value: "10"
+        - name: STIME
+          value: "5"
+      restartPolicy: Never
