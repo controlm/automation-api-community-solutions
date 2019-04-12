@@ -1,4 +1,4 @@
-# Running existing Control-M workflows
+## Running existing Control-M workflows
 Graham Workflows are stored in the Control-M database and can be triggered via REST api to run. Additionally, you have the ability to pass parameters into your workflow at runtime. 
 [Automation API Code Reference documentation page](https://docs.bmc.com/docs/display/public/workloadautomation/Control-M+Automation+API+-+Code+Reference)
 
