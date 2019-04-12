@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="doctor:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="alexa-skeleton-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="doctor:war exploded" />
+    </root>
+  </artifact>
+</component>
