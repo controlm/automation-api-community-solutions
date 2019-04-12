@@ -26,7 +26,8 @@ Sample : ```ctm run order CONTROLMNAME MYFOLDERNAME -f MYJSONFILE.json```
 
 All the default options look like this 
 
-```{
+```
+{
   "variables": [{"arg":"12345"}],
   "hold": "true",
   "ignoreCriteria": "true",
