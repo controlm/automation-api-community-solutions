@@ -1,5 +1,5 @@
-# Ordering existing Smart Folders
-Workflows are stored in the Control-M database (run)
+# Running existing Control-M workflows
+Workflows are stored in the Control-M database and can be triggered by the api to run. Additionally, you have the ability to pass parameters into your workflow at runtime.
 [Automation API Code Reference documentation page](https://docs.bmc.com/docs/display/public/workloadautomation/Control-M+Automation+API+-+Code+Reference)
 
 ## Requirement : 
@@ -14,7 +14,7 @@ Syntax :
 
 Sample : 
 
-```ctm run order CONTROLMNAME MYFOLDERNAME -f MYJSONFILE.json```
+```ctm run order CONTROLMNAME MYFOLDERNAME -f JSONconfig.json```
 
 ## OPTIONS Explained
 <ctm> is the control-m server name
@@ -22,7 +22,7 @@ Sample :
 [jobs] is optional if you want to order specific jobs from the smart folder
 -f is a json file containing arguments
 
-# Example 
+# Example JSON config file
 
 ```
 {
