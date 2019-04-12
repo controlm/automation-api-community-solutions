@@ -10,7 +10,6 @@ The file watcher job type requires Control-M V9.0.18.100 (fixpack 1). This flow 
 Below a screenshot of the example from the web gui:
 
 ![Screenshot](images/file-watcher-flow.png)
-
 The following attributes need to be updated and tailored to your own environment in order to implement this example: 
 
 * ```<APPLICATION>```
