@@ -7,8 +7,11 @@ I have a smart folder defined as a service and I want to order it using the aapi
 Solution : Use the ctm run order call
 
 Syntax :
+
 ```ctm run order <ctm> <folder> [jobs] [-f <configuration file> -i]```
+
 Sample : 
+
 ```ctm run order CONTROLMNAME MYFOLDERNAME -f MYJSONFILE.json```
 
 ## OPTIONS Explained
