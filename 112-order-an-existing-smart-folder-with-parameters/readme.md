@@ -1,4 +1,5 @@
-
+# Ordering existing Smart Folders
+Workflows are stored in the Control-M database (run)
 
 ## Requirement : 
 I have a smart folder defined as a service and I want to order it using the aapi. I also want to pass parameters at the time of ordering.
