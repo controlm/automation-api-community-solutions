@@ -35,5 +35,6 @@ All the default options look like this
   "waitForOrderDate": "false",
   "createDuplicate": "false",
   "orderIntoFolder": "Recent"
-}```
+}
+```
 
