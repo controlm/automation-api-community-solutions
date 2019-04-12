@@ -14,7 +14,7 @@ Syntax :
 
 Sample : 
 
-```ctm run order CONTROLMNAME MYFOLDERNAME -f JSONconfig.json```
+```ctm run order CONTROLMNAME MYFOLDERNAME -f JSONconfigfile.json```
 
 ## OPTIONS Explained
 <ctm> is the control-m server name
@@ -26,7 +26,7 @@ Sample :
 
 ```
 {
-  "variables": [{"webserver":"neilfromconfigfile"}],
+  "variables": [{"variablename":"variablevalue"}],
   "ignoreCriteria": "true",
   "orderIntoFolder": "New"
 }
