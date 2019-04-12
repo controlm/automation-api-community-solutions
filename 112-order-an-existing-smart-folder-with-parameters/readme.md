@@ -1,5 +1,6 @@
 # Ordering existing Smart Folders
 Workflows are stored in the Control-M database (run)
+[Automation API Code Reference documentation page](https://docs.bmc.com/docs/display/public/workloadautomation/Control-M+Automation+API+-+Code+Reference)
 
 ## Requirement : 
 I have a smart folder defined as a service and I want to order it using the aapi. I also want to pass parameters at the time of ordering.
