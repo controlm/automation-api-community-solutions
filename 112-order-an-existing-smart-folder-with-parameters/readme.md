@@ -16,11 +16,13 @@ Sample : ```ctm run order CONTROLMNAME MYFOLDERNAME -f MYJSONFILE.json```
 
 # Example 
 
-```{
+```
+{
   "variables": [{"webserver":"neilfromconfigfile"}],
   "ignoreCriteria": "true",
   "orderIntoFolder": "New"
-}```
+}
+```
 
 All the default options look like this 
 
