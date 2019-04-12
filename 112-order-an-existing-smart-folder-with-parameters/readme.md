@@ -1,11 +1,12 @@
 
 
-## Requirement : I have a smart folder defined as a service and I want to order it using the aapi. I also want to pass parameters at the time of ordering.
+## Requirement : 
+I have a smart folder defined as a service and I want to order it using the aapi. I also want to pass parameters at the time of ordering.
 
 ## Prerequisite : Have a workflow defined in a Smart folder and a Service definition with orderable parameters
 Solution : Use the ctm run order call
-Syntax : ctm run order <ctm> <folder> [jobs] [-f <configuration file> -i]
-Sample : ctm run order CONTROLMNAME MYFOLDERNAME -f MYJSONFILE.json
+Syntax : ```ctm run order <ctm> <folder> [jobs] [-f <configuration file> -i]```
+Sample : ```ctm run order CONTROLMNAME MYFOLDERNAME -f MYJSONFILE.json```
 
 ## OPTIONS Explained
 <ctm> is the control-m server name
