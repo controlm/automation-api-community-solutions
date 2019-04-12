@@ -1,9 +1,9 @@
 # Running existing Control-M workflows
-Workflows are stored in the Control-M database and can be triggered by the api to run. Additionally, you have the ability to pass parameters into your workflow at runtime.
+Workflows are stored in the Control-M database and can be triggered via REST api to run. Additionally, you have the ability to pass parameters into your workflow at runtime. 
 [Automation API Code Reference documentation page](https://docs.bmc.com/docs/display/public/workloadautomation/Control-M+Automation+API+-+Code+Reference)
 
 ## Requirement : 
-I have a smart folder defined as a service and I want to order it using the aapi. I also want to pass parameters at the time of ordering.
+I have a workflow configured in a Control-M Smart folder defined as a service and I want to order it using the aapi. I also want to pass parameters at the time of ordering.
 
 ## Prerequisite : Have a workflow defined in a Smart folder and a Service definition with orderable parameters
 Solution : Use the ctm run order call
