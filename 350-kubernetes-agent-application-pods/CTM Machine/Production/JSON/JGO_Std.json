@@ -1,0 +1,42 @@
+{
+	"Defaults" : {
+		"RunAs" : "emuser", "Application" : "JGO", "SubApplication" : "JGO_AAPI MegaFlow", 
+		"Description" : "Something is better than nothing",
+		"ControlmServer":"CTMV19PGA", "OrderMethod": "Manual",  "SiteStandard" : "",
+		"Job": {"actionIfSuccess" : {"Type": "If", "CompletionStatus":"OK", "mailTeam": 
+			{"Type": "Mail", "Message": "Job %%JOBNAME succeeded", "Subject": "Success", "To": "joe_goldberg@bmc.com"}}},
+		"Job": {"actionIfError" : {"Type": "If", "CompletionStatus":"NOTOK", "mailTeam": 
+			{"Type": "Mail", "Message": "Job %%JOBNAME failed", "Subject": "Error occurred", "To": "joe_goldberg@bmc.com"}}}
+	},
+
+	"JGO_AAPI_MegaFlow" : {	"Type" : "Folder",
+			"JGO_AAPI_Job1": {"Type" : "Job:Command", "Command" : "echo hello job 1"},    
+			"JGO_AAPI_Job2": {"Type" : "Job:Command", "Command" : "echo hello job 2"},    
+			"JGO_AAPI_Job3": {"Type" : "Job:Command", "Command" : "echo hello job 3"}, 
+			"JGO_AAPI_Job4": {"Type" : "Job:Command", "Command" : "echo hello job 4"}, 
+			"JGO_AAPI_Job5": {"Type" : "Job:Command", "Command" : "echo hello job 5"}, 		
+			"JGO_AAPI_Job6": {"Type" : "Job:Command", "Command" : "echo hello job 6"}, 
+			"JGO_AAPI_Job7": {"Type" : "Job:Command", "Command" : "echo hello job 7"},
+			"JGO_AAPI_Job8": {"Type" : "Job:Command", "Command" : "echo hello job 8"},
+			"JGO_AAPI_Job9": {"Type" : "Job:Command", "Command" : "echo hello job 9"},
+			"JGO_AAPI_Job10": {"Type" : "Job:Command", "Command" : "echo hello job 10"},
+			"JGO_AAPI_Job11": {"Type" : "Job:Command", "Command" : "echo hello job 11"},    
+			"JGO_AAPI_Job12": {"Type" : "Job:Command", "Command" : "echo hello job 12"},    
+			"JGO_AAPI_Job13": {"Type" : "Job:Command", "Command" : "echo hello job 13"}, 
+			"JGO_AAPI_Job14": {"Type" : "Job:Command", "Command" : "echo hello job 14"}, 
+			"JGO_AAPI_Job15": {"Type" : "Job:Command", "Command" : "echo hello job 15"}, 		
+			"JGO_AAPI_Job16": {"Type" : "Job:Command", "Command" : "echo hello job 16"}, 
+			"JGO_AAPI_Job17": {"Type" : "Job:Command", "Command" : "echo hello job 17"},
+			"JGO_AAPI_Job18": {"Type" : "Job:Command", "Command" : "echo hello job 18"},
+			"JGO_AAPI_Job19": {"Type" : "Job:Command", "Command" : "echo hello job 19"},
+			"JGO_AAPI_Job20": {"Type" : "Job:Command", "Command" : "echo hello job 20"},
+			
+		"flow00": {"Type":"Flow", "Sequence":["JGO_AAPI_Job1", "JGO_AAPI_Job2", "JGO_AAPI_Job6", "JGO_AAPI_Job7", "JGO_AAPI_Job17"]},
+		"flow01": {"Type":"Flow", "Sequence":["JGO_AAPI_Job1", "JGO_AAPI_Job3", "JGO_AAPI_Job8", "JGO_AAPI_Job9", "JGO_AAPI_Job17"]},
+		"flow02": {"Type":"Flow", "Sequence":["JGO_AAPI_Job1", "JGO_AAPI_Job4", "JGO_AAPI_Job10", "JGO_AAPI_Job11", "JGO_AAPI_Job17"]},
+		"flow03": {"Type":"Flow", "Sequence":["JGO_AAPI_Job1", "JGO_AAPI_Job5", "JGO_AAPI_Job12", "JGO_AAPI_Job13", "JGO_AAPI_Job17"]},
+		"flow04": {"Type":"Flow", "Sequence":["JGO_AAPI_Job1", "JGO_AAPI_Job14", "JGO_AAPI_Job15", "JGO_AAPI_Job16", "JGO_AAPI_Job17"]},
+		"flow05": {"Type":"Flow", "Sequence":["JGO_AAPI_Job1", "JGO_AAPI_Job4", "JGO_AAPI_Job8", "JGO_AAPI_Job7", "JGO_AAPI_Job18", "JGO_AAPI_Job19", "JGO_AAPI_Job20"]}
+
+	}
+}

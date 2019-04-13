@@ -1,0 +1,146 @@
+{
+"Defaults" : {
+		"RunAs" : "ec2-user", "ControlmServer" : "controlm", "OrderMethod" : "Manual", "SiteStandard" : "Cust360", "SubApplication" : "Sentiment", "Application" : "CUST360",
+		"Description" : "Something is better than nothing",
+		"Job": {"actionIfSuccess" : {"Type": "If", "CompletionStatus":"OK", "mailTeam": 
+			{"Type": "Mail", "Message": "Job %%JOBNAME succeeded", "Subject": "Success", "To": "joe_goldberg@bmc.com"}}},
+		"Job": {"actionIfError" : {"Type": "If", "CompletionStatus":"NOTOK", "mailTeam": 
+			{"Type": "Mail", "Message": "Job %%JOBNAME failed", "Subject": "Error occurred", "To": "joe_goldberg@bmc.com"}}}
+	},
+	
+  "CUST360" : { "Type" : "Folder", 
+    "C360_LoadAddresses" : { "Type" : "Job:Database:SQLScript", "OutputSQLOutput" : "Y", 
+	  "SQLScript" : "C:\\Production\\SnowSQL\\GetCustomers.sql",
+      "ConnectionProfile" : "SNOWFLAKE",
+      "RunAs" : "SNOWFLAKE",
+      "Variables" : [ {"DB-DB_TYPE" : "snowflake" }, {"DB-DB_VERSION" : "Any"} ],
+      "eventsToWaitFor" : { "Type" : "WaitForEvents", "Events" : [ { "Event" : "C360_PullGeoUpdates-TO-C360_LoadAddresses" } ]},
+      "eventsToDelete" : { "Type" : "DeleteEvents", "Events" : [ { "Event" : "C360_PullGeoUpdates-TO-C360_LoadAddresses" } ]}
+    },
+    "C360_PullGeoUpdates" : {
+      "Type" : "Job:FileTransfer",
+      "ConnectionProfileSrc" : "S3_SMDemo",
+      "ConnectionProfileDest" : "ctmv19pga_lcl",
+      "Confirm" : true,
+      "Host" : "ctmv19pga",
+      "Variables" : [{"FTP-S3_BUCKET_NAME" : "623469066856-fy20seminars" }],
+      "FileTransfers" : [{"TransferType" : "Binary", "TransferOption" : "SrcToDestFileWatcher", "Src" : "/Inbound/Geo*.dat", "Dest" : "C:\\Production\\Data\\"} ],
+      "eventsToAdd" : {"Type" : "AddEvents", "Events" : [{"Event" : "C360_PullGeoUpdates-TO-C360_LoadAddresses"}]}
+    },
+	"C360_StartKafka" : {
+      "Type" : "Job:Command",
+      "Host" : "KafkaMaster",
+      "RunAs" : "ctmmft",
+      "Command" : "sudo systemctl start kafka.service",
+      "eventsToAdd" : {
+        "Type" : "AddEvents",
+        "Events" : [ {
+          "Event" : "C360_StartKafka-TO-C360_KafkaProducers"
+        } ]
+      }
+    },
+    "C360_StopKafka" : {
+      "Type" : "Job:Command",
+      "Host" : "KafkaMaster",
+      "RunAs" : "ctmmft",
+      "Command" : "sudo systemctl stop kafka.service",
+      "eventsToWaitFor" : {
+        "Type" : "WaitForEvents",
+        "Events" : [ {
+          "Event" : "C360_KafkaProducers-TO-C360_StopKafka"
+        } ]
+      },
+      "eventsToDelete" : {
+        "Type" : "DeleteEvents",
+        "Events" : [ {
+          "Event" : "C360_KafkaProducers-TO-C360_StopKafka"
+        } ]
+      }
+    },
+	
+	"Defaults" : { 
+	   "Job" : {"C360_LOAD" : {"Type" : "Resource:Semaphore","Quantity" : "1"}},
+	   "Job" : {"Host" : "k8sgroup19"}
+	},
+
+	"C360_KafkaConsumers" : {
+      "Type" : "SubFolder",
+      "Description" : "Kubernetes Jobs",
+      "C360_MatchCustomer1" : {"Type" : "Job:EmbeddedScript", "Script" : "#!/bin/bash\\ncd ctmDocker\\npython runJob.py -j c360srv01-job",
+        "FileName" : "runjob001.sh", "Host" : "k8sgroup19", "Description" : "Match Tweet, GeoLocation and Customer Record",
+        "C360srv01-job" : {"Type" : "Resource:Mutex", "MutexType" : "Exclusive"}
+      },
+	  "C360_MatchCustomer2" : {"Type" : "Job:EmbeddedScript", "Script" : "#!/bin/bash\\ncd ctmDocker\\npython runJob.py -j c360srv02-job",
+        "FileName" : "runjob001.sh", "Host" : "k8sgroup19", "Description" : "Match Tweet, GeoLocation and Customer Record",
+        "C360srv02-job" : {"Type" : "Resource:Mutex", "MutexType" : "Exclusive"}
+      },
+	  "C360_MatchCustomer3" : {"Type" : "Job:EmbeddedScript", "Script" : "#!/bin/bash\\ncd ctmDocker\\npython runJob.py -j c360srv03-job",
+        "FileName" : "runjob001.sh", "Host" : "k8sgroup19", "Description" : "Match Tweet, GeoLocation and Customer Record",
+        "C360srv03-job" : {"Type" : "Resource:Mutex", "MutexType" : "Exclusive"}
+      },
+	  "C360_MatchCustomer4" : {"Type" : "Job:EmbeddedScript", "Script" : "#!/bin/bash\\ncd ctmDocker\\npython runJob.py -j c360srv04-job",
+        "FileName" : "runjob001.sh", "Host" : "k8sgroup19", "Description" : "Match Tweet, GeoLocation and Customer Record",
+        "C360srv04-job" : {"Type" : "Resource:Mutex", "MutexType" : "Exclusive"}
+      },
+	  "C360_MatchCustomer5" : {"Type" : "Job:EmbeddedScript", "Script" : "#!/bin/bash\\ncd ctmDocker\\npython runJob.py -j c360srv05-job",
+        "FileName" : "runjob001.sh", "Host" : "k8sgroup19", "Description" : "Match Tweet, GeoLocation and Customer Record",
+        "C360srv05-job" : {"Type" : "Resource:Mutex", "MutexType" : "Exclusive"}
+      }
+    },
+    "C360_KafkaProducers" : {
+      "Type" : "SubFolder",
+      "Description" : "Kubernetes Jobs",
+      "RunAs" : "ec2-user",
+
+      "C360_PullTweetsPush2Kafka-ctne" : {
+        "Type" : "Job:EmbeddedScript", "Script" : "#!/bin/bash\\ncd ctmDocker\\npython runJob.py -j c360kp-ctne-job",
+        "FileName" : "runjob001.sh", 
+        "Description" : "Pull tweets from Twitter and push to Kafka",
+        "c360kp-ctne-job" : {"Type" : "Resource:Mutex", "MutexType" : "Exclusive"}
+      },
+      "C360_PullTweetsPush2Kafka-ctnw" : {
+        "Type" : "Job:EmbeddedScript",
+        "Script" : "#!/bin/bash\\ncd ctmDocker\\npython runJob.py -j c360kp-ctnw-job",
+        "FileName" : "runjob001.sh", 
+        "Description" : "Pull tweets from Twitter and push to Kafka",
+        "c360kp-ctnw-job" : {"Type" : "Resource:Mutex", "MutexType" : "Exclusive"}
+
+      },
+      "C360_PullTweetsPush2Kafka-ctse" : {
+        "Type" : "Job:EmbeddedScript",
+        "Script" : "#!/bin/bash\\ncd ctmDocker\\npython runJob.py -j c360kp-ctse-job",
+        "FileName" : "runjob001.sh",
+        "Description" : "Pull tweets from Twitter and push to Kafka",
+        "c360kp-ctse-job" : {"Type" : "Resource:Mutex", "MutexType" : "Exclusive"}
+
+      },
+      "C360_PullTweetsPush2Kafka-ctsw" : {
+        "Type" : "Job:EmbeddedScript",
+        "Script" : "#!/bin/bash\\ncd ctmDocker\\npython runJob.py -j c360kp-ctsw-job",
+        "FileName" : "runjob001.sh",
+        "Description" : "Pull tweets from Twitter and push to Kafka",
+        "c360kp-ctsw-job" : {"Type" : "Resource:Mutex", "MutexType" : "Exclusive"}
+      },
+      "eventsToWaitFor" : {
+        "Type" : "WaitForEvents",
+        "Events" : [ {
+          "Event" : "C360_StartKafka-TO-C360_KafkaProducers"
+        } ]
+      },
+      "eventsToAdd" : {
+        "Type" : "AddEvents",
+        "Events" : [ {
+          "Event" : "C360_KafkaProducers-TO-C360_StopKafka"
+        } ]
+      },
+      "eventsToDelete" : {
+        "Type" : "DeleteEvents",
+        "Events" : [ {
+          "Event" : "C360_StartKafka-TO-C360_KafkaProducers"
+        } ]
+      }
+    }
+
+	
+  }
+}

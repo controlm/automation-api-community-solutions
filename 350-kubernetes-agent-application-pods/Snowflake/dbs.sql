@@ -1,0 +1,3 @@
+use database DEMO_DB;
+use schema INFORMATION_SCHEMA;
+select DATABASE_NAME,DATABASE_OWNER from DATABASES;

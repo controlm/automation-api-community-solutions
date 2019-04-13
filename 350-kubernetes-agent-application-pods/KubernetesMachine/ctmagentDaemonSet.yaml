@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: controlm-agent
+  namespace: default
+  labels:
+    k8s-app: controlm-agent
+spec:
+  selector:
+    matchLabels:
+      name: controlm-agent
+  template:
+    metadata:
+      labels:
+        name: controlm-agent
+    spec:
+      nodeSelector:
+        WorkflowManager: controlm
+      serviceAccountName: controlm-agent
+      hostNetwork: true
+      containers:
+      - name: ctmagent-container
+        image: joegoldberg/controlm:ctmagfy20seminar
+        ports:
+        - containerPort: 7317
+        env:
+        - name: CTM_ENV
+          value: "ctmv19"
+        - name: CTM_SERVER
+          value: "controlm"
+        - name: CTM_HOSTGROUP
+          value: "k8sgroup19"
+        - name: CTM_AGPORT
+          value: "7317"
+        volumeMounts:
+        - mountPath: /home/ec2-user/ctmDocker
+          name: test-volume
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: test-volume
+        hostPath:
+          # directory location on host
+          path: /home/bitnami/ctmv19
+          # this field is optional
+          type: Directory

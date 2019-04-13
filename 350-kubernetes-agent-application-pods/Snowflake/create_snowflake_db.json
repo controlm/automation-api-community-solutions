@@ -1,0 +1,19 @@
+{
+  "SNOWFLAKE": {
+    "Type": "Folder",
+    "ControlmServer": "CTMV19PGA", "OrderMethod": "Manual", "SiteStandard": "None", "SubApplication": "DBMaint", "Application": "CUST360",
+  },
+    "CreateCustDB": {
+      "Type": "Job:Database:SQLScript",
+      "SQLScript": "C:\\ProdJobs\\SnowSQL\\create.sql",
+      "OutputSQLOutput": "Y",
+      "ConnectionProfile": "SNOWFLAKE",
+      "SubApplication": "DBMaint",
+      "Variables": [
+        {"DB-SSIS_PACKAGE_SOURCE": "SQL Server"}, {"DB-STP_PACKAGE": "*"}, {"DB-DB_TYPE": "SFLAKE"}, {"DB-DB_VERSION": "Any"}
+      ],
+      "eventsToAdd": {
+        "Type": "AddEvents", "Events": [{"Event": "CM_DB_CrateEmployeeDB-TO-CM_DB_LoadWarehouse"}]
+      }
+    }
+}

@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: c360kp-ctne-job
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      name: c360kp-ctne
+    spec:
+      hostNetwork: true
+      containers:
+      - name: c360kp-ctne
+        image: joegoldberg/controlm:bmctwitter
+        env:
+        - name: BTCONF
+          value: "ctne.yaml"
+      restartPolicy: Never
