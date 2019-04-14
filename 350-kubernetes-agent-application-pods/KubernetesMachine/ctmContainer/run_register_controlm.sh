@@ -25,7 +25,7 @@ ctm env set myctm
 
 # Cluster configuration for connecting to the API
 mkdir /home/ec2-user/.kube/
-cp $KUBE_CONFIG /home/ec2-user/.kube/ 
+cp $KUBE_CONFIG /home/ec2-user/.kube/config 
 
 echo run and register controlm agent [$ALIAS] with controlm [$CTM_SERVER], environment [$CTM_ENV] 
 ctm provision setup $CTM_SERVER $ALIAS $CTM_AGPORT

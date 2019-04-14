@@ -74,7 +74,6 @@ RUN cp /tmp/run_register_controlm.sh /home/ec2-user \
 
 # copy Python script and job manifests to container
 COPY runJob.py /home/ec2-user/
-COPY c360srv*-job.yaml /home/ec2-user/
 
 EXPOSE 7000-8000
 EXPOSE 22

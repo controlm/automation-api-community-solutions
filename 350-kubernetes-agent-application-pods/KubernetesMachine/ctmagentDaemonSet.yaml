@@ -21,11 +21,12 @@ spec:
       containers:
       - name: ctmagent-container
         image: joegoldberg/controlm:ctmagfy20seminar
+        imagePullPolicy: Always
         ports:
         - containerPort: 7317
         env:
         - name: CTM_ENV
-          value: "ctmv19"
+          value: "ctmprod"
         - name: CTM_SERVER
           value: "controlm"
         - name: CTM_HOSTGROUP
@@ -42,6 +43,8 @@ spec:
       - name: test-volume
         hostPath:
           # directory location on host
-          path: /home/bitnami/ctmv19
+          path: /home/bitnami/ctmArtifacts
           # this field is optional
           type: Directory
+      imagePullSecrets:
+      - name: regcred
