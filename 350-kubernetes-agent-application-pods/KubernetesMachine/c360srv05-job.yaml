@@ -10,9 +10,12 @@ spec:
       containers:
       - name: c360srv05
         image: joegoldberg/controlm:appimage
+        imagePullPolicy: Always
         env:
         - name: LOOPCTR
           value: "10"
         - name: STIME
           value: "5"
+      imagePullSecrets:
+      - name: regcred
       restartPolicy: Never
