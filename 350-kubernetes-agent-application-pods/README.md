@@ -11,7 +11,7 @@ Control-M orchestrates this application because there are components
 ## **Architecture**
 This is a view of the application components:
 
-![Architecture](images/Cust360Arch.png)
+![Architecture](Images/Cust360Arch.png)
 
  - Kubernetes Cluster - Bitnami Sandbox on AWS running Kubernetes 1.14
  - Control-M Agent - Running as a DaemonSet, managing application Workflows
