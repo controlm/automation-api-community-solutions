@@ -1,3 +1,4 @@
+
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -15,3 +16,5 @@ spec:
         - name: BTCONF
           value: "ctsw.yaml"
       restartPolicy: Never
+      imagePullSecrets:
+      - name: regcred
