@@ -48,7 +48,7 @@ def startJob(kJobname):
       kJob = k8s_api.read_namespaced_job(kJobname, kNameSpace)
    except:
       print("Failed creating job: " + kJobname)
-	  sys.exit(2)
+      sys.exit(2)
 	  
    print("Job {0} created".format(kJob.metadata.name))
    return
@@ -65,8 +65,8 @@ def status(kJobname):
       try:
          ret = batchV1.list_namespaced_job(kNameSpace, label_selector=podLabelSelector)
       except:
-	     print("Failed getting job status: " + kJobname)
-		 sys.exit(4)
+         print("Failed getting job status: " + kJobname)
+         sys.exit(4)
 		 
       for i in ret.items:
          jobStatus = str(i.status.active)
@@ -105,19 +105,19 @@ def deleteJob(kJobname, podName):
    config.load_kube_config()
    jobBody = client.V1Job()
    batchV1 = client.BatchV1Api()
-   ret = batchV1.delete_namespaced_job(kJobname, kNameSpace, jobBody)
+   ret = batchV1.delete_namespaced_job(kJobname, kNameSpace)
    print("Job deleted: " + kJobname)
    
    podBody = client.V1DeleteOptions()
    coreV1 = client.CoreV1Api()
-   ret = coreV1.delete_namespaced_pod(podName, kNameSpace, podBody)
+   ret = coreV1.delete_namespaced_pod(podName, kNameSpace)
    print("Pod deleted: " + podName)
    
    return
 
 def termSignal(signalNumber, frame):  
    global kJobname, kNameSpace, podName
-   print("Terminating due to SIGTERM: " + signalNumber)
+   print("Terminating due to SIGTERM: %i" % signalNumber)
    podName = listPod(kJobname)
    getLog(podName)
    deleteJob(kJobname, podName)

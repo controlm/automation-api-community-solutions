@@ -3,7 +3,6 @@ kind: Job
 metadata:
   name: c360kp-ctne-job
 spec:
-  backoffLimit: 1
   template:
     metadata:
       name: c360kp-ctne

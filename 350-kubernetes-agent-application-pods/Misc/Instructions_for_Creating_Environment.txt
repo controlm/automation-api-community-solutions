@@ -1,0 +1,136 @@
+#
+# This document is still under construction. Status will be updaed upon completion
+#
+#
+
+Snowflake:
+    Snowflake account:	bmc_control_m.us-east-1
+    Certificate:       Git repo: Misc\snow.cer
+    ConnectionString:  jdbc:snowflake://bmc_control_m.us-east-1.snowflakecomputing.com:443
+	Folder:            C:\BMC_Stuff\
+	Class:             net.snowflake.client.jdbc.SnowflakeDriver
+	
+	"C:\Program Files\BMC Software\Control-M Agent\Default\CM\JRE\bin\keytool" -import -alias snowflake -keystore "C:\Program Files\BMC Software\Control-M Agent\Default\CM\AP\data\security\apcerts" -storepass appass -file C:\bmc_stuff\snow.cer
+	
+	"C:\Program Files\BMC Software\Control-M Agent\Default\CM\JRE\bin\keytool" -list -v -keystore "C:\Program Files\BMC Software\Control-M Agent\Default\CM\AP\data\security\apcerts"
+
+net user User1 passwordforuser1 /add
+net localgroup "Remote Desktop Users" User1 /add
+
+ctm config authorization:user::add "C:\\BMC_Stuff\\em_user1_def.json"
+
+Update maxOldDays
+
+#
+# Kafka:
+#
+sudo apt-get install zookeeperd
+telnet localhost 2181
+ruok
+imok
+sudo adduser --system --no-create-home --disabled-password --disabled-login kafka
+cd ~
+wget "http://www-eu.apache.org/dist/kafka/2.1.1/kafka_2.12-2.1.1.tgz"
+curl http://kafka.apache.org/KEYS | gpg --import
+wget https://dist.apache.org/repos/dist/release/kafka/2.1.1/kafka_2.12-2.1.1.tgz.asc
+gpg --verify kafka_2.12-2.1.1.tgz.asc kafka_2.12-2.1.1.tgz
+
+sudo mkdir /opt/kafka
+sudo tar -xvzf kafka_2.12-2.1.1.tgz --directory /opt/kafka --strip-components 1
+
+rm -rf kafka_2.12-2.1.1.tgz kafka_2.12-2.1.1.tgz.asc
+
+sudo mkdir /var/lib/kafka
+sudo mkdir /var/lib/kafka/data
+sudo vi /opt/kafka/config/server.properties
+
+delete.topic.enable = true
+log.dirs=/var/lib/kafka/data
+log.retention.hours=168  #other accepted keys are(log.retention.ms, log.retention.minutes) 
+log.retention.bytes=104857600
+sudo chown -R kafka:nogroup /opt/kafka
+sudo chown -R kafka:nogroup /var/lib/kafka
+
+sudo vi /etc/systemd/system/kafka.service
+[Unit]
+Description=High-available, distributed message broker
+After=network.target
+[Service]
+User=kafka
+ExecStart=/opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties
+[Install]
+WantedBy=multi-user.target
+
+ExecStart=/opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties > /opt/kafka/server.log  <-- optional redirect log
+
+sudo systemctl start kafka.service
+
+sudo systemctl enable kafka.service
+
+sudo systemctl status kafka.service
+
+sudo systemctl restart zookeeper.service <-- Manage Zookeeper
+
+kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic tweets
+
+kafka-console-consumer.sh --bootstrap-server localhost:9092 --from-beginning --topic tweets
+
+kafka-topics.sh --list --zookeeper localhost:2181
+
+#
+# Mongodb:
+#
+vi /etc/systemd/system/mongodb.service
+
+#Unit contains the dependencies to be satisfied before the service is started.
+[Unit]
+Description=MongoDB Database
+After=network.target
+Documentation=https://docs.mongodb.org/manual
+# Service tells systemd, how the service should be started.
+# Key `User` specifies that the server will run under the mongodb user and
+# `ExecStart` defines the startup command for MongoDB server.
+[Service]
+User=mongodb
+Group=mongodb
+ExecStart=/usr/bin/mongod --quiet --config /etc/mongod.conf
+# Install tells systemd when the service should be automatically started.
+# `multi-user.target` means the server will be automatically started during boot.
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl daemon-reload
+
+sudo systemctl start mongodb
+sudo systemctl enable mongodb
+udo systemctl stop mongodb
+sudo systemctl restart mongodb
+
+use admin
+db.createUser({user: "admin", pwd: "abc123", roles: [ { role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase" ] })
+
+/etc/mongod.conf -> security.authorization: enabled
+
+mongo -u "admin" -p "1LIgJHG7PG9D" --authenticationDatabase "admin"
+
+use admin
+db.changeUserPassword("admin", "1LIgJHG7PG9D")
+
+use geo
+db.createUser({user: "geoUser", pwd: "ctmfy20", roles: [{ role: "read", db: "admin" }, { role: "readWrite", db: "geo" }]})
+
+db.createUser({user: "ctmUser", pwd: "ctmfy20", roles: [{ role: "read", db: "admin" }, { role: "readWrite", db: "geo" }]})
+db.dropUser()
+
+var dataKeys = db.<COLLECITON NAME>.findOne();
+for (var key in dataKeys) { print (key) ; }
+
+sudo docker run --net host -e BTCONF=ctSE.yaml bmctwitter
+
+sudo vi /usr/lib/python2.7/site-packages/kubernetes/utils/create_from_yaml.py
+
+#
+# Prepare machine to create an AMI
+#
+powershell C:\ProgramData\Amazon\EC2-Windows\Launch\Scripts\InitializeDisks.ps1 -Schedule
+

@@ -9,6 +9,16 @@
 	},
 	
   "CUST360" : { "Type" : "Folder", 
+    "C360_PullGeoUpdates" : {
+      "Type" : "Job:FileTransfer",
+      "ConnectionProfileSrc" : "S3_SMDemo",
+      "ConnectionProfileDest" : "SMDemoLocal",
+      "Confirm" : true,
+      "Host" : "controlm",
+      "Variables" : [{"FTP-S3_BUCKET_NAME" : "623469066856-fy20seminars" }],
+      "FileTransfers" : [{"TransferType" : "Binary", "TransferOption" : "SrcToDestFileWatcher", "Src" : "/Inbound/Geo*.dat", "Dest" : "C:\\Production\\Data\\"} ],
+      "eventsToAdd" : {"Type" : "AddEvents", "Events" : [{"Event" : "C360_PullGeoUpdates-TO-C360_LoadAddresses"}]}
+    },
     "C360_LoadAddresses" : { "Type" : "Job:Database:SQLScript", "OutputSQLOutput" : "Y", 
 	  "SQLScript" : "C:\\Production\\SnowSQL\\GetCustomers.sql",
       "ConnectionProfile" : "SNOWFLAKE",
@@ -17,16 +27,6 @@
       "eventsToWaitFor" : { "Type" : "WaitForEvents", "Events" : [ { "Event" : "C360_PullGeoUpdates-TO-C360_LoadAddresses" } ]},
       "eventsToDelete" : { "Type" : "DeleteEvents", "Events" : [ { "Event" : "C360_PullGeoUpdates-TO-C360_LoadAddresses" } ]}
     },
-    "C360_PullGeoUpdates" : {
-      "Type" : "Job:FileTransfer",
-      "ConnectionProfileSrc" : "S3_SMDemo",
-      "ConnectionProfileDest" : "ctmv19pga_lcl",
-      "Confirm" : true,
-      "Host" : "ctmv19pga",
-      "Variables" : [{"FTP-S3_BUCKET_NAME" : "623469066856-fy20seminars" }],
-      "FileTransfers" : [{"TransferType" : "Binary", "TransferOption" : "SrcToDestFileWatcher", "Src" : "/Inbound/Geo*.dat", "Dest" : "C:\\Production\\Data\\"} ],
-      "eventsToAdd" : {"Type" : "AddEvents", "Events" : [{"Event" : "C360_PullGeoUpdates-TO-C360_LoadAddresses"}]}
-    },
 	"C360_StartKafka" : {
       "Type" : "Job:Command",
       "Host" : "KafkaMaster",
@@ -34,28 +34,17 @@
       "Command" : "sudo systemctl start kafka.service",
       "eventsToAdd" : {
         "Type" : "AddEvents",
-        "Events" : [ {
-          "Event" : "C360_StartKafka-TO-C360_KafkaProducers"
-        } ]
-      }
-    },
+        "Events" : [{"Event" : "C360_StartKafka-TO-C360_KafkaProducers"}, {"Event" : "C360_StartKafka-TO-C360_KafkaConsumers"}]}
+    },	
     "C360_StopKafka" : {
       "Type" : "Job:Command",
       "Host" : "KafkaMaster",
       "RunAs" : "ctmmft",
       "Command" : "sudo systemctl stop kafka.service",
-      "eventsToWaitFor" : {
-        "Type" : "WaitForEvents",
-        "Events" : [ {
-          "Event" : "C360_KafkaProducers-TO-C360_StopKafka"
-        } ]
-      },
-      "eventsToDelete" : {
-        "Type" : "DeleteEvents",
-        "Events" : [ {
-          "Event" : "C360_KafkaProducers-TO-C360_StopKafka"
-        } ]
-      }
+      "eventsToWaitFor" : {"Type" : "WaitForEvents",
+        "Events" : [{"Event" : "C360_KafkaProducers-TO-C360_StopKafka"}, {"Event" : "C360_KafkaConsumers-TO-C360_StopKafka"}]},
+      "eventsToDelete" : {"Type" : "DeleteEvents",
+        "Events" : [{"Event" : "C360_KafkaProducers-TO-C360_StopKafka"}, {"Event" : "C360_KafkaConsumers-TO-C360_StopKafka"}]}
     },
 	
 	"Defaults" : { 
@@ -85,7 +74,16 @@
 	  "C360_MatchCustomer5" : {"Type" : "Job:EmbeddedScript", "Script" : "#!/bin/bash\\ncd ctmDocker\\npython runJob.py -j c360srv05-job",
         "FileName" : "runjob001.sh", "Host" : "k8sgroup19", "Description" : "Match Tweet, GeoLocation and Customer Record",
         "C360srv05-job" : {"Type" : "Resource:Mutex", "MutexType" : "Exclusive"}
-      }
+      },
+      "eventsToWaitFor" : {
+        "Type" : "WaitForEvents",
+        "Events" : [{"Event" : "C360_StartKafka-TO-C360_KafkaConsumers"}]},
+      "eventsToAdd" : {
+        "Type" : "AddEvents",
+        "Events" : [{"Event" : "C360_KafkaConsumers-TO-C360_StopKafka"}]},
+      "eventsToDelete" : {
+        "Type" : "DeleteEvents",
+        "Events" : [{"Event" : "C360_StartKafka-TO-C360_KafkaConsumers"}]}
     },
     "C360_KafkaProducers" : {
       "Type" : "SubFolder",
@@ -123,22 +121,13 @@
       },
       "eventsToWaitFor" : {
         "Type" : "WaitForEvents",
-        "Events" : [ {
-          "Event" : "C360_StartKafka-TO-C360_KafkaProducers"
-        } ]
-      },
+        "Events" : [{"Event" : "C360_StartKafka-TO-C360_KafkaProducers"}]},
       "eventsToAdd" : {
         "Type" : "AddEvents",
-        "Events" : [ {
-          "Event" : "C360_KafkaProducers-TO-C360_StopKafka"
-        } ]
-      },
+        "Events" : [{"Event" : "C360_KafkaProducers-TO-C360_StopKafka"}]},
       "eventsToDelete" : {
         "Type" : "DeleteEvents",
-        "Events" : [ {
-          "Event" : "C360_StartKafka-TO-C360_KafkaProducers"
-        } ]
-      }
+        "Events" : [{"Event" : "C360_StartKafka-TO-C360_KafkaProducers"}]}
     }
 
 	
