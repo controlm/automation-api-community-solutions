@@ -48,7 +48,7 @@ def startJob(kJobname):
       kJob = k8s_api.read_namespaced_job(kJobname, kNameSpace)
    except:
       print("Failed creating job: " + kJobname)
-	  sys.exit(2)
+      sys.exit(2)
 	  
    print("Job {0} created".format(kJob.metadata.name))
    return
@@ -65,8 +65,8 @@ def status(kJobname):
       try:
          ret = batchV1.list_namespaced_job(kNameSpace, label_selector=podLabelSelector)
       except:
-	     print("Failed getting job status: " + kJobname)
-		 sys.exit(4)
+         print("Failed getting job status: " + kJobname)
+         sys.exit(4)
 		 
       for i in ret.items:
          jobStatus = str(i.status.active)
