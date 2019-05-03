@@ -58,7 +58,7 @@
       "Properties": {
         "DisableApiTermination": "false",
         "InstanceInitiatedShutdownBehavior": "stop",
-        "ImageId": "ami-05470264a83c51685",
+        "ImageId": "ami-05d1f75ff109575f3",
         "InstanceType": "m4.xlarge",
         "KeyName": "FY20AppDevDemo",
         "Monitoring": "false",
