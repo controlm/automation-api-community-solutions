@@ -1,0 +1,20 @@
+{
+"DeployDescriptor":
+  [
+    {
+      "Property" :"RunAs",
+      "Assign" : "workbench"
+    },
+    {
+      "Property" :"Host",
+      "Assign" : "workbench"
+    },
+    {
+      "ApplyOn" : {
+        "Type":"Folder"
+      },
+      "Property" :"ControlmServer",
+      "Assign" : "workbench"
+    } 
+  ]
+}
