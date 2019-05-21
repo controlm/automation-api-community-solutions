@@ -1,0 +1,51 @@
+# Example Pipeline for Control-M jobs-as-code
+
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install
+    npm run build
+    npm -v
+    node -v
+  displayName: 'npm install and build'
+
+- script: |
+    wget https://s3-us-west-2.amazonaws.com/controlm-appdev/release/v9.18.3/ctm-cli.tgz
+    npm -g install ctm-cli.tgz
+    ctm -v
+  displayName: 'Download and install CTM AAPI CLI'
+
+- script: |
+    ctm env add ctm https://<HOST:8443/automation-api <USER> <PASSWORD>
+    ctm session login
+  displayName: 'Add environment and test login'
+
+- script:
+    ctm deploy transform sample.json DeployDescriptorStaging.json
+  displayName: 'Print transformation of jobs with DeployDescriptor'  
+
+- script: |
+    ctm build sample.json DeployDescriptorStaging.json
+  displayName: 'Build jobs-as-code json file'
+
+- script: |
+    ctm run sample.json DeployDescriptorStaging.json
+  displayName: 'run jobs'
+
+- script: |
+    echo "Implement your test automation here using ctm run status and ctm run job:output::get"
+  displayName: 'Test jobs'
+
+- script: |
+    ctm deploy sample.json DeployDescriptorStaging.json
+  displayName: "Deploy jobs (is actually already performed when running the jobs)"

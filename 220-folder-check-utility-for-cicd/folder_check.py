@@ -281,7 +281,12 @@ def get_folders(json_input):
     # Setting variables
     # =================================================================================================
     
-    ctm_server_from_defaults = json_input['Defaults'].get("ControlmServer")
+    try: 
+        ctm_server_from_defaults = json_input['Defaults'].get("ControlmServer")
+    except (ValueError, KeyError, TypeError):
+        # Some elements don't have a type (e.g. defaults). We ignore these
+        ignore=""
+        
     elements = {}
     
     # =================================================================================================
