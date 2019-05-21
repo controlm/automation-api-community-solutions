@@ -1,0 +1,15 @@
+consumer_key: 'n52KxRaILLBc8YUIc6I6Q'
+consumer_secret: 'EdW0CkR1OHPQu7LchEOu2OQqYP1dfV5DYItKHPhRME'
+access_token: '49669525-wa6XwAv3JV0xcOXtPDKVoDY2GRZRRlJeVkWHQzykz'
+access_token_secret: 'bqIOs9XhG9VIp0wXLsHMj4mnO3tLU8HucecIjvwPU'
+
+bottomLongitude: -73.504389 
+bottomLatitude: 41.683924
+topLongitude: -72.644537
+topLatitude: 42.026518
+
+track: ['Trump', 'ocean', 'Democrat', 'Republican', 'jobsascode','BMCSoftware', 'school', 'CT', '#metoo', 'governor', 'Iran']
+
+languages: ['en', 'es', 'fr']
+
+KafkaTopic: 'tweets'

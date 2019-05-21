@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: c360srv05-job
+spec:
+  template:
+    metadata:
+      name: c360srv05
+    spec:
+      containers:
+      - name: c360srv05
+        image: joegoldberg/controlm:appimage
+        imagePullPolicy: Always
+        env:
+        - name: LOOPCTR
+          value: "10"
+        - name: STIME
+          value: "5"
+      imagePullSecrets:
+      - name: regcred
+      restartPolicy: Never

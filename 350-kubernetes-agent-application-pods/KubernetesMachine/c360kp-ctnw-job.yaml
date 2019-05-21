@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: c360kp-ctnw-job
+spec:
+  template:
+    metadata:
+      name: c360kp-ctnw
+    spec:
+      hostNetwork: true
+      containers:
+      - name: c360kp-ctnw
+        image: joegoldberg/controlm:bmctwitter
+        env:
+        - name: BTCONF
+          value: "ctnw.yaml"
+      restartPolicy: Never
+      imagePullSecrets:
+      - name: regcred

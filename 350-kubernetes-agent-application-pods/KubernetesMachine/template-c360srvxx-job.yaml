@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: $$NAME$$-job
+spec:
+  template:
+    metadata:
+      name: $$NAME$$
+    spec:
+      containers:
+      - name: $$NAME$$
+        image: joegoldberg/controlm:appimage
+        imagePullPolicy: Always
+        env:
+        - name: LOOPCTR
+          value: "$$PARM1$$"
+        - name: STIME
+          value: "$$PARM2$$"
+      imagePullSecrets:
+      - name: regcred
+      restartPolicy: Never

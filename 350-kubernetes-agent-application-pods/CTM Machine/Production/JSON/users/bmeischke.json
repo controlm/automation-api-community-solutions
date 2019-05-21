@@ -1,0 +1,14 @@
+{ 
+	"Name": "bmeischke",   
+    "FullName": "Bill Meischke",   
+    "Description": "Australia Pre-Sales",   
+    "Authentication": {
+        "ControlM": {     
+            "Password": "Ozman23$%",     
+            "PasswordExpirationDays": 0,     
+            "ChangePasswordAtNextLogin": false,     
+            "LockAccount": false
+        }   
+    },
+    "Roles": ["UpdateGroup"]
+}

@@ -1,0 +1,6 @@
+simplejson
+tweepy 
+kafka-python
+pyyaml
+pymongo
+snowflake-connector-python
