@@ -26,7 +26,7 @@ steps:
   displayName: 'Download and install CTM AAPI CLI'
 
 - script: |
-    ctm env add ctm https://tmoctm.bmci2t.com:8443/automation-api emuser t43tNgfreJacVjsKHjkY
+    ctm env add ctm https://<HOST:8443/automation-api <USER> <PASSWORD>
     ctm session login
   displayName: 'Add environment and test login'
 
