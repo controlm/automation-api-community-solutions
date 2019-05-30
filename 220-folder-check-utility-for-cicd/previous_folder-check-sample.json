@@ -1,0 +1,62 @@
+{
+	"Defaults": {
+		"Application": "TMO_DEMO",
+		"SubApplication": "TMO_DEMO_FOLDER_CHECK",
+		"ControlmServer" : "ctmserver"
+	},
+	
+	"folder_A": {
+		"Type": "Folder",
+		"ControlmServer" : "ctmserver",
+		"jobA1": {
+			"Type": "Job:Command",
+			"Command": "echo hello",
+			"RunAs": "tmonte"
+		},
+	
+		"jobA2": {
+			"Type": "Job:Command",
+			"Command": "echo hello",
+			"RunAs": "tmonte"
+		},
+		
+		"folder_AA" : {
+			"Type" : "SubFolder",
+			
+			"Folder_AAA" : {
+				"Type" : "SubFolder",
+			
+				"jobAAA1": {
+					"Type": "Job:Command",
+					"Command": "echo hello",
+					"RunAs": "tmonte"
+				}
+			},
+			
+			"jobAA1": {
+				"Type": "Job:Command",
+				"Command": "echo hello",
+				"RunAs": "tmonte"
+			}
+		}
+	},
+	
+	"folder_B": {
+		
+		"Type": "Folder",
+		"jobB1": {
+			"Type": "Job:Command",
+			"Command": "echo hello",
+			"RunAs": "tmonte"
+		}
+	},
+	 
+	"folder_C": {
+		"Type": "Folder",
+		"jobB1": {
+			"Type": "Job:Command",
+			"Command": "echo hello",
+			"RunAs": "tmonte"
+		}
+	}
+}
