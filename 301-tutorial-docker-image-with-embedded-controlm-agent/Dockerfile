@@ -18,7 +18,7 @@ RUN yum -y update \
 	&& yum -y install psmisc
 
 # install nodejs
-RUN curl --silent --location https://rpm.nodesource.com/setup_6.x | bash - \
+RUN curl --silent --location https://rpm.nodesource.com/setup_11.x | bash - \
 	&& yum -y install nodejs \
 	&& node -v \
 	&& npm -v
