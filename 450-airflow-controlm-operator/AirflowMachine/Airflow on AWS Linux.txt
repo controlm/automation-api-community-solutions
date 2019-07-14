@@ -26,22 +26,25 @@ echo 'airflow ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 # Airflow needs MySQL 5.6 or higher and Amazon Linux comes with 5.5 installed
 #
 # /etc/my.cnf add to end
+bind-address = 0.0.0.0 <-- instead of 127.0.0.1
+# skip-networking      <-- Comment to disable
 #explicit_defaults_for_timestamp=1
 mysql> SET GLOBAL explicit_defaults_for_timestamp=ON;
+
 
 sudo service mysqld start
 sudo /etc/init.d/mysqld start
 sudo chkconfig mysqld on
 
-mysqladmin -u root password '123456789'
+mysqladmin -u root password 'K9fndzlFDItf'
 
-mysql -u root -p 123456789
+mysql -u root -p K9fndzlFDItf
 
 mysql> CREATE DATABASE airflow CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 mysql> create user 'airflow'@'localhost' identified by 'airflow';
 mysql> grant all privileges on * . * to 'airflow'@'localhost';
+mysqld> grant all privileges on *.* to 'root'@'%' identified by 'K9fndzlFDItf'; <--remote access
 mysql> flush privileges;
-
 
 
 
