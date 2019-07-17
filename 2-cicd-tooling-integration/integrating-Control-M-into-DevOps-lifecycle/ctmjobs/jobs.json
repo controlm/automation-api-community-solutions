@@ -1,0 +1,49 @@
+{
+	"Defaults": {
+		"Application": "BoEtoMoD",
+		"SubApplication": "FileTransform",
+		"RunAs": "v19p",
+		"Host": "clm-aus-tobcvy"
+	},
+	"BoEtoMoD": {
+		"Type": "Folder",
+		"Comment": "Code reviewed by us DDOS team",
+		"DDO_S1_DOWNLOAD": {
+			"Type": "Job:FileTransfer",
+			"ConnectionProfileSrc": "BoE",
+			"ConnectionProfileDest": "LocalConn",
+			"FileTransfers": [{
+				"Src": "~/input.csv",
+				"Dest": "/tmp/input.csv",
+				"TransferOption": "SrcToDest",
+				"TransferType": "Binary"
+			}]
+		},
+		"DDO_S1_TRANSFORM": {
+			"Type": "Job:Command",
+			"Command": "python /home/v19p/transform.py /tmp/input.csv"
+		},
+		"DDO_S1_VALIDATE": {
+			"Type": "Job:Command",
+			"Command": "python /home/v19p/validate.py /tmp/input.csv /home/v19p/results.json"
+		},
+		"DDO_S1_UPLOAD": {
+			"Type": "Job:FileTransfer",
+			"ConnectionProfileSrc": "LocalConn",
+			"ConnectionProfileDest": "MoD",
+			"FileTransfers": [{
+				"Src": "/home/v19p/results.json",
+				"Dest": "~/results.json",
+				"TransferOption": "SrcToDest",
+				"TransferType": "Binary"
+			}]
+		},
+		"Flow": {
+			"Type": "Flow",
+			"Sequence": ["DDO_S1_DOWNLOAD",
+			"DDO_S1_TRANSFORM",
+			"DDO_S1_VALIDATE",
+			"DDO_S1_UPLOAD"]
+		}
+	}
+}
