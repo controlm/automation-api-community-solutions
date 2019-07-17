@@ -30,3 +30,5 @@ the following video demonstrates an example CI/CD pipeline with Gitlab and
 Jenkins using the files from this project.
 
 [![Watch the video](images/YouTubeLink.PNG)](https://youtu.be/VUudB0hrCtQ)
+
+Click the above image to watch the video on YouTube.
