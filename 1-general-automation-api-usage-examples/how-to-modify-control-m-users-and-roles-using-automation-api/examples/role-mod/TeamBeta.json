@@ -1,0 +1,122 @@
+{
+  "Name": "TeamBeta",
+  "Description": "Beta-Team",
+  "AllowedJobs": {
+    "Included": [
+      [
+        [
+          "Folder",
+          "like",
+          "Beta-*"
+        ],
+        [
+          "FileName",
+          "like",
+          "*"
+        ]
+      ],
+      [
+        [
+          "Application",
+          "like",
+          "Beta-*"
+        ],
+        [
+          "FileName",
+          "like",
+          "*"
+        ]
+      ]
+    ]
+  },
+  "AllowedJobActions": {
+    "ViewProperties": true,
+    "Documentation": true,
+    "Log": true,
+    "Statistics": true,
+    "ViewOutputList": true,
+    "ViewJcl": true,
+    "Why": true,
+    "Hold": true,
+    "Free": true,
+    "Confirm": true,
+    "Rerun": true,
+    "React": true,
+    "Restart": true,
+    "Kill": true,
+    "Bypass": true
+  },
+  "Privileges": {
+    "ClientAccess": {
+      "SelfServiceAccess": "Full",
+      "WorkloadChangeManagerAccess": "Full",
+      "UtilitiesAccess": "Full",
+      "ApplicationIntegratorAccess": "Full"
+    },
+    "ConfigurationManager": {
+      "Authorization": "Browse",
+      "ConfigurationManagerAccess": "Full",
+      "Operation": "Full",
+      "ControlmSecurity": "Update",
+      "Configuration": "Update"
+    },
+    "Monitoring": {
+      "Alert": "Update",
+      "ViewpointArchive": "Full"
+    },
+    "Planning": {
+      "PeriodicalStatistics": "Full",
+      "ForecastOrBatchImpactManagerConfig": "Full",
+      "PromoteAction": "Update"
+    },
+    "Tools": {
+      "Cli": "Full",
+      "BatchImpactManagerReport": "Full",
+      "ForecastReport": "Full"
+    },
+    "ViewpointManager": {
+      "Collections": "Update",
+      "Hierarchies": "Update",
+      "Filters": "Update",
+      "Viewpoints": "Update"
+    }
+  },
+  "Folders": [
+    {
+      "Privilege": "Browse",
+      "ControlmServer": "*",
+      "Library": "*",
+      "Folder": "Beta-*",
+      "Jobs": {
+        "Privilege": "Browse",
+        "Application": "Beta-*",
+        "SubApplication": "*"
+      }
+    }
+  ],
+  "Calendars": [
+    {
+      "Privilege": "Browse",
+      "ControlmServer": "*",
+      "Name": "*"
+    }
+  ],
+  "RunasUsers": [
+    {
+      "ControlmServer": "*"
+    }
+  ],
+  "WorkloadPolicies": [
+    {
+      "Privilege": "Full",
+      "Name": "*"
+    }
+  ],
+  "Events": [
+    {
+      "Privilege": "Full",
+      "ControlmServer": "*",
+      "Name": "*"
+    }
+  ]
+}
