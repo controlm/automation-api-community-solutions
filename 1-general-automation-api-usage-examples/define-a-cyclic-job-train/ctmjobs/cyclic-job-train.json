@@ -1,0 +1,64 @@
+{
+	"Defaults": {
+		"Application": "CyclicJobTrainDemo",
+		"SubApplication": "Demo",
+		"Host": "workbench",
+		"RunAs": "workbench",
+		"Job": {
+			"When": {
+				"WeekDays": ["MON", "TUE", "WED", "THU", "FRI"]
+			}
+		}
+	},
+	"CyclicJobTrain": {
+		"Type": "SimpleFolder",
+		"ControlmServer": "workbench",
+		"A_WatchForFiles": {
+			"Type": "Job:FileWatcher:Create",
+			"Description": "Watches for trigger files named *.done in incoming directory",
+			"Rerun": {
+				"Every": "2",
+				"Units": "Minutes"
+			},
+			"Path": "/home/filehub/incoming/*.done",
+			"SearchInterval": "45"
+		},
+		"B_MoveFiles": {
+			"Type": "Job:EmbeddedScript",
+			"Script": "#!/bin/bash\\ncd /home/filehub/incoming\\nfor f in *.done\\ndo\\n  mv ${f%.*}.csv ../process/\\n  rm $(basename $f)\\ndone\\n",
+			"Description": "Moves csv file to process directory and deletes trigger file",
+			"Rerun": {
+				"Every": "2",
+				"Units": "Minutes"
+			},
+			"FileName": "movefiles.sh"
+		},
+		"C_ProcessFiles": {
+			"Type": "Job:Command",
+			"Command": "/home/filehub/process.py",
+			"Description": "Process the received csv files from process directory",
+			"Rerun": {
+				"Every": "2",
+				"Units": "Minutes"
+			}
+		},
+		"0_TriggerJob": {
+			"Type": "Job:Dummy",
+			"Description": "Dummy job to trigger A_WatchForFiles job at start of day",
+			"AddCondition": {
+				"Type": "AddEvents",
+				"Events": [{
+					"Event": "flow2_from_CyclicJobTrain_folder_job_C_ProcessFiles_to_CyclicJobTrain_folder_job_A_WatchForFiles"
+				}]
+			}
+		},
+		"flow1": {
+			"Type": "Flow",
+			"Sequence": ["A_WatchForFiles", "B_MoveFiles", "C_ProcessFiles"]
+		},
+		"flow2": {
+			"Type": "Flow",
+			"Sequence": ["C_ProcessFiles", "A_WatchForFiles"]
+		}
+	}
+}
