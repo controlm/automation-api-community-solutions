@@ -1,0 +1,240 @@
+{
+  "DbaOpsResource" : {
+    "Type" : "Folder",
+    "ControlmServer" : "workbench",
+    "OrderMethod" : "Manual",
+    "ActiveRetentionPolicy" : "CleanEndedOK",
+    "RunAs" : "workbench",
+    "SubApplication" : "Resource",
+    "CreatedBy" : "workbench",
+    "Application" : "DbaOpsWeeklyUpdate",
+    "When" : {
+      "RuleBasedCalendars" : {
+        "Included" : [ "EVERYDAY" ],
+        "EVERYDAY" : {
+          "Type" : "Calendar:RuleBased",
+          "When" : {
+            "DaysRelation" : "OR",
+            "WeekDays" : [ "NONE" ],
+            "MonthDays" : [ "ALL" ]
+          }
+        }
+      }
+    },
+    "DbaOpsUpdate#1" : {
+      "Type" : "Job:Command",
+      "SubApplication" : "Resource",
+      "EndFolder" : false,
+      "Host" : "workbench",
+      "CreatedBy" : "workbench",
+      "RunAs" : "workbench",
+      "Application" : "DbaOpsWeeklyUpdate",
+      "Command" : "sleep 15",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "SpecificDates" : [ ],
+        "DaysRelation" : "OR"
+      },
+      "DbaOpsDbInstance1" : {
+        "Type" : "Resource:Semaphore",
+        "Quantity" : "1"
+      }
+    },
+    "DbaOpsUpdate#2" : {
+      "Type" : "Job:Command",
+      "SubApplication" : "Resource",
+      "EndFolder" : false,
+      "Host" : "workbench",
+      "CreatedBy" : "workbench",
+      "RunAs" : "workbench",
+      "Application" : "DbaOpsWeeklyUpdate",
+      "Command" : "sleep 15",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "SpecificDates" : [ ],
+        "DaysRelation" : "OR"
+      },
+      "DbaOpsDbInstance1" : {
+        "Type" : "Resource:Semaphore",
+        "Quantity" : "1"
+      }
+    },
+    "DbaOpsUpdate#3" : {
+      "Type" : "Job:Command",
+      "SubApplication" : "Resource",
+      "EndFolder" : false,
+      "Host" : "workbench",
+      "CreatedBy" : "workbench",
+      "RunAs" : "workbench",
+      "Application" : "DbaOpsWeeklyUpdate",
+      "Command" : "sleep 15",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "SpecificDates" : [ ],
+        "DaysRelation" : "OR"
+      },
+      "DbaOpsDbInstance1" : {
+        "Type" : "Resource:Semaphore",
+        "Quantity" : "1"
+      }
+    },
+    "DbaOpsUpdate#4" : {
+      "Type" : "Job:Command",
+      "SubApplication" : "Resource",
+      "EndFolder" : false,
+      "Host" : "workbench",
+      "CreatedBy" : "workbench",
+      "RunAs" : "workbench",
+      "Application" : "DbaOpsWeeklyUpdate",
+      "Command" : "sleep 15",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "SpecificDates" : [ ],
+        "DaysRelation" : "OR"
+      },
+      "DbaOpsDbInstance1" : {
+        "Type" : "Resource:Semaphore",
+        "Quantity" : "1"
+      }
+    },
+    "DbaOpsUpdate#5" : {
+      "Type" : "Job:Command",
+      "SubApplication" : "Resource",
+      "EndFolder" : false,
+      "Host" : "workbench",
+      "CreatedBy" : "workbench",
+      "RunAs" : "workbench",
+      "Application" : "DbaOpsWeeklyUpdate",
+      "Command" : "sleep 15",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "SpecificDates" : [ ],
+        "DaysRelation" : "OR"
+      },
+      "DbaOpsDbInstance1" : {
+        "Type" : "Resource:Semaphore",
+        "Quantity" : "1"
+      }
+    },
+    "DbaOpsUpdate#6" : {
+      "Type" : "Job:Command",
+      "SubApplication" : "Resource",
+      "EndFolder" : false,
+      "Host" : "workbench",
+      "CreatedBy" : "workbench",
+      "RunAs" : "workbench",
+      "Application" : "DbaOpsWeeklyUpdate",
+      "Command" : "sleep 15",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "SpecificDates" : [ ],
+        "DaysRelation" : "OR"
+      },
+      "DbaOpsDbInstance1" : {
+        "Type" : "Resource:Semaphore",
+        "Quantity" : "1"
+      }
+    },
+    "DbaOpsUpdate#7" : {
+      "Type" : "Job:Command",
+      "SubApplication" : "Resource",
+      "EndFolder" : false,
+      "Host" : "workbench",
+      "CreatedBy" : "workbench",
+      "RunAs" : "workbench",
+      "Application" : "DbaOpsWeeklyUpdate",
+      "Command" : "sleep 15",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "SpecificDates" : [ ],
+        "DaysRelation" : "OR"
+      },
+      "DbaOpsDbInstance1" : {
+        "Type" : "Resource:Semaphore",
+        "Quantity" : "1"
+      }
+    },
+    "DbaOpsUpdateMaster#1" : {
+      "Type" : "Job:Command",
+      "SubApplication" : "Resource",
+      "Priority" : "Very High",
+      "EndFolder" : false,
+      "Host" : "workbench",
+      "CreatedBy" : "workbench",
+      "RunAs" : "workbench",
+      "Application" : "DbaOpsWeeklyUpdate",
+      "Command" : "sleep 60",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "SpecificDates" : [ ],
+        "DaysRelation" : "OR"
+      },
+      "DbaOpsMasterTableLock" : {
+        "Type" : "Resource:Mutex",
+        "MutexType" : "Shared"
+      },
+      "DbaOpsDbInstance1" : {
+        "Type" : "Resource:Semaphore",
+        "Quantity" : "3"
+      }
+    },
+    "DbaOpsUpdateMaster#2" : {
+      "Type" : "Job:Command",
+      "SubApplication" : "Resource",
+      "Priority" : "Very High",
+      "EndFolder" : false,
+      "Host" : "workbench",
+      "CreatedBy" : "workbench",
+      "RunAs" : "workbench",
+      "Application" : "DbaOpsWeeklyUpdate",
+      "Command" : "sleep 60",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "SpecificDates" : [ ],
+        "DaysRelation" : "OR"
+      },
+      "DbaOpsMasterTableLock" : {
+        "Type" : "Resource:Mutex",
+        "MutexType" : "Exclusive"
+      },
+      "DbaOpsDbInstance1" : {
+        "Type" : "Resource:Semaphore",
+        "Quantity" : "3"
+      }
+    },
+    "DbaOpsUpdateMaster#3" : {
+      "Type" : "Job:Command",
+      "SubApplication" : "Resource",
+      "Priority" : "Very High",
+      "EndFolder" : false,
+      "Host" : "workbench",
+      "CreatedBy" : "workbench",
+      "RunAs" : "workbench",
+      "Application" : "DbaOpsWeeklyUpdate",
+      "Command" : "sleep 60",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "SpecificDates" : [ ],
+        "DaysRelation" : "OR"
+      },
+      "DbaOpsMasterTableLock" : {
+        "Type" : "Resource:Mutex",
+        "MutexType" : "Exclusive"
+      },
+      "DbaOpsDbInstance1" : {
+        "Type" : "Resource:Semaphore",
+        "Quantity" : "3"
+      }
+    }
+  }
+}
