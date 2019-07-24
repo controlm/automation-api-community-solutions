@@ -127,4 +127,4 @@ automatically by the jobs before they execute.
 
 In this sample run, 5 units of *DbaOpsDbInstance1* semaphore allows 1 critical job and 2 minor ones to run concurrently.
 
-![Script flow](./images/job-control-2.png)
+![Script flow](../images/job-control-2.png)
