@@ -29,7 +29,7 @@ Basic Workflow for this scenario is
 
 
 
-![workflow for scenario](/Images/Workflow.PNG)
+![workflow for scenario](./Images/Workflow.PNG)
 
 
 ## **Prerequisites**
@@ -69,7 +69,7 @@ ctm config server:hostgroup:agent::add $CTM_SERVER $CTM_HOSTGROUP $CTM_AGENT
 ```
 
 
-![workflow for scenario](/Images/LogicOfDeployAgent.PNG)
+![workflow for scenario](./Images/LogicOfDeployAgent.PNG)
 
 
 
@@ -94,7 +94,7 @@ ctm config server:agent::delete $CTM_SERVER $AGENT_ALIAS
 
 
 
-![workflow for scenario](/Images/LogicOfDecommissionAgent.PNG)
+![workflow for scenario](./Images/LogicOfDecommissionAgent.PNG)
 
 
 
