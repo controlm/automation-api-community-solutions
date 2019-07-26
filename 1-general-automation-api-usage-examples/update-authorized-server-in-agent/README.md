@@ -63,5 +63,4 @@ Step 4 - &quot;Perform connecting testing between hostname updated Control-M/Ser
 
 ## Table of Contents
 
-1. [Images](./Images)
-2. [Scripts](./Scripts)
+1. [Scripts](./Scripts)
