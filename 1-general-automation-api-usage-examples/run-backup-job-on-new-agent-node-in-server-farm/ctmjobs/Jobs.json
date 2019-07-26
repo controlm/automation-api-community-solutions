@@ -1,0 +1,27 @@
+{
+	"BackupServerFarmDataFolder" :
+	{
+		"Type" : "SimpleFolder",
+		"ControlmServer" : "clm-aus-tpf0ms",
+
+		"BackupTransactionDataAtNode" : {
+			"Type" : "Job:Script",
+			"Priority" : "Very Low",
+			"RunAs" : "ctms19",
+			"FileName" : "backup_nodedata.sh",
+	        "FilePath" : "/home/ag19",
+			"Host": "AAPIHostGroup",
+			"RunOnAllAgentsInGroup" : true,
+			"When" : {
+		    	"WeekDays" : [ "ALL" ],
+				"MonthDays" : [ "ALL" ],
+				"FromTime":"0100",
+                "ToTime":"0200"
+			},
+			"Notify:NotOK_0" : {
+				"Type" : "Notify:NotOK",
+				"Message" : "Failed to backup the data in server farm"
+		  }
+	   }
+	}
+}
