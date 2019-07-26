@@ -12,7 +12,7 @@ After hostname change, the ctmsuat should be able to connect to all the associat
 Basic Workflow for this scenario is
 
 
-![workflow for scenario](/Images/Workflow.PNG)
+![workflow for scenario](./Images/Workflow.PNG)
 
 
 
