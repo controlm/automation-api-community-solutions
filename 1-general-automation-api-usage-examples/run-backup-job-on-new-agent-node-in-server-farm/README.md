@@ -100,6 +100,5 @@ ctm config server:agent::delete $CTM_SERVER $AGENT_ALIAS
 
 ## Table of Contents
 
-1. [Images](./Images)
-2. [Scripts](./Scripts)
+1. [Scripts](./Scripts)
 2. [Ctmjobs](./ctmjobs)
