@@ -10,7 +10,7 @@ We have our production Control-M Server up and running, its hostname is ctmsprod
 Basic Workflow for this scenario is
 
 
-![workflow for scenario](/Images/Workflow.PNG)
+![workflow for scenario](./Images/Workflow.PNG)
 
 
 ## **Prerequisites**
