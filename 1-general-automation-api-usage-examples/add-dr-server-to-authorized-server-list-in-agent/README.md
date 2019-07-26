@@ -39,3 +39,9 @@ ctm config server:agent:param::set $CTM_SERVER $AGENT "CTMPERMHOSTS" "$DESIRED_C
 Step 3 - &quot;Perform the DR test(optional)&quot;
 
 - You are advised to do a DR testing to ensure DR can connect to all its associated Agents. If you need assistance, please contact BMC Support.
+
+
+
+## Table of Contents
+
+1. [Scripts](./Scripts)
