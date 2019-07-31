@@ -20,7 +20,7 @@ reportName=$(echo $reportName | sed 's/ /%20/g')
 ```
 
 ### Check report format
-Check for 'pdf' or 'csv'.  Although the default is 'csv' when left blank when not specifed the API request fails.
+Check for 'pdf' or 'csv'.  Although the default is 'csv' when left blank when not specified the API request fails.
 ```
 # Check report format
 case $reportFormat in
