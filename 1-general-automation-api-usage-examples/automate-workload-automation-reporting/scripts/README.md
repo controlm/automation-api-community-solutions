@@ -28,7 +28,7 @@ case $reportFormat in
 
 ```
 
-### Check for swithes and options
+### Check for switches and options
 For the -o switch, specify the output directory. Otherwise the default is the current working directory.
 ```
 outputDirectory=""
