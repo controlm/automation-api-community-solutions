@@ -1,9 +1,10 @@
 #!/bin/bash
 
-# Update these variables with appropriate values for your environment
-endpoint="https://wla919:8443/automation-api"
-username="reportuser"
-password="reportuserpassword"
+# Print usage and exit
+print_usage() {
+    printf "Usage: %s -e ENDPOINT -u USERNAME -p PASSWORD -r REPORTNAME -f [pdf|csv] [-o <file_path>]\n" "$(basename "$0")"
+    exit 1
+}
 
 # logout function to be called before each exit when we're already logged in
 ctmapi_logout () {
@@ -12,50 +13,86 @@ ctmapi_logout () {
 
 # Check script arguments
 if [[ ! $# -ge 1 ]] ; then
-    printf "Usage: %s <reportname> [format] [-o <file_path>]\n" "$(basename "$0")"
-    exit 1
+    print_usage
 fi
 
-# Basic sanity check for arguments
 
-# Convert spaces in report name to %20
-reportName=$(echo $1 | sed 's/ /%20/g')
-
-# Check report format
+# Initialize variables
+endpoint=""
+username=""
+password=""
+reportName=""
 reportFormat=""
-case $2 in
-   pdf)
-      reportFormat="pdf"
-      shift 2
-      ;;
-   csv)
-      reportFormat="csv"
-      shift 2
-      ;;
-   *)
-      reportFormat="csv"
-      shift 1
-      ;;
-esac
 
 # Check for swithes
 outputDirectory=""
-while getopts ":o:" opt; do
+while getopts ":e:u:p:r:f:o:" opt; do
    case ${opt} in
+      e)
+          endpoint=$OPTARG
+          ;;
+      u)
+          username=$OPTARG
+          ;;
+      p)
+          password=$OPTARG
+          ;;
+      r)
+          reportName=$OPTARG
+          ;;
+      f)
+          reportFormat=$OPTARG
+          ;;
       o)
           outputDirectory=$OPTARG
           ;;
      \?)
           echo "ERROR: Invalid option "
-          exit 1
+          print_usage
           ;;
       :)
           echo "-$OPTARG requires an argument"
-          exit 1
+          print_usage
           ;;
     esac 
 done
 shift $((OPTIND -1))
+
+# Check if required parameters are set
+# Check if automation api endpoint is set
+if [[ $endpoint = ""  ]]; then
+   printf "ERROR: endpoint not set with -e\n" print_usage
+fi
+
+# Check if username/password are not set
+if [[ ( $username = "" ) ||  ( $password = "" )  ]]; then
+   printf "ERROR: username or password not set with -u -p\n"
+   print_usage
+fi
+
+# Basic sanity check for arguments
+
+# Check if reportname set
+if [[ $reportName = "" ]]; then
+   printf "ERROR: report name not set ith -r\n"
+   print_usage
+fi
+
+# Convert spaces in report name to %20
+reportName=$(echo $reportName | sed 's/ /%20/g')
+
+# Check report format
+case $reportFormat in
+   pdf|PDF)
+      reportFormat="pdf"
+      ;;
+   csv|CSV)
+      reportFormat="csv"
+      ;;
+   *)
+      reportFormat="csv"
+   ;;
+esac
 
 # Check if curl is available
 curlVersion=""
@@ -77,7 +114,6 @@ if [[ $login == *token* ]] ; then
 	token=$(echo ${login##*token\" : \"} | cut -d '"' -f 1)
 else
 	printf "Login failed!\n"
-        ctmapi_logout
 	exit 1
 fi
 
@@ -88,6 +124,8 @@ if [[ ${getReportURL} == *reportURL* ]]; then
    printf "reportURL=%s\n" "${reportURL}"
 else
    printf "ERROR: report generation failed!\n"
+   printf "%s" ${getReportURL}
+   ctmapi_logout
    exit 1
 fi
 

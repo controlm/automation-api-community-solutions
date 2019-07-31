@@ -1,4 +1,4 @@
-# scripts
+# Scripts & Documentation
 
 This directory contains 1 example script:
 * [report_get_curl.sh](./report_get_curl.sh)
@@ -16,21 +16,23 @@ curl -k -s -H "Authorization: Bearer $token" -X POST "$endpoint/session/logout"
 ### URL encode report name
 This is needed to convert spaces to %20 to enable use of the filename in a URL
 ```
-reportName=$(echo $1 | sed 's/ /%20/g')
+reportName=$(echo $reportName | sed 's/ /%20/g')
 ```
 
 ### Check report format
 Check for 'pdf' or 'csv'.  Although the default is 'csv' when left blank when not specifed the API request fails.
 ```
-reportFormat=""
-case $2 in
+# Check report format
+case $reportFormat in
+   pdf|PDF)
+
 ```
 
-### Check for swithes
-This is mainly checking for the -o switch to specify the output directory. Otherwise the default is the current working directory.
+### Check for swithes and options
+For the -o switch, specify the output directory. Otherwise the default is the current working directory.
 ```
 outputDirectory=""
-while getopts ":o:" opt; do
+while getopts ":e:u:p:r:f:o:" opt; do
 ```
 
 ### Check if curl is available
@@ -59,6 +61,19 @@ getReportURL=$(curl -k -s -H "Authorization: Bearer $token" "$endpoint/reporting
 wget --no-check-certificate --directory-prefix=${outputDirectory} "${reportURL}"
 ```
 
+### Sample Execution
+```
+./report_get_curl.sh -u reportuser -p reportuserpassword -e https://wla919:8443/automation-api -r active_jobs -f pdf
+reportURL=http://wla919:18080/RF-Server-Files/9a446605-cb3b-401c-8131-d6a35acd276a.pdf
+--2019-07-31 17:12:59--  http://wla919:18080/RF-Server-Files/9a446605-cb3b-401c-8131-d6a35acd276a.pdf
+Resolving wla919 (wla919)... 172.28.197.63
+Connecting to wla919 (wla919)|172.28.197.63|:18080... connected.
+HTTP request sent, awaiting response... 200
+Length: 2728 (2.7K) [application/pdf]
+Saving to: ‘9a446605-cb3b-401c-8131-d6a35acd276a.pdf’
 
+100%[=================================================================================================================================================================>] 2,728       --.-K/s   in 0s
 
+2019-07-31 17:12:59 (170 MB/s) - ‘9a446605-cb3b-401c-8131-d6a35acd276a.pdf’ saved [2728/2728]
+```
 
