@@ -24,7 +24,7 @@ password=""
 reportName=""
 reportFormat=""
 
-# Check for swithes
+# Check for switches
 outputDirectory=""
 while getopts ":e:u:p:r:f:o:" opt; do
    case ${opt} in
