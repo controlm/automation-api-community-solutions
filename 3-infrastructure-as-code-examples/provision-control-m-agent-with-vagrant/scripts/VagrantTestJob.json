@@ -1,0 +1,23 @@
+{
+  "Vagrant" : {
+    "Type" : "SimpleFolder",
+    "ControlmServer" : "[CTM_SERVER]",
+    "OrderMethod" : "Manual",
+    "vagrant_testjob" : {
+      "Type" : "Job:Command",
+      "SubApplication" : "vagrant",
+      "EndFolder" : true,
+      "CreatedBy" : "",
+      "Host" : "[VAGRANT_HOST]",
+      "RunAs" : "vagrant",
+      "Application" : "vagrant",
+      "Command" : "echo Hello",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "SpecificDates" : [ ],
+        "DaysRelation" : "OR"
+      }
+    }
+  }
+}
