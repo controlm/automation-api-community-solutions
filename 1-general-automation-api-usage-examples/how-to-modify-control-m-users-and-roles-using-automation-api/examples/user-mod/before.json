@@ -1,0 +1,27 @@
+{
+  "Name": "ExampleUser",
+  "Description": "User to Demo",
+  "FullName": "Example User",
+  "Authentication": {
+    "ControlM": {
+      "Password": "KEEP_EXISTING",
+      "PasswordExpirationDays": 60
+    }
+  },
+  "Roles": [
+    "TeamA"
+  ],
+  "Authorization": {
+    "AllowedJobs": {
+      "Included": [
+        [
+          [
+            "FileName",
+            "like",
+            "*"
+          ]
+        ]
+      ]
+    }
+  }
+}
