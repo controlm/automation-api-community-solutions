@@ -25,5 +25,5 @@ requirements.
 
 ## Table of Contents
 
-1. [scripts](./scripts)
+1. [scripts and documentation](./scripts)
 

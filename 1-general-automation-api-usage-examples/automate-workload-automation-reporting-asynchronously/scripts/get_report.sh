@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Update these variables with appropriate values for your environment
+maxiterations=12    # number of iterations the script will check if jobs are still running
+sleepinterval=10    # number of seconds between each interval
+
 # Print usage and exit
 print_usage() {
     printf "Usage: %s -e ENDPOINT -u USERNAME -p PASSWORD -r REPORTNAME -f [pdf|csv] [-o <file_path>]\n" "$(basename "$0")"
@@ -54,7 +58,7 @@ while getopts ":e:u:p:r:f:o:" opt; do
           echo "-$OPTARG requires an argument"
           print_usage
           ;;
-    esac 
+    esac
 done
 shift $((OPTIND -1))
 
@@ -117,18 +121,44 @@ else
 	exit 1
 fi
 
+printf "Submitting report ${reportName}\n"
+
 # Generate Report
-getReportURL=$(curl -k -s -H "Authorization: Bearer $token" "$endpoint/reporting/report/${reportName}?format=${reportFormat}")
-if [[ ${getReportURL} == *reportURL* ]]; then
-   reportURL=$(echo ${getReportURL##*reportURL\" : \"} | cut -d '"' -f 1)
-   printf "reportURL=%s\n" "${reportURL}"
+getReportID=$(curl -k -s -H "Authorization: Bearer $token" -H "Content-Type: application/json" -X POST -d "{\"name\": \"${reportName}\", \"format\": \"${reportFormat}\"}" "$endpoint/reporting/report")
+
+# Get Report ID
+if [[ $getReportID == *reportId* ]]; then
+   reportID=$(echo ${getReportID##*reportId\" : \"} | cut -d '"' -f 1)
+   printf "reportID=%s\n" "${reportID}"
 else
    printf "ERROR: report generation failed!\n"
-   printf "%s" ${getReportURL}
+   echo $getReportID
    ctmapi_logout
    exit 1
 fi
 
+# Check Report Status
+
+i=0
+reportStatus=""
+
+until [[ $reportStatus == "SUCCEEDED" || $i>=$maxiterations ]]; do
+   sleep $sleepinterval
+   getReportStatus=$(curl -k -s -H "Authorization: Bearer $token" -H "Content-Type: application/json" -X GET "$endpoint/reporting/status/$reportID")
+   reportStatus=$(echo ${getReportStatus##*status\" : \"} | cut -d '"' -f 1)
+   reportURL=$(echo ${getReportStatus##*url\" : \"} | cut -d '"' -f 1)
+   i=$(($i + 1))
+   printf "."
+done
+
+if [[ $reportStatus != "SUCCEEDED"  ]]; then
+    printf "ERROR:  Report was not ready for download.\n"
+    printf "%s" ${getReportStatus}
+    ctmapi_logout
+    exit 1
+fi
+
+printf "\nstatus=${reportStatus}\nreportURL:${reportURL}\n"
 
 # Download Report
 wget --no-check-certificate --directory-prefix=${outputDirectory} "${reportURL}"
