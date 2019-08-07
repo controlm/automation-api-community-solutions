@@ -10,7 +10,7 @@ to run the reports without having to wait for them to complete so they don't hav
 * Control-M/Enterprise Manager 9.0.19+
 * Automation API 9.0.19+
 * Report defined in Control-M Reports
-* Control-M user with the following minimal privileges:
+* Control-M user with the following *minimal* privileges:
     * Assigned Roles: BrowseGroup
     * Privileges > Control-M Configuration Manager: Full
     * Privileges > Monitoring and Administration Tools > CLI: Full
