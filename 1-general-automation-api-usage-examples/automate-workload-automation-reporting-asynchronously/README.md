@@ -7,6 +7,7 @@ the Control-M Reports client, Automation API 'ctm' utility, and direct REST call
 to run the reports without having to wait for them to complete so they don't have to leave it running on their workstations.  Also the sychronous option will soon be deprecated.
 
 ## Prerequisites
+* Control-M/Enterprise Manager 9.0.19+
 * Automation API 9.0.19+
 * Assigned Roles: BrowseGroup
 * Privileges > Control-M Configuration Manager: Full
