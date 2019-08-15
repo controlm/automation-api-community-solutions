@@ -1,10 +1,12 @@
 # List Control-M/Server Hostgroups and associated Control-M/Agents
 ## Requirement
-A Control-M System Administrator needs to be able to quickly see a high level overview of the environment status at a glance, allowing easy identification of any hostgroups that may be experiencing issues. To accomplish this a script is written that shows all of the defined hostgroups, as well as what Control-M/Agents are associated with those hostgroups and the related status of said Control-M/Agents. 
+A Control-M System Administrator needs to be able to quickly see a high level overview of the environment status at a glance, allowing easy identification of any hostgroups that may be experiencing issues. To accomplish this a script is written that shows all of the defined hostgroups, as well as what Control-M/Agents are associated with those hostgroups and the related status of said Control-M/Agents.
 
 # Prerequisites
 A Control-M userid has been created named “sysadmin” with the following (minimum) attributes:
 
+* Control-M/Enterprise Manager 9.0.19 or higher
+* Control-M Automation API 9.0.18.300 or higher
 * Assigned Roles: BrowseGroup
 * Privileges > Control-M Configuration Manager: Full
 * Privileges > Configuration: Browse
@@ -12,9 +14,9 @@ A Control-M userid has been created named “sysadmin” with the following (min
 
 ## Implementation
 This python script is broken in to 3 layers:
-1.  Get the list of hostgroups - [/automation-api/config/server/$ctm/hostgroups](https://docs.bmc.com/docs/automation-api/919/services-817914516.html#Services-configserver:hostgroups::get)
-2.  For each hostgroup, get the list of associated agent - [/automation-api/config/server/$ctm/hostgroup/$hostgroup/agents](https://docs.bmc.com/docs/automation-api/919/services-817914516.html#Services-configserver:hostgroup:agents::get)
-3.  Check the status of each agent from step 2 - [/automation-api/config/server/$ctm/agent/$agent/ping](https://docs.bmc.com/docs/automation-api/919/services-817914516.html#Services-configserver:agent::ping)
+1.  Get the list of hostgroups - [/automation-api/config/server/$ctm/hostgroups](https://docs.bmc.com/docs/display/workloadautomation/API+Services+-+Config+service#Configservice-configserver:hostgroups::get)
+2.  For each hostgroup, get the list of associated agent - [/automation-api/config/server/$ctm/hostgroup/$hostgroup/agents](https://docs.bmc.com/docs/display/workloadautomation/API+Services+-+Config+service#Configservice-configserver:hostgroup:agents::get)
+3.  Check the status of each agent from step 2 - [/automation-api/config/server/$ctm/agent/$agent/ping](https://docs.bmc.com/docs/display/workloadautomation/API+Services+-+Config+service#Configservice-configserver:agent::ping)
 
 Finally the information is displayed to the user running the script.
 
@@ -25,10 +27,10 @@ The interface of the hostgroup_list.py script is modeled after the official Auto
   - `python hostgroup_list.py env set <name>`
   - `python hostgroup_list.py env rm <name>`
   - `python hostgroup_list.py env show`
- 
+
  After adding an environment and setting it as the default environment, list the hostgroup status by running:   
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;```python hostgroup_list.py list <ctm>```
- 
+
 Below is example output for an environment that has 2 hostgroups (DB and k8s-ctm) where each hostgroup has 1 offline node.
  ```
  Hostgroup: DB
