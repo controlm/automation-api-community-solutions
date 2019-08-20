@@ -71,3 +71,7 @@ Hostgroup: k8s-ctm
 
 ### Documentation
 This example is documented [here](./code-doc.md)
+
+## Demo
+Click on the below image to watch a demonstration on YouTube.  
+[![Video Demo Link](https://img.youtube.com/vi/HfvES6qIGdo/0.jpg "Video Demo on YouTube")](https://youtu.be/HfvES6qIGdo)
