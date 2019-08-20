@@ -26,5 +26,5 @@ Below are specific examples of modifications that can done:
     * [Role Modification](./examples/role-mod)
 
 ## Demo
-Click on the below image to watch a demonstration on YouTube.
+Click on the below image to watch a demonstration on YouTube.  
 [![Video Demo Link](https://img.youtube.com/vi/Dqn849XK94g/0.jpg "Video Demo on YouTube")](https://youtu.be/Dqn849XK94g)
