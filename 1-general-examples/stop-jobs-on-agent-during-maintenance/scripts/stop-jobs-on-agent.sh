@@ -67,8 +67,8 @@ case $1 in
       ;;
 
    start)
-      # Disable the Agent
-      result=$(curl -k -s -H "Authorization: Bearer $token" -X POST "$endpoint/config/server/$ctmserver/agent/$agenthost/disable")
+      # Ensable the Agent
+      result=$(curl -k -s -H "Authorization: Bearer $token" -X POST "$endpoint/config/server/$ctmserver/agent/$agenthost/enable")
       echo ${result##*message\" : \"} | cut -d '"' -f 1
 
       ;;
