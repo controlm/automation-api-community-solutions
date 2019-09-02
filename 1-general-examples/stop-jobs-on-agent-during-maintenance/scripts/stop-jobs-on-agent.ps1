@@ -9,12 +9,19 @@ Param ( [Parameter(Mandatory=$True)] [ValidateNotNull()] $StopOrStart, [Paramete
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 #----------------------------------------------------------------
-$endPoint   = "https://workbench:8446/automation-api"
-$username   = "sysadmin"
-$password   = "password"
+$filename    ="pass.txt"   #file containing the secure password
+$encpassword = Get-Content $filename | ConvertTo-SecureString
+$credentials = New-Object System.Net.NetworkCredential("dummy", $encpassword, "dummy")
+$password    = $credentials.Password
+$username    = "sysadmin"
+$endPoint    = "https://clm-aus-tobcvy:8446/automation-api"
+
+#----------------------------------------------------------------
 $maxiterations = 20    # number of iterations the script will check if jobs are still running
 $sleepinterval = 15    # number of seconds between each interval
 #------------------------------------------------------------------------------------
+
+
 
 #logout function to be called before each exit when we're already logged in
 function ctmapi_logout {

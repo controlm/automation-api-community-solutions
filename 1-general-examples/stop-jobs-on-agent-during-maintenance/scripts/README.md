@@ -52,3 +52,8 @@ found to be running, the user is given the go ahead to perform his maintenance
 tasks on this host. Else, if jobs are still running after waiting for 5 minutes, 
 the user is asked to conact a Control-M administrator.
 
+### Powershell storing of login credentials
+
+The Powershell version of the script uses the ConvertTo-SecureString cmdlet 
+to store the AAPI login password encrypted in a file.  The script `storepass.ps1`
+is provided to store the password in a file.
