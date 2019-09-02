@@ -4,7 +4,7 @@
 #------------------------------------------------------------------------------------
 endpoint=https://workbench:8446/automation-api
 username=sysadmin
-password=password
+password=$(cat .authfile)
 maxiterations=20    # number of iterations the script will check if jobs are still running
 sleepinterval=15    # number of seconds between each interval
 
