@@ -4,7 +4,7 @@ It is broken down into two main sections:
 * Automation API calls
     * Explains how the call to Automation API is performed, what data is returned, and how that data is used.
 * Generic Python
-    * Provides a high level over view of sections of sections of the code that don't directly interact with Automation API. This is provided ti give general functionality information for context. 
+    * Provides a high level over view of sections of sections of the code that don't directly interact with Automation API. This is provided ti give general functionality information for context.
 
 ### Table of Contents:
 ##### Automation API calls
@@ -23,7 +23,7 @@ It is broken down into two main sections:
 All Automation API calls are performed by functions of the lst class. All REST requests in this script make use of the python module `requests`, for more information on using this module see the documentation here: [https://2.python-requests.org/en/stable/](https://2.python-requests.org/en/stable/)
 
 ##### Login
-The login is performed in the `update_token` function and uses the [session login](https://docs.bmc.com/docs/automation-api/919110/session-service-872868771.html#Sessionservice-sessionlogin) service of Automation API.
+The login is performed in the `update_token` function and uses the [session login](https://docs.bmc.com/docs/display/workloadautomation/API+Services+-+Session+service#Sessionservice-sessionlogin) service of Automation API.
 
 The login request in this function done on [line 390-392](./hostgroup_list.py#L390-392), stripping out the extra functionality (try except block, decrypting the encrypted password, etc), the login request in it's simplest form can look like:
 ```python
@@ -46,7 +46,7 @@ Lastly each request is wrapped in a try except block so that if any connection e
 This function is used to authenticate to Automation API and retrieve a token, which is needed to authenticate later requests.
 
 ##### Get Hostgroups
-The function ```gethostgroups``` uses the [config server:hostgroups::get](https://docs.bmc.com/docs/automation-api/919110/config-service-872868754.html#Configservice-configserver:hostgroups::get) service of Automation API to retrieve a list of the hostgroups that exist on the specified Control-M/Server.
+The function ```gethostgroups``` uses the [config server:hostgroups::get](https://docs.bmc.com/docs/display/workloadautomation/API+Services+-+Config+service#Configservice-configserver:hostgroups::get) service of Automation API to retrieve a list of the hostgroups that exist on the specified Control-M/Server.
 
 This request requires the authentication token to be passed in the header, and the name of the Control-M/Server to be passed in the URL.
 
@@ -74,7 +74,7 @@ Example response:
 ```
 
 ##### Get Hostgroup Agents
-The function ```getagents``` uses the [config server:hostgroup:agents::get](https://docs.bmc.com/docs/automation-api/919110/config-service-872868754.html#Configservice-configserver:hostgroup:agents::get) Automation API service to get the list of all of the in a particular hostgroup. The request requires:
+The function ```getagents``` uses the [config server:hostgroup:agents::get](https://docs.bmc.com/docs/display/workloadautomation/API+Services+-+Config+service#Configservice-configserver:hostgroup:agents::get) Automation API service to get the list of all of the in a particular hostgroup. The request requires:
 * authentication token in the header
 * Control-M/Server name as a URL parameter
 * Hostgroup name as a URL parameter
@@ -107,7 +107,7 @@ Example response:
 ```
 
 ##### Agent Ping
-The `worker_thread` function uses the [config server:agent::ping](https://docs.bmc.com/docs/automation-api/919110/config-service-872868754.html#Configservice-configserver:agent::ping) Automation API service to get up to date status information for the Control-M/Agents that are members of hostgroups.
+The `worker_thread` function uses the [config server:agent::ping](https://docs.bmc.com/docs/display/workloadautomation/API+Services+-+Config+service#Configservice-configserver:agent::ping) Automation API service to get up to date status information for the Control-M/Agents that are members of hostgroups.
 
 This request requires the following inputs:
 * authentication token in the header
@@ -150,7 +150,7 @@ or...
 
 
 
-Note: The [config server:agents::get](https://docs.bmc.com/docs/automation-api/919110/config-service-872868754.html#Configservice-config_server_agents_getconfigserver:agents::get) service could have been used instead, but this shows the status information for the last time the Control-M/Server performed a life check to these specific Control-M/Agents. While this process is reliable and great for most use cases, in this example we opt'ed to use the ping service for each agent to force a status update to ensure the information is update to date.
+Note: The [config server:agents::get](https://docs.bmc.com/docs/display/workloadautomation/API+Services+-+Config+service#Configservice-config_server_agents_getconfigserver:agents::get) service could have been used instead, but this shows the status information for the last time the Control-M/Server performed a life check to these specific Control-M/Agents. While this process is reliable and great for most use cases, in this example we opt'ed to use the ping service for each agent to force a status update to ensure the information is update to date.
 
 ### Generic Python:
 This section will provide an overview some of the non-Automation API specific sections of code in the example script to provide context.
@@ -168,7 +168,7 @@ The documentation for argparse is extreamly exhostive, and if you want to make u
 The following quoted line from [hostgroup_list.py](./hostgroup_list.py#L17) uses the [urllib3](https://urllib3.readthedocs.io/en/latest/) module to disable the warning message that would be otherwise printed to standard error each and every time a request is made (using the `requests` module in this case) to an https endpoint with out a trusted certificate.  
 
 >urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-  
+
 As this scenario is quite common (in test/dev environments, or when using the Automation API workbench appliance), and in some cases the number of requests performed by this script, hence the number of times the warning would be printed, we chose to disable the warning.
 
 ##### AESCipher class
@@ -191,7 +191,7 @@ The `print_res` function of the `lst` class uses the [tabulate](https://pyhdust.
 
 Example:  
 ```
-{ 
+{
   "hostgroups": {
     "hostgroup01": {
       "agent01-a": "Online",
