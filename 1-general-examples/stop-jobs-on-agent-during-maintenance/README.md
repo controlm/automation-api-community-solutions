@@ -37,6 +37,14 @@ the Control-M administrators to check on those jobs and take action.
 The “start” action will enable the Agent so jobs can resume scheduling on 
 the host.
 
-
 The [scripts](./scripts) directory contains the final code, and an explanation 
 on how they work.
+
+
+## Video
+
+The following video demonstrates the above steps.
+
+[![Watch the video](images/StopJobsVideo.PNG)](https://youtu.be/ndHThZVYlNA)
+
+Click the above image to watch the video on YouTube.
