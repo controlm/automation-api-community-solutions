@@ -20,7 +20,7 @@ reportName=$(echo $reportName | sed 's/ /%20/g')
 ```
 
 ### Check report format
-Check for 'pdf' or 'csv'.  Although the default is 'csv' when left blank when not specified the API request fails.
+Check for 'pdf' or 'csv'.  Although the default is 'csv' when left blank when not specifed the API request fails.
 ```
 # Check report format
 case $reportFormat in
@@ -40,6 +40,8 @@ while getopts ":e:u:p:r:f:o:" opt; do
 getCurlVersion=$(curl --version)
 if [[ ${getCurlVersion} == *Release-Date* ]]; then
 ```
+curl is executed with the -k switch which allows insecure server connections when using SSL.  This switch can be removed if trusted cerficates are 
+installed for Control-M/Enterpirse Manager.
 
 ### Login
 First, a login to Control-M is performed, and the session token is captured:
@@ -60,20 +62,25 @@ getReportURL=$(curl -k -s -H "Authorization: Bearer $token" "$endpoint/reporting
 ```
 wget --no-check-certificate --directory-prefix=${outputDirectory} "${reportURL}"
 ```
+wget is executed with the --no-check-certificate switch which allows insecure server connections when using SSL.  This switch can be removed if trusted cerficates are 
+installed for Control-M/Enterpirse Manager.
 
 ### Sample Execution
 ```
-./report_get_curl.sh -u reportuser -p reportuserpassword -e https://wla919:8443/automation-api -r active_jobs -f pdf
-reportURL=http://wla919:18080/RF-Server-Files/9a446605-cb3b-401c-8131-d6a35acd276a.pdf
---2019-07-31 17:12:59--  http://wla919:18080/RF-Server-Files/9a446605-cb3b-401c-8131-d6a35acd276a.pdf
-Resolving wla919 (wla919)... 172.28.197.63
-Connecting to wla919 (wla919)|172.28.197.63|:18080... connected.
+./report_get_curl.sh  -e https://wla919:8443/automation-api -u reportuser -p reportuserpassword -r "active_jobs" -o /tmp -f pdf
+Generating report.  Please wait...
+reportURL=http://wla919:18080/RF-Server-Files/9e837d78-b50d-4e6a-80d0-c8424b22f480.pdf
+Downloading report.  Please wait...
+--2019-08-12 16:21:46--  http://wla919:18080/RF-Server-Files/9e837d78-b50d-4e6a-80d0-c8424b22f480.pdf
+Resolving wla919 (wla919)... 172.28.196.77
+Connecting to wla919 (wla919)|172.28.196.77|:18080... connected.
 HTTP request sent, awaiting response... 200
-Length: 2728 (2.7K) [application/pdf]
-Saving to: ‘9a446605-cb3b-401c-8131-d6a35acd276a.pdf’
+Length: 2729 (2.7K) [application/pdf]
+Saving to: ‘/tmp/9e837d78-b50d-4e6a-80d0-c8424b22f480.pdf’
 
-100%[=================================================================================================================================================================>] 2,728       --.-K/s   in 0s
+100%[==============================================================================================================================================>] 2,729       --.-K/s   in 0s
 
-2019-07-31 17:12:59 (170 MB/s) - ‘9a446605-cb3b-401c-8131-d6a35acd276a.pdf’ saved [2728/2728]
+2019-08-12 16:21:47 (190 MB/s) - ‘/tmp/9e837d78-b50d-4e6a-80d0-c8424b22f480.pdf’ saved [2729/2729]
+
 ```
 

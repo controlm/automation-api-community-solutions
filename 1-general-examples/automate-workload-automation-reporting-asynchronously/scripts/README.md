@@ -40,6 +40,8 @@ while getopts ":e:u:p:r:f:o:" opt; do
 getCurlVersion=$(curl --version)
 if [[ ${getCurlVersion} == *Release-Date* ]]; then
 ```
+curl is executed with the -k switch which allows insecure server connections when using SSL.  This switch can be removed if trusted cerficates are
+installed for Control-M/Enterpirse Manager.
 
 ### Login
 First, a login to Control-M is performed, and the session token is captured:
@@ -74,25 +76,29 @@ until [[ $reportStatus == "SUCCEEDED" || $i>=$maxiterations ]]; do
 ```
 wget --no-check-certificate --directory-prefix=${outputDirectory} "${reportURL}"
 ```
+wget is executed with the --no-check-certificate switch which allows insecure server connections when using SSL.  This switch can be removed if trusted cerficates are
+installed for Control-M/Enterpirse Manager.
 
 ### Sample Execution
 ```
-$ ./get_report.sh -e https://wla919:8443/automation-api -u reportuser -p reportuserpassword -r active_jobs -f pdf
+./get_report.sh -e https://wla919:8443/automation-api -u reportuser -p reportuserpassword -r active_jobs -f pdf
 Submitting report active_jobs
-reportID=bea8d191-d2b8-4cb3-be25-12db00eb6257
-.
+reportID=3077df4c-1a21-475e-bf74-3b9efe9dba30
+Checking report status.  Please wait.
+...
 status=SUCCEEDED
-reportURL:http://wla919:18080/RF-Server-Files/bea8d191-d2b8-4cb3-be25-12db00eb6257.pdf
---2019-07-31 17:45:35--  http://wla919:18080/RF-Server-Files/bea8d191-d2b8-4cb3-be25-12db00eb6257.pdf
-Resolving wla919 (wla919)... 172.28.197.63
-Connecting to wla919 (wla919)|172.28.197.63|:18080... connected.
+reportURL:http://wla919:18080/RF-Server-Files/3077df4c-1a21-475e-bf74-3b9efe9dba30.pdf
+Downloading report.  Please wait.
+--2019-08-16 16:17:30--  http://wla919:18080/RF-Server-Files/3077df4c-1a21-475e-bf74-3b9efe9dba30.pdf
+Resolving wla919 (wla919)... 172.28.198.9
+Connecting to wla919 (wla919)|172.28.198.9|:18080... connected.
 HTTP request sent, awaiting response... 200
-Length: 2728 (2.7K) [application/pdf]
-Saving to: ‘bea8d191-d2b8-4cb3-be25-12db00eb6257.pdf’
+Length: 2729 (2.7K) [application/pdf]
+Saving to: ‘3077df4c-1a21-475e-bf74-3b9efe9dba30.pdf’
 
-100%[=================================================================================================================================================================>] 2,728       --.-K/s   in 0.006s
+100%[==============================================================================================================================================>] 2,729       --.-K/s   in 0.006s
 
-2019-07-31 17:45:35 (456 KB/s) - ‘bea8d191-d2b8-4cb3-be25-12db00eb6257.pdf’ saved [2728/2728]
+2019-08-16 16:17:30 (413 KB/s) - ‘3077df4c-1a21-475e-bf74-3b9efe9dba30.pdf’ saved [2729/2729]
 ```
 
 
