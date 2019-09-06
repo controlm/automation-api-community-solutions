@@ -9,19 +9,29 @@ Control-M Server automatically.  It can also unregister,undeploy, and uninstall 
 having to involve the Control-M administrator.
 
 ## Prerequisites
-* Vagrant 2.2.4+
-* VirtualBox 6.0+
-* Privileges > Control-M Configuration Manager: Full
-* Privileges > Configuration: Update
-* Privileges > Configuration: Full (allows agent to be deleted)
-* Additional Folder and Run As User permissions may be needed for job deployment and execution.
+* Vagrant 2.2.4 or higher
+* VirtualBox 6.0 or higher
+* Control-M/Enterprise Manager 9.0.18.200 or higher
+* Automation API 9.0.18.200 or higher
+* A Control-M user id with the following minimal privileges:
+    * Privileges > Control-M Configuration Manager: Full
+    * Privileges > Configuration: Update
+    * Privileges > Configuration: Full (allows agent to be deleted)
+    * Additional Folder and Run As User permissions may be needed for job deployment and execution.
 
 ## Implementation
 
 ![Script flow](./images/provision-agent-vagrant-1.png)
 
-## Table of Contents
-1. [Vagrantfile & scripts](./scripts)
+## Video
 
+The following video demonstrates the above steps.
+
+[![Video Demo Link](./images/provision-agent-vagrant-2.png "Video Demo on YouTube")](https://youtu.be/bOy0ZvhIOr8)
+
+Click the above image to watch the video on YouTube.
+
+## Table of Contents
+1. [Vagrantfile & Scripts](./scripts)
 
 
