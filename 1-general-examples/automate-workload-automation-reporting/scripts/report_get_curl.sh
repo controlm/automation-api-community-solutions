@@ -24,7 +24,7 @@ password=""
 reportName=""
 reportFormat=""
 
-# Check for switches
+# Check for switches and options
 outputDirectory=""
 while getopts ":e:u:p:r:f:o:" opt; do
    case ${opt} in
@@ -98,7 +98,7 @@ esac
 curlVersion=""
 
 getCurlVersion=$(curl --version)
-if [[ ${getCurlVersion} == *Release-Date* ]]; then
+if [[ ${getCurlVersion} == *Release-Date* ]] || [[ ${getCurlVersion} == *Protocols* ]]; then
    curlVersion=$(echo ${getCurlVersion##curl} | grep curl | cut -d ' ' -f2)
 fi
 
@@ -118,6 +118,8 @@ else
 fi
 
 # Generate Report
+
+printf "Generating report.  Please wait...\n"
 getReportURL=$(curl -k -s -H "Authorization: Bearer $token" "$endpoint/reporting/report/${reportName}?format=${reportFormat}")
 if [[ ${getReportURL} == *reportURL* ]]; then
    reportURL=$(echo ${getReportURL##*reportURL\" : \"} | cut -d '"' -f 1)
@@ -131,6 +133,7 @@ fi
 
 
 # Download Report
+printf "Downloading report.  Please wait...\n"
 wget --no-check-certificate --directory-prefix=${outputDirectory} "${reportURL}"
 
 ctmapi_logout

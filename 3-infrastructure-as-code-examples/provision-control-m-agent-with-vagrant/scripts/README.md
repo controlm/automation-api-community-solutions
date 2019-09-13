@@ -13,19 +13,13 @@ This directory contains 1 Vagrantfile, 4 scripts, and 1 sample job:
 
 
 ## How to use
-* Copy all scripts and files to new Vagrant project or virtual machine directory.
-* Set the Windows environment variables CTMUSER and CTMUSERPASSWORD to the Control-M login and password.  The Vagantfile script will retrieve the user login and password 
-during execution to register an environment for Automation API.
-```
-eg
-  set CTMUSER=devops
-  set CTMUSERPASSWORD=devopspassword
-```
+* Copy all scripts and files to new Vagrant project directory.
 * The following variable assignment is used to pass the Windows host machine by passing the %COMPUTERNAME% environment variable to the virtual machine.
+It should already be set on Windows but set it, if it's missing.
 ```
 CTM_AGENT_HOST=ENV["COMPUTERNAME"]
 ```
-* Edit Vagrantfile and modify remaining environment variables at script entry to match working environment.
+* Edit Vagrantfile and modify environment variables at script entry to match working environment.
 ```
 eg
 CTM_HOST="wla919"
@@ -45,6 +39,14 @@ CTM_AGENT_HOST:CTM_AGENT_PORT.  With this configuration multiple agents can be r
 * Edit virtual box selection.  At the time of this writing a "centos/7" box was availabe from Centos but the confguration should work with other similar boxes.
 ```
 config.vm.box = "centos/7"
+```
+
+* Set the Windows environment variables CTMUSER and CTMUSERPASSWORD to the Control-M login and password.  The Vagantfile script will retrieve the user login and password 
+during execution to register an environment for Automation API.  After the agent is provisioned these are no longer needed and can be set to dummy values otherwise the "Vagrant up" will fail due to missing environment variables.
+```
+eg
+  set CTMUSER=devops
+  set CTMUSERPASSWORD=devopspassword
 ```
 
 
