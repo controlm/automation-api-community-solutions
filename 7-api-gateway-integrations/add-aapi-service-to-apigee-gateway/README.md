@@ -13,7 +13,7 @@ Quickly jump to:
 
 The company has a requirement that all REST APIs in the organisation are to 
 be made available through one centralized API Gateway, which allows developers
-to access those gateways without having to know on which actual host they are
+to access those APIs without having to know on which actual host they are
 running. In addition, the API Gateway allows access control and features such as 
 rate limiting. The Apigee API Gateway has been selected for this.
 
