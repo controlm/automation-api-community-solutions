@@ -1,0 +1,41 @@
+{
+  "AwsDemoS3": {
+    "Type": "ConnectionProfile:FileTransfer:S3:Amazon",
+    "Region": "us-east-1",
+    "AccessKey": "demo-access-key",
+    "SecretAccessKey": {"Secret": "AwsDemoSecretKey"},
+    "TargetAgent": "demoagent",
+    "TargetCTM": "democtm"
+  },
+  "LocalConn" : {
+   "Type" : "ConnectionProfile:FileTransfer:Local",
+   "TargetAgent" : "demoagent",
+   "TargetCTM" : "democtm",
+   "User" : "controlm",
+   "Password" : {"Secret": "LocalControlMPasswd"},
+   "OsType": "Windows"
+ },
+  "DemoAwsS3Folder": {
+    "Type" : "Folder",
+  	"Application" : "aft",
+    "SubApplication": "s3aws",
+    "ControlmServer": "democtm",
+  	"TransferFromLocalToAwsS3" :
+  	{
+  		"Type" : "Job:FileTransfer",
+    	"Application" : "aft",
+      "SubApplication": "s3aws",
+  		"ConnectionProfileSrc" : "LocalConn",
+  		"ConnectionProfileDest" : "AwsDemoS3",
+  		"Host": "demoagent",
+      "S3BucketName": "demobucket",
+  		"FileTransfers" :
+      [
+  			{
+  				"Src" : "C:\\demo\\data.csv",
+  				"Dest" : "s3://demobucket/"
+  			}
+  		]
+  	}
+  }
+}

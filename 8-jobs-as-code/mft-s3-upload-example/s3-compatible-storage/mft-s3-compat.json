@@ -1,0 +1,41 @@
+{
+  "CephDemoS3Compat": {
+    "Type": "ConnectionProfile:FileTransfer:S3:Compatible",
+    "RestEndPoint": "http://CephDemoEndpoint:80",
+    "AccessKey": "CephDemoAccessKey",
+    "SecretAccessKey": {"Secret": "CephDemoSecretKey"},
+    "TargetAgent": "demoagent",
+    "TargetCTM": "democtm"
+  },
+  "LocalConn" : {
+   "Type" : "ConnectionProfile:FileTransfer:Local",
+   "TargetAgent" : "demoagent",
+   "TargetCTM" : "democtm",
+   "User" : "controlm",
+   "Password" : {"Secret": "LocalControlMPasswd"},
+   "OsType": "Windows"
+ },
+  "DemoCephFolder": {
+    "Type" : "Folder",
+  	"Application" : "aft",
+    "SubApplication": "s3compatable",
+    "ControlmServer": "democtm",
+  	"TransferFromLocalToS3CompatableStorage" :
+  	{
+  		"Type" : "Job:FileTransfer",
+    	"Application" : "aft",
+      "SubApplication": "s3compatable",
+  		"ConnectionProfileSrc" : "LocalConn",
+  		"ConnectionProfileDest" : "CephDemoS3Compat",
+  		"Host": "demoagent",
+      "S3BucketName": "demobucket",
+  		"FileTransfers" :
+      [
+  			{
+  				"Src" : "C:\\demo\\data.csv",
+  				"Dest" : "s3://demobucket/"
+  			}
+  		]
+  	}
+  }
+}
