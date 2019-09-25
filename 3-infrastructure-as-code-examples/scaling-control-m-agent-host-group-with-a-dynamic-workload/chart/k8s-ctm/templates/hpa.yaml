@@ -1,0 +1,17 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "k8s-ctm.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "k8s-ctm.name" . }}
+    helm.sh/chart: {{ include "k8s-ctm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "k8s-ctm.fullname" . }}
+  minReplicas: {{ .Values.autoscale.min }}
+  maxReplicas: {{ .Values.autoscale.max }}
+  targetCPUUtilizationPercentage: {{ .Values.autoscale.cpu }}
