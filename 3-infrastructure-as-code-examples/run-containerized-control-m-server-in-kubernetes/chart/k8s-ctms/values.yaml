@@ -1,0 +1,53 @@
+# Default values for k8s-ctm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+image:
+  repository: ""
+  tag: "latest"
+  pullPolicy: IfNotPresent
+  deploysecret: ""
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: LoadBalancer
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+ctm:
+  datacenter: ""
+  povisionImage: Server919100.Linux
+  aapi_endpoint: ""
+  aapi_user: emuser
+  AgentToServerPort: 7005
+  ConfigurationAgentPort: 2369
+  ControlMEMTcpIpPort: 2370
+  aapi_passwd_secret_name: ""
+  aapi_passwd_secret_key: ""
+
+db:
+  host: ""
+  port: ""
+  vendor: Oracle
+  instance: "ORCL.local"
+  dba_user: "SYSTEM"
+  dba_pass: ""
+  dbo_user: "ctmuser"
+  dbo_pass: "Tester01"

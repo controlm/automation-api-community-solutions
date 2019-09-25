@@ -1,0 +1,32 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="code_blocks" default="run">
+	<target name="resolve" description="--> retrieve dependencies with Ivy">
+		<ivy:retrieve/>
+	</target>
+
+	<property name="src" value="./"/>
+	<path id="classpath">
+		<fileset dir="./lib/" includes="*.jar"/>
+	</path>
+
+	<target name="build" depends="resolve">
+		<javac srcdir="${src}" classpathref="classpath" includeantruntime="false">
+		</javac>
+
+		<jar destfile="./code_blocks.jar">
+			<fileset dir="${src}" includes="*.class"/>
+			<zipgroupfileset dir="./lib/" includes="**/*.jar" excludes="**/*-javadoc.jar,**/*-sources.jar"/>
+			<manifest>
+				<attribute name="Main-Class" value="code_blocks"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="run" depends="build">
+		<java fork="true" classname="code_blocks">
+			<classpath>
+				<path refid="classpath"/>
+				<path location="${src}"/>
+			</classpath>
+		</java>
+	</target>
+</project>

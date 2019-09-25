@@ -1,0 +1,7 @@
+<ivy-module version="2.0">
+	<info organisation="com.bmc" module="code_blocks"/>
+	<dependencies>
+		<dependency org="com.konghq" name="unirest-java" rev="2.3.+"/>
+		<dependency	org="info.picocli" name="picocli" rev="4.0.+"/>
+	</dependencies>
+</ivy-module>
