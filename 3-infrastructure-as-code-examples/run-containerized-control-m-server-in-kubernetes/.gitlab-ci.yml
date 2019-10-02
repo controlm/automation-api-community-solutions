@@ -1,0 +1,48 @@
+stages:
+  - build
+  - lint
+  - deploy
+
+build-master:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  tags:
+    - kubernetes
+    - cluster
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - |
+      echo "$REGISTRY_CA_CRT" >> /kaniko/ssl/certs/ca-certificates.crt
+    - /kaniko/executor --context $CI_PROJECT_DIR/container --dockerfile $CI_PROJECT_DIR/container/Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+  only:
+    - tags
+
+
+lint:
+  stage: lint
+  image: dtzar/helm-kubectl:2.12.3
+  tags:
+    - kubernetes
+    - cluster
+  script:
+    - helm init --client-only
+    - helm lint chart/k8s-ctms
+
+deploy-master:
+  stage: deploy
+  environment: production
+  image: dtzar/helm-kubectl:2.12.3
+  only:
+    - tags
+  tags:
+    - kubernetes
+    - cluster
+  script:
+    - kubectl delete secret k8s-ctms-image-pull -n $DEPLOY_NS || true
+    - kubectl delete secret aapi-k8s-pw -n $DEPLOY_NS || true
+    - kubectl create secret docker-registry k8s-ctms-image-pull --docker-server=$CI_REGISTRY --docker-username=$image_pull_user --docker-password=$image_pull_pw -n $DEPLOY_NS
+    - kubectl create secret generic aapi-k8s-pw --from-literal=mypass="$aapi_password" -n $DEPLOY_NS
+    - helm init --client-only
+    - helm upgrade $DEPLOY_NAME ./chart/k8s-ctms --install --debug --namespace $DEPLOY_NS --wait --reset-values --set image.repository=$CI_REGISTRY_IMAGE --set image.deploysecret=k8s-ctms-image-pull --set ctm.aapi_endpoint=$aapi_endpoint --set ctm.aapi_passwd_secret_name=aapi-k8s-pw --set ctm.aapi_passwd_secret_key=mypass --set db.instance=$db_instance --set db.host=$db_host --set db.port=1521 --set db.dba_pass=$dba_pass --set ctm.datacenter=$DEPLOY_NAME --set db.dbo_user=$dbo_user --set install_debug=TRUE

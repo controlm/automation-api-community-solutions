@@ -1,0 +1,51 @@
+stages:
+  - build
+  - lint
+  - deploy
+
+build-master:
+  stage: build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  tags:
+    - kubernetes
+    - cluster
+  script:
+    - echo "{\"auths\":{\"$CI_REGISTRY\":{\"username\":\"$CI_REGISTRY_USER\",\"password\":\"$CI_REGISTRY_PASSWORD\"}}}" > /kaniko/.docker/config.json
+    - |
+      echo "$REGISTRY_CA_CRT" >> /kaniko/ssl/certs/ca-certificates.crt
+    - /kaniko/executor --context $CI_PROJECT_DIR/container --dockerfile $CI_PROJECT_DIR/container/Dockerfile --destination $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+  only:
+    refs:
+      - /^v(\d+\.)(\d+\.)(\d+)$/
+
+
+lint:
+  stage: lint
+  image: dtzar/helm-kubectl:2.12.3
+  tags:
+    - kubernetes
+    - cluster
+  script:
+    - helm init --client-only
+    - helm lint chart/k8s-ctm
+
+deploy-master:
+  stage: deploy
+  environment: production
+  image: dtzar/helm-kubectl:2.12.3
+  only:
+    - /^v(\d+\.)(\d+\.)(\d+)$/
+  tags:
+    - kubernetes
+    - cluster
+  script:
+    - kubectl delete secret ${DEPLOY_NAME}-image-pull-${CI_COMMIT_TAG} -n $DEPLOY_NS || true
+    - kubectl delete secret aapi-k8s-pw -n $DEPLOY_NS || true
+    - kubectl create secret docker-registry ${DEPLOY_NAME}-image-pull-${CI_COMMIT_TAG} --docker-server=$CI_REGISTRY --docker-username=$image_pull_user --docker-password=$image_pull_pw -n $DEPLOY_NS
+    - kubectl create secret generic aapi-k8s-pw --from-literal=mypass="$aapi_password" -n $DEPLOY_NS
+    - helm init --client-only
+    - ctmsoverride=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=k8s-ctms,app.kubernetes.io/instance=k8s-ctms" -o jsonpath='{ .items[0].metadata.name }')
+    - ctmsoverride=k8s-ctms
+    - helm upgrade $DEPLOY_NAME ./chart/k8s-ctm --install --debug --namespace $DEPLOY_NS --wait --reset-values --set image.repository=$CI_REGISTRY_IMAGE --set ctm.overrideCTMSHOST=$ctmsoverride --set image.tag=$CI_COMMIT_TAG --set image.deploysecret=${DEPLOY_NAME}-image-pull-${CI_COMMIT_TAG} --set ctm.aapi_endpoint=$aapi_endpoint --set ctm.datacenter=$datacenter --set ctm.host_group=$DEPLOY_NAME --set ctm.aapi_passwd_secret_name=aapi-k8s-pw --set ctm.aapi_passwd_secret_key=mypass

@@ -102,7 +102,7 @@ esac
 curlVersion=""
 
 getCurlVersion=$(curl --version)
-if [[ ${getCurlVersion} == *Release-Date* ]]; then
+if [[ ${getCurlVersion} == *Release-Date* ]] || [[ ${getCurlVersion} == *Protocols* ]]; then
    curlVersion=$(echo ${getCurlVersion##curl} | grep curl | cut -d ' ' -f2)
 fi
 
@@ -142,13 +142,14 @@ fi
 i=0
 reportStatus=""
 
+printf "Checking report status.  Please wait.\n"
 until [[ $reportStatus == "SUCCEEDED" || $i>=$maxiterations ]]; do
    sleep $sleepinterval
    getReportStatus=$(curl -k -s -H "Authorization: Bearer $token" -H "Content-Type: application/json" -X GET "$endpoint/reporting/status/$reportID")
    reportStatus=$(echo ${getReportStatus##*status\" : \"} | cut -d '"' -f 1)
    reportURL=$(echo ${getReportStatus##*url\" : \"} | cut -d '"' -f 1)
    i=$(($i + 1))
-   printf "."
+   printf "..."
 done
 
 if [[ $reportStatus != "SUCCEEDED"  ]]; then
@@ -161,6 +162,7 @@ fi
 printf "\nstatus=${reportStatus}\nreportURL:${reportURL}\n"
 
 # Download Report
+printf "Downloading report.  Please wait.\n"
 wget --no-check-certificate --directory-prefix=${outputDirectory} "${reportURL}"
 
 ctmapi_logout

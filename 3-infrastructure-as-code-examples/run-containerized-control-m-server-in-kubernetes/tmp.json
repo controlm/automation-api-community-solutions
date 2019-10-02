@@ -1,0 +1,26 @@
+{
+    "Installation": "new",
+    "ControlMName": "k8s-ctms",
+    "Database": {
+        "Vendor": "Oracle",
+        "InstanceName": "ORCL",
+        "Host": "ora-oracledb.oracle",
+        "Port": 1521,
+        "AdminLogin": "sys",
+        "AdminPassword": "Welcome1",
+        "OwnerLogin": "ctmuser",
+        "OwnerPassword": "Tester01",
+        "Size": "Small",
+        "TablespaceSize": 250,
+        "TablespaceName": "ctmuser_tbs"
+    },
+    "Configuration": {
+        "Hostname": "10.10.10.10",
+        "ControlMEMTcpIpPort": 2370,
+        "IPCPort": 6005,
+        "ConfigurationAgentPort": 2369,
+        "ServerToAgentPort": 7006,
+        "AgentToServerPort": 7005,
+        "HighAvailabilityPort": 2368
+    }
+}
