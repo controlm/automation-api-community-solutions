@@ -8,18 +8,18 @@ You can download the latest version of Eclipse [here](https://www.eclipse.org/)
 
 __NOTE__: Please choose the __Eclipse JEE edition__ in order to have the right plug-ins pre-installed.
 
-This example containts integrtrations for the following Eclipse capabilities:
+This example contains integrations for the following Eclipse capabilities:
 - Code snippets (JSON templates)
 - External Run configurations
 
 Other useful Eclipse capabilities for working with jobs-as-code are:
 - Git integration: For version control capabilities. 
 - Syntax highlighting: For better readability
-- Local Terminal: For using the Automation API CLI to use non standard operations
+- Local Terminal: For using the Automation API CLI to use nonstandard operations
 
 ## Step 2 - Tune your Eclipse
 
-Feel free to tailor your Eclipse to your need, but for coding jobs-as-code workflows we recommend to use the following windows:
+Feel free to tailor your Eclipse to your need, but for coding jobs-as-code workflows we recommend using the following windows:
 - Git Repositories
 - Git Staging
 - Projects
