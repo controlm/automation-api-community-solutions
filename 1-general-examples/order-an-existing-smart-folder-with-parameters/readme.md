@@ -22,6 +22,36 @@ Sample :
 [jobs] is optional if you want to order specific jobs from the smart folder
 -f is a json file containing arguments
 
+## Perform a rest call from e.g. a script as alternative 
+
+In some cases, you might not need the full cli. E.g. a lighter option might be preferred if an external application needs to trigger a worklaod on Control-M. In such scenario, a REST call might be the preferred opion. The REST example is described on the [Automation API Service Reference documentation](https://docs.bmc.com/docs/automation-api/9019100monthly/run-service-872868748.html#Runservice-runorder)
+
+An example implementation of of this REST api can by found in the ctm_order.py script. This script can be used stand-alone and does not need the Automation API CLI or NodeJs installend.
+
+usage: ctm_order.py [-h] -e ENDPOINT -s CTM_SERVER -u USER -p PASSWORD
+                    --folder FOLDER [--config_file CONFIG_FILE] [-v]
+                    [--version]
+
+Orders an adhoc job in Control-M for the folder specified
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -e ENDPOINT, --endpoint ENDPOINT
+                        Control-M Automation API end-point for connecting with
+                        Control-M
+  -s CTM_SERVER, --ctm_server CTM_SERVER
+                        Control-M Server name
+  -u USER, --user USER  Control-M user name for connecting with Control-M
+  -p PASSWORD, --password PASSWORD
+                        Control-M password for connecting with Control-M
+  --folder FOLDER       Control-M folder name which holds the jobs to be
+                        ordered
+  --config_file CONFIG_FILE, -f CONFIG_FILE
+                        A json file that holds additional configuration
+                        parameters
+  -v, --verbose         Enables verbose mode
+  --version             show program's version number and exit
+
 # Example JSON config file
 
 ```
@@ -46,4 +76,6 @@ All the default options look like this
   "orderIntoFolder": "Recent"
 }
 ```
+
+
 
