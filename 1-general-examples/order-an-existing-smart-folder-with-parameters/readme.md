@@ -27,7 +27,7 @@ Sample :
 In some cases, you might not need the full cli. E.g. a lighter option might be preferred if an external application needs to trigger a worklaod on Control-M. In such scenario, a REST call might be the preferred opion. The REST example is described on the [Automation API Service Reference documentation](https://docs.bmc.com/docs/automation-api/9019100monthly/run-service-872868748.html#Runservice-runorder)
 
 An example implementation of of this REST api can by found in the ctm_order.py script. This script can be used stand-alone and does not need the Automation API CLI or NodeJs installend.
-
+```
 usage: ctm_order.py [-h] -e ENDPOINT -s CTM_SERVER -u USER -p PASSWORD
                     --folder FOLDER [--config_file CONFIG_FILE] [-v]
                     [--version]
@@ -51,7 +51,7 @@ optional arguments:
                         parameters
   -v, --verbose         Enables verbose mode
   --version             show program's version number and exit
-
+```
 # Example JSON config file
 
 ```
