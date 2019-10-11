@@ -27,7 +27,7 @@ For more inforamtion on how to install this, see
 1. Copy the `apiproxy` directory from this example to a location on the machine
    where you have the apigeetool installed.
 
-2. Edit the following two files which contain the login credentials to your 
+2. Edit the following three files which contain the login credentials to your 
 Control-M Automation API backend and endpoint url:
 ```
 apiproxy/policies/redirect-swagger.xml
