@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+    <Description/>
+    <FaultRules/>
+    <Flows>
+        <Flow name="SwaggerRedirect">
+            <Description>SwaggerRedirect</Description>
+            <Request/>
+            <Response>
+                <Step>
+                    <FaultRules/>
+                    <Name>Swagger-Redirect</Name>
+                </Step>
+            </Response>
+            <Condition>((proxy.pathsuffix == "") or (proxy.pathsuffix == "/"))</Condition>
+        </Flow>
+    </Flows>
+    <PostFlow name="PostFlow">
+        <Request/>
+        <Response/>
+    </PostFlow>
+    <PreFlow name="PreFlow">
+        <Request/>
+        <Response/>
+    </PreFlow>
+    <HTTPProxyConnection>
+        <BasePath>/ctm-routing</BasePath>
+        <Properties/>
+        <VirtualHost>secure</VirtualHost>
+    </HTTPProxyConnection>
+    <!-- Routing rules. /reporting requests routed to "reporting" target, all other requests to the default target -->
+    <RouteRule name="default">
+        <Condition>(proxy.pathsuffix MatchesPath "/reporting/**")</Condition>
+        <TargetEndpoint>reporting</TargetEndpoint>
+    </RouteRule>
+    <RouteRule name="default">
+        <TargetEndpoint>default</TargetEndpoint>
+    </RouteRule>
+</ProxyEndpoint>

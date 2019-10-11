@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PopulateCache async="false" continueOnError="false" enabled="true" name="api-token-populate-cache">
+    <DisplayName>api-token-populate-cache</DisplayName>
+    <FaultRules/>
+    <Properties/>
+    <CacheKey>
+        <KeyFragment>apiAccessToken</KeyFragment>
+    </CacheKey>
+    <CacheResource>ctmtoken</CacheResource>
+    <Scope>Exclusive</Scope>
+    <ExpirySettings>
+        <TimeoutInSec>600</TimeoutInSec>
+    </ExpirySettings>
+    <Source>control-m.apiAccessToken</Source>
+</PopulateCache>

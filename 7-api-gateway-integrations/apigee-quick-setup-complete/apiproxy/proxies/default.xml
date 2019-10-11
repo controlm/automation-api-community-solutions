@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+    <Description/>
+    <FaultRules/>
+    <PreFlow name="PreFlow">
+        <Request>
+            <Step>
+                <Condition>(proxy.pathsuffix MatchesPath "/session/**")</Condition>
+                <FaultRules/>
+                <Name>disallow-session-requests</Name>
+            </Step>
+        </Request>
+        <Response/>
+    </PreFlow>
+    <Flows>
+        <Flow name="Authenticate">
+            <Description>Authenticates user and logs into backend if necessary</Description>
+            <Request>
+                <Step>
+                    <FaultRules/>
+                    <Name>verify-api-key</Name>
+                </Step>
+                <Step>
+                    <FaultRules/>
+                    <Name>remove-apikey-header</Name>
+                </Step>
+                <Step>
+                    <FaultRules/>
+                    <Name>api-config</Name>
+                </Step>
+                <Step>
+                    <FaultRules/>
+                    <Name>api-token-lookup-cache</Name>
+                </Step>
+                <Step>
+                    <Condition>lookupcache.api-token-lookup-cache.cachehit == "false"</Condition>
+                    <FaultRules/>
+                    <Name>api-token-get</Name>
+                </Step>
+                <Step>
+                    <Condition>lookupcache.api-token-lookup-cache.cachehit == "false"</Condition>
+                    <FaultRules/>
+                    <Name>api-token-populate-cache</Name>
+                </Step>
+            </Request>
+            <Response/>
+            <Condition>!((proxy.pathsuffix == "") or (proxy.pathsuffix == "/") or (proxy.pathsuffix == "/yaml") or (proxy.pathsuffix MatchesPath "/swagger-ui**") )</Condition>
+        </Flow>
+    </Flows>
+    <PostFlow>
+        <Response>
+            <Step>
+                <Condition>((proxy.pathsuffix == "") or (proxy.pathsuffix == "/"))</Condition>
+                <Name>redirect-swagger</Name>
+            </Step>
+        </Response>
+    </PostFlow>
+    <HTTPProxyConnection>
+        <BasePath>/controlm</BasePath>
+        <Properties/>
+        <VirtualHost>secure</VirtualHost>
+    </HTTPProxyConnection>
+    <RouteRule name="default">
+        <TargetEndpoint>default</TargetEndpoint>
+    </RouteRule>
+</ProxyEndpoint>
