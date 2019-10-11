@@ -13,4 +13,4 @@ This directory contains examples for working with Control-M Automation API behin
 
 * [Basic setup of Kong API proxy for Control-M Automation API](./add-aapi-service-to-kong-gateway)
 * [Example of routing certain Control-M API requests to different backend servers](./kong-api-gateway-routing-examples)
-
+* [Example of using the ctm cli through a gateway that requires an additional login header](./use-ctm-cli-through-api-gateway)
