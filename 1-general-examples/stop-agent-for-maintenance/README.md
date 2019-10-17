@@ -39,3 +39,10 @@ the host.
 The [scripts](./scripts) directory contains the final code, and an explanation 
 on how they work.
 
+## Video
+
+The following video demonstrates the above steps.
+
+[![Watch the video](images/StopJobsVideo.PNG)](https://youtu.be/iGH3M3ldG4Q)
+
+Click the above image to watch the video on YouTube.
