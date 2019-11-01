@@ -1,0 +1,91 @@
+#!/bin/bash
+yum remove -y java-1.7.0-openjdk
+yum -y install java-1.8.0
+
+sudo yum -y install epel-release
+sudo yum -y install python-pip
+pip -y install pip --upgrade
+
+sudo yum -y install python-devel
+sudo yum -y install gcc
+
+# rm /usr/lib/python2.7/dist-packages/chardet-2.0.1.egg-info
+# rm -r -f /usr/lib/python2.7/dist-packages/chardet
+# rm /usr/lib/python2.7/dist-packages/colorama-0.2.5.egg-info
+# rm -r -f /usr/lib/python2.7/dist-packages/colorama
+# rm -f /usr/lib/python2.7/dist-packages/lockfile*
+
+pip install setuptools -U
+
+useradd -d /home/airflow -p airflow -m -s /bin/bash airflow
+
+
+# Add /usr/lib and /usr/slib to secure path
+#
+echo 'airflow ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+
+wget https://dev.mysql.com/get/mysql80-community-release-el7-3.noarch.rpm
+
+sudo rpm -ivh mysql80-community-release-el7-3.noarch.rpm
+
+yum -y install mysql-server
+yum -y install mysql56-devel
+yum -y install mysql56-server
+yum -y install mysql56-libs
+
+sudo systemctl start mysqld
+
+sudo grep 'temporary password' /var/log/mysqld.log
+
+sudo mysql_secure_installation
+Dlkwyn*aD9&e
+
+mysql> CREATE DATABASE airflow CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+mysql> create user 'airflow'@'localhost' identified by 'airflow';
+mysql> grant all privileges on * . * to 'airflow'@'localhost';
+mysql> flush privileges;
+
+#
+# /etc/my.cnf add to end
+#
+explicit_defaults_for_timestamp = 1
+
+
+
+
+
+su - airflow   # switch to airflow user
+export AIRFLOW_HOME=~/airflow
+
+sudo -E pip install 'apache-airflow[mysql, celery, rabbitmq]'
+
+#
+# Edit airflow.cfg:
+#
+executor = CeleryExecutor
+sql_alchemy_conn = mysql://airflow:airflow@localhost:3306/airflow
+
+airflow initdb
+airflow webserver &
+airflow scheduler &
+
+yum -y install nodejs
+wget --no-check-certificate https://s3-us-west-2.amazonaws.com/623469066856-fy20seminars/ctm-cli.tgz
+npm install -g ctm-cli.tgz
+
+
+
+useradd -d /home/ctmagent -p ctmagent -m -s /bin/bash ctmagent
+echo 'ctmagent ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+#
+# SMDemo Machine
+#
+CtmIP=172.31.45.58
+
+printf '\n' >> /etc/hosts
+echo "$CtmIP controlm" >> /etc/hosts
+cat /etc/hosts
+
+su - ctmagent -c "ctm env add ctmprod https://$controlm:8443/automation-api apiuser ejkWtSJykyo5"
+su - ctmagent -c "ctm prov agent::install Agent.Linux controlm"
+su - ctmagent -c "ctm config server:hostgroup:agent::add controlm airflow `hostname`"

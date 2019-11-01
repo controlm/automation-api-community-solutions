@@ -1,0 +1,81 @@
+Installing on Ubuntu:
+
+useradd -d /home/ctmagent -p ctmagent -m -s /bin/bash ctmagent
+useradd -d /home/airflow -p airflow -m -s /bin/bash airflow
+
+echo 'ctmagent ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+echo 'airflow ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+
+apt-get -y update
+apt-get -y install python-software-properties
+curl -sL https://deb.nodesource.com/setup_11.x | sudo -E bash -
+apt-get -y install nodejs
+add-apt-repository -y ppa:openjdk-r/ppa
+apt-get -y install openjdk-8-jre
+
+wget --no-check-certificate https://s3-us-west-2.amazonaws.com/623469066856-fy20seminars/ctm-cli.tgz
+npm install -g ctm-cli.tgz
+
+#
+# SMDemo Machine
+#
+CtmIP=172.31.45.58
+
+printf '\n' >> /etc/hosts
+echo "$CtmIP controlm" >> /etc/hosts
+cat /etc/hosts
+
+su - ctmagent -c "ctm env add ctmprod https://$controlm:8443/automation-api apiuser ejkWtSJykyo5"
+su - ctmagent -c "ctm prov agent::install Agent.Linux controlm"
+su - ctmagent -c "ctm config server:hostgroup:agent::add controlm airflow `hostname`"
+
+#
+# Install Postgres
+#
+sudo apt-get -y install postgresql postgresql-contrib
+sudo -u postgres createuser --interactive
+sudo -u postgres createdb airflow
+
+\password airflow a1rfl0w
+
+#
+# If on a differnet host than PostgreSQL, then update
+#sudo vi /etc/postgresql/9.5/main/pg_hba.conf
+# IPv4 local connections:
+#host all all 0.0.0.0/0 trust
+#sudo vi /etc/postgresql/9.5/main/postgresql.conf
+# — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — 
+# CONNECTIONS AND AUTHENTICATION
+# — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — — 
+# — Connection Settings -
+#listen_addresses = ‘localhost’ # what IP address(es) to listen on;
+#listen_addresses = ‘*’ # for Airflow connection
+
+#
+# Python3.6 and pip 
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+sudo apt install python3.6
+sudo apt-get install -y python3-pip
+sudo apt-get install build-essential libssl-dev libffi-dev python3-dev
+sudo pip3 install pip --upgrade
+
+#sudo apt-get install mysql-server
+sudo apt-get install libmysqlclient-dev
+
+sudo su - airflow   # switch to airflow user
+export AIRFLOW_HOME=~/airflow
+
+sudo -E pip3 install 'apache-airflow[postgres, mysql, celery, rabbitmq]'
+
+#
+# Edit airflow.cfg:
+#
+executor = CeleryExecutor
+sql_alchemy_conn = postgresql+psycopg2://airflow:a1rfl0w@localhost:5432/airflow
+
+sudo -E pip3 install psycopg2-binary
+
+airflow initdb
+airflow webserver &
+airflow scheduler &

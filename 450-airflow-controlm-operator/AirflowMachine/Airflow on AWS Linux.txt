@@ -1,0 +1,99 @@
+#!/bin/bash
+yum remove -y java-1.7.0-openjdk
+yum -y install java-1.8.0
+pip -y install pip --upgrade
+yum -y install python-devel
+yum -y install gcc
+rm /usr/lib/python2.7/dist-packages/chardet-2.0.1.egg-info
+rm -r -f /usr/lib/python2.7/dist-packages/chardet
+rm /usr/lib/python2.7/dist-packages/colorama-0.2.5.egg-info
+rm -r -f /usr/lib/python2.7/dist-packages/colorama
+rm -f /usr/lib/python2.7/dist-packages/lockfile*
+useradd -d /home/airflow -p airflow -m -s /bin/bash airflow
+
+yum -y install mysql57
+yum -y install mysql57-devel
+yum -y install mysql57-server
+yum -y install mysql57-libs
+
+#
+# Add /usr/lib and /usr/slib to secure path
+#
+sudo su - 
+echo 'airflow ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+
+#
+# Airflow needs MySQL 5.6 or higher and Amazon Linux comes with 5.5 installed
+#
+# /etc/my.cnf add to end
+bind-address = 0.0.0.0 <-- instead of 127.0.0.1
+# skip-networking      <-- Comment to disable
+#explicit_defaults_for_timestamp=1
+mysql> SET GLOBAL explicit_defaults_for_timestamp=ON;
+
+
+sudo service mysqld start
+sudo /etc/init.d/mysqld start
+sudo chkconfig mysqld on
+
+mysqladmin -u root password 'K9fndzlFDItf'
+
+mysql -u root -p K9fndzlFDItf
+
+mysql> CREATE DATABASE airflow CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+mysql> create user 'airflow'@'localhost' identified by 'airflow';
+mysql> grant all privileges on * . * to 'airflow'@'localhost';
+mysqld> grant all privileges on *.* to 'root'@'%' identified by 'K9fndzlFDItf'; <--remote access
+mysql> flush privileges;
+
+
+
+
+useradd -d /home/ctmagent -p ctmagent -m -s /bin/bash ctmagent
+echo 'ctmagent ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+
+
+
+su - airflow   # switch to airflow user
+export AIRFLOW_HOME=~/airflow
+
+sudo -E pip install 'apache-airflow[mysql, celery, rabbitmq]'
+
+#
+# Edit airflow.cfg:
+#
+executor = CeleryExecutor
+sql_alchemy_conn = mysql://airflow:airflow@localhost:3306/airflow
+logging_level = WARN
+
+airflow initdb
+airflow webserver -D &
+airflow scheduler -D &
+airflow worker -D &
+
+
+sudo yum install -y gcc-c++ make
+sudo curl -sL https://rpm.nodesource.com/setup_11.x | sudo -E bash -
+yum -y install nodejs
+
+wget --no-check-certificate https://s3-us-west-2.amazonaws.com/623469066856-fy20seminars/ctm-cli.tgz
+sudo npm install -g ctm-cli.tgz
+
+aws ec2 modify-volume --volume-id <volume id> --size <new number of GB>   <-- Modify size of Linux EBS root volume
+
+ctm env add ctmprod https://ip-172-31-45-58:8443/automation-api apiuser ejkWtSJykyo5
+
+ctm prov Agent.Linux ip-172-31-45-58 <-- no need for hosts update
+
+#
+# SMDemo Machine
+#
+CtmIP=172.31.45.58
+
+printf '\n' >> /etc/hosts
+echo "$CtmIP controlm" >> /etc/hosts
+cat /etc/hosts
+
+su - ctmagent -c "ctm env add ctmprod https://$controlm:8443/automation-api apiuser ejkWtSJykyo5"
+su - ctmagent -c "ctm prov agent::install Agent.Linux controlm"
+su - ctmagent -c "ctm config server:hostgroup:agent::add controlm airflow `hostname`"

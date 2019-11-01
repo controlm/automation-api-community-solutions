@@ -17,3 +17,4 @@ spec:
       restartPolicy: Never
       imagePullSecrets:
       - name: regcred
+  backoffLimit: 0
