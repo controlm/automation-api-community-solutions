@@ -1,0 +1,17 @@
+{
+	"Defaults" : {
+		"Application": "TMO",
+		"SubApplication": "TMO_LAB02",	
+		"ControlmServer": "ctmaws"
+	},
+
+   "TMO_IDE_TEST": {
+		"Type": "Folder",
+		
+		"IDE_TEST": {
+			"Type" : "Job:Command",
+			"Command" : "echo hello",
+			"RunAs" : "user30"
+		}
+	}
+}

@@ -1,0 +1,41 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Change these to the Control-M environment connecting to.
+CTM_HOST="wla919"
+CTM_SERVER="wla919"
+CTM_AGENT_PORT="8006" 
+
+# These are set in the Windows enviroment.  The ENV Ruby hash retrieves the value from the operating system's environmnet variable.
+if ENV["CTMUSER"] == nil
+  abort("Environment variable CTMUSER is not set")
+else
+  CTM_USER=ENV["CTMUSER"]
+end
+
+if ENV["CTMUSERPASSWORD"] == nil
+  abort("Environment variable CTMUSERPASSWORD is not set")
+else
+  CTM_PASSWORD=ENV["CTMUSERPASSWORD"]
+end
+
+if ENV["COMPUTERNAME"] == nil
+  abort("Environment variable COMPUTERNAME is not set")
+else
+  CTM_AGENT_HOST=ENV["COMPUTERNAME"]
+end
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "Centos/7"
+  
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "2048"
+  end
+
+  # Provision Control-M Agent via Automation API
+  config.vm.provision "shell", path: "install_root.sh", :args => [ CTM_HOST ]
+  config.vm.provision "shell", privileged: false, path: "install_agent.sh", :args => [ CTM_HOST, CTM_USER, CTM_PASSWORD, CTM_SERVER, CTM_AGENT_HOST, CTM_AGENT_PORT ]
+  config.vm.network "forwarded_port", guest: CTM_AGENT_PORT, host: CTM_AGENT_PORT
+  config.vm.box_check_update = false
+
+end

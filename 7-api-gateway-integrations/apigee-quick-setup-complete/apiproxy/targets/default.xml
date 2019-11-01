@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TargetEndpoint name="default">
+    <Description/>
+    <FaultRules/>
+    <Flows/>
+    <PreFlow name="PreFlow">
+        <Request>
+            <Step>
+                <Condition>!((proxy.pathsuffix == "") or (proxy.pathsuffix == "/") or (proxy.pathsuffix MatchesPath "/swagger-ui**") )</Condition>
+                <FaultRules/>
+                <Name>add-authorization-header</Name>
+            </Step>
+        </Request>
+    </PreFlow>
+    <PostFlow name="PostFlow">
+        <Response>
+            <Step>
+                <FaultRules/>
+                <Name>api-config</Name>
+            </Step>
+            <Step>
+                <FaultRules/>
+                <Name>rewrite-urls-in-response</Name>
+            </Step>
+        </Response>
+    </PostFlow>
+    <HTTPTargetConnection>
+        <Properties/>
+        <URL>https://ENDPOINT:8443/automation-api</URL>
+    </HTTPTargetConnection>
+</TargetEndpoint>

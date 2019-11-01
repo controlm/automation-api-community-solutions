@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "k8s-ctm.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "k8s-ctm.name" . }}
+    helm.sh/chart: {{ include "k8s-ctm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "k8s-ctm.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "k8s-ctm.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      subdomain: {{ .Release.Name }}
+      {{ if .Values.image.deploysecret }}
+      imagePullSecrets:
+          - name: {{ .Values.image.deploysecret }}{{ end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+          - containerPort: {{ .Values.ctm.agent_port }}
+          env:
+          - name: CTM_USER
+            value: {{ .Values.ctm.aapi_user }}
+          - name: CTM_SERVER
+            value: {{ .Values.ctm.datacenter }}
+          - name: CTM_HOST
+            value: {{ .Values.ctm.aapi_endpoint }}
+          - name: IMAGE
+            value: {{ .Values.ctm.povisionImage }}{{ if .Values.ctm.host_group }}
+          - name: HOST_GROUP
+            value: {{ .Values.ctm.host_group }}{{ end }}{{ if .Values.ctm.overrideCTMSHOST }}
+          - name: CTMSHOSTOVERRIDE
+            value: {{ .Values.ctm.overrideCTMSHOST }}{{ end }}{{ if .Values.ctm.persistant }}
+          - name: persistance
+            value: {{ .Values.ctm.persistant }}{{ end }}
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: INSTANCE
+            value: {{ .Release.Name }}
+          - name: NAME
+            value: {{ .Chart.Name }}
+          - name: CTM_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.ctm.aapi_passwd_secret_name }}
+                key: {{ .Values.ctm.aapi_passwd_secret_key }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}

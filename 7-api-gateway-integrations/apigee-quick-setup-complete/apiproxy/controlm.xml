@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="2" name="controlm">
+    <Basepaths>/controlm</Basepaths>
+    <ConfigurationVersion majorVersion="4" minorVersion="0"/>
+    <Description>Demonstrates a complete example of an Apigee API proxy for Control-M Automation API, including caching Control-M API session tokens and URL rewriting</Description>
+    <DisplayName>controlm</DisplayName>
+    <Policies>
+        <Policy>add-authorization-header</Policy>
+        <Policy>api-config</Policy>
+        <Policy>api-token-get</Policy>
+        <Policy>api-token-lookup-cache</Policy>
+        <Policy>api-token-populate-cache</Policy>
+        <Policy>disallow-session-requests</Policy>
+        <Policy>redirect-swagger</Policy>
+        <Policy>remove-apikey-header</Policy>
+        <Policy>rewrite-urls-in-response</Policy>
+        <Policy>verify-api-key</Policy>
+    </Policies>
+    <ProxyEndpoints>
+        <ProxyEndpoint>default</ProxyEndpoint>
+    </ProxyEndpoints>
+    <Resources>
+        <Resource>jsc://api-config.js</Resource>
+        <Resource>jsc://api-token-get.js</Resource>
+        <Resource>jsc://url-rewrite.js</Resource>
+    </Resources>
+    <Spec></Spec>
+    <TargetServers/>
+    <TargetEndpoints>
+        <TargetEndpoint>default</TargetEndpoint>
+    </TargetEndpoints>
+</APIProxy>

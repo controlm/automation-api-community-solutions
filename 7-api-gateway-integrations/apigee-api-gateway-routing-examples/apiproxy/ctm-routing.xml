@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy revision="1" name="ctm-routing">
+    <Basepaths>/ctm-routing</Basepaths>
+    <Basepaths>/ctm-routing</Basepaths>
+    <ConfigurationVersion majorVersion="4" minorVersion="0"/>
+    <Description>Apigee Gateway routing demo - routes all requests to default target, except /reporting requests are sent to reporting target.</Description>
+    <DisplayName>ctm-routing</DisplayName>
+    <Policies>
+        <Policy>Swagger-Redirect</Policy>
+        <Policy>URLRewrite</Policy>
+    </Policies>
+    <ProxyEndpoints>
+        <ProxyEndpoint>default</ProxyEndpoint>
+    </ProxyEndpoints>
+    <Resources>
+        <Resource>jsc://URLRewrite.js</Resource>
+    </Resources>
+    <Spec></Spec>
+    <TargetServers/>
+    <TargetEndpoints>
+        <TargetEndpoint>default</TargetEndpoint>
+        <TargetEndpoint>reporting</TargetEndpoint>
+    </TargetEndpoints>
+</APIProxy>

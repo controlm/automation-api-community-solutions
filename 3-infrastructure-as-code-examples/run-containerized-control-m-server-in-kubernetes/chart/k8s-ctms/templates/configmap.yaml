@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configmap
+data:
+  ctms-configmap.json: |
+    {
+        "Installation": "new",
+        "ControlMName": "{{ .Values.ctm.datacenter }}",
+        "Database": {
+            "Vendor": "{{ .Values.db.vendor }}",
+            "InstanceName": "{{ .Values.db.instance}}",
+            "Host": "{{ .Values.db.host }}",
+            "Port": {{ .Values.db.port }},
+            "AdminLogin": "{{ .Values.db.dba_user }}",
+            "AdminPassword": "{{ .Values.db.dba_pass }}",
+            "OwnerLogin": "{{ .Values.db.dbo_user }}",
+            "OwnerPassword": "{{ .Values.db.dbo_pass }}",
+            "Size": "Small",
+            "TablespaceSize": 250,
+            "TablespaceName": "{{ .Values.db.dbo_user }}_tbs"
+        },
+        "Configuration": {
+            "Hostname": "10.10.10.10",
+            "ControlMEMTcpIpPort": {{ .Values.ctm.ControlMEMTcpIpPort }},
+            "IPCPort": 6005,
+            "ConfigurationAgentPort": {{ .Values.ctm.ConfigurationAgentPort }},
+            "ServerToAgentPort": 7006,
+            "AgentToServerPort": {{ .Values.ctm.AgentToServerPort }},
+            "HighAvailabilityPort": 2368
+        }
+    }
