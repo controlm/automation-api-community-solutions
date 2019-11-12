@@ -104,26 +104,28 @@ else:
 
 # add sorting key to list
 for j in range(len(jobslist)):
+    pprint( jobslist[j] )
     (discard,jobslist[j]['orderId'])=jobslist[j]['jobId'].split(':',1)
-    jobslist[j]['nameord']=jobslist[j]['name']+jobslist[j]['orderId']
+    jobslist[j]['sortkey']=jobslist[j]['name']+jobslist[j]['host']+':'+jobslist[j]['orderDate']+':'+jobslist[j]['jobId']
 
 # sort jobs on name and orderid
-jobslist.sort(key=operator.itemgetter('nameord'))
+jobslist.sort(key=operator.itemgetter('sortkey'))
 
-# find duplicates
+# The following code determines the jobs are duplicate based on: jobname, host (nodeid) and order Date (odate)
+# Be careful when modifying an test whether it achieves the desired reesul in your environment!
 keep=[]
 dups=[]
 for j in range(len(jobslist)):
     if(j==0):
         keep.append(jobslist[j])
     else:
-        if(jobslist[j]['name']==jobslist[j-1]['name']):
+        if(jobslist[j]['name']==jobslist[j-1]['name'] and jobslist[j]['host']==jobslist[j-1]['host'] and jobslist[j]['orderDate']==jobslist[j-1]['orderDate']) :
             dups.append(jobslist[j])
         else:
             keep.append(jobslist[j])
 
 print("%d total jobs found" % len(jobslist))
-print("%d considered as duplicate based on jobname\n" % len(dups))
+print("%d considered as duplicate based on jobname, host and odate\n" % len(dups))
 
 if(len(dups)==0):
     ctmapi_logout()

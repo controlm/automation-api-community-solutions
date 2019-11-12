@@ -17,9 +17,9 @@ A Python script was developed that retrieves a list of jobs from the active
 evironment that matches the Control-M/Server datacenter and Folder specified by
 the user. 
 
-The script then identifies all duplicate jobs by *jobname*. For each set of 
-duplicates, it considers the job with the lowest orderID as being the original
-non-duplicate, and marks the remaining ones as duplicate.
+The script then identifies all duplicate jobs by *jobname, host and order date*.
+For each set of duplicates, it considers the job with the lowest orderID as 
+being the original non-duplicate, and marks the remaining ones as duplicate.
 
 After requesting confirmation, it then Holds or Deletes each duplicate job.
 
