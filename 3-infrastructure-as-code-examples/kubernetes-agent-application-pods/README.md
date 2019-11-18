@@ -38,3 +38,30 @@ The Control-M agent runs on the Kubernetes cluster as a DaemonSet. The agent con
 Geo-Location data is updated periodically when new buildings or subdivisions are built. The data arrives in an S3 bucket. Control-M "watches" this bucket and when data arrives, pushes updates to Snowflake.
 Information about customers and their current portfolio subscriptions is extracted on a regular basis and used to update that same data in Snowflake.
 A Control-M server runs on an EC2 instance. This infrastructure coordinates all the activities of the agent running in the K8S cluster and the other tasks running outside the cluster. 
+## Kubernetes Client
+A Python client, runJob.py is provided in the **Kubernetes Machine** folder.This script creates Kubernetes JOBs using command-line arguments as follows:
+
+    #   b|backofflimit      default is 0
+    #   c|claim             PersistentVolumeClaim
+    #   e|envname           environment variable name
+    #   H|hostpath          Path on host machine (must be a directory}
+    #   i|image             container image name
+    #   j|jobname           Mandatory. Job name
+    #   m|volname           Volume mount name
+    #   p|image_pull_policy Always or Latest
+    #   r|restartpolicy     default is Never
+    #   s|imagesecret       name of image_pull_secret
+    #   t|volpath           Volume mount path in Pod
+    #   v|envvalue          variable value
+    #   y|yaml              name of a yaml manifest for job creation. Overrides all others except jobname
+	
+Note that if a YAML manifest is provided, all other argument, except for jobname, are ignored.
+
+Additionally, this client performs no authentication. It expects to be running in a Control-M agent that is running as a DaemonSet with a Service Account that grants the agent the required authorization to operate on jobs.
+
+## Control-M Application integrator Jobtype
+A Control-M Application Integrato jobtype, **runKjob** is provided in the **Misc** folder. This jobtype uses the above client to submit and track jobs.
+These are the job's Kubernetes properties.
+![Kubernetes Jobtype ](Images/runKjobJobArguments.png)
+
+The connection profile specifies the location of YAML manifests and the runJob.py script as seen within the Control-M agent Pod. 
