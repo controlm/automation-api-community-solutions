@@ -96,5 +96,5 @@ docker run -it -v $(pwd):/tmp/test -p 7006:7006 ctmag:v0.0.0 -s clm-aus-t5eocu -
 To enable the option Application Integrator job type deployment and connection profile deployment the `-t` and `-cp` options are added:
 
 ```bash
-docker run -it -v $(pwd):/tmp/test -p 7006:7006 ctmag:v0.0.0 -s clm-aus-t5eocu -e https://clm-aus-trvt6e.bmc.com:8443/automation-api -p 7006 -u emuser -pf /tmp/test/authz.txt -a $HOSTNAME -i AppPack9191.Linux -t ECHOAPI -cp /tmp/test/conn-pofiles.json
+docker run -it -v $(pwd):/tmp/test -p 7006:7006 ctmag:v0.0.0 -s clm-aus-t5eocu -e https://clm-aus-trvt6e.bmc.com:8443/automation-api -p 7006 -u emuser -pf /tmp/test/authz.txt -a $HOSTNAME -i AppPack9191.Linux -t ECHOAPI -cp /tmp/test/conn-profiles.json
 ```
