@@ -3,7 +3,7 @@
 #------------------------------------
 
 # Base the container off of an OS Container Image that is supported for the version of the Control-M/Agent that will be deployed
-FROM centos:7
+FROM krallin/centos-tini:7
 # Put your email address in the maintainers line so that others in your company who might use the image know who to contact about it
 LABEL maintainers="your_name@example.com"
 
@@ -33,4 +33,4 @@ COPY run_ctmagent.sh /home/controlm
 
 EXPOSE $CTM_AGENT_PORT
 
-CMD ["/home/controlm/run_ctmagent.sh"]
+ENTRYPOINT ["/usr/local/bin/tini", "--", "/home/controlm/run_ctmagent.sh"]
