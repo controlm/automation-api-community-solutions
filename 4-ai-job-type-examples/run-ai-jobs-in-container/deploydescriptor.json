@@ -1,0 +1,15 @@
+{
+    "DeployDescriptor":
+      [
+        {
+          "ApplyOn": {"Type":"ConnectionProfile.ApplicationIntegrator.*"},
+          "Property": "TargetAgent",
+          "Replace": [ { "AgentHost":"$ALIAS"} ]
+        },
+        {
+            "ApplyOn": {"Type":"ConnectionProfile.ApplicationIntegrator.*"},
+            "Property": "TargetCTM",
+            "Replace": [ { "CTMHost":"$CTM_SERVER"} ]
+        }
+      ]
+}

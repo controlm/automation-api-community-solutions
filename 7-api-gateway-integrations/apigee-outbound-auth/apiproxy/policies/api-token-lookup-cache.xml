@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<LookupCache name="api-token-lookup-cache">
+    <CacheResource>ctmtoken</CacheResource>
+    <AssignTo>control-m.apiAccessToken</AssignTo>
+    <Scope>Exclusive</Scope>
+    <CacheKey>
+        <KeyFragment>apiAccessToken</KeyFragment>
+    </CacheKey>
+</LookupCache>

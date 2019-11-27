@@ -8,7 +8,7 @@ A particular job flow has a highly variable load. At times, the load (number of 
 
 * Control-M/Enterprise Manager 9.0.18.000 or higher
 * Control-M Automation API 9.0.00.500 or higher
-* Control-M/Server
+* Control-M/Server (must be running in k8s)
 * Control-M User with following Privileges
   * Privileges > Control-M Configuration Manager: Full
   * Privileges > Configuration: Full (allows agents to be added and deleted)
@@ -30,6 +30,9 @@ Once the Helm Chart is deployed in to Kubernetes, the following logic is perform
 
 ![k8s-scaling-cycle](./images/k8s-scaling-cycle.PNG)
 
+## Demo
+Click on the below image to watch a demonstration on YouTube.  
+[![Video Demo Link](https://img.youtube.com/vi/xxwjg5DP0m4/0.jpg "Video Demo on YouTube")](https://youtu.be/xxwjg5DP0m4)
 
 ## Table of Contents
 

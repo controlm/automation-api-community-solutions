@@ -16,3 +16,4 @@ spec:
         - name: STIME
           value: "5"
       restartPolicy: Never
+  backoffLimit: 0
