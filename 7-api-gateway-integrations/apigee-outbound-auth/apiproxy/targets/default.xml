@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<TargetEndpoint name="default">
+    <Description/>
+    <FaultRules/>
+    <PreFlow name="PreFlow">
+        <Request>
+            <Step>
+                i<!-- Add Authorization header with session token to send to Control-M backend --> 
+                <Name>add-authorization-header</Name>
+            </Step>
+        </Request>
+        <Response/>
+    </PreFlow>
+    <HTTPTargetConnection>
+        <Properties/>
+        <URL>https://ENDPOINT:8443/automation-api</URL>
+    </HTTPTargetConnection>
+</TargetEndpoint>

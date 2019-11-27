@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<VerifyAPIKey async="false" continueOnError="false" enabled="true" name="verify-api-key">
+    <DisplayName>verify-api-key</DisplayName>
+    <FaultRules/>
+    <Properties/>
+    <APIKey ref="request.header.apikey"></APIKey>
+</VerifyAPIKey>

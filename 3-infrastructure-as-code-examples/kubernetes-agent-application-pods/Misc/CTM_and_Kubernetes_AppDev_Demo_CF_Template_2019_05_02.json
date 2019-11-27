@@ -90,6 +90,7 @@
              "exec 1>/var/lib/cloud/instance/userdata_log.out 2>&1\n",
              "if [ ! -e /var/lib/cloud/instance/ctmdone.txt ]; then\n",
              "   touch /var/lib/cloud/instance/ctmdone.txt\n",
+			 "   apt-get -y update\n",
              "   CtmIP=$(echo ", {"Fn::GetAtt" : [ "CTMInstance", "PrivateIp" ]}, ")\n",
              "   MyHostname=$(curl -s http://169.254.169.254/latest/meta-data/local-hostname | cut -d. -f1)\n",
              "   apt-get -y install python-software-properties\n",

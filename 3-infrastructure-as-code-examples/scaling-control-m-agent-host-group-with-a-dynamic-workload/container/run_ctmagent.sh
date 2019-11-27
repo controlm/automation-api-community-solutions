@@ -70,6 +70,13 @@ function sigtermHandler() {
     return 0
 }
 
+function sigintHandler() {
+    echo '========================================================================'
+    echo 'Received signal SIGINT'
+    echo '========================================================================'
+    removeAgentFromServer
+    return 0
+}
 function getControlmPassword() {
 
     if [ ! -z "$CTM_PASSWORD" ]; then
@@ -113,33 +120,8 @@ if [ -z "$CTM_SERVER" -o -z "$CTM_AGENT_PORT" -o -z "$CTM_HOST" -o -z "$CTM_USER
 fi
 echo
 
-
-# if [ -f '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt' ]; then
-# if [[ -z "$NAMESPACE" ]]; then
-#     NAMESPACE=default
-# fi
-# # TODO determine service type and perform different action based on result
-# # TODO move this logic to it's own function
-# SERVICE_NAME=`hostname | cut -d\- -f1,2,3`
-# export SERVICE_NAME
-# echo SERVICE_NAME=$SERVICE_NAME
-# echo ========================
-# HOST_IP=`curl -s --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://kubernetes/api/v1/namespaces/$NAMESPACE/services/ | python -c 'import sys, json, os; print json.dumps([item["status"]["loadBalancer"]["ingress"][0]["ip"] for item in json.load(sys.stdin)["items"] if item["metadata"]["name"] == sys.argv[1] ])[2:][:-2]' $SERVICE_NAME`
-# HOST_IP=`echo $HOST_IP | cut -d\" -f2`
-# if [[ -z $HOST_IP ]]; then
-#   HOST_IP=$SERVICE_NAME
-# fi
-# echo HOST_IP=$HOST_IP
-# echo ========================
-# else
-#   HOST_IP=$(hostname)
-#   echo HOST_IP=$HOST_IP
-# fi
-SERVICE_NAME=`hostname -i`
-export SERVICE_NAME
-HOST_IP=$SERVICE_NAME
+HOST_IP=`hostname -i`
 export HOST_IP
-echo SERVICE_NAME=$SERVICE_NAME
 
 CTM_ENV="endpoint"
 ALIAS=$HOST_IP
@@ -174,6 +156,7 @@ echo
 # Setup to unregister agent before docker stop
 trap 'sigusr1Handler' SIGUSR1
 trap 'sigtermHandler' SIGTERM
+trap 'sigintHandler' SIGINT
 
 echo
 echo '========================================================================'
@@ -244,7 +227,7 @@ RC=$?
 if [ -n $CTMSHOSTOVERRIDE ]; then
   old_ctmshost=$(grep CTMSHOST $HOME/ctm/data/CONFIG.dat | awk '{ print $2 }')
   sed -i "s/$old_ctmshost/$CTMSHOSTOVERRIDE/g" $HOME/ctm/data/CONFIG.dat
-  bash -c "shut-ag -u contorlm -p all && start-ag -u controlm -p all"
+  bash -c "shut-ag -u controlm -p all && start-ag -u controlm -p all"
   ctm config server:agent::ping $CTM_SERVER $ALIAS
   RC=$?
   if [[ $RC -ne 0 ]]; then

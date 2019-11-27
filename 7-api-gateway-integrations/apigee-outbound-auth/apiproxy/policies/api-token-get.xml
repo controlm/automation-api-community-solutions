@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Javascript async="false" continueOnError="false" enabled="true" timeLimit="2000" name="api-token-get">
+    <DisplayName>api-token-get</DisplayName>
+    <Properties/>
+    <ResourceURL>jsc://api-token-get.js</ResourceURL>
+</Javascript>
