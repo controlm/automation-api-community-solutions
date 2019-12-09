@@ -5,7 +5,7 @@ In this example we will focus on creating a Kubernetes <b>POD</b> with Control-M
 During container start, Control-M Agent will register itself automatically into Control-M Enterprise Manager. 
 Additionally, during Container graceful stop, Control-M Agent will try to disconnect and unregister from Control-M Enterprise Manager. 
 
-Control-M Agent will use specified port for communication. The connection mode will be set to persistant, agent will initiate the connection to server. This scenario makes that there is no need to open any port on K8S cluster nor need to create and maintain any objects like LoadBalancers (of course in different scenario/architecute such objects would be needed, just for single agent with no HA it is not required).
+Control-M Agent will use specified port for communication. The connection mode will be set to persistent, agent will initiate the connection to server. This scenario makes that there is no need to open any port on K8S cluster nor need to create and maintain any objects like LoadBalancers (of course in different scenario/architecute such objects would be needed, just for single agent with no HA it is not required).
 
 Control-M Agent will be pulled from Enterprise Manager and install files should be put into proper folder. The services that are used are described [here](https://docs.bmc.com/docs/automation-api/9019monthly/provision-service-872868763.html). 
 
