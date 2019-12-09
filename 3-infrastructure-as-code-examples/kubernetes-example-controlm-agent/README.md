@@ -10,8 +10,9 @@ Control-M Agent will use specified port for communication. The connection mode w
 ## Image files
 Docker images files are placed in image folder. Sample script to build the image is in build.sh or you can use the command below:
 
-#   docker build --build-arg CTMHOST=<name-or-ip-of-your-em-here> --build-arg USER=<your-user> --build-arg PASSWORD=<your-password> --tag ctm/agent/rt:2.0  .
-
+```
+docker build --build-arg CTMHOST=<name-or-ip-of-your-em-here> --build-arg USER=<your-user> --build-arg PASSWORD=<your-password> --tag ctm/agent/rt:2.0  .
+```
 
 ## Deployment file
 Examples of deployment files are :
