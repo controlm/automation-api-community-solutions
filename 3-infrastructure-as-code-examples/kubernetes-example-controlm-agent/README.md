@@ -1,4 +1,4 @@
-# Kuberentes Example - Control-M Agent in Persistant mode
+# Kuberentes Example - Control-M Agent in Persistent mode
 
 ## Intro
 In this example we will focus on creating a Kubernetes <b>POD</b> with Control-M agent in container. 
