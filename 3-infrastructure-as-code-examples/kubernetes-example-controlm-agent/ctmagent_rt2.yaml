@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+   name: controlm-agent
+spec:
+   containers:
+   - name: controlm-agent
+     image: ctm/agent/rt:2.0
+     imagePullPolicy: Never
+     env:
+     - name: CTM_SERVER
+       value: "ctmserver"
+     - name: CTM_HOSTGROUP
+       value: "name-of-hostgroup"
+     - name: CTM_AGENT_PORT
+       value: "7766"
