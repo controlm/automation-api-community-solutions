@@ -20,4 +20,7 @@ docker build --build-arg CTMHOST=<name-or-ip-of-your-em-here> --build-arg USER=<
 * ctmagent_rt2.yaml - this file is example of pod definition with 1 container that uses previously defined image (ctm/agent/rt:2.0).
 * ctmagent_rt2-deployment.yaml - similar to the example above, but using a deployment method with replicas count=1
 
-To run this example, you 
+To run this example, you just need to apply the configuration, i.e.:
+```
+kubectl apply -f ctmagent_rt2.yaml
+```
