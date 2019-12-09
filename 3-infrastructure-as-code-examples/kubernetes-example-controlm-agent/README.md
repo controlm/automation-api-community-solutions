@@ -1,7 +1,7 @@
 # Kuberentes Example - Control-M Agent in Persistant mode
 
 ## Intro
-In this example we will focus on creating a Kubernetes <b>POD<b> with Control-M agent in container. 
+In this example we will focus on creating a Kubernetes <b>POD</b> with Control-M agent in container. 
 During container start, Control-M Agent will register itself automatically into Control-M Enterprise Manager. 
 Additionally, during Container graceful stop, Control-M Agent will try to disconnect and unregister from Control-M Enterprise Manager. 
 
