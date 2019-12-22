@@ -2,10 +2,16 @@
 
 MYAPP_CTR=${LOOPCTR}
 SLEEP_TIME=${STIME}
+XCODE=${XCODE}
 
 if [ -z "$SLEEP_TIME" ]
 then
    SLEEP_TIME=30
+fi
+
+if [ -z "$XCODE" ]
+then
+   XCODE=0
 fi
 
 echo Sleep Time set to $SLEEP_TIME
@@ -26,4 +32,4 @@ while [ $MYAPP_CTR -gt 0 ]; do
 done
 
 echo All done counting
-exit 0
+exit $XCODE
