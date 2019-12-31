@@ -1,0 +1,19 @@
+{
+	"Defaults" : {"RunAs" : "hadoop", "OrderMethod": "Manual", "Application" : "FY19Seminar", "SubApplication" : "IOT_Pipeline", "When" : {"WeekDays" : ["ALL"]}, "SiteStandard": "SPARK_STD", "Host" : "hadoop", 
+			"Job": {"actionIfSuccess" : {"Type": "If", "CompletionStatus":"OK", "mailTeam": 
+					{"Type": "Mail", "Message": "Job %%JOBNAME succeeded", "Subject": "Success", "To": "joe_goldberg@bmc.com"}}},
+			"Job": {"actionIfError" : {"Type": "If", "CompletionStatus":"NOTOK", "mailTeam": 
+					{"Type": "Mail", "Message": "Job %%JOBNAME failed", "Subject": "Error occurred", "To": "joe_goldberg@bmc.com"}}}
+	},
+	"IOT_FY19Seminar_Services": {
+		"Type": "Folder",
+		"Comment" : "Control-M services to set up and manage demo workflow",
+		
+		"IOT_SubmitFlow": {"Type" : "Job:Command",
+			"Description" : "Prepare notifications and submit demo flow",
+			"Command" : "\"C:\\Program Files\\BMC Software\\Control-M EM\\Default\\bmcperl\\bin\\perl\" \"C:\\BMC_Stuff\\FY19Seminar_SubmitJobFlow.pl\" %%phone1 %%phone2",
+			"Host" : "controlm",
+			"RunAs" : "Administrator"   
+		}
+	}
+}
