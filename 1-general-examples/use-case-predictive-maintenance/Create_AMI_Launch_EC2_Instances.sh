@@ -1,20 +1,20 @@
 #!/bin/bash
 #
-#	S3 Bucket: controlm-automationapi-tutorial-artifacts
-#	=====================================================
-#
 #	PART 1:	Build AMI used to launch Control-M Agent instances and have them
 #			dynamically register with a Control-M environment as specified via 
 #			EC2 Instance Tags
 #
+#           Really this should be done via Cloudformation.
 #
 #	ami-bf4193c7:	AWS Linux Quickstart AMI
-#	sg-31675d48:	default Security Group for my account
-#	vpc-6c02d60b:	default VPC for my account
+#	vpc-6c02d60b:	a VPC for my account 
+#	sg-31675d48:	Security Group in the above VPC
+#                   Inbound open ports: 7005 Control-M Server-to-Agent port this agent may connect to
+#                                         22 Optional - for SSH
+#                                       3389 Optional - for RDP 
 #
 #	<Control-M Server>	Name of Control-M Server launched agents should connect to
 #	<Hostgroup Name>	Control-M Hostgroup launched agents should join
-
 #
 #----------------------------------------------------------------------------------------+
 #	Launch AWS Linux Instance                                                            |
@@ -47,8 +47,10 @@ sudo cp -r .aws /root
 #	Install Control-M Agent
 ctm provision image Agent.Linux
 #
-#	Pull rc.AWS_Agent_sample from S3
-sudo aws s3 cp s3://controlm-automationapi-tutorial-artifacts/rc.AWS_Agent_sample /etc/rc.d/init.d/ctmag-ec2-user
+#	Pull rc.AWS_Agent_sample from Github
+sudo curl -OL https://raw.githubusercontent.com/JoeGoldberg/automation-api-community-solutions/master/1-general-examples/use-case-predictive-maintenance/rc.AWS_Agent_sample
+sudo mv rc.AWS_Agent_sample /etc/rc.d/init.d/ctmag-ec2-user
+
 sudo chmod +x /etc/rc.d/init.d/ctmag-ec2-user
 sudo chkconfig --level 345 ctmag-ec2-user
 
@@ -58,7 +60,7 @@ sudo chkconfig --level 345 ctmag-ec2-user
 #
 sudo vi /etc/hosts
 
-#	Set Control-M enviromnet and start Agent
+#	Set Control-M environment and start Agent
 source .bash_profile
 start-ag 
 
