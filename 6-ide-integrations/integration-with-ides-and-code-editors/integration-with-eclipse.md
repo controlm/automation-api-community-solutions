@@ -6,8 +6,8 @@
 
 3. Type a "Name" at the top and fill in all parameters as in the following screenshot (which shows an example for the "*build*" service):
 
-   ![Eclipse Config](/601-integration-with-ides-and-code-editors/images/eclipse_config.png) 
-
+   ![Eclipse Config](/6-ide-integrations/integration-with-ides-and-code-editors/images/eclipse_config.png)
+ 
    * Name : ```Control-M - Build jobs in json file```
    * Location : ```C:\Windows\System32\cmd.exe```
    * Arguments : ```/c ctm build ${resource_loc}```
@@ -28,6 +28,6 @@
 
    As we also added those operations as favorites, you can launch them too from the “Run external commands” icon at the top, as shown in the following screenshot.
 
-   ![Eclipse Menu](/601-integration-with-ides-and-code-editors/images/eclipse_menu.png) 
+   ![Eclipse Menu](/6-ide-integrations/integration-with-ides-and-code-editors/images/eclipse_menu.png) 
 
    *Integration tested with Eclipse IDE for Java Developers 2018-09 (4.9.0) running on Windows 10*
