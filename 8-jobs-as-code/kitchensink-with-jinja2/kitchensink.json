@@ -1,0 +1,327 @@
+{
+	"Defaults" : {
+		"Comment" : "----------------------------------------------------------------------------------------------------------------",
+		"Comment" : " Defaults section contains values that are applied to all folders and jobs below You can override defaults      ",
+		"Comment" : "    coding the same parameter at the folder or job level. Therefore, select the most common values for          ",
+		"Comment" : "    defaults and the exceptions at the detail level                                                             ",
+		"Comment" : "----------------------------------------------------------------------------------------------------------------",		
+		
+		"Comment" : "----------------------------------------------------------------------------------------------------------------",
+		"Comment" : " Application: User-defined tag describing the application this folder or job belongs to. When using a graphical ",
+		"Comment" : "              interface, this tag directly affects job grouping and organization in both the tree and map views ",
+		"Comment" : " Host:        The name of the single computer or a logical name for a collection of computers on which the job  ",
+		"Comment" : "              should execute                                                                                    ",
+		"Comment" : " OrderMethod: Control-M maintains an Active Environment which includes all jobs that are eligible for execution ",
+		"Comment" : "              OrderMethod Specifies how a job gets loaded into the Active Environment                           ",
+		"Comment" :	"   Manual:    means inclusion is the result of a specific requires, either interactively by a human or via API  ",
+		"Comment" : "   Automatic: Control-M evaluates WHEN criteria to determine if jobs in this folder are loaded into the         ",
+		"Comment" : "              Active Environment                                                                                ",
+		"Comment" : " Runas:       Defines the user context this job executes under                                                  ",
+		"Comment" : " Sub-Application: User-defined tag defining a subset category of an application. When using a graphical         ",
+		"Comment" : "              interface, this tag directly affects job grouping and organization in both the tree and map views ",
+		"Comment" : " When:        Defines the set of days on which jobs should be loaded into the Active Environment                ",
+		"Comment" : "----------------------------------------------------------------------------------------------------------------",
+		
+		"RunAs" : "devops", 
+		"OrderMethod": "Manual", 
+		"Application" : "KitchenSink_Demo", 
+		"SubApplication" : "IOT_Pipeline", 
+		"When" : {"WeekDays" : ["ALL"]}, 
+		"Host" : "ctm", 
+		"Job" : {"SemQR": { "Type": "Resource:Semaphore", "Quantity": "1"},
+				"DocumentationUrl":{
+					"Url": "http://docs.myorg.com/%%JOBNAME"
+				},
+				"TST_IOT_JOBS" : {"Type" : "Resource:Semaphore", "Quantity" : "1"},
+				"actionIfSuccess" : {"Type": "If", "CompletionStatus":"OK", "mailTeam": 
+					{"Type": "Mail", "Message": "Job %%JOBNAME succeeded", "Subject": "Success", "To": "joe_goldberg@bmc.com"}},
+				"actionIfError" : {"Type": "If", "CompletionStatus":"NOTOK", "mailTeam": 
+					{"Type": "Mail", "Message": "Job %%JOBNAME failed", "Subject": "Error occurred", "To": "joe_goldberg@bmc.com"}}
+		}
+	},
+
+	"JGO_FolderName": {
+		"Type": "Folder",
+		"Comment" : "------------------------------------------------------------------------------------------------------------------------",
+		"Comment" : "Kitchen Sink JSON for Control-M. The intent of this sample is to document every parameter available in the Control-M DSL",
+		"Comment" : "------------------------------------------------------------------------------------------------------------------------",
+		
+        "AdjustEvents": true,
+		"Confirm" : true,
+        "ControlmServer": "IP-AC1F1720",
+		"DocumentationFile":{
+			"Path": "home/documentation",
+			"FileName": "%%APPLIC.txt"
+		},
+		
+		"Comment" : "------------------------------------------------------------------------------------------------------------------------",
+		"Comment" : "SiteStandard and BusinessFields:                                                                                        ",
+		"Comment" : "Require Workload Change Manager and a defined Site Standard which can then include optional business fields             ",
+		"Comment" : "------------------------------------------------------------------------------------------------------------------------",
+        "SiteStandard": "WideOpen",
+		"BusinessFields" : [{"FieldOne" : "ValueOne"}, {"FieldTwo":"FieldTwo"}],
+		
+        "OrderMethod": "Manual",
+        "Application": "ApplicationName",
+        "SubApplication" : "SubApplicationName",
+        "RunAs" : "controlm",
+        "When" : {
+			"RuleBasedCalendars": {
+				"Included": [
+					"FRBC_Cal1"
+				],	
+				"FRBC_Cal1": {
+					"Type": "Calendar:RuleBased",
+						"When": {
+							"MonthDaysCalendar": "Workdays",
+							"WeekDays": [
+								"TUE"
+							],
+							"MonthDays": [
+								"NONE"
+							],
+							"ConfirmationCalendars": {
+								"ShiftBy": "+00",
+								"ExceptionPolicy": "DoNotOrder"
+							}
+						}
+				}	
+			}
+		},
+        "ActiveRetentionPolicy": "KeepAll",
+        "DaysKeepActiveIfNotOk" : "41",
+        "mut1" : {
+            "Type": "Resource:Mutex",
+            "MutexType": "Exclusive"
+        },
+        "Notify1": {
+            "Type": "Notify:ExecutionTime",
+            "Criteria": "LessThan",
+            "Value": "3",
+            "Message": "Less than expected"
+        },
+		
+		"Comment" : "-----------------------------------------------------",
+		"Comment" : "Folder Hierarchy:                                    ",
+		"Comment" : "JGO_Folder               <-- Top Level Folder        ",
+		"Comment" : "+-JGO_SubFolder                                      ",
+		"Comment" : "  +-JGO_SubFolderLevel2                              ",		
+		"Comment" : "    |-JGO_JobInSubFolder                             ",		
+		"Comment" : "-----------------------------------------------------",
+		
+		"JGO_SubFolder" : {
+			"Type" : "SubFolder",
+			"Application" : "application",
+			"When" : {
+				"RuleBasedCalendars" : {
+					"Included" : [ "USE PARENT" ]
+				}
+			}
+		},
+		"JGO_SubFolderLevel2" : {
+			"Type" : "SubFolder",
+			"Application" : "application",
+			"When" : {
+				"FromTime":"1211",
+				"ToTime":"2211",
+				"RuleBasedCalendars" : {
+					"Included" : [ "FRBC_Cal1" ]
+				}
+			},
+			"JGO_JobInSubFolder" : {
+					"Type" : "Job:Script",
+					"FileName" : "scriptname.sh",
+					"FilePath" : "/home/user/scripts",
+					"RunAs" : "em900cob"
+				}
+		},
+		
+		"JGO_Jobname_OS_Command": {
+		    "Type": "Job:Command",
+			"Command" : "ls -la",
+			"Host" : "ip-ac1f1720",
+			"When" : {
+				"MonthDaysCalendar" : "WorkingDays",
+				"MonthDays":["1","+2","-3",">4","<5","D6","L7"],
+				"WeekDaysCalendar" : "Summer2017",
+				"WeekDays" : ["SUN","+MON","-TUE",">WED","<THU","FRI","SAT"],
+				"StartDate":"20200322", 
+				"EndDate":"20210325", 
+				"ActivePeriod" :false,
+				"ActivePeriod" :true,
+				"ConfirmationCalendars": {
+					"ExceptionPolicy": "OrderOnNextConfirmedDay",
+					"ShiftBy": "1",
+					"Calendar": "Workdays"
+				}
+			},
+			"Rerun" : {
+				"Every": "3",
+				"Units":  "Minutes",                     
+				"From": "End",                               
+				"Times": "4"
+			},
+			"ConditionsToWaitForWithAndOrRelationships": {
+				"Type": "WaitForEvents",
+					"Events": [
+						"(",
+							{"Event":"JGO_event_w1"},
+							{"Event":"JGO_event_w2","OrderDate":"0315"},
+						")",
+						"OR",
+						"(",
+							{"Event":"JGO_event_w3","OrderDate":"AnyDate"},
+							{"Event":"JGO_event_w4"},
+						")"
+					]
+			},
+			"Comment" : "------------------------------------------------------------------------------------------------------------------------",
+			"Comment" : "  Semaphores are abstract resources managed by Control-M                                                                ",
+			"Comment" : "------------------------------------------------------------------------------------------------------------------------",
+			"ResourcesNeededToRunThisJob": {
+				"Type": "Resource:Semaphore",
+				"Quantity": "3"
+			},
+			"Comment" : "------------------------------------------------------------------------------------------------------------------------",
+			"Comment" : "  Mutex Resources can have MutexType of either Exclusive or Shared                                                      ",
+			"Comment" : "------------------------------------------------------------------------------------------------------------------------",
+			"MutuallyExclusiveResource": {
+				"Type": "Resource:Mutex",
+				"MutexType": "Shared"
+			},			
+			"ConditionsToAdd" : {
+				"Type": "AddEvents",
+					"Events": [
+						{"Event":"JGO_event_a1"},
+						{"Event":"JGO_event_a2"}
+					]
+			},
+			"ConditionsToDelete" : {
+				"Type": "DeleteEvents",
+					"Events": [
+						{"Event":"JGO_event_d1"},
+						{"Event":"JGO_event_d2", "OrderDate":"1111"}
+					]
+			},
+			"ActionIfSuccess" : {
+				"Type": "If",        
+					"CompletionStatus": "OK", 
+						"SetJobToNOTOK": {
+							"Type": "Action:SetToNotOK"
+						},
+						"RerunThisJob": {
+							"Type": "Action:Rerun"  
+						}
+			},
+			"ActionIfFailure" : {
+				"Type": "If",        
+					"CompletionStatus": "NOTOK", 
+						"SendEmail": {
+							"Type": "Action:Mail",
+							"Urgency": "Urgent", 
+							"Subject" : "Completion Email",
+							"Message": "%%JOBNAME just completed", 
+							"To": "team@mycomp.com",
+							"CC": "other@mycomp.com",
+							"AttachOutput": true
+						},
+						"SetControlmVariable": {
+							"Type": "Action:Set",
+							"Variable": "var1",
+							"Value": "1"
+						},
+						"SetJobToOK": {
+							"Type": "Action:SetToOK"
+						},
+						"CyclicRunStop": {
+							"Type": "Action:StopCyclicRun"
+						},
+						"RunAnotherJob": {
+							"Type": "Action:Run",
+							"Folder": "FolderName",
+							"Job": "JobName"
+						},
+						"NotifyToJoblog": {
+							"Type": "Action:Notify",
+							"Message": "job1 just ran",
+							"Destination": "JobLog",
+							"Urgency": "VeryUrgent"
+						},
+						"EventAddOrderDateOptional": {
+							"Type": "Event:Add",
+							"Event": "JGO_event_event1",
+							"OrderDate": "1010"
+						},
+						"EventDelete": {
+							"Type": "Event:Delete",
+							"Event": "JGO_event_event2",
+							"OrderDate": "PreviousOrderDate"
+						},
+						"CopyEntireJobOutput": {
+							"Type": "Action:Output",
+							"Operation": "Copy",
+							"Destination": "/home/copyHere"
+						}
+
+			},
+			"ActionByNumberOfReruns" : {
+				"Type": "If:NumberOfReruns", 
+					"NumberOfReruns": ">=4",
+					"RunJob": {
+					"Type": "Action:Run",
+						"Folder": "Folder1",
+						"Job": "job1"
+					}
+			},
+			"ExtractDataIntoVariable" : {
+				"Type" : "Action:CaptureOutput",
+					"Capture" : "10",
+					"Search" : "failure",
+					"VariableName" : "myVar",
+					"ForwardBy" : {
+						"Columns" : "1",  
+						"Delimiter" : "Tab",   
+						"Lines" : "5",   
+						"ColumnsOption" : "Words"
+					}
+			} 
+		},
+		"JGO_Jobname_OS_Script": {
+			"Type" : "Job:Script",
+				"FileName" : "scriptname.sh",
+				"FilePath" : "/home/user/scripts"
+		},
+		"JGO_TransferFromLocalToSFTP" : {
+			"Type" : "Job:FileTransfer",
+				"ConnectionProfileSrc" : "LocalConn",
+				"ConnectionProfileDest" : "SftpConn",
+				"FileTransfers" : [
+						{
+							"Src" : "/home/controlm/file1",
+							"Dest" : "/home/controlm/file2",
+							"TransferType": "Binary",
+							"TransferOption": "SrcToDest"
+						}
+					]
+		},
+		"JGO_TransferFromS3toLocal": {
+			"Type": "Job:FileTransfer",
+				"ConnectionProfileSrc": "amazonConn",
+				"ConnectionProfileDest": "LocalConn",
+				"S3BucketName": "controlm-appdev",
+				"FileTransfers": [
+					{
+						"Src" : "/subFolder/S3ObjectName",
+						"Dest" : "/home/controlm/file2"
+					}
+				]
+		},
+		"JGO_EmbeddedScriptJob":{
+			"Type":"Job:EmbeddedScript",
+				"Script":"#!/bin/bash -xe\\necho hello\\necho some more\\necho end",
+				"FileName":"myscript.sh",
+				"PreCommand": "echo before running script",
+				"PostCommand": "echo after running script"
+		}
+	}
+}

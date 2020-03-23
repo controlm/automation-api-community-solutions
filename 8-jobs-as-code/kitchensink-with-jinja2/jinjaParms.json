@@ -1,0 +1,8 @@
+{
+	"RunAsUser" : "jogoldbe",
+	"ControlMserver" : "IP-1AC1F1720",
+	"Host" : "sampleHgroup",
+	"semaphore" : true,
+	"mutex" : false,
+	"scriptjob" : true
+}
