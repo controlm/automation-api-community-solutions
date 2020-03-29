@@ -3,13 +3,13 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "adminUsername": {
-      "value": "jogoldbe"
+      "value": "IOTAdmin"
     },
     "adminPassword": {
-      "value": "qwxlCOa2Oe4jfk8CH2Dn0S8A"
+      "value": "SqWRriGsZcsecV3L8ix44rBp"
     },
     "dnsLabelPrefix": {
-      "value": "azurectm"
+      "value": "azureAgentWin"
     }
   }
 }

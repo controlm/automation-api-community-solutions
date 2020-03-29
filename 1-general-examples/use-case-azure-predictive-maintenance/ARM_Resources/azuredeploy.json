@@ -45,7 +45,7 @@
     },
     "containerName": {
       "type": "string",
-      "defaultValue": "logs",
+      "defaultValue": "ctmartifacts",
       "metadata": {
         "description": "Specifies the name of the blob container."
       }
@@ -83,7 +83,7 @@
     "scriptFileName": "vmcustomscript.ps1",
     "subnetName": "Subnet",
     "subnetPrefix": "10.0.0.0/24",
-    "vmName": "AzureCTM",
+    "agentvmName": "AzureCTMAgent",
     "virtualNetworkName": "MyVNET",
     "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]",
     "networkSecurityGroupName": "jogoldbe-default-NSG"
@@ -202,7 +202,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines",
       "apiVersion": "2018-10-01",
-      "name": "[variables('vmName')]",
+      "name": "[variables('agentvmName')]",
       "location": "[parameters('location')]",
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
@@ -213,7 +213,7 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[variables('vmName')]",
+          "computerName": "[variables('agentvmName')]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]"
         },
@@ -249,7 +249,7 @@
             "apiVersion": "2017-03-30",
             "location": "[parameters('location')]",
             "dependsOn": [
-              "[variables('vmName')]"
+              "[variables('agentvmName')]"
             ],
             "properties": {
               "publisher": "Microsoft.Compute",
