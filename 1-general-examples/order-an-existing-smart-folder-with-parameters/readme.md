@@ -3,7 +3,7 @@ Workflows are stored in the Control-M database and can be triggered via REST api
 [Automation API Code Reference documentation page](https://docs.bmc.com/docs/display/public/workloadautomation/Control-M+Automation+API+-+Code+Reference)
 
 ## Requirement : 
-I have a workflow configured in a Control-M Smart folder defined as a service and I want to order it using the aapi. I also want to pass parameters at the time of ordering.
+I have a workflow configured in a Control-M Smart folder defined as a service and I want to order it using the aapi. I also want to pass parameters at the time of ordering. 
 
 ## Prerequisite : Have a workflow defined in a Smart folder and a Service definition with orderable parameters
 Solution : Use the ctm run order call
@@ -29,8 +29,8 @@ In some cases, you might not need the full cli. E.g. a lighter option might be p
 An example implementation of this scenario based on the REST api can by found in the ctm_order.py script. This python script can be used stand-alone and does not need the Automation API CLI or NodeJs installed. It can take the same JSON config file as additional input to e.g. pass variables. 
 ```
 usage: ctm_order.py [-h] -e ENDPOINT -s CTM_SERVER -u USER -p PASSWORD
-                    --folder FOLDER [--config_file CONFIG_FILE] [-v]
-                    [--version]
+                    --folder FOLDER [--jobs JOBS] [--config_file CONFIG_FILE]
+                    [-v] [--version]
 
 Orders an adhoc job in Control-M for the folder specified
 
@@ -46,6 +46,7 @@ optional arguments:
                         Control-M password for connecting with Control-M
   --folder FOLDER       Control-M folder name which holds the jobs to be
                         ordered
+  --jobs JOBS           Control-M jobs to be ordered from the specified folder
   --config_file CONFIG_FILE, -f CONFIG_FILE
                         A json file that holds additional configuration
                         parameters
