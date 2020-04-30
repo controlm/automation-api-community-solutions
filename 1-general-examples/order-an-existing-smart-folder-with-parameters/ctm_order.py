@@ -59,6 +59,7 @@ def main(argv):
     user=''
     password=''
     folder=''
+    jobs=''
     config_file=''
     verbose=False
     configuration=''
@@ -73,6 +74,7 @@ def main(argv):
     parser.add_argument("-u","--user", required=True, help="Control-M user name for connecting with Control-M" )
     parser.add_argument("-p","--password", required=True, help="Control-M password for connecting with Control-M" )
     parser.add_argument("--folder", required=True, help="Control-M folder name which holds the jobs to be ordered")
+    parser.add_argument("--jobs", required=False, help="Control-M jobs to be ordered from the specified folder")
     parser.add_argument("--config_file", "-f", required =False, help="A json file that holds additional configuration parameters" )
     parser.add_argument("-v" , "--verbose", required=False,  action = "store_true", help="Enables verbose mode" )    
     parser.add_argument('--version', action='version', version='Version: %(prog)s 1.0')
@@ -84,6 +86,7 @@ def main(argv):
     user        = parse_result.user
     password    = parse_result.password 
     folder      = parse_result.folder
+    jobs      = parse_result.jobs
     config_file = parse_result.config_file
     verbose     = parse_result.verbose
     
@@ -111,7 +114,7 @@ def main(argv):
         print("Using additional config from file "+ config_file + ":")
         print(config_data)
         
-    result = order_folder(endpoint, token, folder, ctm_server, configuration, config_data, verbose)
+    result = order_folder(endpoint, token, folder, jobs, ctm_server, configuration, config_data, verbose)
     
     if verbose:
         print("Response:", result.text)
@@ -131,7 +134,7 @@ def main(argv):
     else:
         sys.exit(1)
 
-def order_folder(endpoint, token, folder, ctm_server, configuration, config={}, verbose=False):
+def order_folder(endpoint, token, folder, jobs, ctm_server, configuration, config={}, verbose=False):
     
     # Login to CTM endpoint and deploy file
     
@@ -142,6 +145,7 @@ def order_folder(endpoint, token, folder, ctm_server, configuration, config={}, 
     payload=config
     payload["ctm"] = ctm_server
     payload["folder"] = folder
+    payload["jobs"] = jobs
     # payload = config
     if verbose:
         print()
