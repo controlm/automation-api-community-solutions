@@ -53,3 +53,14 @@ optional arguments:
 This utility follows the following flow:
 
 ![flow](images/flow.png)
+
+Description:
+1. Perform a transformation of the input file provided with the -j parameter using deploy descriptor if provided with the -dd option. This step requries the credentials (-u and -p) and endpint information (-e) to be defined. If no deploy descriptor is used, it will contrinue with the profided input file as is. 
+
+2. In this step, the conneciton profiles of the (transfomred) input file will be filters out. All other type of objects will be ignored.
+
+3. Only the connection profiles will be filtered out that are in the provided list of allowed agents specified in the configuration file via the -c option
+
+4. If in filter mode (specified with the -m parameter), the result will be printed to the console.
+
+5. If in deploy mode (specified with the -m parameter), a deployment will be done using the provided credentials (-u and -p) and endpint information (-e). Before the deployment, a temporary json file will be written to the working directory. This will be deleted once the deployment was successfull.  
