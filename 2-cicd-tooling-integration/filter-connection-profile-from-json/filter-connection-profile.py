@@ -73,8 +73,8 @@ def main(argv):
        
     parser = argparse.ArgumentParser(description='Checks if folders are deleted from a Control-M jobs-as-code file by comparing it with the previous version')
     
-    parser.add_argument("-j" , "--json-file", required=True, help="File that holds the current version of your Control-M job definition file" )
-    parser.add_argument("-dd","--deploy-descriptor", required=False, help="File that holds the current deploy-descriptor definition file" )
+    parser.add_argument("-j" , "--json-file", required=True, help="File that holds the Control-M jobs-as-code definition file" )
+    parser.add_argument("-dd","--deploy-descriptor", required=False, help="File that holds the deploy-descriptor definition file" )
     parser.add_argument("-m","--mode", required=False, default="filter" , choices=['filter', 'deploy'], help="Specifies to run this script in filter only mode or deploy mode. Filter mode will only print the filtered content. " )
     parser.add_argument("-e","--endpoint", required=False, help="Control-M Automation API end-point for connecting with Control-M in deploy mode" )
     parser.add_argument("-u","--user", required=False, help="Control-M user name for connecting with Control-M in deploy mode" )
