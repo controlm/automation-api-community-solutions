@@ -77,7 +77,7 @@ def main(argv):
     parser.add_argument("--jobs", required=False, help="Control-M jobs to be ordered from the specified folder")
     parser.add_argument("--config_file", "-f", required =False, help="A json file that holds additional configuration parameters" )
     parser.add_argument("-v" , "--verbose", required=False,  action = "store_true", help="Enables verbose mode" )    
-    parser.add_argument('--version', action='version', version='Version: %(prog)s 1.0')
+    parser.add_argument('--version', action='version', version='Version: %(prog)s 1.1')
     
     parse_result = parser.parse_args()
 
