@@ -12,6 +12,10 @@ In order to ensure only connection profiles will be process, it filters any othe
 This python-based utility filters on connection profiles only. Although it is not a best practice, json files can include both job definitions as connection profiles. The authorization model for jobs is more granular. This utility is intended for a situation where jobs are getting deployed via a user account (personal or non-personal) which has the required granularity configured.
 The utility supports a filter only mode. This supports scenarios where the actual deployment will be dealt with separately. The deployment mode will deploy the connection profile(s) to the provided endpoint. It does support deploy descriptor to transform the connection profile(s) for the targeted environment.
 
+## Installation
+
+Run ```pip install -r requirements.txt``` to install the required dependencies. 
+
 ## Filter on allowed agents
 
 In addition to filtering the connection profiles out of a json, this filter can be set narrower to only include connection profiles on a target agent that are specified to be allowed in a separate json config file using the following format:
