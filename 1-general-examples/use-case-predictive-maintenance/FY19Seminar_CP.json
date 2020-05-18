@@ -1,0 +1,20 @@
+{	
+	"PRDSPARK": {
+		"Type" : "ConnectionProfile:Hadoop",
+		"TargetAgent" : "[ip-aaa-a-aa-aaa]",
+		"TargetCTM" : "controlm",
+		"RunAs": "",
+		"KeyTabPath":""
+	},
+	
+	"EMRhostSFTP": {
+		"Type": "ConnectionProfile:FileTransfer:SFTP",
+		"TargetAgent": "controlm",
+		"TargetCTM" : "controlm",
+		"HostName": "[ip-aaa-a-aa-aaa]",
+		"Port": "22",
+		"User" : "hadoop",
+		"HomeDirectory": "/home/hadoop",  
+		"PrivateKeyName": "C:\\Program Files\\BMC Software\\Control-M Agent\\Default\\CM\\AFT\\data\\Keys\\FY19SeminarKey"
+	}
+}

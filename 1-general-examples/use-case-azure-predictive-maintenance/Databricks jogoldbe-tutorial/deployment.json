@@ -1,0 +1,53 @@
+{
+  "id": "/subscriptions/fee1b749-2ef4-4205-a1a5-3fdb5b803697/resourceGroups/jogoldbe_TutorialRG/providers/Microsoft.Resources/deployments/Microsoft.Databricks",
+  "name": "Microsoft.Databricks",
+  "type": "Microsoft.Resources/deployments",
+  "tags": {
+    "primaryResourceId": "/subscriptions/fee1b749-2ef4-4205-a1a5-3fdb5b803697/resourceGroups/jogoldbe_TutorialRG/providers/Microsoft.Databricks/workspaces/jogoldbe-tutorial-databricks",
+    "marketplaceItemId": "Microsoft.Databricks"
+  },
+  "properties": {
+    "templateHash": "4578769962826184669",
+    "parameters": {
+      "location": {
+        "type": "String",
+        "value": "eastus"
+      },
+      "workspaceName": {
+        "type": "String",
+        "value": "jogoldbe-tutorial-databricks"
+      },
+      "tier": {
+        "type": "String",
+        "value": "standard"
+      },
+      "tagValues": {
+        "type": "Object",
+        "value": {}
+      }
+    },
+    "mode": "Incremental",
+    "debugSetting": {
+      "detailLevel": "None"
+    },
+    "provisioningState": "Running",
+    "timestamp": "2020-03-20T16:37:48.0049893Z",
+    "duration": "PT17.6845288S",
+    "correlationId": "c7a9b352-05ed-439a-8bda-b6077ef9478d",
+    "providers": [
+      {
+        "namespace": "Microsoft.Databricks",
+        "resourceTypes": [
+          {
+            "resourceType": "workspaces",
+            "locations": [
+              "eastus"
+            ]
+          }
+        ]
+      }
+    ],
+    "dependencies": [],
+    "validationLevel": "Template"
+  }
+}

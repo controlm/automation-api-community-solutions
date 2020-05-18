@@ -1,0 +1,320 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "VPC": {
+      "Type": "AWS::EC2::VPC",
+      "Properties": {
+        "CidrBlock": "172.1.12.240/28",
+        "InstanceTenancy": "default",
+        "EnableDnsSupport": "true",
+        "EnableDnsHostnames": "true",
+        "Tags": [{ "Key": "Name", "Value": "VPC  FY19Seminar AppDev Session"}]
+      }
+    },
+    "PublicSubnet": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "CidrBlock": "172.1.12.240/28",
+        "AvailabilityZone": "us-west-2c",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [{"Key": "Name", "Value": "SubNet  FY19Seminar AppDev Session"}]
+      }
+    },
+    "InternetGateway": {
+      "Type": "AWS::EC2::InternetGateway",
+      "Properties": {
+        "Tags": [{"Key": "Name", "Value": "InternetGateway  FY19Seminar AppDev Session"}]
+      }
+    },
+    "AttachGateway": {
+      "Type": "AWS::EC2::VPCGatewayAttachment",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "InternetGatewayId": {
+          "Ref": "InternetGateway"
+        }
+      }
+    },
+    "PublicRouteTable": {
+      "Type": "AWS::EC2::RouteTable",
+      "Properties": {
+        "VpcId": {
+          "Ref": "VPC"
+        }
+      }
+    },
+    "PublicRoute": {
+      "Type": "AWS::EC2::Route",
+      "Properties": {
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "RouteTableId": {
+          "Ref": "PublicRouteTable"
+        },
+        "GatewayId": {
+          "Ref": "InternetGateway"
+        }
+      },
+      "DependsOn": "AttachGateway"
+    },
+    "PublicSubnetRouteTableAssociation" : {
+      "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties" : {
+        "SubnetId" : { "Ref" : "PublicSubnet" },
+        "RouteTableId" : { "Ref" : "PublicRouteTable" }
+      }
+    },
+    "ServerInstance": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "stop",
+        "ImageId": "ami-0de6a45a192424441",
+        "InstanceType": "m4.xlarge",
+        "KeyName": "FY19SeminarKey",
+        "Monitoring": "false",
+        "Tags": [{"Key": "Name", "Value": "FY19Seminar Control-M Server Instance"}],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "Description": "Primary network interface",
+            "DeviceIndex": 0,
+            "SubnetId": {
+              "Ref": "PublicSubnet"
+            },
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "172.1.12.249",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "ServerSecurityGroup"
+              }
+            ],
+            "AssociatePublicIpAddress": "true"
+          }
+        ]
+      },
+	  "DependsOn": "AttachGateway"
+    },
+	"ServerSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Control-M Infrastructure FY19Seminar",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [{"Key": "Name", "Value": "ServerSG  FY19Seminar AppDev Session"}]
+      }
+    },
+	"RDPIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "ServerSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "3389",
+        "ToPort": "3389",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+	"RestSrvrSecureIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "ServerSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "8443",
+        "ToPort": "8443",
+		"CidrIp": "0.0.0.0/0"
+      }
+    },	
+    "CTMAgentIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "ServerSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "7005",
+        "ToPort": "7005",
+		"CidrIp": "0.0.0.0/0"
+      }
+    },	
+    "WebServerInrgess": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "ServerSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "18080",
+        "ToPort": "18080",
+		"CidrIp": "0.0.0.0/0"
+      }
+    },
+	"ICMPEMRMasterIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "ServerSecurityGroup"
+        },
+        "IpProtocol": "icmp",
+        "FromPort": "-1",
+        "ToPort": "-1",
+		"SourceSecurityGroupId": {
+          "Ref": "EMRMasterSecurityGroup"
+        }
+      }
+    },
+    "SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "ServerSecurityGroup"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+	"EMRMasterSecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "EMR Master Security Group FY19Seminar",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [{"Key": "Name", "Value": "EMRSG FY19Seminar AppDev Session"}]
+      }
+    },
+	"SSHIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "EMRMasterSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "22",
+        "ToPort": "22",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+	"TCPMasterIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "EMRMasterSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "0",
+        "ToPort": "65535",
+		"SourceSecurityGroupId": {
+          "Ref": "EMRMasterSecurityGroup"
+        }
+      }
+    },	
+	"ICMPMasterIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "EMRMasterSecurityGroup"
+        },
+        "IpProtocol": "icmp",
+        "FromPort": "-1",
+        "ToPort": "-1",
+		"SourceSecurityGroupId": {
+          "Ref": "EMRMasterSecurityGroup"
+        }
+      }
+    },	
+	"UDPMasterIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "EMRMasterSecurityGroup"
+        },
+        "IpProtocol": "udp",
+        "FromPort": "0",
+        "ToPort": "65535",
+		"SourceSecurityGroupId": {
+          "Ref": "EMRMasterSecurityGroup"
+        }
+      }
+    },	
+	"ICMPCTMServerIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "EMRMasterSecurityGroup"
+        },
+        "IpProtocol": "icmp",
+        "FromPort": "-1",
+        "ToPort": "-1",
+		"SourceSecurityGroupId": {
+          "Ref": "ServerSecurityGroup"
+        }
+      }
+    },	
+    "CTMServerIngress": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "EMRMasterSecurityGroup"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "7000",
+        "ToPort": "9000",
+		"SourceSecurityGroupId": {
+          "Ref": "ServerSecurityGroup"
+        }
+      }
+    },	
+    "SecurityGroupEgress": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "EMRMasterSecurityGroup"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    }
+  },
+  "Outputs": {
+	"ServerInstancePublicIP": {
+      "Description": "Server Instance Public IP Address",
+      "Value": {
+        "Fn::GetAtt": [
+          "ServerInstance",
+          "PublicIp"
+        ]
+      }
+    },
+	"ServerInstanceVpcId": {
+      "Description": "Server Instance Public IP Address",
+      "Value": {
+        "Fn::GetAtt": [
+          "PublicSubnet",
+          "VpcId"
+        ]
+      }
+    },
+	"EMRMasterSGID": {
+      "Description": "EMRMaster SecurityGroup ID",
+      "Value": {
+        "Fn::GetAtt": [
+          "EMRMasterSecurityGroup",
+          "GroupId"
+        ]
+      }
+    }
+  },
+  "Description": "FY19Seminar AppDev Control-M Infrastructure"
+}
