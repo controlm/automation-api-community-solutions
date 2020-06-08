@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: statefulset-agent
+  labels:
+        type: stateful-service-ctmag-srv
+spec:
+    serviceName: ctmag
+    selector:
+        matchLabels:
+            type: stateful-service-ctmag-srv
+    replicas: 1 # number of running agents 
+    template:
+        metadata:
+            labels:
+                type: stateful-service-ctmag-srv
+        spec:
+          containers:
+          - name: ctmagent-container
+            # container in ECR 
+            image: 000000000000.dkr.ecr.us-west-2.amazonaws.com/appdev-dockers-repo:agent-example
+            env:
+            - name: PERSISTENT_VOL
+              value: "/home/controlm/persistent_folder"
+            - name: CTM_SERVER_NAME
+              # update value to your Control-M/Server name
+              value: "<Control-M/Server Name>"
+            - name: CTM_AGPORT
+              value: "7006"
+            - name: AAPI_END_POINT
+              # update value to your AAPI end point
+              value: "<AAPI end point, same as in "ctm environment show" cli> "
+            - name: AAPI_USER
+              # update value to your EM user
+              value: "<Contro-M user>"
+              # user's password, will be present in the logs! consider using k8s secret
+            - name: AAPI_PASS
+              value: "<password>"
+            imagePullPolicy: Always
+            ports:
+            - containerPort: 7006
+            volumeMounts:
+              - name: pv-data
+                mountPath: /home/controlm/persistent_folder
+          terminationGracePeriodSeconds: 10
+    #      This sample is pulling the container from ECR. DockerHub is using imagePullSecret
+    #      imagePullSecrets:
+    #      - name: regcred
+          securityContext:
+             # the agent account gid so it will be able to access the PV 
+             fsGroup: 1000 
+          volumes:    
+            - name: pv-data
+              persistentVolumeClaim:
+                claimName: agent-pvc
