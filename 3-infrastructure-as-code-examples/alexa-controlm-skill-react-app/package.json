@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "bootstrap": "^4.1.2",
+    "bootstrap": "^4.3.1",
     "font-awesome": "^4.7.0",
     "is-url": "^1.2.4",
     "lato-font": "^3.0.0",

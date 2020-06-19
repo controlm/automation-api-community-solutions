@@ -4,7 +4,7 @@
 
 2. Click on the **"+"** icon to add a new item and fill in all parameters and options as in the following screenshot (which shows an example for the "*build*" service):
 
-   ![IntelliJ IDEA > Config](/601-integration-with-ides-and-code-editors/images/intellij_config.png) 
+   ![IntelliJ IDEA > Config](/6-ide-integrations/integration-with-ides-and-code-editors/images/intellij_config.png) 
 
    * Name : ```Build jobs in json file```
    * Group : ```Control-M Automation API```
@@ -20,6 +20,6 @@
 
 4. That´s it. You can now right click on a json file containing Control-M job definitions and use the previously defined actions directly from the tool. A console window will open at the bottom showing the results of the operation.
 
-   ![IntelliJ IDEA > Menu](/601-integration-with-ides-and-code-editors/images/intellij_menu.png) 
+   ![IntelliJ IDEA > Menu](/6-ide-integrations/integration-with-ides-and-code-editors/images/intellij_menu.png) 
 
    *Integration tested with IntelliJ IDEA (Community Edition) 2018.2.5 running on Windows 10*
