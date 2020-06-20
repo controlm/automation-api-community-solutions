@@ -14,7 +14,8 @@ a start time before the completion of the maintenance window.
 
 The artifacts in this folder help automate such a process.
 
-## **Workload Policies **
+## **Workload Policies**
+
 <p>To "drain" jobs for a set of applications, activate a Workload Policy that specifies the desired application / sub-applicaiton in its filter and zero (0) for the number of jobs.</p>
 
 Create a policy using the Workload Automation client. Open the Workload Policies Monitor either from the Tools tab in the Monitoring domain or the Monitoring sectionof the Tools domain. Create a policy that appears similar to this:
@@ -23,7 +24,7 @@ Create a policy using the Workload Automation client. Open the Workload Policies
 
 When you are ready to activate the maintenance window "cutoff" period, activate the policy either from the Workload Policies Monitor or via Automation API. This example is using the cli:
 
-	**ctm run workloadpolicy::activate SAP_STOP**
+   __ctm run workloadpolicy::activate SAP_STOP__
 
 When the maintenance window is complete, check if unwanted jobs were submitted, and if they were, delete thise jobs. 
 
@@ -32,7 +33,9 @@ The next section describes a PowerShell script that checks for any jobs with a s
 ### **Powershell Script**
 **DeleteWaitingJobs.ps1**
 <p>This script can be used to clean up any jobs that were submitted during the maintenance window but prevented from executing by the activated policy.</p>
+
 #### Parameters
+
 				ctmAppl|a			Control-M application filter
 				ctmSubAppl|sa		Sub-application filter
 				ctmName|ctm			Control-M server name
@@ -44,16 +47,16 @@ The next section describes a PowerShell script that checks for any jobs with a s
 Once the maintenance window is complete, determine if any jobs were submitted during maintenance and were prevented from executing by the activated policy:
 
 The script finds the jobs you want to process via command similar to this:
-	ctm run jobs:status::get -s "application=<application from -a parm>&subApplication=<Sub Application from -sa parm>&status=<Job Status from -s parm>"
+	**ctm run jobs:status::get -s "application=<application from -a parm>&subApplication=<Sub Application from -sa parm>&status=<Job Status from -s parm>"**
 
 For each found job, these operations are performed:	
-	ctm run job::hold
-	ctm run job::delete
+	**ctm run job::hold**
+	**ctm run job::delete**
 	
 ## Continue After Cleanup
 After any unwanted jobs have been cleaned up, deactivate the policy that prevented jobs from executing.
 
-	**ctm run workloadpolicy::deactivate SAP_STOP**
+**ctm run workloadpolicy::deactivate SAP_STOP**
 	
 Now that the maintenanc window has been completed, there amay be jobs that you wish to order manually. Use the script in the next section to accomplish that without having to manually select the desired jobs.	
 
@@ -95,12 +98,12 @@ Now that the maintenanc window has been completed, there amay be jobs that you w
 ### Processing large number of jobs
 <p>This script determines which folders and jobs to process by retrieving the job definitions for all folders selected by the folder|fn command line argument. This can be a very large number of jobs resulting in a timeout during retrieval. This situation currently results in a misleading message with text similar to the following, and no job information is returned.
 
-	**Info: Returned buffer contains nnnn folders**
-	**Info: Export completed successfully with nnn Folders, nnnn Smart Folders, nnn Sub Folders, and 11172 Jobs, exported to /tmp/ctmAppDev7nnnnnnnnnnn/out.xml**
+**Info: Returned buffer contains nnnn folders**
+**Info: Export completed successfully with nnn Folders, nnnn Smart Folders, nnn Sub Folders, and 11172 Jobs, exported to /tmp/ctmAppDev7nnnnnnnnnnn/out.xml**
 
-The solution to the timeout is to increae the timeout as follows:
-1)	Locate this file "<Control-M EM Home>\emweb\automation-api\automation-api.properties"
+The solution is to increase the timeout value as follows:
+1)	Locate this file "\<Control-M EM Home>\emweb\automation-api\automation-api.properties"
 2)	Add "emdef_timeout=<timeout value in thousandths of a second> - the default is 600000, which is one minute.
-3)	Stop the EM Rest Server by running "emrestsrv stop" from "<Control-M EM Home>\emweb\automation-api\bin".
+3)	Stop the EM Rest Server by running "emrestsrv stop" from "\<Control-M EM Home>\emweb\automation-api\bin".
 4)	The server is started automatically when the next request is received.
 
