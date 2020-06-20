@@ -36,10 +36,10 @@ The next section describes a PowerShell script that checks for any jobs with a s
 
 #### Parameters
 
-				ctmAppl|a			Control-M application filter
-				ctmSubAppl|sa		Sub-application filter
-				ctmName|ctm			Control-M server name
-				ctmStatus|s 		Default is "Wait Workload"
+				ctmAppl|a		Control-M application filter
+				ctmSubAppl|sa	Sub-application filter
+				ctmName|ctm		Control-M server name
+				ctmStatus|s 	Default is "Wait Workload"
 #### Example
 	
 	.\DeleteWaitingJobs.ps1 -a IOT -sa Preventive_Maintenance -ctm IP-AC1F1720
