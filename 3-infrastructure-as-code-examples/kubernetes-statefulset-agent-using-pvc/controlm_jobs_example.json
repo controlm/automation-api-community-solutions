@@ -1,0 +1,18 @@
+ {
+	"K8s_test_jobs": {
+	   "Type": "Folder",
+	   "20sec_sleep_job": {
+	     "Type": "Job:Command",
+		 "Command": "python2.7 runJob.py -y /home/controlm/job_20_sec.yaml",
+	     "RunAs": "controlm",
+		 "Host": "<your agent name> (example:statefulset-agent-0)",
+		 "ControlmServer" : "<Control-M/Server name> (if you have more than 1, if you have only 1, this property can be omitted)
+	   },
+	   "echo_message": {
+	     "Type": "Job:Command",
+		 "Command": "python2.7 runJob.py --jobname echo-message --image ubuntu --command /bin/bash --args '-c' --args 'echo Hello World!'",
+	     "RunAs": "controlm",
+		 "Host": "<your agent name> (example:statefulset-agent-0)",
+		 "ControlmServer" : "<Control-M/Server name> (if you have more than 1, if you have only 1, this property can be omitted)
+    }
+ }
