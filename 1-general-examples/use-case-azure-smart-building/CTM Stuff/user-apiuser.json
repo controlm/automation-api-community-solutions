@@ -1,0 +1,14 @@
+{   
+    "Name": "apiuser",   
+    "FullName": "Programmatic User",   
+    "Description": "API User",   
+    "Authentication": {
+        "ControlM": {     
+            "Password": "Secret:apiuser-password",     
+            "PasswordExpirationDays": 0,     
+            "ChangePasswordAtNextLogin": false,     
+            "LockAccount": false
+        }   
+    },
+    "Roles": ["UpdateGroup"]
+}

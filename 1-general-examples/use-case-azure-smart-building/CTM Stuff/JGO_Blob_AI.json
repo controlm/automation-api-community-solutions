@@ -1,0 +1,25 @@
+{
+	"Defaults" : {
+		"RunAs" : "apiuser", "Application" : "JGO", "SubApplication" : "Azure_Blob", 
+		"Description" : "Something is better than nothing",
+		"ControlmServer":"FY21CTMServer", "OrderMethod": "Manual",  "SiteStandard" : "",
+		"Job": {"TST_IOT_JOBS" : {"Type" : "Resource:Semaphore", "Quantity" : "1"},
+		       "actionIfSuccess" : {"Type": "If", "CompletionStatus":"OK", "mailTeam": 
+			     {"Type": "Mail", "Message": "Job %%JOBNAME succeeded", "Subject": "Success", "To": "joe_goldberg@bmc.com"}},
+		       "actionIfError" : {"Type": "If", "CompletionStatus":"NOTOK", "mailTeam": 
+			     {"Type": "Mail", "Message": "Job %%JOBNAME failed", "Subject": "Error occurred", "To": "joe_goldberg@bmc.com"}}
+		}
+	},
+
+	"JGO_Azure_Blob" : {	"Type" : "Folder",
+			"JGO_Blob_Watch": 
+				{"Type" : "Job:ApplicationIntegrator:BlobStorage", 
+					"ConnectionProfile" : "STG76DON7HEMX3VK",
+					"Action" : "Watch",
+					"Output" : "json",
+					"BlobWatch Container" : "ctmtest",
+					"BlobWatch Blob Name" : "iotdata",
+					"BlobWatchSleep Interval (Minutes)" : "30"
+				}
+	}
+}

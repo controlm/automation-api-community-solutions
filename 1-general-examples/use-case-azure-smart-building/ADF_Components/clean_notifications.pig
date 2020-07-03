@@ -1,0 +1,1 @@
+fs -rm -f -R wasb://adfv2tutorial@jgazureblob.blob.core.windows.net/files/notifications

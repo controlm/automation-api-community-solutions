@@ -1,0 +1,515 @@
+{
+  "contentVersion": "1.0.0.0",
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "parameters": {
+    "dataFactoryName": {
+      "type": "string",
+	  "defaultvalue": "[concat('FY21DemoADF-', uniqueString(resourceGroup().id))]",
+      "metadata": {
+        "description": "Name of the data factory. Must be globally unique."
+      }
+    },
+    "dataFactoryLocation": {
+      "type": "string",
+      "allowedValues": [
+                "East US",
+                "East US 2",
+                "West US 2",
+                "West Europe",
+                "Southeast Asia"
+      ],
+      "defaultValue": "West US 2",
+      "metadata": {
+        "description": "Location of the data factory. Currently, only East US and East US 2 are supported. "
+      }
+    },
+    "azureStorageAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Azure Storage account."
+      }
+    },
+    "azureSqlServerName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the Azure SQL Server."
+      }
+    },
+    "azureSqlDbName": {
+      "type": "string",
+      "defaultValue": "SmartBuildingDB",
+      "metadata": {
+        "description": "Name of the Azure SQL DB."
+      }
+    },
+    "azureStorageConnectionString": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Connection string for the Azure Storage account."
+      }
+    }, 
+    "azureSqlServerAdministratorPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Password for the Azure SQL Login."
+      }
+    },
+    "azureSqlServerAdministratorLogin": {
+      "type": "string",
+      "metadata": {
+        "description": "Username for the Azure SQL Login."
+      }
+    },
+    "servicePrincipalId": {
+      "type": "string",
+      "metadata": {
+        "description": "The ID of the service principal that has permissions to create HDInsight clusters in your subscription."
+      }
+    },
+    "servicePrincipalKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The access key of the service principal that has permissions to create HDInsight clusters in your subscription."
+      }
+    }
+  },
+  "variables": {
+    "hdiLinkedService": "SBDemoHDILinkedService",
+    "scriptRootPath": "smartbuilding/spark/script",
+    "entryFilePath": "WordCount_Spark.py"
+  },
+  "resources": [
+    {
+      "name": "[parameters('dataFactoryName')]",
+      "apiVersion": "2018-06-01",
+      "type": "Microsoft.DataFactory/factories",
+      "location": "[parameters('dataFactoryLocation')]",
+      "properties": {},
+      "resources": [
+        {
+          "type": "linkedservices",
+          "name": "[parameters('azureStorageAccountName')]",
+          "dependsOn": [
+            "[parameters('dataFactoryName')]"
+          ],
+          "apiVersion": "2018-06-01",
+          "properties": {
+            "type": "AzureStorage",
+            "description": "Azure Storage linked service",
+            "typeProperties": {
+              "connectionString": {
+                "value": "[parameters('azureStorageConnectionString')]",
+                "type": "SecureString"
+              }
+            }
+          }
+        },
+        {
+          "name": "[parameters('azureSqlServerName')]",
+          "type": "linkedservices",
+          "apiVersion": "2018-06-01",
+          "properties": {
+            "annotations": [],
+            "type": "AzureSqlDatabase",
+            "typeProperties": {
+              "connectionString": "[concat('Server=tcp:',parameters('azureSqlServerName'),'.database.windows.net,1433;Initial Catalog=',parameters('azureSqlDbName'),';Persist Security Info=False;User ID=',parameters('azureSqlServerAdministratorLogin'),';Password=',parameters('azureSqlServerAdministratorPassword'),';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
+              "type": "SecureString"
+            }
+          },
+          "dependsOn": [
+            "[parameters('dataFactoryName')]"
+          ]
+        },
+        {
+          "type": "linkedservices",
+          "name": "[variables('hdiLinkedService')]",
+          "dependsOn": [
+            "[parameters('dataFactoryName')]",
+            "[parameters('azureStorageAccountName')]"
+          ],
+          "apiVersion": "2018-06-01",
+          "properties": {
+            "type": "HDInsightOnDemand",
+            "typeProperties": {
+              "clusterType": "spark",
+              "clusterSize": 2,
+              "timeToLive": "01:30:00",
+                      "version": "3.6",
+              "clusterResourceGroup": "[resourceGroup().name]",
+              "tenant": "[subscription().tenantId]",
+              "sparkVersion": "",
+              "servicePrincipalId": "[parameters('servicePrincipalId')]",
+              "servicePrincipalKey": {
+                "type": "SecureString",
+                "value": "[parameters('servicePrincipalKey')]"
+              },
+                      "osType": "Linux",
+                      "clusterNamePrefix": "FY21DEMOADF",
+              "linkedServiceName": {
+                "referenceName": "[parameters('azureStorageAccountName')]",
+                "type": "LinkedServiceReference"
+              }
+            }
+          }
+        },
+        {
+          "name": "SmartBuilding_SparkPipeline",
+          "type": "Microsoft.DataFactory/factories/pipelines",
+          "apiVersion": "2018-06-01",
+          "type": "pipelines",
+          "properties": {
+            "activities": [
+              {
+                "name": "SparkStepLinkedHDI",
+                "type": "HDInsightSpark",
+                        "dependsOn": [
+                    {
+                      "activity": "CleanNotificationsDirectory",
+                      "dependencyConditions": [
+                            "Succeeded"
+                      ]
+                    }
+                ],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                            "rootPath": "smartbuilding/spark/jar",
+                            "entryFilePath": "sblr.jar",
+                            "arguments": [
+                              "[concat('wasb://', parameters('azureStorageAccountName'), '.blob.core.windows.net/files/buildingdata.csv')]",
+                    "maintenance_model",
+                                "[concat('wasb://', parameters('azureStorageAccountName'), '.blob.core.windows.net/files/notifications')]"
+                            ],
+                            "getDebugInfo": "Always",
+                            "className": "com.bmc.sb.processBuildingData",
+                            "sparkJobLinkedService": {
+                              "referenceName": "[parameters('azureStorageAccountName')]",
+                                "type": "LinkedServiceReference"
+                            }
+                },
+                "linkedServiceName": {
+                            "referenceName": "[variables('hdiLinkedService')]",
+                            "type": "LinkedServiceReference"
+                }
+              },
+              {
+                "name": "PigDirectoryCleanup",
+                "type": "HDInsightPig",
+                "dependsOn": [
+                  {
+                    "activity": "CleanOutputDirectory_File",
+                      "dependencyConditions": [
+                        "Succeeded"
+                      ]
+                  }
+                ],
+                "policy": {
+                  "timeout": "7.00:00:00",
+                  "retry": 0,
+                  "retryIntervalInSeconds": 30,
+                  "secureOutput": false,
+                  "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                  "scriptPath": "smartbuilding/spark/script/dir_clean.pig",
+                  "getDebugInfo": "Failure",
+                  "scriptLinkedService": {
+                    "referenceName": "[parameters('azureStorageAccountName')]",
+                    "type": "LinkedServiceReference"
+                  }
+                },
+                "linkedServiceName": {
+                  "referenceName": "[variables('hdiLinkedService')]",
+                  "type": "LinkedServiceReference"
+                }
+              },
+              {
+                        "name": "CleanOutputDirectory_File",
+                        "type": "Delete",
+                        "dependsOn": [],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "dataset": {
+                                "referenceName": "CleanupOldOutput",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            },
+                            "enableLogging": false,
+                            "storeSettings": {
+                                "type": "AzureBlobStorageReadSettings",
+                                "recursive": true
+                            }
+                        }
+              },
+              {
+                        "name": "CleanNotificationsDirectory",
+                        "type": "HDInsightPig",
+                        "dependsOn": [
+                            {
+                                "activity": "PigDirectoryCleanup",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "scriptPath": "adfv2tutorial/spark/script/clean_notifications.pig",
+                            "scriptLinkedService": {
+                                "referenceName": "[parameters('azureStorageAccountName')]",
+                                "type": "LinkedServiceReference"
+                            }
+                        },
+                        "linkedServiceName": {
+                            "referenceName": "[variables('hdiLinkedService')]",
+                            "type": "LinkedServiceReference"
+                        }
+              },
+              {
+                        "name": "Copy2SQL",
+                        "type": "Copy",
+                        "dependsOn": [
+                            {
+                                "activity": "SparkStepLinkedHDI",
+                                "dependencyConditions": [
+                                    "Succeeded"
+                                ]
+                            }
+                        ],
+                        "policy": {
+                            "timeout": "7.00:00:00",
+                            "retry": 0,
+                            "retryIntervalInSeconds": 30,
+                            "secureOutput": false,
+                            "secureInput": false
+                        },
+                        "userProperties": [],
+                        "typeProperties": {
+                            "source": {
+                                "type": "DelimitedTextSource",
+                                "additionalColumns": [
+                                    {
+                                        "name": "ingestTime",
+                                        "value": {
+                                            "value": "@utcnow()",
+                                            "type": "Expression"
+                                        }
+                                    }
+                                ],
+                                "storeSettings": {
+                                    "type": "AzureBlobStorageReadSettings",
+                                    "recursive": true,
+                                    "wildcardFolderPath": "files/notifications",
+                                    "wildcardFileName": "*.csv",
+                                    "enablePartitionDiscovery": false
+                                },
+                                "formatSettings": {
+                                    "type": "DelimitedTextReadSettings"
+                                }
+                            },
+                            "sink": {
+                                "type": "AzureSqlSink"
+                            },
+                            "enableStaging": false
+                        },
+                        "inputs": [
+                            {
+                                "referenceName": "CSVText",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ],
+                        "outputs": [
+                            {
+                                "referenceName": "AzureSqlsmartBuildingTable",
+                                "type": "DatasetReference",
+                                "parameters": {}
+                            }
+                        ]
+              }
+            ],
+            "annotations": []
+          },
+          "dependsOn": [
+            "[parameters('dataFactoryName')]",
+            "[parameters('azureStorageAccountName')]",
+            "[variables('hdiLinkedService')]",
+            "CleanupOldOutput",
+            "CSVText",
+            "AzureSqlsmartBuildingTable"
+          ]
+        },
+        {
+            "name": "CSVText",
+            "type": "datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "[parameters('azureStorageAccountName')]",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "DelimitedText",
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobStorageLocation",
+                        "fileName": "part-00000-8c6cbeb4-9b41-4201-abff-83d42b60aaca-c000.csv",
+                        "folderPath": "files/notifications",
+                        "container": "smartbuilding"
+                    },
+                    "columnDelimiter": ",",
+                    "escapeChar": "\\",
+                    "firstRowAsHeader": true,
+                    "quoteChar": "\""
+                },
+                "schema": [
+                    {
+                        "type": "String"
+                    },
+                    {
+                        "type": "String"
+                    },
+                    {
+                        "type": "String"
+                    },
+                    {
+                        "type": "String"
+                    },
+                    {
+                        "type": "String"
+                    },
+                    {
+                        "type": "String"
+                    },
+                    {
+                        "type": "String"
+                    },
+                    {
+                        "type": "String"
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[parameters('dataFactoryName')]"
+            ]
+        },
+        {
+            "name": "AzureSqlsmartBuildingTable",
+            "type": "datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "[parameters('azureSqlServerName')]",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "AzureSqlTable",
+                "schema": [
+                    {
+                        "name": "sbdate",
+                        "type": "datetime",
+                        "precision": 23,
+                        "scale": 3
+                    },
+                    {
+                        "name": "Temperature",
+                        "type": "decimal",
+                        "precision": 15,
+                        "scale": 2
+                    },
+                    {
+                        "name": "Humidity",
+                        "type": "decimal",
+                        "precision": 15,
+                        "scale": 2
+                    },
+                    {
+                        "name": "Light",
+                        "type": "decimal",
+                        "precision": 15,
+                        "scale": 2
+                    },
+                    {
+                        "name": "CO2",
+                        "type": "decimal",
+                        "precision": 10,
+                        "scale": 2
+                    },
+                    {
+                        "name": "HumidityRatio",
+                        "type": "decimal",
+                        "precision": 10,
+                        "scale": 1
+                    },
+                    {
+                        "name": "Occupancy",
+                        "type": "int",
+                        "precision": 10
+                    },
+                    {
+                        "name": "ingestTime",
+                        "type": "datetime",
+                        "precision": 23,
+                        "scale": 3
+                    }
+                ],
+                "typeProperties": {
+                    "schema": "dbo",
+                    "table": "SBDATA"
+                }
+            },
+            "dependsOn": [
+                "[parameters('dataFactoryName')]",
+                "[parameters('azureSqlServerName')]"
+            ]
+        },
+        {
+            "name": "CleanupOldOutput",
+            "type": "datasets",
+            "apiVersion": "2018-06-01",
+            "properties": {
+                "linkedServiceName": {
+                    "referenceName": "[parameters('azureStorageAccountName')]",
+                    "type": "LinkedServiceReference"
+                },
+                "annotations": [],
+                "type": "Binary",
+                "typeProperties": {
+                    "location": {
+                        "type": "AzureBlobStorageLocation",
+                        "fileName": "notifications",
+                        "folderPath": "files",
+                        "container": "smartbuilding"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[parameters('dataFactoryName')]",
+                "[parameters('azureStorageAccountName')]"
+            ]
+        }
+      ]
+    }
+  ]
+}
