@@ -73,7 +73,7 @@ param(
 	[Parameter(Mandatory=$false)][Alias("nAgN")][String]$agNewName = "FY21AGCopy",
 	[Parameter(Mandatory=$false)][Alias("nAgOSD")][String]$agNewOSDisk = 'FY21AGDemoCopy_OS_Disk',
 	[Parameter(Mandatory=$false)][Alias("agSname")][String]$agSnapShotName = 'FY21AG_Snapshot',
-	[Parameter(Mandatory=$false)][Alias("t")][String]$tenantId = '92b796c5-5839-40a6-8dd9-c1fad320c69b',
+	[Parameter(Mandatory=$false)][Alias("t")][String]$tenantId = '<tenant-id>',
 	[Parameter(Mandatory=$false)][String]$ctmNsg = "FY21CTMSDemoCopy_Nsg",
 	[Parameter(Mandatory=$false)][String]$ctmSubnet = 'FY21CTMSDemoCopy_SubNet',
 	[Parameter(Mandatory=$false)][String]$ctmNIC = "FY21CTMSDemoCopy_NicName",
