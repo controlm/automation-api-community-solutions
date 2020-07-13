@@ -87,13 +87,13 @@ unique needs of your environment.
 A typical process of deploying Control-M/Agent on Kubernetes consists of the
 following steps:
 
-[Step 1: Create a Control-M/Agent image](#step-1-create-a-control-magent-image)
-[Step 2: Create persistent storage for the agent](#step-2-create-persistent-storage-for-the-agent)
-[Step 3: Run the agent](#step-3-run-the-agent)
-[Step 4: Verify agent-server connection](#step-4-verify-agent-server-connection)
-[Step 5: Add the agent to a Host Group](#step-5-add-the-agent-to-a-host-group)
-[Step 6: Verify permissions](#step-6-verify-permissions)
-[Step 7: Run Control-M jobs](#step-7-run-control-m-jobs)
+- [Step 1: Create a Control-M/Agent image](#step-1-create-a-control-magent-image)
+- [Step 2: Create persistent storage for the agent](#step-2-create-persistent-storage-for-the-agent)
+- [Step 3: Run the agent](#step-3-run-the-agent)
+- [Step 4: Verify agent-server connection](#step-4-verify-agent-server-connection)
+- [Step 5: Add the agent to a Host Group](#step-5-add-the-agent-to-a-host-group)
+- [Step 6: Verify permissions](#step-6-verify-permissions)
+- [Step 7: Run Control-M jobs](#step-7-run-control-m-jobs)
 
 > The processes described here are meant as guidelines for running
 workloads in Kubernetes-based clusters. These processes have been tested in BMC
