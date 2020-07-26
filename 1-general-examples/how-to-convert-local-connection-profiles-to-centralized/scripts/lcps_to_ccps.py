@@ -166,4 +166,4 @@ printLog('Deploy result:\n'+r.text+'\n')
 
 ctmapi_logout()
 printLog('Done')
-exit(11)
+exit(0)
