@@ -1,0 +1,11 @@
+{
+  "FY21DEMO": {
+    "Type": "ConnectionProfile:ApplicationIntegrator:Blob Storage",
+    "AI-RunAs-Pass": "utw4na5L",
+    "AI-Account name": "stg7s75ufcunsfls",
+    "AI-Account key": "MukIRO+5VflItiNzlaJsiKdPvQm1EW2hz7ibvrXWSowmgiU/BWqkBgNTTwN30nHgyqKEHThrfJ1w5nF9qLTB6w==",
+    "AI-Run As:": "ctmadmin",
+    "TargetAgent": "fy21ctmserver",
+    "TargetCTM": "FY21CTMServer"
+  }
+}

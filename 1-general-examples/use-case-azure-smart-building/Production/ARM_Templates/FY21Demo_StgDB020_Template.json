@@ -116,7 +116,20 @@
                     "dependsOn": [
                         "[resourceId('Microsoft.Sql/servers', concat(parameters('sqlServerName')))]"
                     ]
-                }
+                },
+				{
+					"name": "AllowAllMicrosoftAzureIps",
+					"type": "firewallrules",
+					"apiVersion": "2014-04-01",
+					"location": "[parameters('location')]",
+					"properties": {
+						"endIpAddress": "0.0.0.0",
+						"startIpAddress": "0.0.0.0"
+					},
+					"dependsOn": [
+						"[parameters('sqlServerName')]"
+					]
+				}
             ]
         }
     ],
@@ -124,6 +137,10 @@
 		"storageAccountName": {
 			"type": "string",
 			"value": "[parameters('storageAccountName')]"
+		},
+		"storageAccountKey": {
+			"type": "string",
+			"value": "[Concat(listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value)]"
 		},
 		"sqlServerName": {
 			"type": "string",

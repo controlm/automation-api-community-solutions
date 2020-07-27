@@ -13,55 +13,74 @@
 #	- Create Virtual Machines
 
 # Arguments:
-#	OID							Intended for Control-M OrderID but can be any string to make a new 
-#									Resource Group unique
-#	cf|credsFile				Fully-qualified path to a text file containing service principal and client secret, 
-#									on seperate lines
+#	OID							Mandatory: Intended for Control-M OrderID but can be any string to make a new Resource Group unique
+#	t|tenantId 					Mandatory: Azure Tenant-ID
+#
+#	cf|credsFile				Fully-qualified path to a text file containing service principal and client secret, on seperate lines
+#								If this parameter is not provided, a prompt is issued for the credentials.
+#
 #	rg|rgOriginalName			Source Resource Group containing the VMs used as base template images
-#									Default:	FY21DemoSetup
+#								Default:	FY21DemoSetup
+#
 #	cn|ctmOriginalName			VM Name of original Control-M machine with EM, Server and agent
-#									Default:	FY21CTMServer
+#								Default:	FY21CTMServer
+#
 #   an|agOriginalName 			VM name of the original agent machine used as a template
-#									Default:	FY21agent
+#								Default:	FY21agent
+#
 #   newrg						New Resource Group PREFIX (OID appended) in which the new resources will be deployed
-#									Default:	FY21DemoSetup
+#								Default:	FY21DemoSetup
+#
 #   sSS|skipSnapShot			Skip generating new SnapShots of the OS Disks and use existing ones
+#
 #	nCtm|ctmNewName				Name of the new VM for Control-M "servers" machine
-#									Default:	FY21CTMSCopy
+#								Default:	FY21CTMSCopy
+#
 #	nctmOSD|ctmNewOSDisk		Name of new OS Disk for Control-M "servers" machine
-#									Default:	'FY21CTMSDemoCopy_OS_Disk',
+#								Default:	'FY21CTMSDemoCopy_OS_Disk',
+#
 #	ctmSname|ctmSnapShotName	Snapshot name of Control-M "servers" machine 
-#									Default:	FY21CTMS_Snapshot
+#								Default:	FY21CTMS_Snapshot
+#
 #	ctmPip|ctmPublicIP 			Public IP Address for Control-M "servers" machine 
-#									Default:	FY21CTMSDemoCopy_IP
+#								Default:	FY21CTMSDemoCopy_IP
+#
 #	agPip|agPublicIP 			Public IP Address for Control-M "agent" machine
-#									Default:	FY21AGDemoCopy_IP	
+#								Default:	FY21AGDemoCopy_IP	
+#
 #	nAgN|agNewName 				Name of new VM for Control-M agent 
-#									Default:	FY21AGCopy
+#								Default:	FY21AGCopy
+#
 #	nAgOSD|agNewOSDisk 			Name of new OS Disk for Control-M agent machine
-#									Default:	FY21AGDemoCopy_OS_Disk
+#								Default:	FY21AGDemoCopy_OS_Disk
+#
 #	agSname|agSnapShotName		Snapshot name of Control-M "agent" machine 
-#									Default:	FY21AG_Snapshot
-#	t|tenantId 					Azure Tenant-ID
-#									Default:	92b796c5-5839-40a6-8dd9-c1fad320c69b
+#								Default:	FY21AG_Snapshot
+#
 #	ctmNsg 						Server Network Security Group
-#									Default:	FY21CTMSDemoCopy_Nsg
+#								Default:	FY21CTMSDemoCopy_Nsg
+#
 #	ctmSubnet 					Control-M server machine Subnet
-#									Default:	FY21CTMSDemoCopy_SubNet
+#								Default:	FY21CTMSDemoCopy_SubNet
+#
 #	ctmNIC 						Network Interface
-#									Default:	FY21CTMSDemoCopy_NicName
+#								Default:	FY21CTMSDemoCopy_NicName
+#
 #	agSubnet 					Control-M agent machine subnet
-#									Default:	FY21AGDemoCopy_SubNet
+#								Default:	FY21AGDemoCopy_SubNet
+#
 #	agNsg 						Agent Security group
-#									Default:	FY21AGDemoCopy_Nsg
+#								Default:	FY21AGDemoCopy_Nsg
+#
 #	agNIC 						Agent Network Interface
-#									Default:	FY21AGDemoCopy_NicName"
+#								Default:	FY21AGDemoCopy_NicName
 
 param(
     [Parameter(Mandatory=$true)][String]$OID,
+	[Parameter(Mandatory=$false)][Alias("tnt")][String]$tenantId = '92b796c5-5839-40a6-8dd9-c1fad320c69b',	
 	[Parameter(Mandatory=$false)][Alias("cf")][String]$credsFile = '.\azcreds.txt',
     [Parameter(Mandatory=$false)][Alias("rg")][String]$rgOriginalName = 'FY21DemoSetup',
-    [Parameter(Mandatory=$false)][Alias("cn")][String]$ctmOriginalName = 'FY21CTMServer',
+   	[Parameter(Mandatory=$false)][Alias("cn")][String]$ctmOriginalName = 'FY21CTMServer',
     [Parameter(Mandatory=$false)][Alias("an")][String]$agOriginalName = 'FY21agent',
     [Parameter(Mandatory=$false)][Alias("newrg")][String]$destRgBase = 'FY21DemoSetup',
     [Parameter(Mandatory=$false)][Alias("sSS")][Switch]$skipSnapShot,
@@ -73,7 +92,6 @@ param(
 	[Parameter(Mandatory=$false)][Alias("nAgN")][String]$agNewName = "FY21AGCopy",
 	[Parameter(Mandatory=$false)][Alias("nAgOSD")][String]$agNewOSDisk = 'FY21AGDemoCopy_OS_Disk',
 	[Parameter(Mandatory=$false)][Alias("agSname")][String]$agSnapShotName = 'FY21AG_Snapshot',
-	[Parameter(Mandatory=$false)][Alias("t")][String]$tenantId = '<tenant-id>',
 	[Parameter(Mandatory=$false)][String]$ctmNsg = "FY21CTMSDemoCopy_Nsg",
 	[Parameter(Mandatory=$false)][String]$ctmSubnet = 'FY21CTMSDemoCopy_SubNet',
 	[Parameter(Mandatory=$false)][String]$ctmNIC = "FY21CTMSDemoCopy_NicName",
@@ -89,7 +107,14 @@ function Get-Credentials
 		$password = ConvertFrom-SecureString -SecureString $securepswd -AsPlainText
 	}
 	else {
-		$credsInFile = Get-Content -Path $credsFile -TotalCount 2
+		try {
+			$credsInFile = Get-Content -Path $credsFile -TotalCount 2
+		}
+		catch {
+			"Some error occurred"
+			$_.Exception.Message
+			exit
+		}
 		$userName = $credsInFile[0]
 		$password = $credsInFile[1]
 	}
@@ -119,8 +144,8 @@ Set-Item Env:\SuppressAzurePowerShellBreakingChangeWarnings "true"
 
 if(-Not $skipSnapShot.IsPresent) #Use existing Snapshot
     {
-        Remove-AzSnapshot -ResourceGroupName $rgOriginalName -SnapShotName $ctmSnapShotName
-        Remove-AzSnapshot -ResourceGroupName $rgOriginalName -SnapShotName $agSnapShotName
+        Remove-AzSnapshot -Force -ResourceGroupName $rgOriginalName -SnapShotName $ctmSnapShotName
+        Remove-AzSnapshot -Force -ResourceGroupName $rgOriginalName -SnapShotName $agSnapShotName
 
         # Get the Server VM Object
         $ctmvm = Get-AzVM -Name $ctmOriginalName `
@@ -242,7 +267,8 @@ $ctmvm = Set-AzVMOSDisk -VM $ctmvm -ManagedDiskId $osDisk.Id -StorageAccountType
     -DiskSizeInGB 256 -CreateOption Attach -Windows
 
 # Complete the VM
-New-AzVM -ResourceGroupName $destinationResourceGroup -Location $location -VM $ctmvm
+$newCTM = New-AzVM -ResourceGroupName $destinationResourceGroup -Location $location -VM $ctmvm
+$newCTM
 
 #---------------------------------------+
 # Create Managed Disk for Agent Machine |
@@ -291,4 +317,5 @@ $agvm = Set-AzVMOSDisk -VM $agvm -ManagedDiskId $agOsDisk.Id -StorageAccountType
     -DiskSizeInGB 30 -CreateOption Attach -Linux
 
 # Complete the VM
-New-AzVM -ResourceGroupName $destinationResourceGroup -Location $location -VM $agvm
+$newAgent = New-AzVM -ResourceGroupName $destinationResourceGroup -Location $location -VM $agvm
+$newAgent

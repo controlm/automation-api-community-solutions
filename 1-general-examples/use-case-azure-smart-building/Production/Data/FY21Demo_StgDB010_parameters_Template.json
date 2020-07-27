@@ -3,10 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
 		"administratorLogin": {
-			"value": "jogoldbe"
+			"value": "xxxxsqladminuserxxxx"
 		},
 		"administratorLoginPassword": {
-			"value": "<SQLServerPassword>"
+			"value": "xxxxsqladminpasswordxxxx"
 		}
     }
 }

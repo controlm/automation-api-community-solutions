@@ -1,0 +1,140 @@
+{
+  "Defaults" : {
+	"ControlmServer": "FY21CTMServer", "OrderMethod": "Manual",
+    "Description": "Complete flow orchestrating Smat Building data pipeline for building management dashboards",
+    "Application": "SMB","SubApplication": "Azure_Data_Pipeline", "RunAs": "FY21DEMO", "Host" : "SystemsOfRecord"
+  },
+  "SMB_Pipeline": {"Type": "Folder", 
+    
+    "SMB_Blob_Download": {"Type": "Job:ApplicationIntegrator:Blob Storage",
+	  "ConnectionProfile": "FY21DEMO",
+      "AI-Action": "Download",
+      "AI-Blob name (Up/Download)": "smartbuilding.csv",
+      "AI-Container (Up/Download)": "smartbuilding",
+      "AI-File path": "c:\\Production\\Data\\smartbuilding.csv",
+      "AI-Public Access": "Off",
+      "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-SMB_Blob_Download"}]
+      },
+      "eventsToAdd": {
+        "Type": "AddEvents",
+        "Events": [{"Event": "SMB_Blob_Download-TO-ADF_SPARK"}]
+      },
+      "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-SMB_Blob_Download"}]
+      }
+    },
+    "ADF_SPARK": {
+      "Type": "Job:ApplicationIntegrator:ADF Run Pipeline",
+      "AI-Azure Data Factory": "ADF-JG",
+      "AI-Resource Group": "ADF-Resource",
+      "AI-Pipeline": "JGTestingSpark",
+      "ConnectionProfile": "ADF",
+      "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [{"Event": "SMB_Blob_Download-TO-ADF_SPARK"},
+				   {"Event": "DataExtract-TO-ADF_SPARK"}]
+      },
+      "eventsToAdd": {
+        "Type": "AddEvents",
+        "Events": [{"Event": "ADF_SPARK-TO-twilio_test"},
+				   {"Event": "ADF_SPARK-TO-SendEmail"}]
+      },
+      "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [{"Event": "SMB_Blob_Download-TO-ADF_SPARK"},
+				   {"Event": "DataExtract-TO-ADF_SPARK"}]
+      }
+    },
+    "twilio_test": {
+      "Type": "Job:Command",
+      "RunAs": "bmc-ctm",
+      "Command": "python c:\\Production\\scripts\\twilio_send.py -m \"some text\" -n \"+14167225672\" -f \"C:\\Production\\Data\\TwilioCreds.txt\"",
+      "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [{"Event": "ADF_SPARK-TO-twilio_test"}]
+      },
+      "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [{"Event": "ADF_SPARK-TO-twilio_test"}]
+      }
+    },
+    "SMB_Push2Blob": {
+      "Type": "Job:ApplicationIntegrator:Blob Storage",
+      "AI-Action": "Upload",
+      "AI-Blob name (Up/Download)": "bwtest",
+      "AI-Container (Up/Download)": "ctmprod",
+      "AI-File path": "\"%%FileInput\"",
+      "AI-Public Access": "Off",
+      "ConnectionProfile": "FY21DEMO",
+      "When": {"WeekDays": ["NONE"], "MonthDays": ["NONE"],"SpecificDates": [],"DaysRelation": "OR"}
+    },
+    "SendEmail": {
+      "Type": "Job:ApplicationIntegrator:AzureLogicApps",
+      "AI-Resource Group": "FY21DemoSetup",
+      "AI-TriggerName": "manual",
+      "AI-Workflow": "SendEmail",
+      "ConnectionProfile": "AZ_LOGICAPPS",
+      "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [{"Event": "ADF_SPARK-TO-SendEmail"}]
+      },
+      "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [{"Event": "ADF_SPARK-TO-SendEmail"}]
+      }
+    },
+    "DataExtract": {
+      "Type": "SubFolder",
+      "Data Extract Inventory": {
+        "Type": "Job:Database:EmbeddedQuery",
+        "Query": "select * from public.def_job",
+        "OutputSQLOutput": "Y",
+        "SQLOutputFormat": "CSV",
+        "ConnectionProfile": "SOR"
+      },
+      "Data Extract SAP": {
+        "Type": "Job:Database:EmbeddedQuery",
+        "Query": "select * from public.def_job",
+        "OutputSQLOutput": "Y",
+        "SQLOutputFormat": "CSV",
+        "ConnectionProfile": "SOR"
+      },
+      "Data Extract Warranty": {
+        "Type": "Job:Database:EmbeddedQuery",
+        "Query": "select * from public.def_job",
+        "OutputSQLOutput": "Y",
+        "SQLOutputFormat": "CSV",
+        "ConnectionProfile": "SOR"
+      },
+      "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-DataExtract"}]
+      },
+      "eventsToAdd": {
+        "Type": "AddEvents",
+        "Events": [{"Event": "DataExtract-TO-ADF_SPARK"}]
+      },
+      "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-DataExtract"}]
+      }
+    },
+    "SMB_Blob_Watch_Incoming": {
+      "Type": "Job:ApplicationIntegrator:Blob Storage",
+      "AI-Action": "Watch",
+      "AI-Public Access": "Off",
+      "AI-BlobWatch Container": "smartbuilding",
+      "AI-BlobWatch Blob Name": "sensor_data.csv",
+      "AI-BlobWatch Sleep Interval": "30",
+      "ConnectionProfile": "FY21DEMO",
+      "eventsToAdd": {
+        "Type": "AddEvents",
+        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-DataExtract"},
+          {"Event": "SMB_Blob_Watch_Incoming-TO-SMB_Blob_Download"}]
+      }
+    }
+  }
+}

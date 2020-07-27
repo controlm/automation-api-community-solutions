@@ -6,25 +6,25 @@
       "value": "West US 2"
     },
 	  "azureStorageAccountName": {
-      "value": "stg76don7hemx3vk"
+      "value": "xxxxstorageAccountNamexxxx"
     },
     "azureSqlServerName": {
-      "value": "slqsb76don7hemx3vk"
+      "value": "xxxxsqlnamexxxx"
     },
     "azureStorageConnectionString": {
-      "value": "<storage Account Key>"
+      "value": "xxxxstorageAccountKeyxxxx"
     },
     "azureSqlServerAdministratorPassword": {
-      "value": "wifkEB3L"
+      "value": "xxxxsqladminpasswordxxxx"
     },
     "azureSqlServerAdministratorLogin": {
-      "value": "jogoldbe"
+      "value": "xxxxsqladminuserxxxx"
     },
     "servicePrincipalId": {
-      "value": "736885f5-34e9-4d86-a5c9-91b812193116"
+      "value": "xxxxservicePrincipalxxxx"
     },
     "servicePrincipalKey": {
-      "value": "<Service Principal Client Secret>"
+      "value": "xxxxservicePrincipalClientSecretxxxx"
     }    
   }
 }

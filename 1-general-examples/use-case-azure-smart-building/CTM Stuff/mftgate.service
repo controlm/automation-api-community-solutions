@@ -1,0 +1,11 @@
+[Unit]
+Description=B2B Gateway
+[Service]
+Type=forking
+RemainAfterExit=yes
+ExecStart=/home/mftgate/mft-proxy/exe/start-mft-proxy.sh
+ExecStop=/home/mftgate/mft-proxy/exe/shut-mft-proxy.sh
+User=mftgate
+Group=mftgate
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "dataFactoryLocation": {
+      "value": "West US 2"
+    },
+	  "azureStorageAccountName": {
+      "value": "xxxxstorageAccountNamexxxx"
+    },
+    "azureSqlServerName": {
+      "value": "xxxxsqlnamexxxx"
+    },
+    "azureStorageConnectionString": {
+      "value": "xxxxstorageAccountKeyxxxx"
+    },
+    "azureSqlServerAdministratorPassword": {
+      "value": "xxxxsqladminpasswordxxxx"
+    },
+    "azureSqlServerAdministratorLogin": {
+      "value": "xxxxsqladminuserxxxx"
+    },
+    "servicePrincipalId": {
+      "value": "xxxxservicePrincipalxxxx"
+    },
+    "servicePrincipalKey": {
+      "value": "xxxxservicePrincipalClientSecretxxxx"
+    }    
+  }
+}

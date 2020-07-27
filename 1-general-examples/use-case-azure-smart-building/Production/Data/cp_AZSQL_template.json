@@ -1,0 +1,13 @@
+{
+  "AZSQL": {
+    "Type": "ConnectionProfile:Database:MSSQL",
+    "User": "xxxxsqladminuserxxxx",
+    "DatabaseName": "SmartBuildingDB",
+    "Host": "xxxxsqlnamexxxx.database.windows.net",
+    "Secure": "False",
+    "DatabaseVersion": "2008",
+    "Password": "xxxxsqladminpasswordxxxx",
+    "TargetAgent": "fy21ctmserver",
+    "TargetCTM": "FY21CTMServer"
+  }
+}

@@ -20,7 +20,7 @@
       ],
       "defaultValue": "West US 2",
       "metadata": {
-        "description": "Location of the data factory. Currently, only East US and East US 2 are supported. "
+        "description": "Location of the data factory"
       }
     },
     "azureStorageAccountName": {
@@ -75,8 +75,7 @@
   },
   "variables": {
     "hdiLinkedService": "SBDemoHDILinkedService",
-    "scriptRootPath": "smartbuilding/spark/script",
-    "entryFilePath": "WordCount_Spark.py"
+    "scriptRootPath": "smartbuilding/spark/script"
   },
   "resources": [
     {
@@ -182,9 +181,9 @@
                             "rootPath": "smartbuilding/spark/jar",
                             "entryFilePath": "sblr.jar",
                             "arguments": [
-                              "[concat('wasb://', parameters('azureStorageAccountName'), '.blob.core.windows.net/files/buildingdata.csv')]",
+                              "[concat('wasb://smartbuilding@', parameters('azureStorageAccountName'), '.blob.core.windows.net/files/buildingdata.csv')]",
                     "maintenance_model",
-                                "[concat('wasb://', parameters('azureStorageAccountName'), '.blob.core.windows.net/files/notifications')]"
+                                "[concat('wasb://smartbuilding@', parameters('azureStorageAccountName'), '.blob.core.windows.net/files/notifications')]"
                             ],
                             "getDebugInfo": "Always",
                             "className": "com.bmc.sb.processBuildingData",
@@ -275,7 +274,7 @@
                         },
                         "userProperties": [],
                         "typeProperties": {
-                            "scriptPath": "adfv2tutorial/spark/script/clean_notifications.pig",
+                            "scriptPath": "smartbuilding/spark/script/clean_notifications.pig",
                             "scriptLinkedService": {
                                 "referenceName": "[parameters('azureStorageAccountName')]",
                                 "type": "LinkedServiceReference"
