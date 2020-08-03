@@ -19,46 +19,46 @@
       },
       "eventsToAdd": {
         "Type": "AddEvents",
-        "Events": [{"Event": "SMB_Blob_Download-TO-ADF_SPARK"}]
+        "Events": [{"Event": "SMB_Blob_Download-TO-SMB_ADF_SparkPipeline"}]
       },
       "eventsToDelete": {
         "Type": "DeleteEvents",
         "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-SMB_Blob_Download"}]
       }
     },
-    "ADF_SPARK": {
+    "SMB_ADF_SparkPipeline": {
       "Type": "Job:ApplicationIntegrator:ADF Run Pipeline",
-      "AI-Azure Data Factory": "ADF-JG",
+      "AI-Azure Data Factory": "FY21DemoADF-kqugr6bycgfu6",
       "AI-Resource Group": "ADF-Resource",
-      "AI-Pipeline": "JGTestingSpark",
+      "AI-Pipeline": "SmartBuilding_SparkPipeline",
       "ConnectionProfile": "ADF",
       "eventsToWaitFor": {
         "Type": "WaitForEvents",
-        "Events": [{"Event": "SMB_Blob_Download-TO-ADF_SPARK"},
-				   {"Event": "DataExtract-TO-ADF_SPARK"}]
+        "Events": [{"Event": "SMB_Blob_Download-TO-SMB_ADF_SparkPipeline"},
+				   {"Event": "SMB_SOR_DataExtract-TO-SMB_ADF_SparkPipeline"}]
       },
       "eventsToAdd": {
         "Type": "AddEvents",
-        "Events": [{"Event": "ADF_SPARK-TO-twilio_test"},
-				   {"Event": "ADF_SPARK-TO-SendEmail"}]
+        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_SMS_Notification"},
+				   {"Event": "SMB_ADF_SparkPipeline-TO-SMB_Email_Notification"}]
       },
       "eventsToDelete": {
         "Type": "DeleteEvents",
-        "Events": [{"Event": "SMB_Blob_Download-TO-ADF_SPARK"},
-				   {"Event": "DataExtract-TO-ADF_SPARK"}]
+        "Events": [{"Event": "SMB_Blob_Download-TO-SMB_ADF_SparkPipeline"},
+				   {"Event": "SMB_SOR_DataExtract-TO-SMB_ADF_SparkPipeline"}]
       }
     },
-    "twilio_test": {
+    "SMB_SMS_Notification": {
       "Type": "Job:Command",
       "RunAs": "bmc-ctm",
       "Command": "python c:\\Production\\scripts\\twilio_send.py -m \"some text\" -n \"+14167225672\" -f \"C:\\Production\\Data\\TwilioCreds.txt\"",
       "eventsToWaitFor": {
         "Type": "WaitForEvents",
-        "Events": [{"Event": "ADF_SPARK-TO-twilio_test"}]
+        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_SMS_Notification"}]
       },
       "eventsToDelete": {
         "Type": "DeleteEvents",
-        "Events": [{"Event": "ADF_SPARK-TO-twilio_test"}]
+        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_SMS_Notification"}]
       }
     },
     "SMB_Push2Blob": {
@@ -71,38 +71,38 @@
       "ConnectionProfile": "FY21DEMO",
       "When": {"WeekDays": ["NONE"], "MonthDays": ["NONE"],"SpecificDates": [],"DaysRelation": "OR"}
     },
-    "SendEmail": {
+    "SMB_Email_Notification": {
       "Type": "Job:ApplicationIntegrator:AzureLogicApps",
       "AI-Resource Group": "FY21DemoSetup",
       "AI-TriggerName": "manual",
-      "AI-Workflow": "SendEmail",
+      "AI-Workflow": "SMB_Email_Notification",
       "ConnectionProfile": "AZ_LOGICAPPS",
       "eventsToWaitFor": {
         "Type": "WaitForEvents",
-        "Events": [{"Event": "ADF_SPARK-TO-SendEmail"}]
+        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_Email_Notification"}]
       },
       "eventsToDelete": {
         "Type": "DeleteEvents",
-        "Events": [{"Event": "ADF_SPARK-TO-SendEmail"}]
+        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_Email_Notification"}]
       }
     },
-    "DataExtract": {
+    "SMB_SOR_DataExtract": {
       "Type": "SubFolder",
-      "Data Extract Inventory": {
+      "SMB_Inventory_DataExtract": {
         "Type": "Job:Database:EmbeddedQuery",
         "Query": "select * from public.def_job",
         "OutputSQLOutput": "Y",
         "SQLOutputFormat": "CSV",
         "ConnectionProfile": "SOR"
       },
-      "Data Extract SAP": {
+      "SMB_SAP_DataExtract": {
         "Type": "Job:Database:EmbeddedQuery",
         "Query": "select * from public.def_job",
         "OutputSQLOutput": "Y",
         "SQLOutputFormat": "CSV",
         "ConnectionProfile": "SOR"
       },
-      "Data Extract Warranty": {
+      "SMB_Warranty_DataExtract": {
         "Type": "Job:Database:EmbeddedQuery",
         "Query": "select * from public.def_job",
         "OutputSQLOutput": "Y",
@@ -111,15 +111,15 @@
       },
       "eventsToWaitFor": {
         "Type": "WaitForEvents",
-        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-DataExtract"}]
+        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-SMB_SOR_DataExtract"}]
       },
       "eventsToAdd": {
         "Type": "AddEvents",
-        "Events": [{"Event": "DataExtract-TO-ADF_SPARK"}]
+        "Events": [{"Event": "SMB_SOR_DataExtract-TO-SMB_ADF_SparkPipeline"}]
       },
       "eventsToDelete": {
         "Type": "DeleteEvents",
-        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-DataExtract"}]
+        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-SMB_SOR_DataExtract"}]
       }
     },
     "SMB_Blob_Watch_Incoming": {
@@ -132,7 +132,7 @@
       "ConnectionProfile": "FY21DEMO",
       "eventsToAdd": {
         "Type": "AddEvents",
-        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-DataExtract"},
+        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-SMB_SOR_DataExtract"},
           {"Event": "SMB_Blob_Watch_Incoming-TO-SMB_Blob_Download"}]
       }
     }

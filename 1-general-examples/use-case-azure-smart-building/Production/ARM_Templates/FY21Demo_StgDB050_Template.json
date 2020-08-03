@@ -18,7 +18,7 @@
         },
 		"sqlServerName": {
             "type": "string",
-            "defaultValue": "[concat('slqsb', uniqueString(resourceGroup().id))]",
+            "defaultValue": "[concat('sqlsb', uniqueString(resourceGroup().id))]",
             "metadata": {
                 "description": "The name of the SQL logical server."
             }
@@ -48,7 +48,13 @@
             "metadata": {
                 "description": "The administrator password of the SQL logical server."
             }
-        }
+        },
+		"ctmPublicIp": {
+			"type": "string",
+            "metadata": {
+                "description": "Public IP address of Server to update SQL Server firewall"
+			}
+		}
     },
     "variables": {
 	},
@@ -62,7 +68,7 @@
                 "name": "Standard_LRS",
                 "tier": "Standard"
             },
-            "kind": "Storage",
+            "kind": "StorageV2",
             "properties": {
                 "networkAcls": {
                     "bypass": "AzureServices",
@@ -70,7 +76,7 @@
                     "ipRules": [],
                     "defaultAction": "Allow"
                 },
-                "supportsHttpsTrafficOnly": true,
+                "supportsHttpsTrafficOnly": false,
                 "encryption": {
                     "services": {
                         "file": {
@@ -123,8 +129,8 @@
 					"apiVersion": "2014-04-01",
 					"location": "[parameters('location')]",
 					"properties": {
-						"endIpAddress": "0.0.0.0",
-						"startIpAddress": "0.0.0.0"
+						"endIpAddress": "[parameters('ctmPublicIp')]",
+						"startIpAddress": "[parameters('ctmPublicIp')]"
 					},
 					"dependsOn": [
 						"[parameters('sqlServerName')]"

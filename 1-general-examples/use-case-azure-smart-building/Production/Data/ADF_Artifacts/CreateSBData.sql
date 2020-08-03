@@ -1,4 +1,3 @@
-DROP TABLE SBDATA;
 CREATE TABLE SBDATA 
 	(seq INT,
     detectiondate DATETIME,

@@ -41,17 +41,17 @@ $pscredential = New-Object System.Management.Automation.PSCredential ($servicePr
 Connect-AzAccount -ServicePrincipal -Credential $pscredential -Tenant $tenantId
 
 if ($templateParameterFile.ToLower() -eq 'none') {
-	$Deployment_Output = New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFile 
+	$deploymentOutput = New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -TemplateFile $templateFile 
 }
 else {
-	$Deployment_Output = New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName `
+	$deploymentOutput = New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName `
 	-TemplateFile $templateFile -TemplateParameterFile $templateParameterFile 
 }
 
-if ($outFile -ne '') {
-	$storageAccountName = $Deployment_Output.Outputs.storageAccountName.Value
-	$storageAccountKey = $Deployment_Output.Outputs.storageAccountKey.Value
-	$sqlServerName = $Deployment_Output.Outputs.sqlServerName.Value
+if (($outFile -ne '') -And ($deploymentOutput.ProvisioningState -eq "Succeeded")) {
+	$storageAccountName = $deploymentOutput.Outputs.storageAccountName.Value
+	$storageAccountKey = $deploymentOutput.Outputs.storageAccountKey.Value
+	$sqlServerName = $deploymentOutput.Outputs.sqlServerName.Value
 	$storageAccountNameRecord = "xxxxstorageAccountNamexxxx:$storageAccountName"
 	$sqlServerNameRecord = "xxxxsqlnamexxxx:$sqlServerName"
 	$storageAccountKeyRecord = "xxxxstorageAccountKeyxxxx:$storageAccountKey"
@@ -59,4 +59,12 @@ if ($outFile -ne '') {
 	$storageAccountNameRecord | Add-Content $outFile
 	$storageAccountKeyRecord | Add-Content $outFile
 	$sqlServerNameRecord | Add-Content $outFile
+}
+
+$deploymentOutput
+
+if ($deploymentOutput.ProvisioningState -eq "Succeeded") {
+	exit(0)
+} else {
+	exit(1)
 }

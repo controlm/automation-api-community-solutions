@@ -7,6 +7,9 @@
 		},
 		"administratorLoginPassword": {
 			"value": "xxxxsqladminpasswordxxxx"
+		},
+		"ctmPublicIp": {
+			"value": "xxxxctmPublicIpxxxx"
 		}
     }
 }

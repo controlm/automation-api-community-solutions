@@ -71,11 +71,20 @@
       "metadata": {
         "description": "The access key of the service principal that has permissions to create HDInsight clusters in your subscription."
       }
-    }
+    },
+	"subscriptionId": {
+      "type": "string",
+      "metadata": {
+        "description": "The subscription."
+      }
+    },
   },
   "variables": {
     "hdiLinkedService": "SBDemoHDILinkedService",
-    "scriptRootPath": "smartbuilding/spark/script"
+	"storageLinkedService": "SBDemoStgLinkedService",
+	"sqlLinkedService": "SBDemoSqlLinkedService",
+    "scriptRootPath": "smartbuilding/spark/script",
+	"storageAccountId": "[resourceId('Microsoft.Storage/storageAccounts', parameters('azureStorageAccountName'))]"
   },
   "resources": [
     {
@@ -86,32 +95,28 @@
       "properties": {},
       "resources": [
         {
-          "type": "linkedservices",
-          "name": "[parameters('azureStorageAccountName')]",
-          "dependsOn": [
-            "[parameters('dataFactoryName')]"
-          ],
-          "apiVersion": "2018-06-01",
+          "type": "linkedServices",
+          "name": "[variables('storageLinkedService')]",
+		  "apiVersion": "2018-06-01",
           "properties": {
-            "type": "AzureStorage",
-            "description": "Azure Storage linked service",
+            "type": "AzureBlobStorage",
             "typeProperties": {
-              "connectionString": {
-                "value": "[parameters('azureStorageConnectionString')]",
-                "type": "SecureString"
-              }
+              "connectionString": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('azureStorageAccountName'),';AccountKey=',listKeys(variables('StorageAccountId'), '2019-06-01').keys[0].value)]"
             }
-          }
+          },
+		  "dependsOn": [
+            "[parameters('dataFactoryName')]"
+          ]
         },
         {
-          "name": "[parameters('azureSqlServerName')]",
-          "type": "linkedservices",
+          "name": "[variables('sqlLinkedService')]",
+          "type": "linkedServices",
           "apiVersion": "2018-06-01",
           "properties": {
             "annotations": [],
             "type": "AzureSqlDatabase",
-            "typeProperties": {
-              "connectionString": "[concat('Server=tcp:',parameters('azureSqlServerName'),'.database.windows.net,1433;Initial Catalog=',parameters('azureSqlDbName'),';Persist Security Info=False;User ID=',parameters('azureSqlServerAdministratorLogin'),';Password=',parameters('azureSqlServerAdministratorPassword'),';MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;')]",
+            "typeProperties": {		  
+			  "connectionString": "[concat('integrated security=False;encrypt=True;connection timeout=30;data source=',parameters('azureSqlServerName'),'.database.windows.net;initial catalog=SmartBuildingDB;user id=',parameters('azureSqlServerAdministratorLogin'),';Password=',parameters('azureSqlServerAdministratorPassword'))]",
               "type": "SecureString"
             }
           },
@@ -120,48 +125,58 @@
           ]
         },
         {
-          "type": "linkedservices",
-          "name": "[variables('hdiLinkedService')]",
-          "dependsOn": [
+        "type": "linkedServices",
+		"name": "[variables('hdiLinkedService')]",
+        "dependsOn": [
             "[parameters('dataFactoryName')]",
-            "[parameters('azureStorageAccountName')]"
-          ],
-          "apiVersion": "2018-06-01",
-          "properties": {
-            "type": "HDInsightOnDemand",
-            "typeProperties": {
-              "clusterType": "spark",
-              "clusterSize": 2,
-              "timeToLive": "01:30:00",
-                      "version": "3.6",
-              "clusterResourceGroup": "[resourceGroup().name]",
-              "tenant": "[subscription().tenantId]",
-              "sparkVersion": "",
-              "servicePrincipalId": "[parameters('servicePrincipalId')]",
-              "servicePrincipalKey": {
-                "type": "SecureString",
-                "value": "[parameters('servicePrincipalKey')]"
-              },
-                      "osType": "Linux",
-                      "clusterNamePrefix": "FY21DEMOADF",
-              "linkedServiceName": {
-                "referenceName": "[parameters('azureStorageAccountName')]",
-                "type": "LinkedServiceReference"
-              }
+            "[variables('storageLinkedService')]"
+        ],
+        "apiVersion": "2018-06-01",
+        "properties": {
+			"type": "HDInsightOnDemand",
+			"typeProperties": {
+				"clusterType": "spark",
+				"clusterSize": 1,
+				"timeToLive": "01:30:00",
+				"version": "3.6",
+				"hostSubscriptionId": "[parameters('subscriptionId')]",
+				"clusterResourceGroup": "[resourceGroup().name]",
+				"tenant": "[subscription().tenantId]",
+				"sparkVersion": "",
+				"servicePrincipalId": "[parameters('servicePrincipalId')]",
+				"servicePrincipalKey": {
+					"type": "SecureString",
+					"value": "[parameters('servicePrincipalKey')]"
+				},
+				"osType": "Linux",
+				"clusterNamePrefix": "FY21DEMOADF",
+                "clusterUserName": "[parameters('azureSqlServerAdministratorLogin')]",				
+				"clusterPassword": {
+                    "type": "SecureString",
+                    "value": "[parameters('azureSqlServerAdministratorPassword')]"
+                },
+                "clusterSshUserName": "[parameters('azureSqlServerAdministratorLogin')]",
+                "clusterSshPassword": {
+                    "type": "SecureString",
+                    "value": "[parameters('azureSqlServerAdministratorPassword')]"
+                },
+				"linkedServiceName": {
+					"referenceName": "[variables('storageLinkedService')]",
+					"type": "LinkedServiceReference"
+				}
             }
           }
         },
         {
           "name": "SmartBuilding_SparkPipeline",
-          "type": "Microsoft.DataFactory/factories/pipelines",
-          "apiVersion": "2018-06-01",
           "type": "pipelines",
+          "apiVersion": "2018-06-01",
           "properties": {
             "activities": [
               {
                 "name": "SparkStepLinkedHDI",
                 "type": "HDInsightSpark",
-                        "dependsOn": [
+                "dependsOn": [
                     {
                       "activity": "CleanNotificationsDirectory",
                       "dependencyConditions": [
@@ -178,23 +193,23 @@
                 },
                 "userProperties": [],
                 "typeProperties": {
-                            "rootPath": "smartbuilding/spark/jar",
-                            "entryFilePath": "sblr.jar",
-                            "arguments": [
-                              "[concat('wasb://smartbuilding@', parameters('azureStorageAccountName'), '.blob.core.windows.net/files/buildingdata.csv')]",
-                    "maintenance_model",
-                                "[concat('wasb://smartbuilding@', parameters('azureStorageAccountName'), '.blob.core.windows.net/files/notifications')]"
-                            ],
-                            "getDebugInfo": "Always",
-                            "className": "com.bmc.sb.processBuildingData",
-                            "sparkJobLinkedService": {
-                              "referenceName": "[parameters('azureStorageAccountName')]",
-                                "type": "LinkedServiceReference"
-                            }
+                    "rootPath": "smartbuilding/spark/jar",
+                    "entryFilePath": "sblr.jar",
+                    "arguments": [
+                        "[concat('wasb://smartbuilding@', parameters('azureStorageAccountName'), '.blob.core.windows.net/files/buildingdata.csv')]",
+						"maintenance_model",
+                        "[concat('wasb://smartbuilding@', parameters('azureStorageAccountName'), '.blob.core.windows.net/files/notifications')]"
+                    ],
+                    "getDebugInfo": "Always",
+                    "className": "com.bmc.sb.processBuildingData",
+                    "sparkJobLinkedService": {
+                        "referenceName": "[variables('storageLinkedService')]",
+                        "type": "LinkedServiceReference"
+                    }
                 },
                 "linkedServiceName": {
-                            "referenceName": "[variables('hdiLinkedService')]",
-                            "type": "LinkedServiceReference"
+                    "referenceName": "[variables('hdiLinkedService')]",
+                    "type": "LinkedServiceReference"
                 }
               },
               {
@@ -220,7 +235,7 @@
                   "scriptPath": "smartbuilding/spark/script/dir_clean.pig",
                   "getDebugInfo": "Failure",
                   "scriptLinkedService": {
-                    "referenceName": "[parameters('azureStorageAccountName')]",
+                    "referenceName": "[variables('storageLinkedService')]",
                     "type": "LinkedServiceReference"
                   }
                 },
@@ -276,7 +291,7 @@
                         "typeProperties": {
                             "scriptPath": "smartbuilding/spark/script/clean_notifications.pig",
                             "scriptLinkedService": {
-                                "referenceName": "[parameters('azureStorageAccountName')]",
+                                "referenceName": "[variables('storageLinkedService')]",
                                 "type": "LinkedServiceReference"
                             }
                         },
@@ -330,7 +345,124 @@
                             "sink": {
                                 "type": "AzureSqlSink"
                             },
-                            "enableStaging": false
+                            "enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+                                    {
+                                        "source": {
+                                            "name": "seq",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "seq",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "detectiondate",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "detectiondate",
+                                            "type": "DateTime",
+                                            "physicalType": "datetime"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "Temperature",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "Temperature",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "Humidity",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "Humidity",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "Light",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "Light",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "CO2",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "CO2",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "HumidityRatio",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "HumidityRatio",
+                                            "type": "Decimal",
+                                            "physicalType": "decimal"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "Occupancy",
+                                            "type": "String",
+                                            "physicalType": "String"
+                                        },
+                                        "sink": {
+                                            "name": "Occupancy",
+                                            "type": "Int32",
+                                            "physicalType": "int"
+                                        }
+                                    },
+                                    {
+                                        "source": {
+                                            "name": "ingestTime",
+                                            "type": "String"
+                                        },
+                                        "sink": {
+                                            "name": "ingestTime",
+                                            "type": "DateTime",
+                                            "physicalType": "datetime"
+                                        }
+                                    }
+                                ],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
                         },
                         "inputs": [
                             {
@@ -352,11 +484,11 @@
           },
           "dependsOn": [
             "[parameters('dataFactoryName')]",
-            "[parameters('azureStorageAccountName')]",
+            "[variables('storageLinkedService')]",
+			"[variables('sqlLinkedService')]",
             "[variables('hdiLinkedService')]",
-            "CleanupOldOutput",
-            "CSVText",
-            "AzureSqlsmartBuildingTable"
+			"CSVText"
+
           ]
         },
         {
@@ -365,7 +497,7 @@
             "apiVersion": "2018-06-01",
             "properties": {
                 "linkedServiceName": {
-                    "referenceName": "[parameters('azureStorageAccountName')]",
+                    "referenceName": "[variables('storageLinkedService')]",
                     "type": "LinkedServiceReference"
                 },
                 "annotations": [],
@@ -410,7 +542,8 @@
                 ]
             },
             "dependsOn": [
-                "[parameters('dataFactoryName')]"
+                "[parameters('dataFactoryName')]",
+				"[variables('storageLinkedService')]"
             ]
         },
         {
@@ -419,60 +552,65 @@
             "apiVersion": "2018-06-01",
             "properties": {
                 "linkedServiceName": {
-                    "referenceName": "[parameters('azureSqlServerName')]",
+                    "referenceName": "[variables('sqlLinkedService')]",
                     "type": "LinkedServiceReference"
                 },
                 "annotations": [],
                 "type": "AzureSqlTable",
-                "schema": [
-                    {
-                        "name": "sbdate",
-                        "type": "datetime",
-                        "precision": 23,
-                        "scale": 3
-                    },
-                    {
-                        "name": "Temperature",
-                        "type": "decimal",
-                        "precision": 15,
-                        "scale": 2
-                    },
-                    {
-                        "name": "Humidity",
-                        "type": "decimal",
-                        "precision": 15,
-                        "scale": 2
-                    },
-                    {
-                        "name": "Light",
-                        "type": "decimal",
-                        "precision": 15,
-                        "scale": 2
-                    },
-                    {
-                        "name": "CO2",
-                        "type": "decimal",
-                        "precision": 10,
-                        "scale": 2
-                    },
-                    {
-                        "name": "HumidityRatio",
-                        "type": "decimal",
-                        "precision": 10,
-                        "scale": 1
-                    },
-                    {
-                        "name": "Occupancy",
-                        "type": "int",
-                        "precision": 10
-                    },
-                    {
-                        "name": "ingestTime",
-                        "type": "datetime",
-                        "precision": 23,
-                        "scale": 3
-                    }
-                ],
+				"schema": [
+					{
+						"name": "seq",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "detectiondate",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "Temperature",
+						"type": "decimal",
+						"precision": 16,
+						"scale": 12
+					},
+					{
+						"name": "Humidity",
+						"type": "decimal",
+						"precision": 16,
+						"scale": 12
+					},
+					{
+						"name": "Light",
+						"type": "decimal",
+						"precision": 16,
+						"scale": 12
+					},
+					{
+						"name": "CO2",
+						"type": "decimal",
+						"precision": 16,
+						"scale": 11
+					},
+					{
+						"name": "HumidityRatio",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 17
+					},
+					{
+						"name": "Occupancy",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "ingestTime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
                 "typeProperties": {
                     "schema": "dbo",
                     "table": "SBDATA"
@@ -480,7 +618,7 @@
             },
             "dependsOn": [
                 "[parameters('dataFactoryName')]",
-                "[parameters('azureSqlServerName')]"
+                "[variables('sqlLinkedService')]"
             ]
         },
         {
@@ -489,7 +627,7 @@
             "apiVersion": "2018-06-01",
             "properties": {
                 "linkedServiceName": {
-                    "referenceName": "[parameters('azureStorageAccountName')]",
+                    "referenceName": "[variables('storageLinkedService')]",
                     "type": "LinkedServiceReference"
                 },
                 "annotations": [],
@@ -505,7 +643,7 @@
             },
             "dependsOn": [
                 "[parameters('dataFactoryName')]",
-                "[parameters('azureStorageAccountName')]"
+                "[variables('storageLinkedService')]"
             ]
         }
       ]
