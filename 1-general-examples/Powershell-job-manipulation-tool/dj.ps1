@@ -43,7 +43,7 @@ function Select-Environment
 $envName, $subVersion, $monthly = Select-Environment
 $folderFilter = Read-Host "Please enter a folder name or prefix to search. Enter to quit"
 While ($folderFilter -ne "q") {
-	if (($subVersion -eq 20) -And ($monthly -gt 15)) { 
+	if (($subVersion -eq 20) -And ($monthly -gt 10)) { 
 		[String]$jobInfo = ctm run jobs:status::get -e $envName -s """ctm=*&folder=$folderFilter&deleted=false"""
 	} else {
 		[String]$jobInfo = ctm run jobs:status::get -e $envName -s """ctm=*&folder=$folderFilter"""
