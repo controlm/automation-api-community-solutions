@@ -5,6 +5,10 @@
     "Application": "SMB","SubApplication": "Azure_Data_Pipeline", "RunAs": "FY21DEMO", "Host" : "SystemsOfRecord"
   },
   "SMB_Pipeline": {"Type": "Folder", 
+	"Variables": [
+      {"AZRG": "azureResourceGroupName"},
+	  {"AZDF": "azureDataFactoryName"}
+    ],
     
     "SMB_Blob_Download": {"Type": "Job:ApplicationIntegrator:Blob Storage",
 	  "ConnectionProfile": "FY21DEMO",
@@ -28,8 +32,8 @@
     },
     "SMB_ADF_SparkPipeline": {
       "Type": "Job:ApplicationIntegrator:ADF Run Pipeline",
-      "AI-Azure Data Factory": "FY21DemoADF-kqugr6bycgfu6",
-      "AI-Resource Group": "ADF-Resource",
+      "AI-Azure Data Factory": "%%AZDF",
+      "AI-Resource Group": "%%AZRG",
       "AI-Pipeline": "SmartBuilding_SparkPipeline",
       "ConnectionProfile": "ADF",
       "eventsToWaitFor": {
@@ -50,7 +54,7 @@
     },
     "SMB_SMS_Notification": {
       "Type": "Job:Command",
-      "RunAs": "bmc-ctm",
+      "RunAs": "ctmadmin",
       "Command": "python c:\\Production\\scripts\\twilio_send.py -m \"some text\" -n \"+14167225672\" -f \"C:\\Production\\Data\\TwilioCreds.txt\"",
       "eventsToWaitFor": {
         "Type": "WaitForEvents",
@@ -64,8 +68,8 @@
     "SMB_Push2Blob": {
       "Type": "Job:ApplicationIntegrator:Blob Storage",
       "AI-Action": "Upload",
-      "AI-Blob name (Up/Download)": "bwtest",
-      "AI-Container (Up/Download)": "ctmprod",
+      "AI-Blob name (Up/Download)": "????blobName????",
+      "AI-Container (Up/Download)": "smartbuilding",
       "AI-File path": "\"%%FileInput\"",
       "AI-Public Access": "Off",
       "ConnectionProfile": "FY21DEMO",
@@ -73,7 +77,7 @@
     },
     "SMB_Email_Notification": {
       "Type": "Job:ApplicationIntegrator:AzureLogicApps",
-      "AI-Resource Group": "FY21DemoSetup",
+      "AI-Resource Group": "xxxxresourceGroupxxxx",
       "AI-TriggerName": "manual",
       "AI-Workflow": "SMB_Email_Notification",
       "ConnectionProfile": "AZ_LOGICAPPS",
@@ -88,6 +92,10 @@
     },
     "SMB_SOR_DataExtract": {
       "Type": "SubFolder",
+	  "When": {
+        "SpecificDates": [], "DaysRelation": "OR",
+        "RuleBasedCalendars": {"Relationship": "AND", "Included": ["USE PARENT"]}
+      },
       "SMB_Inventory_DataExtract": {
         "Type": "Job:Database:EmbeddedQuery",
         "Query": "select * from public.def_job",
@@ -124,6 +132,7 @@
     },
     "SMB_Blob_Watch_Incoming": {
       "Type": "Job:ApplicationIntegrator:Blob Storage",
+	  "Confirm": true,
       "AI-Action": "Watch",
       "AI-Public Access": "Off",
       "AI-BlobWatch Container": "smartbuilding",

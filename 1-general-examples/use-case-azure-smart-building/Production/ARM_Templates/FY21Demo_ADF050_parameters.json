@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "dataFactoryLocation": {
+      "value": "West US 2"
+    },
+	"azureStorageAccountName": {
+      "value": "stgkqugr6bycgfu6"
+    },
+    "azureSqlServerName": {
+      "value": "sqlsbkqugr6bycgfu6"
+    },
+    "azureStorageConnectionString": {
+      "value": "/blG2nVOp/HsjJicyzKckUVe8cQYBVyK/l/SfO7gDR2FK3t9liAElBEwYt3yPUABOw+pFYd5PzzMJLSYEOZSFQ=="
+    },
+    "azureSqlServerAdministratorPassword": {
+      "value": "utw4na5L"
+    },
+    "azureSqlServerAdministratorLogin": {
+      "value": "dbauser"
+    },
+    "servicePrincipalId": {
+      "value": "f2cb3182-c023-4ac4-9112-9da03584a764"
+    },
+    "servicePrincipalKey": {
+      "value": "_Yah.tGL3t~-XuV6hAzW.4t~87q6mNp1-U"
+    },
+	"subscriptionId": {
+	  "value": "fee1b749-2ef4-4205-a1a5-3fdb5b803697"
+    }    
+  }
+}

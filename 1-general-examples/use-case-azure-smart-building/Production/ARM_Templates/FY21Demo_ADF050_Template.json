@@ -116,8 +116,7 @@
             "annotations": [],
             "type": "AzureSqlDatabase",
             "typeProperties": {		  
-			  "connectionString": "[concat('integrated security=False;encrypt=True;connection timeout=30;data source=',parameters('azureSqlServerName'),'.database.windows.net;initial catalog=SmartBuildingDB;user id=',parameters('azureSqlServerAdministratorLogin'),';Password=',parameters('azureSqlServerAdministratorPassword'))]",
-              "type": "SecureString"
+			  "connectionString": "[concat('integrated security=False;encrypt=True;connection timeout=30;data source=',parameters('azureSqlServerName'),'.database.windows.net;initial catalog=SmartBuildingDB;user id=',parameters('azureSqlServerAdministratorLogin'),';Password=',parameters('azureSqlServerAdministratorPassword'))]"
             }
           },
           "dependsOn": [
@@ -648,5 +647,11 @@
         }
       ]
     }
-  ]
+  ],
+  	"outputs": {
+		"dataFactoryName": {
+			"type": "string",
+			"value": "[parameters('dataFactoryName')]"
+		}
+	}
 }

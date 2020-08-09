@@ -105,9 +105,12 @@
             "apiVersion": "2019-06-01-preview",
             "name": "[parameters('sqlServerName')]",
             "location": "[parameters('location')]",
+			"kind": "v12.0",
             "properties": {
                 "administratorLogin": "[parameters('administratorLogin')]",
-                "administratorLoginPassword": "[parameters('administratorLoginPassword')]"
+                "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+				"version": "12.0",
+				"publicNetworkAccess": "Enabled"
             },
             "resources": [
                 {
@@ -124,17 +127,28 @@
                     ]
                 },
 				{
+					"type": "firewallRules",
 					"name": "AllowAllMicrosoftAzureIps",
+					"apiVersion": "2015-05-01-preview",
+					"dependsOn": [
+						"[parameters('sqlServerName')]"
+					],
+					"properties": {
+						"startIpAddress": "0.0.0.0",
+						"endIpAddress": "0.0.0.0"
+					}
+				},
+				{
 					"type": "firewallrules",
-					"apiVersion": "2014-04-01",
-					"location": "[parameters('location')]",
+					"name": "CTMServerIp",
+					"apiVersion": "2015-05-01-preview",
+					"dependsOn": [
+						"[parameters('sqlServerName')]"
+					],
 					"properties": {
 						"endIpAddress": "[parameters('ctmPublicIp')]",
 						"startIpAddress": "[parameters('ctmPublicIp')]"
-					},
-					"dependsOn": [
-						"[parameters('sqlServerName')]"
-					]
+					}
 				}
             ]
         }

@@ -5,7 +5,7 @@ param(
 )
 
 $kvHash = @{}
-
+[Int]$ctr = 0
 foreach($kvLine in Get-Content $kvFile) {
 	$k, $v = $kvLine -split ':'
 	$kvHash.Add($k, $v)
@@ -19,7 +19,10 @@ foreach($inLine in Get-Content $inFile) {
 		$v = $($kv.Value)
 
 		if ($inLine -match $k) {
+			$ctr++
 			$outLine = $inLine.Replace($k, "$v")
+			Write-Host "Original: $inLine "
+			Write-Host "Updated:  $outLine"
 			$updated = $true
 			break
 		}
@@ -30,3 +33,5 @@ foreach($inLine in Get-Content $inFile) {
 	}
 	$outLine | Out-File $outFile -Append
 }
+
+Write-Host "Number of lines replaced: $ctr"

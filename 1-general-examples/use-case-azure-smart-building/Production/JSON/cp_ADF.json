@@ -1,0 +1,11 @@
+{
+  "ADF": {
+    "Type": "ConnectionProfile:ApplicationIntegrator:ADF Run Pipeline",
+    "AI-Subscription ID": "fee1b749-2ef4-4205-a1a5-3fdb5b803697",
+    "AI-Password": "_Yah.tGL3t~-XuV6hAzW.4t~87q6mNp1-U",
+    "AI-Application ID": "f2cb3182-c023-4ac4-9112-9da03584a764",
+    "AI-Tenant ID": "92b796c5-5839-40a6-8dd9-c1fad320c69b",
+    "TargetAgent": "fy21ctmserver",
+    "TargetCTM": "FY21CTMServer"
+  }
+}

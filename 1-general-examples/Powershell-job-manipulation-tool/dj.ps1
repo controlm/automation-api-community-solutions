@@ -44,6 +44,7 @@ $envName, $subVersion, $monthly = Select-Environment
 $folderFilter = Read-Host "Please enter a folder name or prefix to search. Enter to quit"
 While ($folderFilter -ne "q") {
 	if (($subVersion -eq 20) -And ($monthly -gt 10)) { 
+
 		[String]$jobInfo = ctm run jobs:status::get -e $envName -s """ctm=*&folder=$folderFilter&deleted=false"""
 	} else {
 		[String]$jobInfo = ctm run jobs:status::get -e $envName -s """ctm=*&folder=$folderFilter"""
@@ -66,22 +67,21 @@ While ($folderFilter -ne "q") {
 		}
 		
 		$jobId = $jobHash.statuses.jobId[$jobSelect - 1]
-		
 
 		$function = Read-Host "Select action: b (Bypass), d (details), k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
 		Switch ($function)
 			{
-				b {ctm run job::runNow $jobId}
-				d {ctm run job:status::get $jobId}
+				b {ctm run job::runNow $jobId -e $envName}
+				d {ctm run job:status::get $jobId -e $envName}
 				e {$envName, $subVersion, $monthly = Select-Environment}
-				k {ctm run job::kill $jobId}
-				l {ctm run job:log::get $jobId}
+				k {ctm run job::kill $jobId -e $envName}
+				l {ctm run job:log::get $jobId -e $envName}
 				n { 
-					ctm run job::rerun $jobId
-					ctm run job::runNow $jobId
+					ctm run job::rerun $jobId -e $envName
+					ctm run job::runNow $jobId -e $envName
 				}
-				o {ctm run job:output::get $jobId}
-				r {ctm run job::rerun $jobId}
+				o {ctm run job:output::get $jobId -e $envName}
+				r {ctm run job::rerun $jobId -e $envName}
 				Default {
 					Write-Host "Valid selections are b (Bypass), d (details), k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
 				}
