@@ -9,7 +9,7 @@ spec:
     selector:
         matchLabels:
             type: stateful-service-ctmag-srv
-    replicas: 1 # number of running agents 
+    replicas: 1 # number of running agents
     template:
         metadata:
             labels:
@@ -17,7 +17,7 @@ spec:
         spec:
           containers:
           - name: ctmagent-container
-            # container in ECR 
+            # container in ECR
             image: 000000000000.dkr.ecr.us-west-2.amazonaws.com/appdev-dockers-repo:agent-example
             env:
             - name: PERSISTENT_VOL
@@ -46,10 +46,12 @@ spec:
     #      This sample is pulling the container from ECR. DockerHub is using imagePullSecret
     #      imagePullSecrets:
     #      - name: regcred
+    #     See example_RBC.yaml for sample RBC Configuration
+    #     serviceAccountName: statefulset-agent
           securityContext:
-             # the agent account gid so it will be able to access the PV 
-             fsGroup: 1000 
-          volumes:    
+             # the agent account gid so it will be able to access the PV
+             fsGroup: 1000
+          volumes:
             - name: pv-data
               persistentVolumeClaim:
                 claimName: agent-pvc

@@ -1,0 +1,39 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  labels:
+        type: stateful-service-ctmag-srv
+  name: statefulset-agent
+  namespace: controlm
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: statefulset-agent
+  namespace: controlm
+  labels:
+        type: stateful-service-ctmag-srv
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/log", "pods/status"]
+  verbs: ["get", "list", "create", "update", "patch", "watch", "delete"]
+- apiGroups: ["batch"]
+  resources: ["jobs"]
+  verbs: ["get", "list", "create", "update", "patch", "watch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: statefulset-agent
+  namespace: controlm
+  labels:
+        type: stateful-service-ctmag-srv
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: statefulset-agent
+subjects:
+- kind: ServiceAccount
+  name: statefulset-agent
+  namespace: controlm
