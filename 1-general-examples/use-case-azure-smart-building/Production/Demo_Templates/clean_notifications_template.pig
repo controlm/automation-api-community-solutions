@@ -1,0 +1,1 @@
+fs -rm -f -R wasb://smartbuilding@xxxxstorageAccountNamexxxx.blob.core.windows.net/files/notifications
