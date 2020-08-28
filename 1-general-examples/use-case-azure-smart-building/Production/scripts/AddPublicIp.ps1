@@ -46,7 +46,13 @@ $instanceMetaData = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET 
 $resourceGroupName = $instanceMetaData.compute.resourceGroupName
 $computerName = $instanceMetaData.compute.name
 $vmInfo = Get-AzPublicIpAddress -ResourceGroupName $resourceGroupName -Name $vmName
-$ipAddr = $vmInfo.IpAddress
-
-$ipAddrRecord = "xxxxctmPublicIpxxxx:$ipAddr"
-$ipAddrRecord | Add-Content $outFile
+$eCode = $?
+if ($eCode) {
+	$ipAddr = $vmInfo.IpAddress
+	$ipAddrRecord = "xxxxctmPublicIpxxxx:$ipAddr"
+	$ipAddrRecord | Add-Content $outFile
+	exit(0)
+} else {
+	Write-Host "Interface $vmName not found in Resource Group $resourceGroupName"
+	exit(1)
+}

@@ -6,11 +6,6 @@
   
   "SMB_Demo_Setup": {
     "Type": "Folder",
-    "Variables": [
-      {
-        "AZRG": ""
-      }
-    ],
 
     "SMB_JarFile": {
       "Type": "Job:ApplicationIntegrator:Blob Storage",
@@ -113,12 +108,12 @@
     "SMB_Deploy_StgSql": {
       "Type": "Job:Command",
       "Description": "ARM Template to deploy Storage Account, SQL server and SQL Database",
-      "Command": "pwsh \"C:\\Production\\scripts\\PrepForDemoDeployment.ps1\" -rg %%AZRG -t \"C:\\Production\\ARM_Templates\\FY21Demo_stgDB050_Template.json\" -p \"C:\\Production\\ARM_Templates\\FY21Demo_stgDB050_parameters.json\" -cf \"C:\\Production\\Data\\azcreds.txt\" -of \"C:\\Production\\Data\\demo_parms.cfg\""
+      "Command": "pwsh \"C:\\Production\\scripts\\PrepForDemoDeployment.ps1\" -t \"C:\\Production\\ARM_Templates\\FY21Demo_stgDB050_Template.json\" -p \"C:\\Production\\ARM_Templates\\FY21Demo_stgDB050_parameters.json\" -cf \"C:\\Production\\Data\\azcreds.txt\" -of \"C:\\Production\\Data\\demo_parms.cfg\""
     },
 	"SMB_Deploy_ADF": {
       "Type": "Job:Command",
       "Description": "ARM Template to deploy Storage Account, SQL server and SQL Database",
-      "Command": "pwsh \"C:\\Production\\scripts\\DeployDataFactory.ps1\" -rg %%AZRG -t \"C:\\Production\\ARM_Templates\\FY21Demo_ADF050_Template.json\" -p \"C:\\Production\\ARM_Templates\\FY21Demo_ADF050_parameters.json\" -cf \"C:\\Production\\Data\\azcreds.txt\" -of \"C:\\Production\\Data\\demo_parms.cfg\""
+      "Command": "pwsh \"C:\\Production\\scripts\\DeployDataFactory.ps1\" -t \"C:\\Production\\ARM_Templates\\FY21Demo_ADF050_Template.json\" -p \"C:\\Production\\ARM_Templates\\FY21Demo_ADF050_parameters.json\" -cf \"C:\\Production\\Data\\azcreds.txt\" -of \"C:\\Production\\Data\\demo_parms.cfg\""
     },
 	"SMB__Deploy_ConnectionProfiles":{
 	  "Type":"Job:EmbeddedScript",

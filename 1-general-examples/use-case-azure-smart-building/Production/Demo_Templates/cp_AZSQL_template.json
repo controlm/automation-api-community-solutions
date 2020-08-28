@@ -7,7 +7,6 @@
     "Secure": "False",
     "DatabaseVersion": "2008",
     "Password": "xxxxsqladminpasswordxxxx",
-    "TargetAgent": "fy21ctmserver",
-    "TargetCTM": "FY21CTMServer"
+    "Centralized": true
   }
 }
