@@ -63,7 +63,7 @@ While ($folderFilter -ne "q") {
 		
 		$jobSelect = 0
 		While (($jobSelect -lt 1) -Or ($jobSelect -gt $returnedJobs)) {
-			$jobSelect = Read-Host "Enter job sequence # to process"
+			[Int]$jobSelect = Read-Host "Enter job sequence # to process"
 		}
 		
 		$jobId = $jobHash.statuses.jobId[$jobSelect - 1]

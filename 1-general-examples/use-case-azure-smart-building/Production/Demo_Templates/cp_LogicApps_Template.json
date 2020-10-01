@@ -1,5 +1,5 @@
 {
-  "AZURELOGICAPPS": {
+  "AZ_LOGICAPPS": {
     "Type": "ConnectionProfile:ApplicationIntegrator:AI AzureLogicApps",
     "AI-Subscription ID": "xxxxsubscriptionIDxxxx",
     "AI-Password": "xxxxservicePrincipalClientSecretxxxx",

@@ -8,7 +8,7 @@
     "Type": "Folder",
 
     "SMB_JarFile": {
-      "Type": "Job:ApplicationIntegrator:Blob Storage",
+      "Type": "Job:ApplicationIntegrator:AI Blob Storage",
       "AI-Action": "Upload",
       "AI-Blob name (Up/Download)": "spark/jar/sblr.jar",
       "AI-Container (Up/Download)": "smartbuilding",
@@ -16,17 +16,8 @@
       "AI-Public Access": "Off",
       "ConnectionProfile": "FY21DEMO"
     },
-    "SMB_SensorData": {
-      "Type": "Job:ApplicationIntegrator:Blob Storage",
-      "AI-Action": "Upload",
-      "AI-Blob name (Up/Download)": "files/buildingdata.csv",
-      "AI-Container (Up/Download)": "smartbuilding",
-      "AI-File path": "C:\\Production\\Data\\ADF_Artifacts\\buildingdata.csv",
-      "AI-Public Access": "Off",
-      "ConnectionProfile": "FY21DEMO"
-    },
 	"SMB_Create_files_notifications": {
-      "Type": "Job:ApplicationIntegrator:Blob Storage",
+      "Type": "Job:ApplicationIntegrator:AI Blob Storage",
       "AI-Action": "Upload",
       "AI-Blob name (Up/Download)": "files/notifications/part-00000-8c6cbeb4-9b41-4201-abff-83d42b60aaca-c000.csv",
       "AI-Container (Up/Download)": "smartbuilding",
@@ -36,7 +27,7 @@
 
     },
     "SMB_dirclean_pig_script": {
-      "Type": "Job:ApplicationIntegrator:Blob Storage",
+      "Type": "Job:ApplicationIntegrator:AI Blob Storage",
       "AI-Action": "Upload",
       "AI-Blob name (Up/Download)": "spark/script/dir_clean.pig",
       "AI-Container (Up/Download)": "smartbuilding",
@@ -45,7 +36,7 @@
       "ConnectionProfile": "FY21DEMO"
     },
     "SMB_cleanNotifications_pig_script": {
-      "Type": "Job:ApplicationIntegrator:Blob Storage",
+      "Type": "Job:ApplicationIntegrator:AI Blob Storage",
       "AI-Action": "Upload",
       "AI-Blob name (Up/Download)": "spark/script/clean_notifications.pig",
       "AI-Container (Up/Download)": "smartbuilding",
@@ -117,7 +108,7 @@
     },
 	"SMB__Deploy_ConnectionProfiles":{
 	  "Type":"Job:EmbeddedScript",
-	  "Script":"cmd /c ctm deploy C:\\Production\\JSON\\cp_ADF.json\\ncmd /c ctm deploy C:\\Production\\JSON\\cp_AZSQL.json\\nctm deploy c:\\Production\\JSON\\CP_FY21DEMO_BlobStg.json\\nctm deploy c:\\Production\\JSON\\cp_LogicApps.json",
+	  "Script":"cmd /c ctm deploy C:\\Production\\JSON\\cp_ADF.json\\ncmd /c ctm deploy C:\\Production\\JSON\\cp_AZSQL.json\\ncmd /c ctm deploy c:\\Production\\JSON\\CP_FY21DEMO_BlobStg.json\\ncmd /c ctm deploy c:\\Production\\JSON\\cp_LogicApps.json",
 	  "FileName" : "cpdeploy.bat"
 	},
 	
@@ -128,7 +119,7 @@
 	"flow03": {"Type":"Flow", "Sequence":["SMB_Deploy_StgSql", "SMB_Update_BlobStg_CP", "SMB__Deploy_ConnectionProfiles"]},
 	"flow04": {"Type":"Flow", "Sequence":["SMB_Deploy_StgSql", "SMB_Update_LogicApps_CP", "SMB__Deploy_ConnectionProfiles"]},
 	"flow05": {"Type":"Flow", "Sequence": ["SMB__Deploy_ConnectionProfiles", "SMB_Define_SQL_Table", "SMB_Deploy_ADF"]},
-	"flow06": {"Type":"Flow", "Sequence": ["SMB__Deploy_ConnectionProfiles", "SMB_SensorData", "SMB_Deploy_ADF"]},
+	"flow06": {"Type":"Flow", "Sequence": ["SMB__Deploy_ConnectionProfiles", "SMB_Deploy_ADF"]},
 	"flow07": {"Type":"Flow", "Sequence": ["SMB__Deploy_ConnectionProfiles", "SMB_JarFile", "SMB_Deploy_ADF"]},
 	"flow08": {"Type":"Flow", "Sequence": ["SMB__Deploy_ConnectionProfiles", "SMB_dirclean_pig_script", "SMB_Deploy_ADF"]},
 	"flow09": {"Type":"Flow", "Sequence": ["SMB__Deploy_ConnectionProfiles", "SMB_Update_PigScript_Parameters", "SMB_cleanNotifications_pig_script", "SMB_Deploy_ADF"]},

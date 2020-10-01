@@ -6,5 +6,13 @@
     "AI-Account key": "xxxxstorageAccountKeyxxxx",
     "AI-Run As:": "xxxxctmadminuserxxxx",
     "Centralized": true
+  },
+   "AZBLOBLINUX": {
+    "Type": "ConnectionProfile:ApplicationIntegrator:AI Blob Storage",
+    "AI-RunAs-Pass": "xxxxctmadminpasswordxxxx",
+    "AI-Account name": "xxxxstorageAccountNamexxxx",
+    "AI-Account key": "xxxxstorageAccountKeyxxxx",
+    "AI-Run As:": "ctmagent",
+    "Centralized": true
   }
 }

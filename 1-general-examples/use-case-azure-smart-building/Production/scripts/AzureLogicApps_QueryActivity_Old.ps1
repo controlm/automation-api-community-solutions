@@ -1,7 +1,6 @@
 param(
 	[Parameter(Mandatory=$true)][Alias("la")][String]$logicAppName,
 	[Parameter(Mandatory=$true)][Alias("rg")][String]$resourceGroupName,
-	[Parameter(Mandatory=$true)][Alias("rid")][String]$latestRun,
 	[Parameter(Mandatory=$false)][Alias("sp")][String]$servicePrincipal,
 	[Parameter(Mandatory=$false)][Alias("cs")][String]$clientSecret,
 	[Parameter(Mandatory=$false)][Alias("tnt")][String]$tenantId
@@ -14,7 +13,10 @@ if ($servicePrincipal -ne '') {
 	Write-Host "Connect-AzAccount performed with sp: $servicePrincipal and Tenant: $tenantId"
 }
 
-$laInfo = Get-AzLogicAppRunAction -ResourceGroupName $resourceGroupName -Name $logicAppName -RunName $latestRun
+$laRuns = Get-AzLogicAppRunHistory -ResourceGroupName $resourceGroupName -Name $logicAppName
+$latestRun = $laRuns[0].Name
+
+$laInfo = Get-AzLogicAppRunAction -ResourceGroupName FY21DemoSetup -Name SendEmail -RunName $latestRun
 foreach ($action in $laInfo) {
 	$aName = $action.Name
 	$aSTime = $action.StartTime
