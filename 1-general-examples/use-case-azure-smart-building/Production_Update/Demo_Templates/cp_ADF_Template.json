@@ -1,0 +1,10 @@
+{
+  "ADF": {
+    "Type": "ConnectionProfile:ApplicationIntegrator:AI Azure Data Factory",
+    "AI-Subscription ID": "xxxxsubscriptionIDxxxx",
+    "AI-Password": "xxxxservicePrincipalClientSecretxxxx",
+    "AI-Application ID": "xxxxservicePrincipalxxxx",
+    "AI-Tenant ID": "xxxxtenantIDxxxx",
+    "Centralized": true
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "Defaults" : {
+	"ControlmServer": "FY21CTMServer", "OrderMethod": "Manual",
+    "Description": "Complete flow orchestrating Smart Building data pipeline for building management dashboards",
+    "Application": "SMB","SubApplication": "Azure_Data_Pipeline", "RunAs": "FY21DEMO", "Host" : "SystemsOfRecord"
+  },
+  "SMB_Pipeline": {"Type": "Folder", 
+
+	"SMB_Set_Variables": {
+      "Type": "Job:Command", "Confirm": true,
+      "Command": "pwsh \"C:\\Production\\scripts\\SetCtmVars.ps1\"",
+	  "eventsToAdd": {
+        "Type": "AddEvents",
+        "Events": [{"Event": "SMB_Set_Variable-TO-SMB_Blob_Watch_Incoming"},
+				   {"Event": "SMB_Set_Variables-TO-SMB_SOR_DataExtracts"}]
+      }
+    },
+    
+	"SMB_Blob_Watch_Incoming": {
+      "Type": "Job:ApplicationIntegrator:AI Blob Storage",
+      "AI-Action": "Watch",
+      "AI-Public Access": "Off",
+      "AI-BlobWatch Container": "smartbuilding",
+      "AI-BlobWatch Blob Name": "files/buildingdata.csv",
+      "AI-BlobWatch Sleep Interval": "30",
+      "ConnectionProfile": "FY21DEMO",
+	  "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [{"Event": "SMB_Set_Variable-TO-SMB_Blob_Watch_Incoming"}]
+      },
+      "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [{"Event": "SMB_Set_Variable-TO-SMB_Blob_Watch_Incoming"}]
+      },
+      "eventsToAdd": {
+        "Type": "AddEvents",
+        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-SMB_ADF_SparkPipeline"}]
+      }
+    },
+	
+    "SMB_ADF_SparkPipeline": {
+      "Type": "Job:ApplicationIntegrator:AI Azure Data Factory",
+      "AI-Azure Data Factory": "%%AZDF",
+      "AI-Resource Group": "%%AZRG",
+      "AI-Pipeline": "SmartBuilding_SparkPipeline",
+      "ConnectionProfile": "ADF",
+      "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-SMB_ADF_SparkPipeline"},
+				   {"Event": "SMB_SOR_DataExtract-TO-SMB_ADF_SparkPipeline"}]
+      },
+      "eventsToAdd": {
+        "Type": "AddEvents",
+        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_SMS_Notification"},
+				   {"Event": "SMB_ADF_SparkPipeline-TO-SMB_Email_Notification"}]
+      },
+      "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-SMB_ADF_SparkPipeline"},
+				   {"Event": "SMB_SOR_DataExtract-TO-SMB_ADF_SparkPipeline"}]
+      }
+    },
+    "SMB_SMS_Notification": {
+      "Type": "Job:Command",
+      "RunAs": "ctmadmin",
+      "Command": "python c:\\Production\\scripts\\twilio_send.py -m \"some text\" -n \"+14167225672\" -f \"C:\\Production\\Data\\TwilioCreds.txt\"",
+      "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_SMS_Notification"}]
+      },
+      "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_SMS_Notification"}]
+      }
+    },
+    "SMB_Email_Notification": {
+      "Type": "Job:ApplicationIntegrator:AI AzureLogicApps",
+      "AI-Resource Group": "FY21DemoSetup",
+      "AI-TriggerName": "manual",
+      "AI-Workflow": "SendEmail",
+      "ConnectionProfile": "AZ_LOGICAPPS",
+      "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_Email_Notification"}]
+      },
+      "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_Email_Notification"}]
+      }
+    },
+    "SMB_SOR_DataExtract": {
+      "Type": "SubFolder",
+	  "When": {
+        "SpecificDates": [], "DaysRelation": "OR",
+        "RuleBasedCalendars": {"Relationship": "AND", "Included": ["USE PARENT"]}
+      },
+      "SMB_EquipmentData_Extract": {
+        "Type": "Job:Database:EmbeddedQuery",
+        "Query": "select * from public.def_job",
+        "OutputSQLOutput": "Y",
+        "SQLOutputFormat": "CSV",
+        "ConnectionProfile": "SOR"
+      },
+      "SMB_TenantData_Extract": {
+        "Type": "Job:Database:EmbeddedQuery",
+        "Query": "select * from public.def_job",
+        "OutputSQLOutput": "Y",
+        "SQLOutputFormat": "CSV",
+        "ConnectionProfile": "SOR"
+      },
+      "SMB_BuildingData_Extract": {
+        "Type": "Job:Database:EmbeddedQuery",
+        "Query": "select * from public.def_job",
+        "OutputSQLOutput": "Y",
+        "SQLOutputFormat": "CSV",
+        "ConnectionProfile": "SOR"
+      },
+	  "eventsToWaitFor": {
+        "Type": "WaitForEvents",
+        "Events": [{"Event": "SMB_Set_Variables-TO-SMB_SOR_DataExtracts"}]
+      },
+      "eventsToAdd": {
+        "Type": "AddEvents",
+        "Events": [{"Event": "SMB_SOR_DataExtract-TO-SMB_ADF_SparkPipeline"}]
+      },
+	  "eventsToDelete": {
+        "Type": "DeleteEvents",
+        "Events": [{"Event": "SMB_Set_Variables-TO-SMB_SOR_DataExtracts"}]
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "AZ_LOGICAPPS": {
+    "Type": "ConnectionProfile:ApplicationIntegrator:AI AzureLogicApps",
+    "AI-Subscription ID": "xxxxsubscriptionIDxxxx",
+    "AI-Password": "xxxxservicePrincipalClientSecretxxxx",
+    "AI-Application ID": "xxxxservicePrincipalxxxx",
+    "AI-Tenant ID": "xxxxtenantIDxxxx",
+    "Centralized": true
+  }
+}

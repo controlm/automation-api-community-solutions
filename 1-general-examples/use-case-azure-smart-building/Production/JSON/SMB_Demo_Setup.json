@@ -7,6 +7,11 @@
   "SMB_Demo_Setup": {
     "Type": "Folder",
 
+	"SMB_Update_demoparms": {
+      "Type": "Job:Command",
+      "Command": "pwsh \"C:\\Production\\scripts\\sp_login.ps1\" -cf \"C:\\Production\\Data\\azcreds.txt\" -pf \"C:\\Production\\Data\\demo_parms.cfg\"",
+	  "PreCommand": "echo preCommand & copy \"C:\\Production\\Demo_Templates\\demo_parms_Template.cfg\" \"C:\\Production\\Data\\demo_parms.cfg\""
+    },
     "SMB_JarFile": {
       "Type": "Job:ApplicationIntegrator:AI Blob Storage",
       "AI-Action": "Upload",
@@ -57,14 +62,9 @@
       "Command": "pwsh \"C:\\Production\\scripts\\ReplaceMultiStrings.ps1\" -if \"C:\\Production\\Demo_Templates\\FY21Demo_stgDB050_parameters_Template.json\" -of \"C:\\Production\\ARM_Templates\\FY21Demo_stgDB050_parameters.json\" -kf \"C:\\Production\\Data\\demo_parms.cfg\"",
 	  "PreCommand": "del \"C:\\Production\\ARM_Templates\\FY21Demo_stgDB050_parameters.json\""
     },
-	"SMB_Update_azcreds": {
-      "Type": "Job:Command", "Confirm": true,
-      "Command": "pwsh \"C:\\Production\\scripts\\ReplaceMultiStrings.ps1\" -if \"C:\\Production\\Demo_Templates\\azcreds_Template.txt\" -of \"C:\\Production\\Data\\azcreds.txt\" -kf \"C:\\Production\\Data\\demo_parms.cfg\"",
-	  "PreCommand": "del \"C:\\Production\\Data\\azcreds.txt\""
-    },
 	"SMB_Update_PublicIP": {
       "Type": "Job:Command", 
-      "Command": "pwsh \"C:\\Production\\scripts\\AddPublicIp.ps1\" -cf \"C:\\Production\\Data\\azcreds.txt\" -of \"C:\\Production\\Data\\demo_parms.cfg\""
+      "Command": "pwsh \"C:\\Production\\scripts\\AddPublicIp.ps1\" -of \"C:\\Production\\Data\\demo_parms.cfg\""
     },
 	"SMB_Update_PigScript_Parameters": {
       "Type": "Job:Command",
@@ -113,7 +113,7 @@
 	},
 	
 	
-	"flow00": {"Type":"Flow", "Sequence":["SMB_Update_azcreds", "SMB_Update_PublicIP", "SMB_Update_StgSQL_Parameters", "SMB_Deploy_StgSql"]},
+	"flow00": {"Type":"Flow", "Sequence":["SMB_Update_demoparms", "SMB_Update_PublicIP", "SMB_Update_StgSQL_Parameters", "SMB_Deploy_StgSql"]},
 	"flow01": {"Type":"Flow", "Sequence":["SMB_Deploy_StgSql", "SMB_Update_ADF_CP", "SMB__Deploy_ConnectionProfiles"]},
 	"flow02": {"Type":"Flow", "Sequence":["SMB_Deploy_StgSql", "SMB_Update_AZSQL_CP", "SMB__Deploy_ConnectionProfiles"]},
 	"flow03": {"Type":"Flow", "Sequence":["SMB_Deploy_StgSql", "SMB_Update_BlobStg_CP", "SMB__Deploy_ConnectionProfiles"]},

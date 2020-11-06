@@ -1,0 +1,135 @@
+{
+	"Defaults" : {"RunAs" : "hadoop", "OrderMethod": "Manual", "Application" : "CVH", "SubApplication" : "PredictiveMaintenance", "When" : {"WeekDays" : ["ALL"]}, "Host" : "SystemsofRecord", 
+		"Job" : {"SemQR": { "Type": "Resource:Semaphore", "Quantity": "1"},
+			"actionIfSuccess" : {"Type": "If", "CompletionStatus":"OK", "mailTeam": 
+				{"Type": "Mail", "Message": "Job %%JOBNAME succeeded", "Subject": "Success", "To": "joe_goldberg@bmc.com"}},
+			"actionIfError" : {"Type": "If", "CompletionStatus":"NOTOK", "mailTeam": 
+				{"Type": "Mail", "Message": "Job %%JOBNAME failed", "Subject": "Error occurred", "To": "joe_goldberg@bmc.com"}}}
+	},
+
+	"IOT_Pipeline": {
+		"Type": "Folder",
+		"Comment" : "In the Connected Vehicle application, run Predictive maintenance analysis based on vehicle sensor data",
+		
+		"IOT_Create_Cluster": {"Type" : "Job:Script", 
+			"Description" : "Launch EMR cluster and deploy a Control-M agent",
+			"FileName" : "launchEMR.bat",
+			"FilePath" : "C:\\BMC_Stuff\\",
+			"Host" : "fy21ctmserver",
+			"RunAs" : "Administrator",
+			"Confirm" : true
+		},
+
+		"IOT_CPSetup": {"Type" : "Job:Script",
+			"Description" : "Customize and deploy connection profiles for dynamic EMR agent",
+			"FileName" : "FY19Seminar_CPDeploy.bat",
+			"FilePath" : "C:\\BMC_Stuff\\",
+			"Host" : "fy21ctmserver",
+			"RunAs" : "Administrator"   
+		},
+		
+		"IOT_JAR_Setup": {
+			"Type" : "Job:FileTransfer",
+			"ConnectionProfileSrc" : "controlm",
+			"ConnectionProfileDest" : "EMRhostSFTP",
+			"Host" : "fy21ctmserver",
+			"FileTransfers" :
+				[
+					{
+						"Src" : "C:\\BMC_Stuff\\maintenance_data.csv",
+						"Dest" : "/home/hadoop/maintenance_data.csv",
+						"TransferType": "Ascii",
+						"TransferOption": "SrcToDest"
+					},
+					{
+						"Src" : "C:\\BMC_Stuff\\lr-assembly-1.0.jar",
+						"Dest" : "/home/hadoop/",
+						"TransferOption": "SrcToDest"
+					}
+				]
+		},	
+		"IOT_CopyMaintenanceData": {
+			"Type": "Job:Hadoop:HDFSCommands",
+			"ConnectionProfile": "PRDSPARK",        
+			"Commands": [
+				{"copyFromLocal" : "-f /home/hadoop/maintenance_data.csv /user/hadoop/maintenance_data.csv"}
+			]
+		},
+		
+		"IOT_ReadCSV": {
+			"Type": "Job:Hadoop:Spark:ScalaJava",
+			"ConnectionProfile": "PRDSPARK",
+
+			"ProgramJar": "/home/hadoop//lr-assembly-1.0.jar",
+			"MainClass" : "com.bmc.lr.readCSV ",
+			"Arguments": [
+				"/user/hadoop/maintenance_data.csv",
+				"/user/hadoop/maintenance_model"
+			],
+
+			"PreCommands": {
+				"FailJobOnCommandFailure" :false,
+				"Commands" : [
+					{"rm"  : "-f -R /user/hadoop/maintenance_model"}
+				]
+			},
+			"Output": {
+				"Operation": "Copy",
+				"Destination": "/home/hadoop/ViJ.log"
+			} 
+		},
+		"IOT_ViJ_Data": {
+			"Type" : "Job:FileTransfer",
+			"ConnectionProfileSrc" : "controlm",
+			"ConnectionProfileDest" : "EMRhostSFTP",
+			"Host" : "fy21ctmserver",
+			"FileTransfers" :
+				[
+					{
+						"Src" : "C:\\BMC_Stuff\\",
+						"Dest" : "/home/hadoop/ViJ.log",
+						"TransferOption": "DestToSrc"
+					}
+				]
+		},
+		"IOT_Redshift_SQL_Load": {"Type": "Job:Database:EmbeddedQuery",
+		    "Description" : "Load csv data into Redshft from S3",
+            "Query": "copy telematics from 's3://623469066856-fy19seminar/TelematicsData' credentials 'aws_access_key_id=ABCD1234XYZ;aws_secret_access_key=b2F6abc123hFDG76Najfh7' csv;",
+            "ConnectionProfile": "REDSHIFT"
+        },
+		"IOT_Notify": {"Type" : "Job:Command",
+			"Description" : "Notify owner that vehicle maintenance is required",
+			"Command" : "\"C:\\Program Files\\BMC Software\\Control-M EM\\Default\\bmcperl\\bin\\perl\" \"C:\\BMC_Stuff\\Publish.pl\" %%phone1 %%phone2",
+			"Host" : "fy21ctmserver",
+			"RunAs" : "Administrator"
+		},
+		"IOT_WaitAWhile": {"Type" : "Job:Command",
+			"Description" : "Wait 10 minutes to provide time for discussion",
+			"Command" : "powershell -command \"Start-Sleep -s 600\"",
+			"Host" : "fy21ctmserver",
+			"RunAs" : "Administrator"
+		},
+		"IOT_DeleteAgentfromHostgroup": {"Type" : "Job:Command",
+			"Description" : "Remove agent from hostgroup",
+			"Command" : "ctm config server:hostgroup:agent::delete controlm hadoop %%\\\\IOT_Pipeline\\EMRAGENT",
+			"Host" : "fy21ctmserver",
+			"RunAs" : "Administrator"
+		},
+		"IOT_DeleteAgentfromServer": {"Type" : "Job:Command",
+			"Description" : "Remove agent from server",
+			"Command" : "ctm config server:agent::delete controlm %%\\\\IOT_Pipeline\\EMRAGENT",
+			"Host" : "fy21ctmserver",
+			"RunAs" : "Administrator"
+		},		
+		
+		"IOT_Terminate_Cluster": {"Type" : "Job:Command", 
+			"Description" : "Terminate EMR cluster",
+			"Command" : "\"C:\\Program Files\\BMC Software\\Control-M EM\\Default\\bmcperl\\bin\\perl\" \"C:\\BMC_Stuff\\terminateEMR.pl\" %%\\\\FY19AppDevDemo\\clusterID",
+			"Host" : "fy21ctmserver",
+			"RunAs" : "Administrator"
+		},
+		
+		"flow00": {"Type":"Flow", "Sequence":["IOT_Create_Cluster", "IOT_CPSetup", "IOT_JAR_Setup", "IOT_CopyMaintenanceData", "IOT_ReadCSV", "IOT_Redshift_SQL_Load", "IOT_ViJ_Data", "IOT_Notify", "IOT_WaitAWhile", "IOT_DeleteAgentfromHostgroup", "IOT_DeleteAgentfromServer", "IOT_Terminate_Cluster"]}
+	}
+	
+}

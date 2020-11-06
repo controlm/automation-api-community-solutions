@@ -1,6 +1,5 @@
 param(
-	[Parameter(Mandatory=$false)][Alias("cf")][String]$credsFile = '.\azcreds.txt',
-	[Parameter(Mandatory=$false)][Alias("tnt")][String]$tenantId = '92b796c5-5839-40a6-8dd9-c1fad320c69b',	
+	[Parameter(Mandatory=$false)][Alias("cf")][String]$credsFile = 'C:\Production\Data\azcreds.txt',
 	[Parameter(Mandatory=$false)][Alias("l")][String]$location = 'West US 2',
 	[Parameter(Mandatory=$false)][Alias("t")][String]$templateFile = 'azuredeploy.json',
 	[Parameter(Mandatory=$false)][Alias("p")][String]$templateParameterFile = 'azuredeploy_parameters.json',
@@ -14,30 +13,39 @@ function Get-Credentials
 		$password = ConvertFrom-SecureString -SecureString $securepswd -AsPlainText
 	}
 	else {
-		try {
-			$credsInFile = Get-Content -Path $credsFile -TotalCount 2
+		$credsInFile = Get-Content -Path $credsFile -TotalCount 3
+		if (-Not $?) {
+			"Error reading creds"
+			exit(20)
 		}
-		catch {
-			"Some error occurred"
-			$_.Exception.Message
-			exit
+		else { 	
+			$tenantId = $credsInFile[0]
+			$userName = $credsInFile[1]
+			$password = $credsInFile[2]
 		}
-		$userName = $credsInFile[0]
-		$password = $credsInFile[1]
+		
 	}
 	
-	$creds = @($userName, $password)
+	$creds = @($tenantId, $userName, $password)
 	return $creds
 }
 
-#
-#	Get AppRegistration and Client Secret, then connect to an Azure account
-#
+Disconnect-AzAccount
+
 $azCreds = Get-Credentials	
-$servicePrincipal = $azCreds[0]
-$password = ConvertTo-SecureString $azCreds[1] -AsPlainText -Force
+$tenantId = $azCreds[0]
+$servicePrincipal = $azCreds[1]
+$password = ConvertTo-SecureString $azCreds[2] -AsPlainText -Force
 $pscredential = New-Object System.Management.Automation.PSCredential ($servicePrincipal, $password)
 Connect-AzAccount -ServicePrincipal -Credential $pscredential -Tenant $tenantId
+if ($?) {
+	"Connect Account Successful"
+	[Int]$lastRC = 0
+}
+else { 	
+	"Connect Account Failed"
+	exit(16)
+}
 
 $instanceMetaData = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -NoProxy -Uri http://169.254.169.254/metadata/instance?api-version=2019-11-01
 $resourceGroupName = $instanceMetaData.compute.resourceGroupName

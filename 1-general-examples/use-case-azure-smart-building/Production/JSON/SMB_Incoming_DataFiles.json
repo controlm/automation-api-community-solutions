@@ -15,7 +15,15 @@
       "AI-Blob name (Up/Download)": "files/%%BLOBNAME",
 	  "AI-File path": "%%FILENAME",
       "AI-Public Access": "Off"
-    }
+    },
+	
+	"SMB_Incoming_Delete": {
+      "Type": "Job:Command",
+	  "RunAs": "ctmagent", "Host" : "fy21agent",
+	  "Command": "rm -f %%FILENAME"
+    },
+	
+	"flow00": {"Type":"Flow", "Sequence": ["SMB_MoveTo_Blob", "SMB_Incoming_Delete"]}
   }
 }
 

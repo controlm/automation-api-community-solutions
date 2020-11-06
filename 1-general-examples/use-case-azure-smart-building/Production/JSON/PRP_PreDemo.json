@@ -1,0 +1,53 @@
+{
+  "Defaults" : {
+	"ControlmServer": "FY21CTMServer", "OrderMethod": "Manual",
+    "Description": "Instantiate HDInsight cluster and clean up for demo execution",
+    "Application": "PRP","SubApplication": "HDInsight_Prep", "RunAs": "FY21DEMO", "Host" : "SystemsOfRecord"
+  },
+  "PRP_PreDemo": { 
+    "Type": "Folder",
+
+    "PRP_Set_Variables": {
+      "Type": "Job:Command",
+      "Command": "pwsh \"C:\\Production\\scripts\\SetCtmVars.ps1\""
+    },
+	
+    "PRP_Blob_Upload": {
+      "Type": "Job:ApplicationIntegrator:AI Blob Storage",
+      "AI-Blob name (Up/Download)": "files/buildingdata.csv",
+      "AI-File path": "C:\\BMC\\BuildingData\\buildingdata.csv",
+      "AI-Container (Up/Download)": "smartbuilding",
+      "AI-Action": "Upload",
+      "ConnectionProfile": "FY21DEMO"
+    },
+	
+    "PRP_ADF_SparkPipeline": {
+      "Type": "Job:ApplicationIntegrator:AI Azure Data Factory",
+      "AI-Azure Data Factory": "%%AZDF",
+      "AI-Resource Group": "%%AZRG",
+      "AI-Pipeline": "SmartBuilding_SparkPipeline",
+      "ConnectionProfile": "ADF",
+	  "adfResource": {
+        "Type": "Resource:Mutex",
+        "MutexType": "Exclusive"
+      }
+    },
+	
+    "PRP_Blob_Delete": {
+      "Type": "Job:ApplicationIntegrator:AI Blob Storage",
+      "AI-Action": "Delete",
+      "AI-Blob name (Delete)": "files/buildingdata.csv",
+      "AI-Public Access": "Off",
+      "AI-Container (Delete)": "smartbuilding",
+      "ConnectionProfile": "FY21DEMO"
+    },
+	
+	"PRP_Incoming_Delete": {
+      "Type": "Job:Command",
+	  "RunAs": "ctmagent", "Host" : "fy21agent",
+	  "Command": "rm -f /home/ctmagent/ctm/cm/AFT/ftshome/b2bhome/BMC/incoming/buildingdata.csv"
+    },
+	
+  "flow00": {"Type":"Flow", "Sequence": ["PRP_Set_Variables", "PRP_Blob_Upload", "PRP_ADF_SparkPipeline", "PRP_Blob_Delete", "PRP_Incoming_Delete"]}
+  }
+}
