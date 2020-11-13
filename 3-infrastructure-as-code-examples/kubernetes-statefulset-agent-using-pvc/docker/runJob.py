@@ -10,7 +10,7 @@ import getopt, os, sys, time
 import signal
 import yaml
 
-kNameSpace = "default"
+kNameSpace = "controlm"
 kJobname = None
 util_client = None
 batch_client = None
@@ -43,7 +43,7 @@ def get_job_name_from_dict(data, verbose=False):
         for yml_object in data["items"]:
             # Mitigate cases when server returns a xxxList object
             # See kubernetes-client/python#586
-            if kind is not "":
+            if kind != "":
                 yml_object["apiVersion"] = data["apiVersion"]
                 yml_object["kind"] = kind
             try:
@@ -77,9 +77,9 @@ def get_name_from_yaml_single_item(yml_object, verbose=False):
 def create_job_object(kJob, kImage, kVname, kVvalue, kimagepullpolicy, kimagepullsecret, krestartpolicy,
                       kbackofflimit, khostpath, kvolname, kvolpath, kpvolclaim, kcommands, kargs):
     # This creates a job object dynamically but supports only limited parameters
-	# If you need any characteristics nt supported here, use a yaml manifest 
-    #  
-	
+    # If you need any characteristics nt supported here, use a yaml manifest
+    #
+
     # Configure environment variables
     env_list = []
     for key in kVname:
@@ -109,8 +109,8 @@ def create_job_object(kJob, kImage, kVname, kVvalue, kimagepullpolicy, kimagepul
        vol_list.append(vol)
 
     # Configure Pod template container
-    container = client.V1Container(  
-        name="ctmjob", 
+    container = client.V1Container(
+        name="ctmjob",
         image=kImage,
         image_pull_policy=kimagepullpolicy,
         env=env_list,
@@ -144,10 +144,10 @@ def create_job_object(kJob, kImage, kVname, kVvalue, kimagepullpolicy, kimagepul
         spec=spec)
 
     return job
-	
+
 def createJob(api_batch, job):
     try:
-       api_response = api_batch.create_namespaced_job(body=job, namespace="default")
+       api_response = api_batch.create_namespaced_job(body=job, namespace=kNameSpace)
        print("Job created. status='%s'" % str(api_response.status))
     except ApiException as e:
        print("Exception when calling BatchV1Api->create_namespaced_job: %s\n" % e)
@@ -157,7 +157,7 @@ def createJob(api_batch, job):
 def deleteJob(api_batch, api_core, kJobname, podName):
     api_batch.delete_namespaced_job(kJobname, kNameSpace)
     print("Job deleted: " + kJobname)
-   
+
 #   podBody = client.V1DeleteOptions()
     ret = api_core.delete_namespaced_pod(podName, kNameSpace)
     print("Pod deleted: " + podName)
@@ -194,7 +194,7 @@ def startJob(api_util, batch_client, kJobname, yaml):
 
     print("Job {0} created".format(api_response.metadata.name))
     return
-   
+
 def status(api_batch, kJobname):
     print("Starting to track job status for: %s\n" % kJobname)
     jobStatus = "Success"
@@ -205,13 +205,13 @@ def status(api_batch, kJobname):
     while jobRunning == "Running":
        try:
           ret = api_batch.list_namespaced_job(kNameSpace, label_selector=podLabelSelector)
-          if len(ret.items) <= 0: 
-             print ("job was deleted, no info found")
+          if len(ret.items) <= 0:
+             print("job was deleted, no info found")
              return (0, 0, 0, 0)
 
        except:
           print("Failed getting job status: " + kJobname)
-          print ("job was deleted, no info found")
+          print("job was deleted, no info found")
           return (0, 0, 0, 0)
 
        for i in ret.items:
@@ -225,7 +225,7 @@ def status(api_batch, kJobname):
                 time.sleep(stime)
              else:
                 jobRunning = "Not Running"
-          else: 
+          else:
              jobRunning = "Not Running"
 
     podsFailed = str(i.status.failed)
@@ -239,7 +239,7 @@ def status(api_batch, kJobname):
     if podsFailed == "None":
        podsFailed = "0"
        jobStatus = "0" # no contianer failed - job succeeded
-    
+
     return int(jobStatus), podsActive, podsSucceeded, podsFailed
 
 def termSignal(signalNumber, frame):
@@ -259,6 +259,7 @@ def usage():
     print("\t-H, --hostpath\t\tPath on host machine (must be a directory)")
     print("\t-i, --image\t\tcontainer image name")
     print("\t-j, --jobname\t\tMandatory. Job name")
+    print("\t-n, --namespace\t\tDefault is namespace of Agent statefulset/pod")
     print("\t-m, --volname\t\tVolume mount name")
     print("\t-k, --command\t\tcommand to run (default None, continer entrypoint will be used)")
     print("\t-p, --image\t\tpull_policy Always or Latest")
@@ -268,7 +269,7 @@ def usage():
     print("\t-v, --envvalue\t\tvariable value")
     print("\t-y, --yaml\t\tname of a yaml manifest for job creation. Overrides all others except jobname")
 
-def used_opts(kJobname, kYaml, kVname,
+def used_opts(kJobname, kNameSpace, kYaml, kVname,
     kVvalue, kImagename, kimagepullpolicy,
     kimagepullsecret, krestartpolicy,
     kbackofflimit, khostpath,
@@ -276,6 +277,7 @@ def used_opts(kJobname, kYaml, kVname,
 
     print("Command line options specified:")
     print("\tjobname: %s \n"
+          "\tnamespace: %s \n"
           "\tEnvironment Variables: %s \n"
           "\tEnvironment Values: %s \n"
           "\tContainer image: %s \n"
@@ -285,12 +287,12 @@ def used_opts(kJobname, kYaml, kVname,
           "\tbackofflimit: %d \n"
           "\tVolume Name: %s \n"
           "\tHost path: %s \n"
-          "\tContainer Path: %s \n" 
+          "\tContainer Path: %s \n"
           "\tPersistentVolumeClaim: %s \n"
           "\tCommands: %s \n"
           "\tArgs: %s \n"
           "\tYaml file: %s \n"
-          % (kJobname, kVname,
+          % (kJobname, kNameSpace, kVname,
              kVvalue, kImagename, kimagepullpolicy,
              kimagepullsecret, krestartpolicy,
              kbackofflimit, kvolname, khostpath,
@@ -298,6 +300,7 @@ def used_opts(kJobname, kYaml, kVname,
 
 def main(argv):
     kJobname = ''
+    kNameSpace = None
     kYaml = ''
     kVname = []
     kVvalue = []
@@ -314,7 +317,7 @@ def main(argv):
     kargs = []
 
     # Arguments:
-    #   a|args              arguments to pass to -k|Commands (default is None) 
+    #   a|args              arguments to pass to -k|Commands (default is None)
     #   b|backofflimit      default is 0
     #   c|claim             PersistentVolumeClaim
     #   e|envname           environment variable name
@@ -350,6 +353,8 @@ def main(argv):
           kImagename = arg
        elif opt in ("-j", "--jobname"):
           kJobname = arg
+       elif opt in ("-n", "--namespace"):
+          kNameSpace = arg
        elif opt in ("-v", "--envvalue"):
           kVvalue.append(arg)
        elif opt in ("-y", "--yaml"):
@@ -371,7 +376,11 @@ def main(argv):
        elif opt in ("-a", "--args"):
           kargs.append(arg)
 
-    used_opts(kJobname, kYaml, kVname,
+    if kNameSpace == None:
+        with open("/run/secrets/kubernetes.io/serviceaccount/namespace", 'r') as ns:
+          kNameSpace = ns.readlines()
+
+    used_opts(kJobname, kNameSpace, kYaml, kVname,
               kVvalue, kImagename, kimagepullpolicy,
               kimagepullsecret, krestartpolicy,
               kbackofflimit, khostpath,
@@ -385,19 +394,19 @@ def main(argv):
     elif kJobname != '' and kYaml != '':
        ymlJobName = get_job_name_from_ymal(kYaml)
        if (ymlJobName != kJobname):
-         print ("jobname -j '%s' not equal to the jobname in the yaml file '%s'" % (kJobname, ymlJobName))
+         print("jobname -j '%s' not equal to the jobname in the yaml file '%s'" % (kJobname, ymlJobName))
          sys.exit(26)
 
     #config.load_kube_config()
     clientConf = client.Configuration()
-    # assuming the script is running in pod: 
+    # assuming the script is running in pod:
     # token in: /var/run/secrets/kubernetes.io/serviceaccount/token
     # ca in: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
     # api server: https://kubernetes.default
     # (true for all pods)
     with open('/var/run/secrets/kubernetes.io/serviceaccount/token') as f:
       token = f.read()
-    clientConf.host = 'https://kubernetes.default'  
+    clientConf.host = 'https://kubernetes.default'
     clientConf.api_key['authorization'] = token
     clientConf.api_key_prefix['authorization'] = 'Bearer'
     clientConf.ssl_ca_cert = '/var/run/secrets/kubernetes.io/serviceaccount/ca.crt'
@@ -413,14 +422,14 @@ def main(argv):
       podName = listPod(core_client, kJobname)
       # There can't be more than 1 deployment (kube job) with the same name
       # do we want to delete ?
-      job_exist =  podName is not None 
+      job_exist =  podName is not None
     except ApiException as e:
       print("Exception when calling BatchV1Api->read_namespaced_job_status: %s\n" % e)
       sys.exit(16)
 
 
     if not job_exist:
-      print "job not exist - creating (starting) job"
+      print("job not exist - creating (starting) job")
       if kYaml != '':
          print("Yaml specified. All other arguments - besides jobname - ignored")
          startJob(util_client, batch_client, kJobname, kYaml)
@@ -432,24 +441,24 @@ def main(argv):
          except:
             print("Job creation failed")
             sys.exit(16)
-    else: 
-      print "job already exist - start monitoring"
+    else:
+      print("job already exist - start monitoring")
 
     #signal.signal(signal.SIGTERM, termSignal)
     jobStatus, podsActive, podsSucceeded, podsFailed = status(batch_client, kJobname)
 
-    
+
     if (podName is None):
       # incase the job started (initial list returned none since the job didnt exist)
       podName = listPod(core_client, kJobname)
-    
+
     getLog(core_client, podName)
 
     print("Pods Statuses: %s Running / %s Succeeded / %s Failed" % (podsActive, podsSucceeded, podsFailed))
     print("Job Completion status: %d " % (jobStatus))
-   
+
     deleteJob(batch_client, core_client, kJobname, podName)
-   
+
     sys.exit(jobStatus)
 
 if __name__ == '__main__':
