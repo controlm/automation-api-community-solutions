@@ -1,11 +1,10 @@
 {
-  "AZURELOGICAPPS": {
-    "Type": "ConnectionProfile:ApplicationIntegrator:AzureLogicApps",
+  "AZ_LOGICAPPS": {
+    "Type": "ConnectionProfile:ApplicationIntegrator:AI AzureLogicApps",
     "AI-Subscription ID": "xxxxsubscriptionIDxxxx",
     "AI-Password": "xxxxservicePrincipalClientSecretxxxx",
     "AI-Application ID": "xxxxservicePrincipalxxxx",
     "AI-Tenant ID": "xxxxtenantIDxxxx",
-    "TargetAgent": "fy21ctmserver",
-    "TargetCTM": "FY21CTMServer"
+    "Centralized": true
   }
 }

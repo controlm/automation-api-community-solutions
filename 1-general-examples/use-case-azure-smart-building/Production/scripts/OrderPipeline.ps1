@@ -1,9 +1,12 @@
 param(
-	[Parameter(Mandatory=$true)][Alias("rg")][String]$resourceGroupName,
 	[Parameter(Mandatory=$false)][Alias("cf")][String]$parmsFile = '.\demo_parms.cfg',
 	[Parameter(Mandatory=$false)][Alias("vf")][String]$varsFile = '.\ctmvars.json'
 
 )
+
+$instanceMetaData = Invoke-RestMethod -Headers @{"Metadata"="true"} -Method GET -NoProxy -Uri http://169.254.169.254/metadata/instance?api-version=2019-11-01
+$resourceGroupName = $instanceMetaData.compute.resourceGroupName
+
 $varsLine = "{"
 $varsLine | Out-File $varsFile
 $varsLine = "`t""Variables"": ["

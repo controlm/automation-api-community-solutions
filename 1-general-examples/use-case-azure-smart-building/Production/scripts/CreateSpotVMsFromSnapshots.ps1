@@ -257,11 +257,9 @@ $nic = New-AzNetworkInterface -Name $ctmNIC `
    -PublicIpAddressId $pip.Id `
    -NetworkSecurityGroupId $nsg.Id
 
-# Set unique VM Name and size
+# Set VM Name and size
 # Moved to Memory-optimized for Control-M 20
-[String]$vmGuid = New-Guid
-$ctmSName = "$ctmNewName-$vmGuid"
-$vmConfig = New-AzVMConfig -VMName $ctmSName -VMSize "Standard_E4s_v3" -IdentityType SystemAssigned
+$vmConfig = New-AzVMConfig -VMName $ctmNewName -VMSize "Standard_E4_v3" -Priority "Spot" -MaxPrice -1 -EvictionPolicy Delete -IdentityType SystemAssigned
 # Add the NIC
 $ctmvm = Add-AzVMNetworkInterface -VM $vmConfig -Id $nic.Id
 
@@ -311,9 +309,7 @@ $nic = New-AzNetworkInterface -Name $agNIC `
    -NetworkSecurityGroupId $nsg.Id
 
 # Set VM Name and size
-[String]$vmGuid = New-Guid
-$agName = "$agNewName-$vmGuid"
-$vmConfig = New-AzVMConfig -VMName $agName -VMSize "Standard_D2_v3"
+$vmConfig = New-AzVMConfig -VMName $agNewName -VMSize "Standard_D2_v3" -Priority "Spot" -MaxPrice -1 -EvictionPolicy Delete
 # Add the NIC
 $agvm = Add-AzVMNetworkInterface -VM $vmConfig -Id $nic.Id
 
