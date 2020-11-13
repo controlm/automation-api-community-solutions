@@ -1,1 +1,0 @@
-fs -rm -f -R $dir

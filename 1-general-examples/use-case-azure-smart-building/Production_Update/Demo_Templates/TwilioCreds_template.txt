@@ -1,2 +1,0 @@
-<Twilio Account SID>
-<Twilio Auth Token>
