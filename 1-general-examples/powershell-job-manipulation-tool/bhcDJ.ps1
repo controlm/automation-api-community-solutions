@@ -93,9 +93,11 @@ function Do-Folders
 			}
 			
 			$a = @{Expression={$_.sq}; Label="SQ"; Width=3}, 
-				@{Expression={$_.Name}; Label="Folder Name"; Width=30}, 
+				@{Expression={$_.Name}; Label="Folder Name"; Width=30},
+				@{Expression={$_.Value.OrderMethod}; Label="Order Method"; Width=10},				
 				@{Expression={$_.Value.ControlmServer}; Label="Control-M Server"; Width=20}, 
 				@{Expression={$_.ft}; Label="Folder Type"; Width=7}
+				
 				$folderObj.PsObject.Properties | Format-Table -Property $a
 
 			$folderSelect = 0			
