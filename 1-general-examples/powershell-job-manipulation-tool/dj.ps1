@@ -63,29 +63,38 @@ While ($folderFilter -ne "q") {
 		
 		$jobSelect = 0
 		While (($jobSelect -lt 1) -Or ($jobSelect -gt $returnedJobs)) {
-			[Int]$jobSelect = Read-Host "Enter job sequence # to process"
+			$reply = Read-Host "Enter job sequence # to process or "q" to quit"
+			Try {
+			   [Int]$jobSelect = $reply
+			}
+			Catch {
+			    if ($reply -eq "q") {Break}
+			}
 		}
 		
-		$jobId = $jobHash.statuses.jobId[$jobSelect - 1]
+		If ($reply -ne "q") {
+			$jobId = $jobHash.statuses.jobId[$jobSelect - 1]
 
-		$function = Read-Host "Select action: b (Bypass), d (details), k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
-		Switch ($function)
-			{
-				b {ctm run job::runNow $jobId -e $envName}
-				d {ctm run job:status::get $jobId -e $envName}
-				e {$envName, $subVersion, $monthly = Select-Environment}
-				k {ctm run job::kill $jobId -e $envName}
-				l {ctm run job:log::get $jobId -e $envName}
-				n { 
-					ctm run job::rerun $jobId -e $envName
-					ctm run job::runNow $jobId -e $envName
+			$function = Read-Host "Select action: b (Bypass), c (Confirm), d (Details), k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
+			Switch ($function)
+				{
+					b {ctm run job::runNow $jobId -e $envName}
+					c {ctm run job::confirm $jobId -e $envName}
+					d {ctm run job:status::get $jobId -e $envName}
+					e {$envName, $subVersion, $monthly = Select-Environment}
+					k {ctm run job::kill $jobId -e $envName}
+					l {ctm run job:log::get $jobId -e $envName}
+					n { 
+						ctm run job::rerun $jobId -e $envName
+						ctm run job::runNow $jobId -e $envName
+					}
+					o {ctm run job:output::get $jobId -e $envName}
+					r {ctm run job::rerun $jobId -e $envName}
+					Default {
+						Write-Host "Valid selections are b (Bypass), d (details), k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
+					}
 				}
-				o {ctm run job:output::get $jobId -e $envName}
-				r {ctm run job::rerun $jobId -e $envName}
-				Default {
-					Write-Host "Valid selections are b (Bypass), d (details), k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
-				}
-			}
+		}
 
 		
 	} else {

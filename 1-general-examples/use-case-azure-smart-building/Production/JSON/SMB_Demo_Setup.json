@@ -76,6 +76,11 @@
       "Command": "pwsh \"C:\\Production\\scripts\\ReplaceMultiStrings.ps1\" -if \"C:\\Production\\Demo_Templates\\FY21Demo_ADF050_parameters_Template.json\" -of \"C:\\Production\\ARM_Templates\\FY21Demo_ADF050_parameters.json\" -kf \"C:\\Production\\Data\\demo_parms.cfg\"",
 	  "PreCommand": "del \"C:\\Production\\ARM_Templates\\FY21Demo_ADF050_parameters.json\""
     },
+	"SMB_Update_LA_Parameters": {
+      "Type": "Job:Command",
+      "Command": "pwsh \"C:\\Production\\scripts\\ReplaceMultiStrings.ps1\" -if \"C:\\Production\\Demo_Templates\\FY21Demo_LA010_parameters_Template.json\" -of \"C:\\Production\\ARM_Templates\\FY21Demo_LA010_parameters.json\" -kf \"C:\\Production\\Data\\demo_parms.cfg\"",
+	  "PreCommand": "del \"C:\\Production\\ARM_Templates\\FY21Demo_LA010_parameters.json\""
+    },
 	"SMB_Update_ADF_CP": {
       "Type": "Job:Command",
       "Command": "pwsh \"C:\\Production\\scripts\\ReplaceMultiStrings.ps1\" -if \"C:\\Production\\Demo_Templates\\cp_ADF_Template.json\" -of \"C:\\Production\\JSON\\cp_ADF.json\" -kf \"C:\\Production\\Data\\demo_parms.cfg\"",
@@ -106,11 +111,21 @@
       "Description": "ARM Template to deploy Storage Account, SQL server and SQL Database",
       "Command": "pwsh \"C:\\Production\\scripts\\DeployDataFactory.ps1\" -t \"C:\\Production\\ARM_Templates\\FY21Demo_ADF050_Template.json\" -p \"C:\\Production\\ARM_Templates\\FY21Demo_ADF050_parameters.json\" -cf \"C:\\Production\\Data\\azcreds.txt\" -of \"C:\\Production\\Data\\demo_parms.cfg\""
     },
+	"SMB_Deploy_API_Connection": {
+      "Type": "Job:Command",
+      "Description": "ARM Template to deploy Email API Connection",
+      "Command": "pwsh \"C:\\Production\\scripts\\DeployARM_Template.ps1\" -t \"C:\\Production\\ARM_Templates\\FY21Demo_Mail000_Template.json\" -p none -cf \"C:\\Production\\Data\\azcreds.txt\""
+    },
 	"SMB__Deploy_ConnectionProfiles":{
 	  "Type":"Job:EmbeddedScript",
 	  "Script":"cmd /c ctm deploy C:\\Production\\JSON\\cp_ADF.json\\ncmd /c ctm deploy C:\\Production\\JSON\\cp_AZSQL.json\\ncmd /c ctm deploy c:\\Production\\JSON\\CP_FY21DEMO_BlobStg.json\\ncmd /c ctm deploy c:\\Production\\JSON\\cp_LogicApps.json",
 	  "FileName" : "cpdeploy.bat"
 	},
+	"SMB_Deploy_LogicApp": {
+      "Type": "Job:Command", "Confirm" : true,
+      "Description": "ARM Template to deploy Logic App",
+      "Command": "pwsh \"C:\\Production\\scripts\\DeployARM_Template.ps1\" -t \"C:\\Production\\ARM_Templates\\FY21Demo_LA010_Template.json\" -p \"C:\\Production\\ARM_Templates\\FY21Demo_LA010_parameters.json\" -cf \"C:\\Production\\Data\\azcreds.txt\""
+    },
 	
 	
 	"flow00": {"Type":"Flow", "Sequence":["SMB_Update_demoparms", "SMB_Update_PublicIP", "SMB_Update_StgSQL_Parameters", "SMB_Deploy_StgSql"]},
@@ -124,6 +139,7 @@
 	"flow08": {"Type":"Flow", "Sequence": ["SMB__Deploy_ConnectionProfiles", "SMB_dirclean_pig_script", "SMB_Deploy_ADF"]},
 	"flow09": {"Type":"Flow", "Sequence": ["SMB__Deploy_ConnectionProfiles", "SMB_Update_PigScript_Parameters", "SMB_cleanNotifications_pig_script", "SMB_Deploy_ADF"]},
 	"flow10": {"Type":"Flow", "Sequence": ["SMB__Deploy_ConnectionProfiles", "SMB_Update_ADF_Parameters", "SMB_Deploy_ADF"]},
-	"flow11": {"Type":"Flow", "Sequence": ["SMB__Deploy_ConnectionProfiles", "SMB_Create_files_notifications" , "SMB_Deploy_ADF"]}
+	"flow11": {"Type":"Flow", "Sequence": ["SMB__Deploy_ConnectionProfiles", "SMB_Create_files_notifications" , "SMB_Deploy_ADF"]},
+	"flow12": {"Type":"Flow", "Sequence": ["SMB__Deploy_ConnectionProfiles", "SMB_Create_files_notifications" , "SMB_Deploy_API_Connection", "SMB_Update_LA_Parameters", "SMB_Deploy_LogicApp"]}
   }
 }

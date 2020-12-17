@@ -26,9 +26,9 @@ function Get-Credentials
 			exit(20)
 		}
 		else { 	
-			$tenantId = $credsInFile[0]
-			$userName = $credsInFile[1]
-			$password = $credsInFile[2]
+			$userName = $credsInFile[0]
+			$password = $credsInFile[1]
+			$tenantId = $credsInFile[2]
 		}
 		
 	}
