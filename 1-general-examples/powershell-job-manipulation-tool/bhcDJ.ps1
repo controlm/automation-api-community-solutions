@@ -131,16 +131,60 @@ function Do-Folders
 	} 
 }
 
+function Do-One-Job
+{
+	$jobId = $jobHash.statuses.jobId[$jobSelect - 1]
+
+	$function = Read-Host "Select action: b (Bypass), c (confirm), d (details), k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
+	Switch ($function)
+	{
+		b {ctm run job::runNow $jobId -e $envName}
+		c {ctm run job::confirm $jobId -e $envName}
+		d {ctm run job:status::get $jobId -e $envName}
+		k {ctm run job::kill $jobId -e $envName}
+		l {ctm run job:log::get $jobId -e $envName}
+		n { 
+			ctm run job::rerun $jobId -e $envName
+			ctm run job::runNow $jobId -e $envName
+		}
+		o {ctm run job:output::get $jobId -e $envName}
+		r {ctm run job::rerun $jobId -e $envName}
+		Default {
+			Write-Host "Valid selections are b (Bypass), d (details), k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
+		}
+	}	
+}
+
 function Do-Jobs
 {
-	$folderFilter = Read-Host "Please enter a folder name or prefix to search. Enter to quit"
-	While ($folderFilter -ne "q") {
-		if (($subVersion -eq 20) -And ($monthly -gt 10)) { 
-
-			[String]$jobInfo = ctm run jobs:status::get -e $envName -s """ctm=*&folder=$folderFilter&deleted=false"""
-		} else {
-			[String]$jobInfo = ctm run jobs:status::get -e $envName -s """ctm=*&folder=$folderFilter"""
+	$jobsFilter = ""
+	$jobsReply = ""
+	$saveJobsFilter = ""
+	While ($jobsFilter -ne "q") {	
+		Write-Host "Job selection filter: $jobsFilter"
+		while (($jobsReply -ne "r") -And ($customFilter.Length -eq 0)) {
+				[String]$customFilter = Read-Host "Folder name or prefix to search or query= . Enter to repeat, q to quit"
 		}
+
+		if ($customFilter -eq "q") {
+			break
+		}
+		
+		if (($jobsReply -eq "r") -And ($customFilter.Length -eq 0)) {
+			$jobsFilter = $saveJobsFilter
+		}
+		else {
+			if (($customFilter.Length -gt 5) -AND ($customFilter.substring(0,6) -eq "query=")) {
+				$jobsFilter = $customFilter.substring(6)
+			}
+			else {
+				$jobsFilter = "folder=$customFilter"
+			}
+		}
+		
+		$saveJobsFilter = $jobsFilter
+		$customFilter = ""
+		[String]$jobInfo = ctm run jobs:status::get -e $envName -s """ctm=*&deleted=false&$jobsFilter"""
 		$jobHash = ConvertFrom-JSON $jobinfo
 		[Int]$returnedJobs = $jobHash.returned
 		
@@ -155,53 +199,29 @@ function Do-Jobs
 			
 			$jobSelect = 0
 			
-			While (($jobSelect -lt 1) -Or ($jobSelect -gt $returnedJobs)) {
-				$reply = Read-Host "Enter job sequence # to process or "q" to quit"
+			While ($true) {
+				$jobsReply = Read-Host "Enter job sequence # to process, "q" to quit, or press enter to repeat $jobsFilter "
 				Try {
-					if ($reply.Length -eq 0) {
-						$reply = "r"
+					if ($jobsReply.Length -eq 0) {
+						$jobsReply = "r"
 						Break
 					}
-					else {[Int]$jobSelect = $reply}
+					else {[Int]$jobSelect = $jobsReply}
 				}
 				Catch {
-					if ($reply -eq "q") {Break}
+					if ($jobsReply -eq "q") {Break}
 				}
+				if (($jobSelect -gt 0) -And ($jobSelect -le $returnedJobs)) {
+					Do-One-Job
+				}
+
 			}
 		
-			If (($reply -ne "q") -AND ($reply -ne "r")) {			
-				$jobId = $jobHash.statuses.jobId[$jobSelect - 1]
-
-				$function = Read-Host "Select action: b (Bypass), c (confirm), d (details), k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
-				Switch ($function)
-					{
-						b {ctm run job::runNow $jobId -e $envName}
-						c {ctm run job::confirm $jobId -e $envName}
-						d {ctm run job:status::get $jobId -e $envName}
-						k {ctm run job::kill $jobId -e $envName}
-						l {ctm run job:log::get $jobId -e $envName}
-						n { 
-							ctm run job::rerun $jobId -e $envName
-							ctm run job::runNow $jobId -e $envName
-						}
-						o {ctm run job:output::get $jobId -e $envName}
-						r {ctm run job::rerun $jobId -e $envName}
-						Default {
-							Write-Host "Valid selections are b (Bypass), d (details), k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
-						}
-					}
-			}
+			
 
 			
 		} else {
-			Write-Host "No jobs found to match folder=$folderFilter"
-		}
-		$saveFilter = $folderFilter
-		if ($reply -ne "r") {
-			$folderFilter = Read-Host "Please enter a folder name or prefix to search, Enter to repeat same criteria, q to quit"
-		}
-		if ($folderFilter -eq "") {
-			$folderFilter = $saveFilter
+			Write-Host "No jobs found to match $jobsFilter"
 		}
 	} 
 }
