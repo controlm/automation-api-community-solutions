@@ -71,6 +71,23 @@ function Select-Environment
 	return($envName, $subVersion, $monthly)
 }
 
+function Do-One-Folder
+{
+	param (
+        [Int]$f2l
+    )
+	$fname = $folderObj.PsObject.Properties.Name[$f2l]
+	$jobs = $folderObj.PsObject.Properties.Value[$f2l]
+	foreach($job in $jobs) 
+	{
+		foreach($jobV in $job.PsObject.Properties) { 
+			if (($jobV.Value.Type.Length -gt 2) -And ($jobV.Value.Type.substring(0,3)) -eq "Job") {
+				$jobV.Name
+			}
+		}
+	}
+}
+
 function Do-Folders
 {
 	$folderFilter = Read-Host "Please enter a folder name or prefix to search. Enter to quit"
@@ -98,7 +115,7 @@ function Do-Folders
 				@{Expression={$_.Value.ControlmServer}; Label="Control-M Server"; Width=20}, 
 				@{Expression={$_.ft}; Label="Folder Type"; Width=7}
 				
-				$folderObj.PsObject.Properties | Format-Table -Property $a
+			$folderObj.PsObject.Properties | Format-Table -Property $a
 
 			$folderSelect = 0			
 			While (($folderSelect -lt 1) -Or ($folderSelect -gt $folderCtr)) {
@@ -112,12 +129,22 @@ function Do-Folders
 			}
 			
 			If ($reply -ne "q") {
-				$function = Read-Host "Select action: o (Order) or q (quit)"
+				$function = Read-Host "Select action: l (List jobs), o (Order) or q (quit)"
+				[Int]$fn = $folderSelect-
+				if ($folderObj.PsObject.Properties.Name -is [Array]) {
+					$folderName = $folderObj.PsObject.Properties.Name[$fn]
+				}
+				else {
+					$folderName = $folderObj.PsObject.Properties.Name
+				}
 				Switch ($function)
 					{
-						o {ctm run order $folderObj.PsObject.Properties.Value[$folderSelect-1].ControlmServer $folderObj.PsObject.Properties.Name[$folderSelect-1] -e $envName}
+						l {
+							Do-One-Folder -f2l $fn
+						}
+						o {ctm run order $folderObj.PsObject.Properties.Value[$fn].ControlmServer $folderName -e $envName}
 						Default {
-							Write-Host "Valid selections are o (Order) or q (quit)"
+							Write-Host "Valid selections are l (List jobs), o (Order) or q (quit)"
 						}
 					}
 			}
@@ -150,7 +177,7 @@ function Do-One-Job
 		o {ctm run job:output::get $jobId -e $envName}
 		r {ctm run job::rerun $jobId -e $envName}
 		Default {
-			Write-Host "Valid selections are b (Bypass), d (details), k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
+			Write-Host "===>Valid selections are b (Bypass), d (details), k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
 		}
 	}	
 }
@@ -161,9 +188,9 @@ function Do-Jobs
 	$jobsReply = ""
 	$saveJobsFilter = ""
 	While ($jobsFilter -ne "q") {	
-		Write-Host "Job selection filter: $jobsFilter"
+		Write-Host ">Job selection filter: $jobsFilter"
 		while (($jobsReply -ne "r") -And ($customFilter.Length -eq 0)) {
-				[String]$customFilter = Read-Host "Folder name or prefix to search or query= . Enter to repeat, q to quit"
+				[String]$customFilter = Read-Host ">Folder name or prefix to search or query= . Enter to repeat, q to quit"
 		}
 
 		if ($customFilter -eq "q") {
@@ -200,7 +227,7 @@ function Do-Jobs
 			$jobSelect = 0
 			
 			While ($true) {
-				$jobsReply = Read-Host "Enter job sequence # to process, "q" to quit, or press enter to repeat $jobsFilter "
+				$jobsReply = Read-Host "===>Enter job sequence # to process, "q" to quit, or press enter to repeat $jobsFilter "
 				Try {
 					if ($jobsReply.Length -eq 0) {
 						$jobsReply = "r"
@@ -216,10 +243,6 @@ function Do-Jobs
 				}
 
 			}
-		
-			
-
-			
 		} else {
 			Write-Host "No jobs found to match $jobsFilter"
 		}
@@ -228,16 +251,16 @@ function Do-Jobs
 
 $envName, $subVersion, $monthly = Select-Environment
 
-	While ($function -ne "q") {
-		$function = Read-Host "Select action: e (Select Environment), j (Job Processing), f (Folder Processing or q (quit)"
-		Switch ($function)
-			{
-				j {Do-Jobs}
-				e {$envName, $subVersion, $monthly = Select-Environment}
-				f {Do-Folders}
-				q {}
-				Default {
-					Write-Host "Valid selections are e (Select Environment), j (Job Processing), f (Folder Processing or q (quit)"
-				}
-			}
+While ($function -ne "q") {
+	$function = Read-Host "Select action: e (Select Environment), j (Job Processing), f (Folder Processing or q (quit)"
+	Switch ($function)
+	{
+		j {Do-Jobs}
+		e {$envName, $subVersion, $monthly = Select-Environment}
+		f {Do-Folders}
+		q {}
+		Default {
+			Write-Host "Valid selections are e (Select Environment), j (Job Processing), f (Folder Processing or q (quit)"
+		}
 	}
+}
