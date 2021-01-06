@@ -1,0 +1,97 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "SendEmail_recipient": {
+            "defaultValue": "joe_goldberg@bmc.com",
+            "type": "String"
+        },
+		"workflows_SendEmail_name": {
+            "defaultValue": "SendEmail",
+            "type": "String"
+        },
+        "connections_gmail_externalid": {
+            "defaultValue": "[concat(resourceGroup().id, '/providers/Microsoft.Web/connections/gmail')]",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Logic/workflows",
+            "apiVersion": "2017-07-01",
+            "name": "[parameters('workflows_SendEmail_name')]",
+            "location": "westus2",
+            "properties": {
+                "state": "Enabled",
+                "definition": {
+                    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "$connections": {
+                            "defaultValue": {},
+                            "type": "Object"
+                        }
+                    },
+                    "triggers": {
+                        "manual": {
+                            "type": "Request",
+                            "kind": "Http",
+                            "inputs": {
+                                "method": "GET",
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "actions": {
+                        "Response": {
+                            "runAfter": {},
+                            "type": "Response",
+                            "kind": "Http",
+                            "inputs": {
+                                "statusCode": 200
+                            }
+                        },
+                        "Send_email_(V2)": {
+                            "runAfter": {
+                                "Response": [
+                                    "Succeeded",
+                                    "Failed",
+                                    "Skipped",
+                                    "TimedOut"
+                                ]
+                            },
+                            "type": "ApiConnection",
+                            "inputs": {
+                                "body": {
+                                    "Body": "<p>From your friendly neighborhood Logic App at@{utcNow()}</p>",
+                                    "Subject": "Azure Logic App run by Control-M",
+                                    "To": "[parameters('SendEmail_recipient')]"
+                                },
+                                "host": {
+                                    "connection": {
+                                        "name": "@parameters('$connections')['gmail']['connectionId']"
+                                    }
+                                },
+                                "method": "post",
+                                "path": "/v2/Mail"
+                            }
+                        }
+                    },
+                    "outputs": {}
+                },
+                "parameters": {
+                    "$connections": {
+                        "value": {
+                            "gmail": {
+                                "connectionId": "[parameters('connections_gmail_externalid')]",
+                                "connectionName": "gmail",
+                                "id": "/subscriptions/fee1b749-2ef4-4205-a1a5-3fdb5b803697/providers/Microsoft.Web/locations/westus2/managedApis/gmail"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

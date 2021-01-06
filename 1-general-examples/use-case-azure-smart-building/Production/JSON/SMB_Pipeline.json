@@ -80,7 +80,7 @@
     },
     "SMB_Email_Notification": {
       "Type": "Job:ApplicationIntegrator:AI AzureLogicApps",
-      "AI-Resource Group": "FY21DemoSetup",
+      "AI-Resource Group": "%%AZRG",
       "AI-TriggerName": "manual",
       "AI-Workflow": "SendEmail",
       "ConnectionProfile": "AZ_LOGICAPPS",
