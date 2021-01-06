@@ -130,7 +130,7 @@ function Do-Folders
 			
 			If ($reply -ne "q") {
 				$function = Read-Host "Select action: l (List jobs), o (Order) or q (quit)"
-				[Int]$fn = $folderSelect-
+				[Int]$fn = $folderSelect-1
 				if ($folderObj.PsObject.Properties.Name -is [Array]) {
 					$folderName = $folderObj.PsObject.Properties.Name[$fn]
 				}
