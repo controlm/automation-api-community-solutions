@@ -1,0 +1,21 @@
+{
+  "Defaults" : {
+		"RunAs" : "ctmagent", "Application" : "SMB", "SubApplication" : "Demo Build", "Host" : "winsaas000-default", 
+		"Description" : "Build Control-M in Azure demo", "ControlmServer":"IN01", "OrderMethod": "Manual"
+	},
+  
+  "SMB_Agent_Setup": {
+    "Type": "Folder",
+
+	"SMB_CheckEnv": {
+      "Type": "Job:Command",
+      "Command": "SET & PATH"
+    },
+	
+	"SMB_Agent_ctm_Env": {
+      "Type": "Job:Command",
+      "Command": "ctm env saas::add myenv https://se-americas-prod-aapi.prod.us1.preprod.ctmsaas.com/automation-api UFBSR0JYOmJkM2M0MzdjLThhNTUtNDhjYi04Mjk5LTJiMzQxZTJkMjViOTp4aEF2T05URHlDNnJzUVNrODAwV1lqRFNFU2pwakVRcmdGajl1UUcyTVNzPQ=="
+    }
+	
+  }
+}

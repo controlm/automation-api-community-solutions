@@ -35,7 +35,10 @@ function Select-Environment
 			}
 			Write-Host "`t$eEP "
 		}	
-		$envNum = Read-Host "Choose Environment number to use or d for default ($dfltEnv)"	
+		$envNum = Read-Host "Choose Environment number to use [default: $dfltEnv]"
+		if ($envNum -eq "") {
+			$envNum = "d"
+		}	
 		Try {
 			[Int]$envSelect = $envNum
 			$envName = $envJson.psobject.properties.Name[$envNum - 1]
@@ -250,7 +253,7 @@ function Do-Jobs
 }
 
 $envName, $subVersion, $monthly = Select-Environment
-
+$function = ""
 While ($function -ne "q") {
 	$function = Read-Host "Select action: e (Select Environment), j (Job Processing), f (Folder Processing or q (quit)"
 	Switch ($function)
