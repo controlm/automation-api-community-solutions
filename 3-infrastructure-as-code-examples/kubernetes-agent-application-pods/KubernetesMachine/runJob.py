@@ -1,6 +1,6 @@
 
 from os import path
-from kubernetes import config, client, utils
+from kubernetes import config, client, utils, watch
 from kubernetes.client.rest import ApiException
 from pprint import pprint
 
@@ -99,9 +99,11 @@ def deleteJob(api_batch, api_core, kJobname, podName):
     return
 
 def getLog(api_core, podName):
-    api_response = api_core.read_namespaced_pod_log(podName, kNameSpace)
     print("Log output from Pod: " + podName)
-    print(api_response)
+    w = watch.Watch()
+    for logentry in w.stream(api_core.read_namespaced_pod_log, name=podName, namespace=kNameSpace, follow=True, tail_lines=1):
+       print(logentry)
+    print("Log output completed ")
 
     return
 
@@ -146,6 +148,8 @@ def status(api_batch, kJobname):
        except:
           print("Failed getting job status: " + kJobname)
           sys.exit(4)
+
+       getLog(core_client, podName)
 
        for i in ret.items:
           print("Status active %s failed %s succeeded %s\n" % (i.status.active, i.status.failed, i.status.succeeded))
@@ -366,10 +370,10 @@ def main(argv):
            sys.exit(16)
 
     signal.signal(signal.SIGTERM, termSignal)
-    jobStatus, podsActive, podsSucceeded, podsFailed = status(batch_client, kJobname)
 
     podName = listPod(core_client, kJobname)
-    getLog(core_client, podName)
+
+    jobStatus, podsActive, podsSucceeded, podsFailed = status(batch_client, kJobname)
 
     print("Pods Statuses: %s Running / %s Succeeded / %s Failed" % (podsActive, podsSucceeded, podsFailed))
     print("Job Completion status: %d " % (jobStatus))
