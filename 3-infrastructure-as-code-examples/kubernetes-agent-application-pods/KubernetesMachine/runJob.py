@@ -82,7 +82,7 @@ def create_job_object(kJob, kImage, kVname, kVvalue, kimagepullpolicy, kimagepul
 	
 def createJob(api_batch, job):
     try:
-       api_response = api_batch.create_namespaced_job(body=job, namespace="default")
+       api_response = api_batch.create_namespaced_job(body=job, namespace=kNameSpace)
        print("Job created. status='%s'" % str(api_response.status))
     except ApiException as e:
        print("Exception when calling BatchV1Api->create_namespaced_job: %s\n" % e)
@@ -361,6 +361,8 @@ def main(argv):
               kbackofflimit, khostpath, kvolname, kvolpath,kpvolclaim)
        startJob(util_client, batch_client, kJobname, kYaml)
     else:
+       if kNameSpace == '':                  # If not specified, use default
+          kNameSpace = "default"
        # Display options used for this execution      
        used_opts(kJobname, kYaml, kVname, kVvalue, kImagename, kimagepullpolicy, kimagepullsecret, krestartpolicy,
               kbackofflimit, khostpath, kvolname, kvolpath,kpvolclaim)
