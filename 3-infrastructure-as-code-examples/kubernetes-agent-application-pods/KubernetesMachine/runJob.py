@@ -8,7 +8,7 @@ import getopt, os, sys, time
 import signal
 import yaml
 
-kNameSpace = "default"
+kNameSpace = ""                         # Expect Namespace to come from parameter or manifest
 stime = 15                              # Default sleep interval in seconds for status check
 
 def create_job_object(kJob, kImage, kVname, kVvalue, kimagepullpolicy, kimagepullsecret, krestartpolicy,
@@ -101,7 +101,7 @@ def deleteJob(api_batch, api_core, kJobname, podName):
 def getLog(api_core, podName):
     print("Log output from Pod: " + podName)
     w = watch.Watch()
-    for logentry in w.stream(api_core.read_namespaced_pod_log, name=podName, namespace=kNameSpace, follow=True, tail_lines=1):
+    for logentry in w.stream(api_core.read_namespaced_pod_log, name=podName, namespace=kNameSpace, follow=True):
        print(logentry)
     print("Log output completed ")
 
@@ -140,7 +140,9 @@ def status(api_batch, kJobname):
     jobStatus = "Success"
     jobRunning = "Running"
     podLabelSelector = 'job-name=' + kJobname
-    time.sleep(stime)                  # Give the Pod a chance to initialize
+    time.sleep(5)                               # Give the job time to warm up
+
+    getLog(core_client, podName)                # Stream the log output
 
     while jobRunning == "Running":
        try:
@@ -148,8 +150,6 @@ def status(api_batch, kJobname):
        except:
           print("Failed getting job status: " + kJobname)
           sys.exit(4)
-
-       getLog(core_client, podName)
 
        for i in ret.items:
           print("Status active %s failed %s succeeded %s\n" % (i.status.active, i.status.failed, i.status.succeeded))
@@ -354,6 +354,8 @@ def main(argv):
        if mNameSpace != kNameSpace:
           print("Manifest namespace \"%s\" and parameter namespace \"%s\" do not match" % (mNameSpace, kNameSpace))
           sys.exit(18)
+       if kNameSpace == '':                  # If not in manifest or parameter, use default
+          kNameSpace = "default"
        # Display options used for this execution      
        used_opts(kJobname, kYaml, kVname, kVvalue, kImagename, kimagepullpolicy, kimagepullsecret, krestartpolicy,
               kbackofflimit, khostpath, kvolname, kvolpath,kpvolclaim)
