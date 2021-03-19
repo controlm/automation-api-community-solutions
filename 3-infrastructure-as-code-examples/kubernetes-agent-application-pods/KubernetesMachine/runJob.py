@@ -111,7 +111,12 @@ def listPod(api_core, kJobname):
     global podName
     podLabelSelector = 'job-name=' + kJobname
     print("Listing pod for jobname:" + kJobname)
-    ret = api_core.list_namespaced_pod(kNameSpace, label_selector=podLabelSelector)
+    try: 
+       ret = api_core.list_namespaced_pod(kNameSpace, label_selector=podLabelSelector)
+    except ApiException as e:
+       print("Exception listing pods for job %s namespace %s error: %s\n" % (kJobname, kNameSpace, e))
+       sys.exit(6)
+   
     for i in ret.items:
        podName = str(i.metadata.name)
        print("%s" % i.metadata.name)
@@ -140,7 +145,7 @@ def status(api_batch, kJobname):
     jobStatus = "Success"
     jobRunning = "Running"
     podLabelSelector = 'job-name=' + kJobname
-    time.sleep(5)                               # Give the job time to warm up
+                            # Give the job time to warm up
 
     getLog(core_client, podName)                # Stream the log output
 
@@ -375,6 +380,7 @@ def main(argv):
 
     signal.signal(signal.SIGTERM, termSignal)
 
+    time.sleep(5)                      # Give the job time to start a pod
     podName = listPod(core_client, kJobname)
 
     jobStatus, podsActive, podsSucceeded, podsFailed = status(batch_client, kJobname)
