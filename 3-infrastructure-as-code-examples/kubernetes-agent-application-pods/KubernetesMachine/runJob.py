@@ -1,6 +1,6 @@
 
 from os import path
-from kubernetes import config, client, utils
+from kubernetes import config, client, utils, watch
 from kubernetes.client.rest import ApiException
 from pprint import pprint
 
@@ -8,7 +8,7 @@ import getopt, os, sys, time
 import signal
 import yaml
 
-kNameSpace = "default"
+kNameSpace = ""                         # Expect Namespace to come from parameter or manifest
 stime = 15                              # Default sleep interval in seconds for status check
 
 def create_job_object(kJob, kImage, kVname, kVvalue, kimagepullpolicy, kimagepullsecret, krestartpolicy,
@@ -82,7 +82,7 @@ def create_job_object(kJob, kImage, kVname, kVvalue, kimagepullpolicy, kimagepul
 	
 def createJob(api_batch, job):
     try:
-       api_response = api_batch.create_namespaced_job(body=job, namespace="default")
+       api_response = api_batch.create_namespaced_job(body=job, namespace=kNameSpace)
        print("Job created. status='%s'" % str(api_response.status))
     except ApiException as e:
        print("Exception when calling BatchV1Api->create_namespaced_job: %s\n" % e)
@@ -90,38 +90,49 @@ def createJob(api_batch, job):
        sys.exit(3)
 
 def deleteJob(api_batch, api_core, kJobname, podName):
-    ret = api_batch.delete_namespaced_job(kJobname, kNameSpace)
-    print("Job deleted: " + kJobname)
-   
-#   podBody = client.V1DeleteOptions()
-    ret = api_core.delete_namespaced_pod(podName, kNameSpace)
-    print("Pod deleted: " + podName)
+    api_response = api_batch.delete_namespaced_job(kJobname, kNameSpace)
+    print("\nJob %s deleted: status='%s'" % (kJobname, str(api_response.status)))
+
+    api_response = api_core.delete_namespaced_pod(podName, kNameSpace)
+    print("\nPod %s deleted: status='%s'" % (podName, str(api_response.status)))
+
+    return
 
 def getLog(api_core, podName):
-    ret = api_core.read_namespaced_pod_log(podName, kNameSpace)
     print("Log output from Pod: " + podName)
-    print(ret)
+    w = watch.Watch()
+    for logentry in w.stream(api_core.read_namespaced_pod_log, name=podName, namespace=kNameSpace, follow=True):
+       print(logentry)
+    print("Log output completed ")
+
     return
 
 def listPod(api_core, kJobname):
+    global podName
     podLabelSelector = 'job-name=' + kJobname
     print("Listing pod for jobname:" + kJobname)
-    ret = api_core.list_namespaced_pod(kNameSpace, label_selector=podLabelSelector)
+    try: 
+       ret = api_core.list_namespaced_pod(kNameSpace, label_selector=podLabelSelector)
+    except ApiException as e:
+       print("Exception listing pods for job %s namespace %s error: %s\n" % (kJobname, kNameSpace, e))
+       sys.exit(6)
+   
     for i in ret.items:
        podName = str(i.metadata.name)
        print("%s" % i.metadata.name)
     return podName
 
 def startJob(api_util, batch_client, kJobname, yaml):
+    verbose = False
     try:
-       api_response = utils.create_from_yaml(api_util, yaml)
-    except Apiexception as e:
+       api_response = utils.create_from_yaml(api_util, yaml, verbose, namespace=kNameSpace)
+    except ApiException as e:
        print("Exception when calling UtilAPI->create_from_yaml: %s\n" % e)
        sys.exit(5)
 
     try:
        api_response = batch_client.read_namespaced_job(kJobname, kNameSpace)
-       pprint(api_response)
+#      pprint(api_response)
     except ApiException as e:
        print("Exception when calling BatchV1Api->read_namespaced_job: %s\n" % e)
        sys.exit(6)
@@ -134,7 +145,9 @@ def status(api_batch, kJobname):
     jobStatus = "Success"
     jobRunning = "Running"
     podLabelSelector = 'job-name=' + kJobname
-    time.sleep(stime)                  # Give the Pod a chance to initialize
+                            # Give the job time to warm up
+
+    getLog(core_client, podName)                # Stream the log output
 
     while jobRunning == "Running":
        try:
@@ -166,19 +179,20 @@ def status(api_batch, kJobname):
        podsSucceeded = "0"
     if podsFailed == "None":
        podsFailed = "0"
-    if podsSucceeded >= 1:
-       jobStatus = "0"
-    else:
-       jobStatus = "1"
+    if podsSucceeded.isdigit():
+       if int(podsSucceeded) >= 1:
+          jobStatus = "0"
+       else:
+          jobStatus = "1"
     
     return int(jobStatus), podsActive, podsSucceeded, podsFailed
 
 def termSignal(signalNumber, frame):
-    global kJobname, kNameSpace, podName
+    global podName
     print("Terminating due to SIGTERM: " + signalNumber)
-    podName = listPod(kJobname)
-    getLog(podName)
-    deleteJob(kJobname, podName)
+    podName = listPod(core_client, kJobname)
+    getLog(core_client, podName)
+    deleteJob(batch_client, core_client, kJobname, podName)
     sys.exit(8)
 
 def usage():
@@ -190,6 +204,7 @@ def usage():
     print("\t-i, --image\t\tcontainer image name")
     print("\t-j, --jobname\t\tMandatory. Job name")
     print("\t-m, --volname\t\tVolume mount name")
+    print("\t-n, --namespace\t\tKubernetes Name Space")
     print("\t-p, --image\t\tpull_policy Always or Latest")
     print("\t-r, --restartpolicy\tefault is Never")
     print("\t-s, --imagesecret\ttname of image_pull_secret")
@@ -203,27 +218,43 @@ def used_opts(kJobname, kYaml, kVname,
     kbackofflimit, khostpath,
     kvolname, kvolpath, kpvolclaim):
 
-    print("Command line options specified:")
-    print("\tjobname: %s \n"
-          "\tEnvironment Variables: %s \n"
-          "\tEnvironment Values: %s \n"
-          "\tContainer image: %s \n"
-          "\tImage_pull_policyy: %s \n"
-          "\tImage_pull_secret: %s \n"
-          "\tRestart_policy: %s \n"
-          "\tbackofflimit: %d \n"
-          "\tVolume Name: %s \n"
-          "\tHost path: %s \n"
-          "\tContainer Path: %s \n" 
-          "\tPersistentVolumeClaim: %s \n"
-          "\tYaml file: %s \n"
-          % (kJobname, kVname,
-             kVvalue, kImagename, kimagepullpolicy,
-             kimagepullsecret, krestartpolicy,
-             kbackofflimit, kvolname, khostpath,
-             kvolpath, kpvolclaim, kYaml))
+    print("Execution options specified:")
+    print("\tjobname: \t\t\t%s \n"
+          "\tEnvironment Variables: \t\t%s \n"
+          "\tEnvironment Values: \t\t%s \n"
+          "\tContainer image: \t\t%s \n"
+          "\tImage_pull_policyy: \t\t%s \n"
+          "\tImage_pull_secret: \t\t%s \n"
+          "\tRestart_policy: \t\t%s \n"
+          "\tbackofflimit: \t\t\t%d \n"
+          "\tVolume Name: \t\t\t%s \n"
+          "\tHost path: \t\t\t%s \n"
+          "\tContainer Path: \t\t%s \n" 
+          "\tPersistentVolumeClaim: \t\t%s \n"
+          "\tYaml file: \t\t\t%s \n"
+          "\tName Space: \t\t\t%s \n"
+          % (kJobname, kVname, kVvalue, kImagename, kimagepullpolicy,
+             kimagepullsecret, krestartpolicy, kbackofflimit, kvolname, khostpath,
+             kvolpath, kpvolclaim, kYaml, kNameSpace))
+
+def yamlload(kYaml):
+    manifest = open(kYaml)
+    ynamespace = kNameSpace
+    yjobname = kJobname
+    yamldata = yaml.load(manifest, Loader=yaml.FullLoader)
+    if 'metadata' in yamldata:
+       metadata = yamldata.get('metadata')
+       if 'namespace' in metadata:
+          ynamespace = metadata.get('namespace')
+       if 'name' in metadata:
+          yjobname = metadata.get('name')
+          
+    return ynamespace, yjobname
 
 def main(argv):
+
+    global kNameSpace, core_client, batch_client, kJobname, podName
+
     kJobname = ''
     kYaml = ''
     kVname = []
@@ -238,6 +269,8 @@ def main(argv):
     kvolname = 'none'
     kvolpath = 'none'
 
+    
+
     # Arguments:
     #   b|backofflimit      default is 0
     #   c|claim             PersistentVolumeClaim
@@ -246,6 +279,7 @@ def main(argv):
     #   i|image             container image name
     #   j|jobname           Mandatory. Job name
     #   m|volname           Volume mount name
+    #   n|namespace         Kubernetes Name Space
     #   p|image_pull_policy Always or Latest
     #   r|restartpolicy     default is Never
     #   s|imagesecret       name of image_pull_secret
@@ -254,10 +288,21 @@ def main(argv):
     #   y|yaml              name of a yaml manifest for job creation. Overrides all others except jobname
     #
     try:
-       opts, args = getopt.getopt(argv,"hj:c:i:e:v:y:p:s:r:b:H:m:t:",
-                                  ["jobname=","claim=", "image=","envname=","envvalue=","yaml=","imagepullpolicy=",
-                                   "imagepullsecret=", "restartpolicy=", "backofflimit=", "hostpath=",
-                                   "volname=", "volpath="])
+       opts, arg = getopt.getopt(argv,"hb:c:e:H:i:j:m:n:p:r:s:t:v:y:",
+            ["backofflimit=", 
+             "claim=",
+             "envname=", 
+             "hostpath=",
+             "image=",
+             "jobname=",
+             "volname=",
+             "namespace=",
+             "imagepullpolicy=",
+             "restartpolicy=", 
+             "imagepullsecret=", 
+             "volpath="
+             "envvalue=",
+             "yaml="])
     except getopt.GetoptError:
        usage()
        sys.exit(1)
@@ -292,28 +337,41 @@ def main(argv):
           kvolname = arg
        elif opt in ("-t", "--volpath"):
           kvolpath = arg
+       elif opt in ("-n", "--namespace"):
+          kNameSpace = arg
 
-    used_opts(kJobname, kYaml, kVname,
-              kVvalue, kImagename, kimagepullpolicy,
-              kimagepullsecret, krestartpolicy,
-              kbackofflimit, khostpath,
-              kvolname, kvolpath,kpvolclaim)
-
-    if kJobname == '':
-       usage()
-       sys.exit(2)
-
-    config.load_kube_config()
+#   config.load_kube_config()                      # Out of cluster 
+    config.load_incluster_config()                 # In cluster
     util_client = client.ApiClient()
     batch_client = client.BatchV1Api()
     core_client = client.CoreV1Api()
    
     if kYaml != '':
-       print("Yaml specified. All other arguments - besides jobname - ignored")
+       print("Yaml file %s specified" % (kYaml))
+       mNameSpace, mJobname = yamlload(kYaml)
+       if kNameSpace == '':
+          kNameSpace = mNameSpace
+       if kJobname == '':
+          kJobname = mJobname
+       if mJobname != kJobname:
+          print("Manifest job name \"%s\" and parameter job name \"%s\" do not match" % (mJobname, kJobname))
+          sys.exit(16)
+       if mNameSpace != kNameSpace:
+          print("Manifest namespace \"%s\" and parameter namespace \"%s\" do not match" % (mNameSpace, kNameSpace))
+          sys.exit(18)
+       if kNameSpace == '':                  # If not in manifest or parameter, use default
+          kNameSpace = "default"
+       # Display options used for this execution      
+       used_opts(kJobname, kYaml, kVname, kVvalue, kImagename, kimagepullpolicy, kimagepullsecret, krestartpolicy,
+              kbackofflimit, khostpath, kvolname, kvolpath,kpvolclaim)
        startJob(util_client, batch_client, kJobname, kYaml)
     else:
-       job = create_job_object(kJobname, kImagename, kVname, kVvalue, kimagepullpolicy, kimagepullsecret,
-                               krestartpolicy, kbackofflimit, khostpath, kvolname, kvolpath, kpvolclaim)
+       if kNameSpace == '':                  # If not specified, use default
+          kNameSpace = "default"
+       # Display options used for this execution      
+       used_opts(kJobname, kYaml, kVname, kVvalue, kImagename, kimagepullpolicy, kimagepullsecret, krestartpolicy,
+              kbackofflimit, khostpath, kvolname, kvolpath,kpvolclaim)
+       job = create_job_object(kJobname, kImagename, kVname, kVvalue, kimagepullpolicy, kimagepullsecret, krestartpolicy, kbackofflimit, khostpath, kvolname, kvolpath, kpvolclaim)
        try:
            createJob(batch_client, job)
        except:
@@ -321,10 +379,11 @@ def main(argv):
            sys.exit(16)
 
     signal.signal(signal.SIGTERM, termSignal)
-    jobStatus, podsActive, podsSucceeded, podsFailed = status(batch_client, kJobname)
 
+    time.sleep(5)                      # Give the job time to start a pod
     podName = listPod(core_client, kJobname)
-    getLog(core_client, podName)
+
+    jobStatus, podsActive, podsSucceeded, podsFailed = status(batch_client, kJobname)
 
     print("Pods Statuses: %s Running / %s Succeeded / %s Failed" % (podsActive, podsSucceeded, podsFailed))
     print("Job Completion status: %d " % (jobStatus))

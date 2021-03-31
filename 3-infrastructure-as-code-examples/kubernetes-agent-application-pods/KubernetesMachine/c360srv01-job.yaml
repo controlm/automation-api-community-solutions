@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: c360srv01-job
+  namespace: controlm
 spec:
   template:
     metadata:

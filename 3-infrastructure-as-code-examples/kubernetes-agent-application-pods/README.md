@@ -48,6 +48,7 @@ A Python client, runJob.py is provided in the **Kubernetes Machine** folder.This
     #   i|image             container image name
     #   j|jobname           Mandatory. Job name
     #   m|volname           Volume mount name
+    #   n|namespace         Namespace to use or verify against manifest
     #   p|image_pull_policy Always or Latest
     #   r|restartpolicy     default is Never
     #   s|imagesecret       name of image_pull_secret
@@ -55,9 +56,13 @@ A Python client, runJob.py is provided in the **Kubernetes Machine** folder.This
     #   v|envvalue          variable value
     #   y|yaml              name of a yaml manifest for job creation. Overrides all others except jobname
 	
-Note that if a YAML manifest is provided, all other argument, except for jobname, are ignored.
+Note that if a YAML manifest is provided, all other arguments are ignored.
 
-Additionally, this client performs no authentication. It expects to be running in a Control-M agent that is running as a DaemonSet with a Service Account that grants the agent the required authorization to operate on jobs.
+Additionally, this client expects to be running inside a Kubernetes cluster as opposed to relying on an "admin.conf" setup.
+
+### Running the Python script directly
+runJob.py can be used directly as a script in an OS job. Use the command line parameters above. Here is an example.
+** python3 ctmDocker/runJob.py -j mytest-job2 -n controlm -b 0 -s regcred -i "joegoldberg/controlm:appimage" -p Never -e LOOPCTR -v 10 -e STIME -v 5 **
 
 ## Control-M Application integrator Jobtype
 A Control-M Application Integrato jobtype, **runKjob** is provided in the **Misc** folder. This jobtype uses the above client to submit and track jobs.

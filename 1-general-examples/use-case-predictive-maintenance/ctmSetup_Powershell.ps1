@@ -29,13 +29,13 @@ aws s3 cp s3://controlm-automationapi-tutorial-artifacts/$CTM_ENV.password.secre
 $password = & type c:\$CTM_ENV.password.secret
 
 del c:\$CTM_ENV.*.secret
-Write-Host –NoNewLine "AWS Instance ID is " $AWS_Instance_ID
+Write-Host -NoNewline "AWS Instance ID is " $AWS_Instance_ID
 Write-Host ""
-Write-Host –NoNewLine "Control-M Server is " $CTM_SERVER
+Write-Host -NoNewline "Control-M Server is " $CTM_SERVER
 Write-Host ""
-Write-Host –NoNewLine "Hostgroup is " $CTM_HOSTGROUP
+Write-Host -NoNewLine "Hostgroup is " $CTM_HOSTGROUP
 Write-Host ""
-Write-Host –NoNewLine "Control-M Environment is " $CTM_ENV
+Write-Host -NoNewline "Control-M Environment is " $CTM_ENV
 Write-Host ""
 
 ctm env del ctm
