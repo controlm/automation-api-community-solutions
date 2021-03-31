@@ -14,8 +14,7 @@
 	
 	"SMB_Agent_ctm_Env": {
       "Type": "Job:Command",
-      "Command": "ctm env saas::add myenv https://se-americas-prod-aapi.prod.us1.preprod.ctmsaas.com/automation-api UFBSR0JYOmJkM2M0MzdjLThhNTUtNDhjYi04Mjk5LTJiMzQxZTJkMjViOTp4aEF2T05URHlDNnJzUVNrODAwV1lqRFNFU2pwakVRcmdGajl1UUcyTVNzPQ=="
+      "Command": "ctm env saas::add myenv <Automation API endpoint> <API token>"
     }
-	
   }
 }
