@@ -35,10 +35,10 @@ Before any job can be run, a connection profile is required. Below is an example
 {
   "<CONNECTION_PROFILE NAME>" : {
     "Type": "ConnectionProfile:ApplicationIntegrator:AI AzureLogicApps",
-    "AI-Subscription ID": "fee1b749-2ef4-4205-a1a5-3fdb5b803697",
-    "AI-Password": ".iAes520RF__hgzysx4lyGF_2aHWTL-.s5",
-    "AI-Application ID": "736885f5-34e9-4d86-a5c9-91b812193116",
-    "AI-Tenant ID": "92b796c5-5839-40a6-8dd9-c1fad320c69b",
+    "AI-Subscription ID": "<subscription id>",
+    "AI-Password": "<client secret>",
+    "AI-Application ID": "<application id>",
+    "AI-Tenant ID": "<tenant id>",
     "Centralized": true
   }
 }
