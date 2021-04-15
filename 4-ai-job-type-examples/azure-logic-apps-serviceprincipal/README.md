@@ -108,7 +108,7 @@ You can also simply type in values if you know them. The complete job form shoul
 ### Azure Logic Apps
 This is the connection profile:
 
-![Architecture](images/cp-form-AzRESTLogicApps.png)
+![Architecture](images/cp-form-AzREST-LogicApps.png)
 
 See above for the job form.
 
@@ -117,6 +117,6 @@ This folder has sample JSON for jobs and connectionn profiles for each of the jo
 
 ### JSON atrifacts
 
-* connectinProfile-LogicAppviaREST.json contains a sample connection profile for the jobtype that uses only REST
-* connectinProfile-AzureLogicApps.json contains a sample connection profile for the jobtype that uses a PowerShell script
+* connectionProfile-LogicAppviaREST.json contains a sample connection profile for the jobtype that uses only REST
+* connectionProfile-AzureLogicApps.json contains a sample connection profile for the jobtype that uses a PowerShell script
 * jgo-azure-logicapps.json sample jobs for each job type

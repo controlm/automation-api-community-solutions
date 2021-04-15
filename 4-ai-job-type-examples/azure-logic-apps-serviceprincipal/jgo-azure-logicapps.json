@@ -1,0 +1,23 @@
+{
+  "<Folder Name>": {
+    "Type": "Folder", "ControlmServer": "<Control-M Server Name>", "OrderMethod": "Manual", 
+    "Application": "jgo-azure", "SubApplication": "LogicApps",
+
+    "jgo-RunAzureLogicApp-job100": {
+      "Type": "Job:ApplicationIntegrator:AI AzureLogicApps",
+      "Host": "<Host or Hostgroup Name>", 
+      "ConnectionProfile": "<Connection Profile Name>",
+      "AI-Resource Group": "<Azure Resource Group Name>",
+      "AI-TriggerName": "<Trigger name>",
+      "AI-Workflow": "<Workflow name>"
+    },
+    "jgo-LogiAppviaRest-job200": {
+      "Type": "Job:ApplicationIntegrator:AI AzREST Logic Apps",
+      "Host": "<Host or Hostgroup Name>", 
+      "ConnectionProfile": "<Connection Profile Name>",
+      "AI-Resource Group": "<Azure Resource Group Name>",
+      "AI-TriggerName": "<Trigger name>",
+      "AI-Workflow": "<Workflow name>"
+    }
+  }
+}
