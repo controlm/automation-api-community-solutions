@@ -23,6 +23,7 @@ This job type uses exclusively Azure REST APIs to run and monitor a Logic App. U
 ### AI AzureLogicApps.ctmai
 This job type uses REST to start and monitor the Logic App and a PowerShell script with the Azure module, to display detailed information about the execution. The script is invoked as the last step in the job process and produces output similar to what can be seen from the Azure console by selecting each activity in the "Logic app run" blade. For a simple Logic App with an HTTP trigger and a "Send email" action, the output would appear similar to this:
 
+```
 Activity: Response
 Status: Skipped
 Code: ActionResponseSkipped
@@ -57,6 +58,7 @@ gmail"
 "To": "joe_goldberg@bmc.com"
 }
 }
+```
 
 ## Prerequisites and installation notes:
 
@@ -84,6 +86,13 @@ The connection profiles and job forms are very similar for both job types. The o
 This is a centralized connection profile (local profiles are also supported).
 
 ![Architecture](images/cp-form-AzureLogicApps.png)
+
+Attribute|Description
+---------|-----------
+Subscription ID|Azure subscription id of the Logic App you wish to run
+Tenant ID|Azure tenant ID of the Logic App
+Application ID|Azure App Registration (also known as Service Principal) that has permission to run the desired Logic App
+Client Secret|An active secret for the Application ID above
 
 Note that the job form is almost identical (only the jobtype is different) for both job types. Once a connection profile is selected, you can use the elipsis (...) next to each field to retrieve from Azure the available values for each field and you can select the desired one from the list. Here is the empty form:
 
