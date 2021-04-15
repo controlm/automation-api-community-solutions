@@ -15,7 +15,7 @@ This job type has the following prerequisites:
 
 * Control-M Agent with the Application Integrator CM
 * Azure CLI v2.0 installed
-* Azure CLI authenticated with the “az login” command
+* Azure CLI authenticated with the ï¿½az loginï¿½ command
 
 __Note:__ This job types supports multi-factor authentication by using Azure's az login command as prerequisites. This job type can be modified to include the azure authentication parameters as part of the connection profile in scenarios where a 2 factor authentication is used. This would eliminate the prerequisites to authenticate the Azure CLI.
 
