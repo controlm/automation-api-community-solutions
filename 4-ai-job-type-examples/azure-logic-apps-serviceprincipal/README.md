@@ -82,6 +82,7 @@ These job type have the following prerequisites:
 The connection profiles and job forms are very similar for both job types. The only differences are the job types. The screen shots below show some examples.
 ### AzREST Logic Apps
 This is a centralized connection profile (local profiles are also supported).
+
 ![Architecture](images/cp-form-AzureLogicApps.png)
 
 Note that the job form is almost identical (only the jobtype is different) for both job types. Once a connection profile is selected, you can use the elipsis (...) next to each field to retrieve from Azure the available values for each field and you can select the desired one from the list. Here is the empty form:
@@ -102,17 +103,20 @@ And for the trigger:
 
 You can also simply type in values if you know them. The complete job form should appear like this:
 
-![Architecture](images/job-form-filled-AzREST LogicApps.png)
+![Architecture](images/job-form-filled-AzREST-LogicApps.png)
 
 ### Azure Logic Apps
+This is the connection profile:
+
 ![Architecture](images/cp-form-AzRESTLogicApps.png)
+
 See above for the job form.
 
 ## Automation API
 This folder has sample JSON for jobs and connectionn profiles for each of the job types.
 
-### Connection profile
+### JSON atrifacts
 
-```
-connectinProfile-AzureLogicApps.json contains a sample connection profile for the jobtype that uses a PowerShell script
-```
+* connectinProfile-LogicAppviaREST.json contains a sample connection profile for the jobtype that uses only REST
+* connectinProfile-AzureLogicApps.json contains a sample connection profile for the jobtype that uses a PowerShell script
+* jgo-azure-logicapps.json sample jobs for each job type
