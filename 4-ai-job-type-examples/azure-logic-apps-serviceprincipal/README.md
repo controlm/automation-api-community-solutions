@@ -85,18 +85,25 @@ This is a centralized connection profile (local profiles are also supported).
 ![Architecture](images/cp-form-AzureLogicApps.png)
 
 Note that the job form is almost identical (only the jobtype is different) for both job types. Once a connection profile is selected, you can use the elipsis (...) next to each field to retrieve from Azure the available values for each field and you can select the desired one from the list. Here is the empty form:
+
 ![Architecture](images/job-form-LogicApps.png)
 
 Press the elipsis next to Resource Group to get a selection list like this:
+
 ![Architecture](images/selection-list-ResourceGroups.png)
 
 Repat for the Workflow field:
+
 ![Architecture](images/selection-list-Workflows.png)
 
 And for the trigger:
+
 ![Architecture](images/selection-list-Triggers.png)
 
+You can also simply type in values if you know them. The complete job form should appear like this:
+
 ![Architecture](images/job-form-filled-AzREST LogicApps.png)
+
 ### Azure Logic Apps
 ![Architecture](images/cp-form-AzRESTLogicApps.png)
 See above for the job form.
