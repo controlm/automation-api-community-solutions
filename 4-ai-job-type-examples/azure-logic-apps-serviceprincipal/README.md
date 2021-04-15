@@ -15,10 +15,12 @@ Both job types run an Azure Logic App, monitor it until completion and report on
 ### AI LogicAppviaREST.ctmai
 This job type uses exclusively Azure REST APIs to run and monitor a Logic App. Upon completion, a brief summary of the Logic App run infromation is displayed similar to this:
 
+```
 'WORKFLOW_STATUS'==> 'Succeeded' 
 'STARTTIME'==> '2021-04-11T16:12:02.7949029Z' 
 'ENDTIME'==> '2021-04-11T16:12:34.5468479Z' 
 'CLIENT_TRACKING_ID'==> '08585834493626840076315186327CU00'
+```
 
 ### AI AzureLogicApps.ctmai
 This job type uses REST to start and monitor the Logic App and a PowerShell script with the Azure module, to display detailed information about the execution. The script is invoked as the last step in the job process and produces output similar to what can be seen from the Azure console by selecting each activity in the "Logic app run" blade. For a simple Logic App with an HTTP trigger and a "Send email" action, the output would appear similar to this:
