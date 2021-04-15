@@ -15,14 +15,17 @@ Both job types run an Azure Logic App, monitor it until completion and report on
 ### AI LogicAppviaREST.ctmai
 This job type uses exclusively Azure REST APIs to run and monitor a Logic App. Upon completion, a brief summary of the Logic App run infromation is displayed similar to this:
 
+```
 'WORKFLOW_STATUS'==> 'Succeeded' 
 'STARTTIME'==> '2021-04-11T16:12:02.7949029Z' 
 'ENDTIME'==> '2021-04-11T16:12:34.5468479Z' 
 'CLIENT_TRACKING_ID'==> '08585834493626840076315186327CU00'
+```
 
 ### AI AzureLogicApps.ctmai
 This job type uses REST to start and monitor the Logic App and a PowerShell script with the Azure module, to display detailed information about the execution. The script is invoked as the last step in the job process and produces output similar to what can be seen from the Azure console by selecting each activity in the "Logic app run" blade. For a simple Logic App with an HTTP trigger and a "Send email" action, the output would appear similar to this:
 
+```
 Activity: Response
 Status: Skipped
 Code: ActionResponseSkipped
@@ -57,6 +60,7 @@ gmail"
 "To": "joe_goldberg@bmc.com"
 }
 }
+```
 
 ## Prerequisites and installation notes:
 
@@ -82,30 +86,48 @@ These job type have the following prerequisites:
 The connection profiles and job forms are very similar for both job types. The only differences are the job types. The screen shots below show some examples.
 ### AzREST Logic Apps
 This is a centralized connection profile (local profiles are also supported).
+
 ![Architecture](images/cp-form-AzureLogicApps.png)
 
+Attribute|Description
+---------|-----------
+Subscription ID|Azure subscription id of the Logic App you wish to run
+Tenant ID|Azure tenant ID of the Logic App
+Application ID|Azure App Registration (also known as Service Principal) that has permission to run the desired Logic App
+Client Secret|An active secret for the Application ID above
+
 Note that the job form is almost identical (only the jobtype is different) for both job types. Once a connection profile is selected, you can use the elipsis (...) next to each field to retrieve from Azure the available values for each field and you can select the desired one from the list. Here is the empty form:
+
 ![Architecture](images/job-form-LogicApps.png)
 
 Press the elipsis next to Resource Group to get a selection list like this:
+
 ![Architecture](images/selection-list-ResourceGroups.png)
 
 Repat for the Workflow field:
+
 ![Architecture](images/selection-list-Workflows.png)
 
 And for the trigger:
+
 ![Architecture](images/selection-list-Triggers.png)
 
-![Architecture](images/job-form-filled-AzREST LogicApps.png)
+You can also simply type in values if you know them. The complete job form should appear like this:
+
+![Architecture](images/job-form-filled-AzREST-LogicApps.png)
+
 ### Azure Logic Apps
-![Architecture](images/cp-form-AzRESTLogicApps.png)
+This is the connection profile:
+
+![Architecture](images/cp-form-AzREST-LogicApps.png)
+
 See above for the job form.
 
 ## Automation API
 This folder has sample JSON for jobs and connectionn profiles for each of the job types.
 
-### Connection profile
+### JSON atrifacts
 
-```
-connectinProfile-AzureLogicApps.json contains a sample connection profile for the jobtype that uses a PowerShell script
-```
+* connectionProfile-LogicAppviaREST.json contains a sample connection profile for the jobtype that uses only REST
+* connectionProfile-AzureLogicApps.json contains a sample connection profile for the jobtype that uses a PowerShell script
+* jgo-azure-logicapps.json sample jobs for each job type
