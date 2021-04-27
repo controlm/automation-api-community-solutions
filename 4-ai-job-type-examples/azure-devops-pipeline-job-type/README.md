@@ -19,7 +19,9 @@ DevOps include many tools, like:
 
 This folder contains sample Application Integrator jobtype for running and monitoring Azure DevOps Pipeline. 
 
-__Note:__The authentication method used by these job types is PAT (Personal Access Token) as described in [API Doc](https://docs.microsoft.com/en-us/rest/api/azure/devops/pipelines/runs/run%20pipeline?view=azure-devops-rest-6.1#security). For other DevOps Services please   
+__Note:__The authentication method used by these job types is PAT (Personal Access Token) as described in [API Doc](https://docs.microsoft.com/en-us/rest/api/azure/devops/pipelines/runs/run%20pipeline?view=azure-devops-rest-6.1#security). For other DevOps Services please please check DOCS as they might require different methods. 
+
+
 Personal Access Token can be obtained from User Settings:
 ![PAT](images/PAT1.png)
 
