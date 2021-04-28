@@ -22,12 +22,13 @@ This folder contains sample Application Integrator jobtype for running and monit
 __Note:__The authentication method used by these job types is PAT (Personal Access Token) as described in [API Doc](https://docs.microsoft.com/en-us/rest/api/azure/devops/pipelines/runs/run%20pipeline?view=azure-devops-rest-6.1#security). For other DevOps Services please please check DOCS as they might require different methods. 
 
 
-Personal Access Token can be obtained from User Settings:
+Personal Access Token can be obtained from User Settings:  
 ![PAT](images/PAT1.png)
 
 <hr>
 
-### AI AzurePipes.ctmai  << Need to check proper AI name
+### AI Azure Pipelines.ctmai
+
 This AI job triggers Azure Pipeline via REST API.   
 Required parameters (connection profile and job parameters):
 - username
@@ -50,7 +51,7 @@ The actions taken by this AI job are the following:
 - Headers: Content-Type=application/json
 - Body: {} (you can change it if needed)  
 REST API using basic authentication.  
-After successful execution, get RUNID. 
+After successful execution, get RUNID into runtime parameter. 
 
 <br>
 
@@ -85,6 +86,49 @@ How to get parameters:
 ![Pipeline1](images/pipeline1.png)
 ![Pipeline2](images/pipeline2.png)  
 You can also get pipeline ID from [REST API call](https://docs.microsoft.com/en-us/rest/api/azure/devops/pipelines/pipelines/list?view=azure-devops-rest-6.1) 
+
+
+---
+Connection profile example is [here](jobs/connectionprofile.json):
+```
+{
+  "WZA_AZ_DEVOPS_PIPELINES": {
+    "Type": "ConnectionProfile:ApplicationIntegrator:AI Azure Pipelines",
+    "AI-PersonalAccessToken": "*****",
+    "AI-User Name": "wzaremba",
+    "Description": "",
+    "Centralized": true
+  }
+}
+```
+
+---
+Job as Code example is [here](jobs/job.json)
+```
+{
+  "WZA_AZ_DEVOPS_PIPELINES": {
+    "Type": "SimpleFolder",
+    "ControlmServer": "cirrocumulus",
+    "SiteStandard": "WZA1",
+    "OrderMethod": "Manual",
+    "AI Azure Pipelines_Job": {
+      "Type": "Job:ApplicationIntegrator:AI Azure Pipelines",
+      "ConnectionProfile": "WZA_AZ_DEVOPS_PIPELINES",
+      "AI-Organization": "wzaremba",
+      "AI-Project": "CTM",
+      "AI-Pipeline ID": "2",
+      "SubApplication": "AZ_DEVOPS",
+      "Host": "cirrocumulus",
+      "CreatedBy": "wzaremba",
+      "RunAs": "WZA_AZ_DEVOPS_PIPELINES",
+      "Application": "WZA"
+    }
+  }
+}
+```
+
+---
+Sample output is [here](jobs/output.txt)
 
 
 ---
