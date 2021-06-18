@@ -58,7 +58,7 @@ function Select-Environment
 #	but it is not yet available in SaaS so checking for 'saas' in endpoint
 #	as a temporary kludge.
 #--------------------------------------------------------------------------
-	if ($endPoint.IndexOf('saas') -gt 0) {
+	if (($endPoint.IndexOf('saas') -gt 0) -Or ($endPoint.IndexOf('controlm.com') -gt 0)) {
 		Write-Host Assuming SaaS environment based on endpoint
 		$subVersion = "20"
 		$monthly = "40"
