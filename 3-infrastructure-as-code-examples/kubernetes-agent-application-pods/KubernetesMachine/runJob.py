@@ -122,6 +122,43 @@ def listPod(api_core, kJobname):
        print("%s" % i.metadata.name)
     return podName
 
+def readjob(api_batch, kJobname):
+    try: 
+       ret = api_batch.read_namespaced_job(kJobname, kNameSpace)
+    except ApiException as e:
+       print("Exception reading job %s namespace %s error: %s\n" % (kJobname, kNameSpace, e))
+       sys.exit(6)
+    
+    numPods = 0
+    podsFailed = str(ret.status.failed)
+    podsSucceeded = str(ret.status.succeeded)
+    podsActive = str(ret.status.active)
+    
+    print("Status active %s failed %s succeeded %s\n" % (podsActive, podsFailed, podsSucceeded))
+
+    if podsFailed.isdigit():
+      numPods = numPods + int(podsFailed)
+    if podsSucceeded.isdigit():
+      numPods = numPods + int(podsSucceeded)
+    if podsActive.isdigit():
+      numPods = numPods + int(podsActive)
+
+    return int(numPods)
+
+def readpod(api_batch, podName):
+    try: 
+       ret = api_batch.read_namespaced_pod(podName, kNameSpace)
+    except ApiException as e:
+       print("Exception reading pod %s namespace %s error: %s\n" % (podName, kNameSpace, e))
+       sys.exit(6)
+
+    pod_status = ret.status
+    
+    for c in pod_status.container_statuses:
+      print("Container status: image-id %s ready %s started %s\n" % (c.image_id, c.ready, c.started))
+
+    return c.ready
+
 def startJob(api_util, batch_client, kJobname, yaml):
     verbose = False
     try:
@@ -139,13 +176,12 @@ def startJob(api_util, batch_client, kJobname, yaml):
 
     print("Job {0} created".format(api_response.metadata.name))
     return
-   
+
 def status(api_batch, kJobname):
     print("Starting to track job status for: %s\n" % kJobname)
     jobStatus = "Success"
     jobRunning = "Running"
     podLabelSelector = 'job-name=' + kJobname
-                            # Give the job time to warm up
 
     getLog(core_client, podName)                # Stream the log output
 
@@ -380,8 +416,14 @@ def main(argv):
 
     signal.signal(signal.SIGTERM, termSignal)
 
-    time.sleep(5)                      # Give the job time to start a pod
+    podctr = 0
+    while podctr < 1:
+       podctr = readjob(batch_client, kJobname)                          # Wait until a pod has been created
+   
     podName = listPod(core_client, kJobname)
+
+    while not readpod(core_client, podName):
+       print("Waiting for container to be ready")
 
     jobStatus, podsActive, podsSucceeded, podsFailed = status(batch_client, kJobname)
 
