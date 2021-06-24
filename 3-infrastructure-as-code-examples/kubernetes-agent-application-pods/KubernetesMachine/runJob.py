@@ -155,7 +155,8 @@ def readpod(api_batch, podName):
     pod_status = ret.status
     
     for c in pod_status.container_statuses:
-      print("Container status: image-id %s ready %s started %s\n" % (c.image_id, c.ready, c.started))
+      time.sleep(1)
+      #print("Container status: image-id %s ready %s started %s\n" % (c.image_id, c.ready, c.started))
 
     return c.ready
 
@@ -239,6 +240,7 @@ def usage():
     print("\t-H, --hostpath\t\tPath on host machine (must be a directory)")
     print("\t-i, --image\t\tcontainer image name")
     print("\t-j, --jobname\t\tMandatory. Job name")
+    print("\t-k, --command\t\tcommand to run (default None, continer entrypoint will be used)")
     print("\t-m, --volname\t\tVolume mount name")
     print("\t-n, --namespace\t\tKubernetes Name Space")
     print("\t-p, --image\t\tpull_policy Always or Latest")
@@ -422,8 +424,12 @@ def main(argv):
    
     podName = listPod(core_client, kJobname)
 
+    containerwaiter = 0
     while not readpod(core_client, podName):
-       print("Waiting for container to be ready")
+       #print("Waiting for container to be ready")
+       containerwaiter =+ 1
+
+    print("Checked for container to become ready %s times" % (containerwaiter))
 
     jobStatus, podsActive, podsSucceeded, podsFailed = status(batch_client, kJobname)
 
