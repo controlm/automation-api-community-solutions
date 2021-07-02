@@ -1,5 +1,6 @@
 ctmArtifacts.tar
 /.project
 /.DS_Store
+.DS_Store
 /.pydevproject
 3-infrastructure-as-code-examples/kubernetes-agent-application-pods/Images/runKjobConnectionProfile.png

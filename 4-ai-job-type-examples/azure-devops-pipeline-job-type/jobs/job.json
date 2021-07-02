@@ -1,0 +1,20 @@
+{
+  "WZA_AZ_DEVOPS_PIPELINES": {
+    "Type": "SimpleFolder",
+    "ControlmServer": "cirrocumulus",
+    "SiteStandard": "WZA1",
+    "OrderMethod": "Manual",
+    "AI Azure Pipelines_Job": {
+      "Type": "Job:ApplicationIntegrator:AI Azure Pipelines",
+      "ConnectionProfile": "WZA_AZ_DEVOPS_PIPELINES",
+      "AI-Organization": "wzaremba",
+      "AI-Project": "CTM",
+      "AI-Pipeline ID": "2",
+      "SubApplication": "AZ_DEVOPS",
+      "Host": "cirrocumulus",
+      "CreatedBy": "wzaremba",
+      "RunAs": "WZA_AZ_DEVOPS_PIPELINES",
+      "Application": "WZA"
+    }
+  }
+}
