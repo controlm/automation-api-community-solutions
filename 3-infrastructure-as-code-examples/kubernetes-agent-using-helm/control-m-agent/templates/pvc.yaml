@@ -1,0 +1,10 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: agent-pvc
+spec:
+  accessModes:
+    - {{ .Values.pvc.accessMode }}
+  resources:
+    requests:
+      storage: {{ .Values.pvc.volumeSize }}

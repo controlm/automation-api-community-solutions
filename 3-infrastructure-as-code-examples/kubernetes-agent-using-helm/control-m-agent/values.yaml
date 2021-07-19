@@ -1,0 +1,24 @@
+# Default values for control-m-agent.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+runOnOpenShift: true
+
+pvc:
+  volumeSize: 10Gi
+  accessMode: ReadWriteOnce
+
+controlM:
+  serverName:
+  api:
+    endpoint:
+    user: change
+    pass: this    
+  agent:
+    image: 000000000000.dkr.ecr.us-west-2.amazonaws.com/appdev-dockers-repo:agent-example
+    pullPolicy: IfNotPresent
+    replicas: 1
+    agport: "7006"
+  volumePath: "/home/controlm/persistent_folder"
+  
+  
