@@ -165,12 +165,14 @@ function Do-One-Job
 {
 	$jobId = $jobHash.statuses.jobId[$jobSelect - 1]
 
-	$function = Read-Host "Select action: b (Bypass), c (confirm), d (details), k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
+	$function = Read-Host "Select action: b (Bypass), c (confirm), d (details), f (free), h (hold, k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
 	Switch ($function)
 	{
 		b {ctm run job::runNow $jobId -e $envName}
 		c {ctm run job::confirm $jobId -e $envName}
 		d {ctm run job:status::get $jobId -e $envName}
+		f {ctm run job::free $jobId -e $envName}
+		h {ctm run job::hold $jobId -e $envName}
 		k {ctm run job::kill $jobId -e $envName}
 		l {ctm run job:log::get $jobId -e $envName}
 		n { 
