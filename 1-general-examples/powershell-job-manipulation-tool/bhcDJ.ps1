@@ -1,3 +1,8 @@
+# Copyright © BMC Software, Inc. All rights reserved.
+# Your access and use of the following is governed by the terms and conditions set forth in License in the project root.
+# Changes may cause incorrect behavior and will be lost if the code is regenerated.
+
+
 function Select-Environment 
 {
 	$envString = ""
@@ -227,7 +232,7 @@ function Do-Jobs
 				$jobCtr++
 				Add-Member -InputObject $job -MemberType NoteProperty -Name sq -Value $jobCtr
 			}
-			$jobHash.statuses | Format-Table -RepeatHeader -Property sq, name, folder, status, jobId, application, subApplication, startTime, endTime, host, cyclic
+			$jobHash.statuses | Format-Table -RepeatHeader -Property sq, name, folder, status, jobId, application, subApplication, orderDate, startTime, endTime, host, cyclic
 			
 			$jobSelect = 0
 			
