@@ -1,0 +1,9 @@
+{
+  "WZA_AZ_DEVOPS_PIPELINES": {
+    "Type": "ConnectionProfile:ApplicationIntegrator:AI Azure Pipelines",
+    "AI-PersonalAccessToken": "*****",
+    "AI-User Name": "wzaremba",
+    "Description": "",
+    "Centralized": true
+  }
+}

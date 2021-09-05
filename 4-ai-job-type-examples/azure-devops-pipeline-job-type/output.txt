@@ -1,0 +1,194 @@
+Environment information:
++-------------------------+--------------------------------------------------+
+|Connection Profile Name  |WZA_AZ_DEVOPS_PIPELINES                           |
++-------------------------+--------------------------------------------------+
+|Connection Profile Scope |Centralized                                       |
++-------------------------+--------------------------------------------------+
+
+
+=============================================
+Operation: Execute
+Step name: 'Run and monitor'
+=============================================
+REST service details: 
+--------------------
+
+method: 	POST
+URL: 	https://dev.azure.com/ path: wzaremba/CTM/_apis/pipelines/2/runs?api-version=6.0-preview.1
+
+Response: 
+--------
+HttpResponseInfo [m_statusCode=200, m_statusMesg=OK, m_message={"_links":{"self":{"href":"https://dev.azure.com/wzaremba/deed2ce3-0\
+8e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27"},"web":{"href":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a29\
+7578e7/_build/results?buildId=27"},"pipeline.web":{"href":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_bui\
+ld/definition?definitionId=2"},"pipeline":{"href":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipeli\
+nes/2?revision=1"}},"pipeline":{"url":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2?revisi\
+on=1","id":2,"revision":1,"name":"wzaremba.pipelines-java","folder":"\\"},"state":"inProgress","createdDate":"2021-04-28T13:42:43.0\
+918246Z","url":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27","resources":{"reposi\
+tories":{"self":{"repository":{"fullName":"wzaremba/pipelines-java","connection":{"id":"fb0e0d48-aee9-4dfc-a5c5-5fcf5910b8e8"},"typ\
+e":"gitHub"},"refName":"refs/heads/master","version":"bccb1bcf73bdeb23c1c94aafc1eebbcd0eabd332"}}},"id":27,"name":"20210428.3"}, m_\
+contentType=application/json; charset=utf-8; api-version=6.0-preview.1, m_headers=null:[HTTP/1.1 200 OK]; X-VSS-UserData:[16cca0b7-\
+121b-63c6-8ac9-db1bba93332c:wzaremba@bmc.com]; X-TFS-Session:[0a235339-26fc-4a19-b552-580b16fd9b1c]; X-Content-Type-Options:[nosnif\
+f]; ActivityId:[0a235339-26fc-4a19-b552-580b16fd9b1c]; Pragma:[no-cache]; X-FRAME-OPTIONS:[SAMEORIGIN]; P3P:[CP="CAO DSP COR ADMa D\
+EV CONo TELo CUR PSA PSD TAI IVDo OUR SAMi BUS DEM NAV STA UNI COM INT PHY ONL FIN PUR LOC CNT"]; X-MSEdge-Ref:[Ref A: 71CB34D41C47\
+43C0B55F81E8921D1C9F Ref B: DUS30EDGE0317 Ref C: 2021-04-28T13:42:42Z]; Date:[Wed, 28 Apr 2021 13:42:45 GMT]; Access-Control-Expose\
+-Headers:[Request-Context]; Strict-Transport-Security:[max-age=31536000; includeSubDomains]; X-TFS-ProcessId:[8f566ea2-d7ac-4090-a6\
+92-4bb83221eb1c]; Cache-Control:[no-cache, no-store, must-revalidate]; Set-Cookie:[VstsSession=%7B%22PersistentSessionId%22%3A%220a\
+59c327-1f0d-477b-9ebf-3fa5f9b0afbf%22%2C%22PendingAuthenticationSessionId%22%3A%2200000000-0000-0000-0000-000000000000%22%2C%22Curr\
+entAuthenticationSessionId%22%3A%2200000000-0000-0000-0000-000000000000%22%2C%22SignInState%22%3A%7B%7D%7D;SameSite=None; domain=.d\
+ev.azure.com; expires=Mon, 27-Apr-2026 13:42:42 GMT; path=/; secure; HttpOnly]; Expires:[-1]; Content-Length:[1112]; Request-Contex\
+t:[appId=cid-v1:75f7e064-d741-4620-89f0-b5624ba3fe6d]; X-VSS-E2EID:[0a235339-26fc-4a19-b552-580b16fd9b1c]; Content-Type:[applicatio\
+n/json; charset=utf-8; api-version=6.0-preview.1]; ]
+Extracted runtime parameter:
+----------------------------
+'RUNID'==> '27' 
+
+=============================================
+Operation: MonitorCompletion
+Step name: 'Verify operation completion'
+=============================================
+REST service details: 
+--------------------
+
+method: 	GET
+URL: 	https://dev.azure.com/ path: /wzaremba/CTM/_apis/pipelines/2/runs/27?api-version=6.1-preview.1
+
+=============================================
+Operation: MonitorCompletion
+Step name: 'Verify operation completion'
+=============================================
+REST service details: 
+--------------------
+
+method: 	GET
+URL: 	https://dev.azure.com/ path: /wzaremba/CTM/_apis/pipelines/2/runs/27?api-version=6.1-preview.1
+
+=============================================
+Operation: MonitorCompletion
+Step name: 'Verify operation completion'
+=============================================
+REST service details: 
+--------------------
+
+method: 	GET
+URL: 	https://dev.azure.com/ path: /wzaremba/CTM/_apis/pipelines/2/runs/27?api-version=6.1-preview.1
+
+=============================================
+Operation: MonitorCompletion
+Step name: 'Verify operation completion'
+=============================================
+REST service details: 
+--------------------
+
+method: 	GET
+URL: 	https://dev.azure.com/ path: /wzaremba/CTM/_apis/pipelines/2/runs/27?api-version=6.1-preview.1
+
+=============================================
+Operation: MonitorCompletion
+Step name: 'Verify operation completion'
+=============================================
+REST service details: 
+--------------------
+
+method: 	GET
+URL: 	https://dev.azure.com/ path: /wzaremba/CTM/_apis/pipelines/2/runs/27?api-version=6.1-preview.1
+
+=============================================
+Operation: MonitorCompletion
+Step name: 'Verify operation completion'
+=============================================
+REST service details: 
+--------------------
+
+method: 	GET
+URL: 	https://dev.azure.com/ path: /wzaremba/CTM/_apis/pipelines/2/runs/27?api-version=6.1-preview.1
+
+=============================================
+Operation: Execute
+Step name: 'Get logs URLs'
+=============================================
+REST service details: 
+--------------------
+
+method: 	GET
+URL: 	https://dev.azure.com/ path: wzaremba/CTM/_apis/pipelines/2/runs/27/logs?$expand=signedContent&api-version=6.0-preview.1
+
+Response: 
+--------
+HttpResponseInfo [m_statusCode=200, m_statusMesg=OK, m_message={"logs":[{"createdOn":"2021-04-28T13:42:45.62Z","id":1,"lastChangedO\
+n":"2021-04-28T13:42:45.873Z","lineCount":23,"signedContent":{"url":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297\
+578e7/_apis/pipelines/2/runs/27/signedlogcontent/1?urlExpires=2021-04-28T13%3A44%3A37.2685858Z&urlSigningMethod=HMACV1&urlSignature\
+=F7zh4s28f%2F1H8QVx7jVk03vjUi9LQ90kwJ34CVFs0t8%3D","signatureExpires":"2021-04-28T13:44:37.2685858Z"},"url":"https://dev.azure.com/\
+wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27/logs/1"},{"createdOn":"2021-04-28T13:42:45.62Z","id":2,"las\
+tChangedOn":"2021-04-28T13:42:45.63Z","lineCount":50,"signedContent":{"url":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba\
+-685a297578e7/_apis/pipelines/2/runs/27/signedlogcontent/2?urlExpires=2021-04-28T13%3A44%3A37.2735855Z&urlSigningMethod=HMACV1&urlS\
+ignature=7oxc%2FVl5QXXrEeo75AkwR2jLmCDeUk633Qgbs2e1HU0%3D","signatureExpires":"2021-04-28T13:44:37.2735855Z"},"url":"https://dev.az\
+ure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27/logs/2"},{"createdOn":"2021-04-28T13:42:47.17Z","id\
+":3,"lastChangedOn":"2021-04-28T13:42:47.173Z","lineCount":32,"signedContent":{"url":"https://dev.azure.com/wzaremba/deed2ce3-08e6-\
+4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27/signedlogcontent/3?urlExpires=2021-04-28T13%3A44%3A37.2735855Z&urlSigningMethod=HM\
+ACV1&urlSignature=GKgIUBug3lE7isr3vr5X4EFXpjzg2I%2BYWQ6IIq2FNZQ%3D","signatureExpires":"2021-04-28T13:44:37.2735855Z"},"url":"https\
+://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27/logs/3"},{"createdOn":"2021-04-28T13:43:03\
+.103Z","id":4,"lastChangedOn":"2021-04-28T13:43:04.047Z","lineCount":29,"signedContent":{"url":"https://dev.azure.com/wzaremba/deed\
+2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27/signedlogcontent/4?urlExpires=2021-04-28T13%3A44%3A37.2735855Z&urlSignin\
+gMethod=HMACV1&urlSignature=UrUeiIfX2PiS4CLIrg%2F7UI2oQW%2Ft%2F1mi2P%2BDTxL3Xiw%3D","signatureExpires":"2021-04-28T13:44:37.2735855\
+Z"},"url":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27/logs/4"},{"createdOn":"202\
+1-04-28T13:43:05.21Z","id":5,"lastChangedOn":"2021-04-28T13:43:05.527Z","lineCount":205,"signedContent":{"url":"https://dev.azure.c\
+om/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27/signedlogcontent/5?urlExpires=2021-04-28T13%3A44%3A37.27\
+88521Z&urlSigningMethod=HMACV1&urlSignature=aMRO2gecU%2FdtSt%2F2QOXXi1erv1rliIiX6WFHdAwsrcY%3D","signatureExpires":"2021-04-28T13:4\
+4:37.2788521Z"},"url":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27/logs/5"},{"cre\
+atedOn":"2021-04-28T13:43:20.043Z","id":6,"lastChangedOn":"2021-04-28T13:43:20.25Z","lineCount":5161,"signedContent":{"url":"https:\
+//dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27/signedlogcontent/6?urlExpires=2021-04-28T13\
+%3A44%3A37.2788521Z&urlSigningMethod=HMACV1&urlSignature=C5S%2BnGo5OiBrimF%2BtUFzJRzGEzIa5ocOIFqwFcynZaw%3D","signatureExpires":"20\
+21-04-28T13:44:37.2788521Z"},"url":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27/l\
+ogs/6"},{"createdOn":"2021-04-28T13:43:24.23Z","id":7,"lastChangedOn":"2021-04-28T13:43:24.387Z","lineCount":10,"signedContent":{"u\
+rl":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27/signedlogcontent/7?urlExpires=20\
+21-04-28T13%3A44%3A37.2788521Z&urlSigningMethod=HMACV1&urlSignature=VeA7LwIfegrAnQI5zVVcTrm8X9vRMaxU4lrU6yKCfIw%3D","signatureExpir\
+es":"2021-04-28T13:44:37.2788521Z"},"url":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/ru\
+ns/27/logs/7"},{"createdOn":"2021-04-28T13:43:24.587Z","id":8,"lastChangedOn":"2021-04-28T13:43:24.773Z","lineCount":4,"signedConte\
+nt":{"url":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27/signedlogcontent/8?urlExp\
+ires=2021-04-28T13%3A44%3A37.2788521Z&urlSigningMethod=HMACV1&urlSignature=AA9eidUMrL5tji0kMW0Xmq0gGuOdOJUOAxAmP2jtS4s%3D","signatu\
+reExpires":"2021-04-28T13:44:37.2788521Z"},"url":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelin\
+es/2/runs/27/logs/8"},{"createdOn":"2021-04-28T13:43:24.963Z","id":9,"lastChangedOn":"2021-04-28T13:43:25.127Z","lineCount":5411,"s\
+ignedContent":{"url":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27/signedlogconten\
+t/9?urlExpires=2021-04-28T13%3A44%3A37.2788521Z&urlSigningMethod=HMACV1&urlSignature=eOTrb2ZJ3mIG0BstYm10y%2BM8kTENmFIqm2ULKxIz5Fk%\
+3D","signatureExpires":"2021-04-28T13:44:37.2788521Z"},"url":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_\
+apis/pipelines/2/runs/27/logs/9"}],"signedContent":{"url":"https://dev.azure.com/wzaremba/deed2ce3-08e6-4b38-9bba-685a297578e7/_api\
+s/pipelines/2/runs/27/signedlogcontent?urlExpires=2021-04-28T13%3A44%3A37.2285868Z&urlSigningMethod=HMACV1&urlSignature=sMXFbqqzuZg\
+yBJr2cXhJ9isoBN3gC4nMWOHw26MVALE%3D","signatureExpires":"2021-04-28T13:44:37.2285868Z"},"url":"https://dev.azure.com/wzaremba/deed2\
+ce3-08e6-4b38-9bba-685a297578e7/_apis/pipelines/2/runs/27/logs"}, m_contentType=application/json; charset=utf-8; api-version=6.0-pr\
+eview.1, m_headers=null:[HTTP/1.1 200 OK]; X-VSS-UserData:[16cca0b7-121b-63c6-8ac9-db1bba93332c:wzaremba@bmc.com]; X-TFS-Session:[1\
+8118b9d-2aea-464d-90f9-ecd5cb456a33]; X-Content-Type-Options:[nosniff]; ActivityId:[18118b9d-2aea-464d-90f9-ecd5cb456a33]; Pragma:[\
+no-cache]; X-FRAME-OPTIONS:[SAMEORIGIN]; P3P:[CP="CAO DSP COR ADMa DEV CONo TELo CUR PSA PSD TAI IVDo OUR SAMi BUS DEM NAV STA UNI \
+COM INT PHY ONL FIN PUR LOC CNT"]; X-MSEdge-Ref:[Ref A: 755D0CFD3D9D453881A7F323B905C934 Ref B: DUS30EDGE0315 Ref C: 2021-04-28T13:\
+43:37Z]; Date:[Wed, 28 Apr 2021 13:43:36 GMT]; Access-Control-Expose-Headers:[Request-Context]; Strict-Transport-Security:[max-age=\
+31536000; includeSubDomains]; X-TFS-ProcessId:[3237a14b-f8c3-4c33-a0e2-07aaf57d3ebd]; Cache-Control:[no-cache, no-sto
+re, must-revalidate]; Set-Cookie:[VstsSession=%7B%22PersistentSessionId%22%3A%22866aba2c-b76a-4ec3-a922-af1e1c3e0997%22%2C%22Pendin\
+gAuthenticationSessionId%22%3A%2200000000-0000-0000-0000-000000000000%22%2C%22CurrentAuthenticationSessionId%22%3A%2200000000-0000-\
+0000-0000-000000000000%22%2C%22SignInState%22%3A%7B%7D%7D;SameSite=None; domain=.dev.azure.com; expires=Mon, 27-Apr-2026 13:43:37 G\
+MT; path=/; secure; HttpOnly]; Expires:[-1]; Content-Length:[5241]; Request-Context:[appId=cid-v1:75f7e064-d741-4620-89f0-b5624ba3f\
+e6d]; X-VSS-E2EID:[18118b9d-2aea-464d-90f9-ecd5cb456a33]; Content-Type:[application/json; charset=utf-8; api-version=6.0-preview.1]\
+; ]
+Extracted runtime parameter:
+----------------------------
+'LOGS'==> '["https:\/\/dev.azure.com\/wzaremba\/deed2ce3-08e6-4b38-9bba-685a297578e7\/_apis\/pipelines\/2\/runs\/27\/logs\/1","http\
+s:\/\/dev.azure.com\/wzaremba\/deed2ce3-08e6-4b38-9bba-685a297578e7\/_apis\/pipelines\/2\/runs\/27\/logs\/2","https:\/\/dev.azure.c\
+om\/wzaremba\/deed2ce3-08e6-4b38-9bba-685a297578e7\/_apis\/pipelines\/2\/runs\/27\/logs\/3","https:\/\/dev.azure.com\/wzaremba\/dee\
+d2ce3-08e6-4b38-9bba-685a297578e7\/_apis\/pipelines\/2\/runs\/27\/logs\/4","https:\/\/dev.azure.com\/wzaremba\/deed2ce3-08e6-4b38-9\
+bba-685a297578e7\/_apis\/pipelines\/2\/runs\/27\/logs\/5","https:\/\/dev.azure.com\/wzaremba\/deed2ce3-08e6-4b38-9bba-685a297578e7\\
+/_apis\/pipelines\/2\/runs\/27\/logs\/6","https:\/\/dev.azure.com\/wzaremba\/deed2ce3-08e6-4b38-9bba-685a297578e7\/_apis\/pipelines\
+\/2\/runs\/27\/logs\/7","https:\/\/dev.azure.com\/wzaremba\/deed2ce3-08e6-4b38-9bba-685a297578e7\/_apis\/pipelines\/2\/runs\/27\/lo\
+gs\/8","https:\/\/dev.azure.com\/wzaremba\/deed2ce3-08e6-4b38-9bba-685a297578e7\/_apis\/pipelines\/2\/runs\/27\/logs\/9"]' 
+
+
+
+
+Job statistics:
++-------------------------+-------------------------+
+|Start Time               |20210428134242           |
++-------------------------+-------------------------+
+|End Time                 |20210428134337           |
++-------------------------+-------------------------+
+|Elapsed Time             |5467                     |
++-------------------------+-------------------------+
+Exit Code    = 0
+Exit Message = Normal completion
