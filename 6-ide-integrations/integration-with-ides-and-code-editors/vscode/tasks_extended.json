@@ -1,0 +1,109 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "windows": {
+        "options": {
+            "shell": { "executable": "cmd.exe", "args": [ "/d", "/c" ] }
+        }
+    },
+    "presentation": {
+        "echo": false,
+        "showReuseMessage": false,
+        "clear": true
+    },
+    "tasks": [
+        {
+            "label": "ctm aapi - build/deploy/run",
+            "type": "shell",
+            "command": "ctm ${input:ctmService} \"${file}\" -e ${input:ctmEnv}",
+            "problemMatcher": []
+        },
+        {
+            "label": "ctm aapi - deploy using descriptor",
+            "type": "shell",
+            "command": "ctm deploy \"${file}\" \"${fileDirname}/${input:ctmDepDesc}\" -e ${input:ctmEnv}",
+            "problemMatcher": []
+        },
+        {
+            "label": "ctm aapi - test deploy descriptor",
+            "type": "shell",
+            "command": "ctm deploy transform \"${file}\" \"${fileDirname}\\${input:ctmDepDesc}\" -e ${input:ctmEnv} > \"${fileDirname}\\${fileBasenameNoExtension}_transform.tmp\" & code \"${fileDirname}\\${fileBasenameNoExtension}_transform.tmp\" & del \"${fileDirname}\\${fileBasenameNoExtension}_transform.tmp\"",
+            "problemMatcher": []
+        },
+        {
+            "label": "ctm aapi - run (show runId)",
+            "type": "shell",
+            "command": "ctm run \"${file}\" -e ${input:ctmEnv} > \"${fileDirname}\\${fileBasenameNoExtension}.tmp\" && code \"${fileDirname}\\${fileBasenameNoExtension}.tmp\" & del \"${fileDirname}\\${fileBasenameNoExtension}.tmp\"",
+            "problemMatcher": []
+        },
+        {
+            "label": "ctm aapi - workflow status",
+            "type": "shell",
+            "command": "ctm run status ${selectedText} -e ${input:ctmEnv} > \"${fileDirname}\\${fileBasenameNoExtension}_wstatus.tmp\" && code \"${fileDirname}\\${fileBasenameNoExtension}_wstatus.tmp\" & del \"${fileDirname}\\${fileBasenameNoExtension}_wstatus.tmp\"",
+            "problemMatcher": []
+        },
+        {
+            "label": "ctm aapi - job status/log/output",
+            "type": "shell",
+            "command": "ctm run job:${input:ctmJobGet}::get ${selectedText} -e ${input:ctmEnv} > \"${fileDirname}\\${fileBasenameNoExtension}_${input:ctmJobGet}.tmp\" && code \"${fileDirname}\\${fileBasenameNoExtension}_${input:ctmJobGet}.tmp\" & del \"${fileDirname}\\${fileBasenameNoExtension}_${input:ctmJobGet}.tmp\"",
+            "problemMatcher": []
+        },
+        {
+            "label": "ctm aapi - job actions",
+            "type": "shell",
+            "command": "ctm run job::${input:ctmJobAction} ${selectedText} -e ${input:ctmEnv}",
+            "problemMatcher": []
+        },
+        {
+            "label": "ctm aapi - folder import",
+            "type": "shell",
+            "command": "ctm deploy jobs::get -s \"ctm=*&folder=${selectedText}\" -e ${input:ctmEnv} > \"${fileDirname}\\${fileBasenameNoExtension}_import.tmp\" && code \"${fileDirname}\\${fileBasenameNoExtension}_import.tmp\" & del \"${fileDirname}\\${fileBasenameNoExtension}_import.tmp\"",
+            "problemMatcher": []
+        },
+        {
+            "label": "ctm aapi - folder delete",
+            "type": "shell",
+            "command": "ctm deploy folder::delete ${input:ctmServer} ${selectedText} -e ${input:ctmEnv}",
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "type": "pickString",
+            "id": "ctmService",
+            "description": "Control-M Automation API - Select Operation",
+            "options": [ "build", "deploy", "run" ]
+        },
+        {
+            "type": "pickString",
+            "id": "ctmEnv",
+            "description": "Control-M Automation API - Select Environment",
+            // Edit the following line to use your own Automation API environment names
+            "options": [ "test", "dev", "sandbox", "workbench" ]
+        },
+        {
+            "type": "promptString",
+            "id": "ctmDepDesc",
+            "description": "Deploy Descriptor file name",
+            "default": "deploy_descriptor.json"
+        },
+        {
+            "type": "promptString",
+            "id": "ctmServer",
+            "description": "Control-M Server name"
+        },
+        {
+            "type": "pickString",
+            "id": "ctmJobGet",
+            "description": "Control-M Automation API - Select Operation",
+            "options": [ "status", "log", "output" ]
+        },
+        {
+            "type": "pickString",
+            "id": "ctmJobAction",
+            "description": "Control-M Automation API - Select Action",
+            "options": [ "hold", "free", "rerun", "setToOk", "runNow", "kill", "delete", "undelete", "waitingInfo", "get" ]
+        }
+    ]
+}
