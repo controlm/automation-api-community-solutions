@@ -3,7 +3,7 @@
 This an example to trigger the Control-M Automation API command line via Visual Studio Code custom tasks. To import the provided sample task definitions:
 
 1. From VS Code, press F1 (or Ctrl+Shift+P) and type "tasks", select "Tasks: Open User Tasks" and then "Others".
-2. Replace the default content with the ["tasks_basic.json"](/6-ide-integrations/integration-with-ides-and-code-editors/vscode/tasks_basic.json) file. (*If you already have your own "tasks" or "inputs" defined in the tasks.json file, update it by adding the new entries instead of overwriting the file*). 
+2. Replace the default content with the "[**tasks_basic.json**](/6-ide-integrations/integration-with-ides-and-code-editors/vscode/tasks_basic.json)" file. (*If you already have your own "tasks" or "inputs" defined in the tasks.json file, update it by adding the new entries instead of overwriting the file*). 
 3. Before saving and closing the "tasks.json" file, go to the line after the comment "*Edit the following line to use your own Automation API environment names*" - and update accordingly.
 
 And that´s it. The "tasks_basic.json" file includes two tasks:
@@ -22,7 +22,7 @@ For more information regarding custom tasks configuration in VS Code: https://co
 
 ## Keyboard shortcuts
 
-Optionally, you can create your custom keyboard shortcuts to access the previously defined tasks. A sample "keybindings.json" file is provided.
+Optionally, you can create your custom keyboard shortcuts to access the previously defined tasks. A sample "[**keybindings.json**](/6-ide-integrations/integration-with-ides-and-code-editors/vscode/keybindings.json)" file is provided.
 
 1. Go to "File" > "Preferences" > "Keyboard Shortcuts".
 2. Click on the top right icon which shows the mouse-over message "Open Keyboard Shortcuts (JSON)"
@@ -51,7 +51,7 @@ Once a task is executed, any resulting output or error messages will be shown in
 
 ## Additional Tasks
 
-Instead of the "tasks_basic.json" file, you can use "tasks_extended.json", which includes additional Automation API operations.
+Instead of the "tasks_basic.json" file, you can use "[**tasks_extended.json**](/6-ide-integrations/integration-with-ides-and-code-editors/vscode/tasks_extended.json)", which includes additional Automation API operations.
 
 > **The tasks defined in this file work only when VS Code is installed on Windows**. 
 
