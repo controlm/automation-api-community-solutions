@@ -26,7 +26,7 @@ Optionally, you can create your custom keyboard shortcuts to access the previous
 
 1. Go to "File" > "Preferences" > "Keyboard Shortcuts".
 2. Click on the top right icon which shows the mouse-over message "Open Keyboard Shortcuts (JSON)"
-3. Replace the default content with the "keybindings.json" file. (*If you already had custom shorcuts, edit the file accordingly*).
+3. Replace the default content with the "keybindings.json" file. (*If you already had custom shortcuts, edit the file accordingly*).
 
 The provided example defines "Ctrl+Alt+T" to open all available tasks, and "Alt+C" to directly trigger the "build/deploy/run" task. You can change it to use your preferred keyboard shortcuts (make sure there are no conflicts with default VS Code shortcuts).
 
@@ -57,7 +57,7 @@ Instead of the "tasks_basic.json" file, you can use "[**tasks_extended.json**](/
 
 * *For other OS such as macOS or Linux, you would need to adapt the commands and syntax used in each "command" task property.*
 
-* *Please be also aware that the "windows" and "presentation" sections would apply to all tasks defined in the JSON file. If you have additional custom tasks that could be affected by these settings, you will have to include both sections in *each* task definition in the JSON file, as in the "tasks_basic".json example.*
+* *Please be also aware that the "windows" and "presentation" sections would apply to all tasks defined in the JSON file. If you have additional custom tasks that could be affected by these settings, you will have to include both sections in *each* task definition in the JSON file, as in the "tasks_basic.json" example.*
 
 To import these tasks just follow the same instructions as above, but using the content of the "tasks_extended.json" file instead.
 
