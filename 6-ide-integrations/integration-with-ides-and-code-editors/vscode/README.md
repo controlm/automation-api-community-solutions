@@ -28,7 +28,7 @@ Optionally, you can create your custom keyboard shortcuts to access the previous
 2. Click on the top right icon which shows the mouse-over message "Open Keyboard Shortcuts (JSON)"
 3. Replace the default content with the "keybindings.json" file. (*If you already had custom shorcuts, edit the file accordingly*).
 
-The provided example defines "Ctrl+Alt+T" to open all available tasks, and "Alt+C" to directly trigger the "build/deploy/run" task. You can change it to use your own keyboard shortcuts (make sure there are no conflicts with default VS Code shortcuts).
+The provided example defines "Ctrl+Alt+T" to open all available tasks, and "Alt+C" to directly trigger the "build/deploy/run" task. You can change it to use your preferred keyboard shortcuts (make sure there are no conflicts with default VS Code shortcuts).
 
 For more information regarding keyboard shortcuts in VS Code: https://code.visualstudio.com/docs/getstarted/keybindings
 
