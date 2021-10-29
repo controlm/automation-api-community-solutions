@@ -1,3 +1,8 @@
+# Copyright © BMC Software, Inc. All rights reserved.
+# Your access and use of the following is governed by the terms and conditions set forth in License in the project root.
+# Changes may cause incorrect behavior and will be lost if the code is regenerated.
+
+
 function Select-Environment 
 {
 	$envString = ""
@@ -58,7 +63,7 @@ function Select-Environment
 #	but it is not yet available in SaaS so checking for 'saas' in endpoint
 #	as a temporary kludge.
 #--------------------------------------------------------------------------
-	if ($endPoint.IndexOf('saas') -gt 0) {
+	if (($endPoint.IndexOf('saas') -gt 0) -Or ($endPoint.IndexOf('controlm.com') -gt 0)) {
 		Write-Host Assuming SaaS environment based on endpoint
 		$subVersion = "20"
 		$monthly = "40"
@@ -165,12 +170,14 @@ function Do-One-Job
 {
 	$jobId = $jobHash.statuses.jobId[$jobSelect - 1]
 
-	$function = Read-Host "Select action: b (Bypass), c (confirm), d (details), k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
+	$function = Read-Host "Select action: b (Bypass), c (confirm), d (details), f (free), h (hold, k (Kill), l (Log), n (Rerun now), o (Output), r (Rerun) or q (quit)"
 	Switch ($function)
 	{
 		b {ctm run job::runNow $jobId -e $envName}
 		c {ctm run job::confirm $jobId -e $envName}
 		d {ctm run job:status::get $jobId -e $envName}
+		f {ctm run job::free $jobId -e $envName}
+		h {ctm run job::hold $jobId -e $envName}
 		k {ctm run job::kill $jobId -e $envName}
 		l {ctm run job:log::get $jobId -e $envName}
 		n { 
@@ -225,7 +232,7 @@ function Do-Jobs
 				$jobCtr++
 				Add-Member -InputObject $job -MemberType NoteProperty -Name sq -Value $jobCtr
 			}
-			$jobHash.statuses | Format-Table -RepeatHeader -Property sq, name, folder, status, jobId, application, subApplication, startTime, endTime, host, cyclic
+			$jobHash.statuses | Format-Table -RepeatHeader -Property sq, name, folder, status, jobId, application, subApplication, orderDate, startTime, endTime, host, cyclic
 			
 			$jobSelect = 0
 			

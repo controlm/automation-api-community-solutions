@@ -23,7 +23,7 @@ This job type uses exclusively Azure REST APIs to run and monitor a Logic App. U
 ```
 
 ### AI AzureLogicApps.ctmai
-This job type uses REST to start and monitor the Logic App and a PowerShell script with the Azure module, to display detailed information about the execution. The script is invoked as the last step in the job process and produces output similar to what can be seen from the Azure console by selecting each activity in the "Logic app run" blade. For a simple Logic App with an HTTP trigger and a "Send email" action, the output would appear similar to this:
+This job type uses REST to start and monitor the Logic App and a PowerShell script to display detailed information about the execution. The script is invoked as the last step in the job process and produces output similar to what can be seen from the Azure console by selecting each activity in the "Logic app run" blade. For a simple Logic App with an HTTP trigger and a "Send email" action, the output would appear similar to this:
 
 ```
 Activity: Response
@@ -94,7 +94,8 @@ Attribute|Description
 Subscription ID|Azure subscription id of the Logic App you wish to run
 Tenant ID|Azure tenant ID of the Logic App
 Application ID|Azure App Registration (also known as Service Principal) that has permission to run the desired Logic App
-Client Secret|An active secret for the Application ID above
+Passoword|An active client secret for the Application ID above
+Powershell Path|Full qualified path where the Powrshell script is located. This parameter is only for the AzureLogicApps job tpe which uses the Powershell script, included in this folder, to format the Logic App results.
 
 Note that the job form is almost identical (only the jobtype is different) for both job types. Once a connection profile is selected, you can use the elipsis (...) next to each field to retrieve from Azure the available values for each field and you can select the desired one from the list. Here is the empty form:
 
@@ -131,3 +132,7 @@ This folder has sample JSON for jobs and connectionn profiles for each of the jo
 * connectionProfile-LogicAppviaREST.json contains a sample connection profile for the jobtype that uses only REST
 * connectionProfile-AzureLogicApps.json contains a sample connection profile for the jobtype that uses a PowerShell script
 * jgo-azure-logicapps.json sample jobs for each job type
+
+## Powershell Script
+
+* AzureLogicApps_QueryActivity.ps1 uses the same credentials (the App Registration/Service Principal) that is specified in the Connection Profile. 
