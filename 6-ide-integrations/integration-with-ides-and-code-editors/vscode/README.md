@@ -3,7 +3,7 @@
 This an example to trigger the Control-M Automation API command line via Visual Studio Code custom tasks. To import the provided sample task definitions:
 
 1. From VS Code, press F1 (or Ctrl+Shift+P) and type "tasks", select "Tasks: Open User Tasks" and then "Others".
-2. Replace the default content with the "tasks_basic.json" [**"tasks_basic.json"**](/6-ide-integrations/integration-with-ides-and-code-editors/vscode/tasks_basic.json) file. (*If you already have your own "tasks" or "inputs" defined in the tasks.json file, update it by adding the new entries instead of overwriting the file*). 
+2. Replace the default content with the ["tasks_basic.json"](/6-ide-integrations/integration-with-ides-and-code-editors/vscode/tasks_basic.json) file. (*If you already have your own "tasks" or "inputs" defined in the tasks.json file, update it by adding the new entries instead of overwriting the file*). 
 3. Before saving and closing the "tasks.json" file, go to the line after the comment "*Edit the following line to use your own Automation API environment names*" - and update accordingly.
 
 And that´s it. The "tasks_basic.json" file includes two tasks:
