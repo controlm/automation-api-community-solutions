@@ -1,0 +1,179 @@
+#!/bin/sh
+# chkconfig: 345 98 01
+# description: Startup and Shutdown script for Control-M Agent
+
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+#	Addition for AWS Instance based on supplied rc.agent_user to:
+#		Get AWS Instance ID
+#		Retrieve EC2 Instance tags added for Control-M
+#		Connect to Control-M Server specified in the ctmserver tags
+#		Join Hostgroup specified in the ctmhostgroup tag
+#		Use Environment specified in the ctmenvironment tag
+#----------------------------------------------------------------------------------------------------------------------------------------------------
+AWS_Info() {
+	AWS_LOG="/var/log/ctm_awsprovision-`date +'%Y-%m-%d_%H-%M-%S'`.log"
+
+#
+#	Get EC2 Instance ID and region
+
+	AWS_Instance_ID=`curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document | grep instanceId | cut -f 2 -d ':' | sed s/[^a-zA-Z0-9_-]//g`
+	AWS_Region=`curl --silent http://169.254.169.254/latest/dynamic/instance-identity/document | grep region | cut -f 2 -d ':' | sed s/[^a-zA-Z0-9_-]//g`
+
+#	Get Control-M Server Name to connect to and Control-M Hostgroup to join
+	CTM_SERVER=`aws ec2 describe-tags --region ${AWS_Region} --filters "Name=resource-id,Values=$AWS_Instance_ID" "Name=key,Values=ctmserver" | grep Value | cut -f 2 -d ':' | sed s/[^a-zA-Z0-9_-]//g`
+	CTM_HOSTGROUP=`aws ec2 describe-tags --region ${AWS_Region} --filters "Name=resource-id,Values=$AWS_Instance_ID" "Name=key,Values=ctmhostgroup" | grep Value | cut -f 2 -d ':' | sed s/[^a-zA-Z0-9_-]//g`
+	CTM_ENV=`aws ec2 describe-tags --region ${AWS_Region} --filters "Name=resource-id,Values=$AWS_Instance_ID" "Name=key,Values=ctmenvironment" | grep Value | cut -f 2 -d ':' | sed s/[^a-zA-Z0-9_-]//g`
+#
+#	Get CTM Environment configuration
+#
+	envurl=${CTM_ENV}-url
+	ctmurl=`aws secretsmanager get-secret-value --region ${AWS_Region} --secret-id ${envurl} --query 'SecretString' --output text | tr -d '"'`
+	envuser=${CTM_ENV}-user
+	ctmuser=`aws secretsmanager get-secret-value --region ${AWS_Region} --secret-id ${envuser} --query 'SecretString' --output text`
+	envpswd=${CTM_ENV}-password
+	ctmpswd=`aws secretsmanager get-secret-value --region ${AWS_Region} --secret-id ${envpswd} --query 'SecretString' --output text`
+	envausr=${CTM_ENV}-agentuser
+	agentuser=`aws secretsmanager get-secret-value --region ${AWS_Region} --secret-id ${envausr} --query 'SecretString' --output text`
+
+	ctm env add ${CTM_ENV} ${ctmurl} ${ctmuser} ${ctmpswd}
+	ctm env set ${CTM_ENV} 
+
+	echo AWS Instance ID is $AWS_Instance_ID
+	echo AWS Region is $AWS_Region
+	echo Server is $CTM_SERVER
+	echo Hostgroup is $CTM_HOSTGROUP
+	echo Invocation Type is $STATE_ACTION
+	echo Control-M Environment is $CTM_ENV
+	echo Control-M Endpoint is $ctmurl
+	echo Control-M Agent username is $agentuser
+
+	echo AWS Instance ID is $AWS_Instance_ID >> $AWS_LOG
+	echo AWS Region is $AWS_Region >> $AWS_LOG
+	echo Server is $CTM_SERVER >> $AWS_LOG
+	echo Hostgroup is $CTM_HOSTGROUP >> $AWS_LOG
+	echo Invocation Type is $STATE_ACTION >> $AWS_LOG
+	echo Control-M Environment is $CTM_ENV >> $AWS_LOG
+	echo Control-M Endpoint is $ctmurl >> $AWS_LOG
+	echo Control-M Agent username is $agentuser >> $AWS_LOG
+
+}
+
+AWS_Setup() {
+
+	local AWS_user_owner=$1
+
+#------------------------------------------------------------------------------------------------------------------------------------
+#
+#	Do the Agent setup
+#
+#------------------------------------------------------------------------------------------------------------------------------------
+
+
+	CTMS_Reg_File=$install_path/ctm/data/ctm_serv_reg.dat
+	ALIAS=$(hostname -s)
+	ALIAS=$ALIAS:$AWS_Instance_ID
+
+	echo $CTMS_Reg_File
+	echo ALIAS is $ALIAS
+
+	echo $CTMS_Reg_File >> $AWS_LOG
+	echo ALIAS is $ALIAS >> $AWS_LOG
+
+	if [ ! -f $CTMS_Reg_File ] && [ "$STATE_ACTION" = "start" ] ; then	
+		touch $CTMS_Reg_File
+		/bin/su - $AWS_user_owner -c "ctm provision setup $CTM_SERVER $ALIAS"
+		/bin/su - $AWS_user_owner -c "ctm config server:hostgroup:agent::add $CTM_SERVER $CTM_HOSTGROUP \"$ALIAS\" "
+	fi
+	if [ -f $CTMS_Reg_File ] && [ "$STATE_ACTION" = "stop" ] ; then
+		rm -f $CTMS_Reg_File
+		/bin/su - $AWS_user_owner -c "ctm config server:hostgroup:agent::delete $CTM_SERVER $CTM_HOSTGROUP \"$ALIAS\" "
+		/bin/su - $AWS_user_owner -c "ctm config server:agent::delete $CTM_SERVER $ALIAS "
+	fi
+}
+#---------------------------------------------------------------------------------------------------------------------------------------------------
+#		END of AWS Additions
+#---------------------------------------------------------------------------------------------------------------------------------------------------
+
+# set minimal PATH to make sure basic commands like grep and awk are recognized
+PATH=/usr/sbin/:/usr/bin:/sbin:$PATH
+export PATH
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------
+#		Retrieve AWS Info
+#---------------------------------------------------------------------------------------------------------------------------------------------------
+AWS_Info
+
+#
+#	Account name is configured during standard installation. 
+#	Here it's retrieved from an AWS secret and should match the 
+#	Linux username under which the Control-M agent was provisioned
+#
+account_name="${agentuser}"
+install_path="/home/${agentuser}"
+
+# Get the agent status
+AGENT_STATUS_FILE=$install_path/ctm/data/ctm_agent_status.dat
+agent_status=`cat $AGENT_STATUS_FILE`
+
+# set config file name
+config_file=$install_path/ctm/data/CONFIG.dat
+
+#Get input parameter start|stop|<empty> for backward compatibility
+ARG1=`echo $1 | tr '[A-Z]' '[a-z]'`
+
+if [ "$ARG1" = "start" ] || [ "$ARG1" = "stop" ] ; then
+	if [ "$ARG1" = "start" ] ; then
+		STATE_ACTION="start"
+	elif [ "$ARG1" = "stop" ] ; then
+		STATE_ACTION="stop"
+	fi 
+else
+	STATE_ACTION="start"
+fi
+
+if [ "$agent_status" = "STOPPED" ] ; then # AGENT_STATUS is set to 'STOPPED', exit without starting the Agent
+	echo "Control-M/Agent (account $account_name) status is set to 'STOPPED'. Control-M/Agent will not start."
+	exit 0
+fi
+
+# get the value for config parameter AGENT_OWNER to determine which owner should start the agent
+# in case the parameter is missing or empty, start as root.
+# This script is executed as root user by the OS during machine startup.
+# If the agent should run as agent owner, use 'su' to run start-ag
+agent_owner=`grep AGENT_OWNER $config_file | awk '{print $2}'`
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------
+#		Set up agent on EC2 
+#---------------------------------------------------------------------------------------------------------------------------------------------------
+AWS_Setup $agent_owner
+
+
+if [ "$STATE_ACTION" = "start" ] ; then 
+
+	 
+	
+	if [ "$agent_owner" != "root" ] ; then
+		/bin/su - $agent_owner -c "$install_path/ctm/scripts/start-ag -u $account_name -p ALL"
+	else
+		$install_path/ctm/scripts/start-ag -u $account_name -p ALL
+	fi
+
+else
+ 
+	# backup ctm_agent_status.dat to keep origional status
+	TMP_FILE_NAME="ctm_agent_status_dat-`date +'%Y-%m-%d_%H-%M-%S'`.tar"	
+	cd $install_path/ctm/data ; tar -cf $TMP_FILE_NAME ctm_agent_status.dat 
+	
+	if [ "$agent_owner" != "root" ] ; then
+			/bin/su - $agent_owner -c "$install_path/ctm/scripts/shut-ag -u $account_name -p ALL"
+	else			
+			$install_path/ctm/scripts/shut-ag -u $account_name -p ALL
+	fi
+	
+	# restore ctm_agent_status.dat to origional 
+	cd $install_path/ctm/data ; tar -xf $TMP_FILE_NAME  ; rm -f $TMP_FILE_NAME 
+
+fi
+exit 0
+
+
