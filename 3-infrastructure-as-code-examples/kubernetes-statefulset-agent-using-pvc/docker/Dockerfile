@@ -12,6 +12,7 @@ LABEL Description="This is a Control-M/Agent image that planned to run in K8s en
 #--	&& yum -y install wget \
 RUN  yum -y install wget \
         && yum -y install telnet \
+	&& yum -y install psmisc \
         && yum -y install unzip \
         && yum -y install sudo \
         && yum -y install net-tools \

@@ -50,6 +50,6 @@
 
    ![Notepad++ > Menu](/6-ide-integrations/integration-with-ides-and-code-editors/images/notepad++_menu.png)
 
-   > If you want to add additional Automation API operations as shown in the screenshot above, have a look at the [**Notepad++ additional examples**](/6-ide-integrations/integration-with-ides-and-code-editors/notepad++-additional-examples.md) 
+   > If you want to add additional Automation API operations as shown in the screenshot above, have a look at the [**Notepad++ additional examples**](/6-ide-integrations/integration-with-ides-and-code-editors/notepad++/notepad++-additional-examples.md) 
       
    *Integration tested with Notepad++ 7.5.9 (64-bit) and NppExec plugin 0.6 running on Windows 10*

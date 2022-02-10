@@ -4,11 +4,11 @@ Here are additional examples of commands to invoke the Control-M Automation API.
    
 To integrate them in Notepad++ you have two options:
 
-   1. Do it manually for each operation, following the instructions in [**Integration with Notepad++**](/6-ide-integrations/integration-with-ides-and-code-editors/integration-with-notepad++.md). 
+   1. Do it manually for each operation, following the instructions in [**Integration with Notepad++**](/6-ide-integrations/integration-with-ides-and-code-editors/notepad++/README.md). 
    
-   2. Download the [**notepad++-nppexec-files.zip**](/6-ide-integrations/integration-with-ides-and-code-editors/notepad++-nppexec-files.zip) file and follow these instructions - but *please be aware that it will overwrite any previous configuration you may have added for the Notepad++ context menus and the NppExec plugin*.
+   2. Download the [**notepad++-nppexec-files.zip**](/6-ide-integrations/integration-with-ides-and-code-editors/notepad++/notepad++-nppexec-files.zip) file and follow these instructions - but *please be aware that it will overwrite any previous configuration you may have added for the Notepad++ context menus and the NppExec plugin*.
    
-      * make sure the NppExec plugin is installed (as explained in [Integration with Notepad++](/6-ide-integrations/integration-with-ides-and-code-editors/integration-with-notepad++.md)) and then close Notepad++
+      * make sure the NppExec plugin is installed (as explained in [Integration with Notepad++](/6-ide-integrations/integration-with-ides-and-code-editors/notepad++/README.md)) and then close Notepad++
       * unzip the file and copy (overwrite) the existing “contextMenu.xml” in your “%APPDATA%\Notepad++” folder
       * copy the other two files to “%APPDATA%\Notepad++\plugins\config”
 

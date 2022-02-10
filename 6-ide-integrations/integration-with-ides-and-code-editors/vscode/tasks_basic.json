@@ -1,0 +1,44 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "ctm aapi - build/deploy/run",
+            "type": "shell",
+            "command": "ctm ${input:ctmService} \"${file}\" -e ${input:ctmEnv}",
+            "windows": { "options": { "shell": { "executable": "cmd.exe", "args": [ "/d", "/c" ] } } },
+            "presentation": { "echo": false, "showReuseMessage": false, "clear": true },
+            "problemMatcher": []
+        },
+        {
+            "label": "ctm aapi - deploy using descriptor",
+            "type": "shell",
+            "command": "ctm deploy \"${file}\" \"${fileDirname}/${input:ctmDepDesc}\" -e ${input:ctmEnv}",
+            "windows": { "options": { "shell": { "executable": "cmd.exe", "args": [ "/d", "/c" ] } } },
+            "presentation": { "echo": false, "showReuseMessage": false, "clear": true },
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "type": "pickString",
+            "id": "ctmEnv",
+            "description": "Control-M Automation API - Select Environment",
+            // Edit the following line to use your own Automation API environment names
+            "options": [ "test", "dev", "sandbox", "workbench" ]
+        },
+        {
+            "type": "pickString",
+            "id": "ctmService",
+            "description": "Control-M Automation API - Select Operation",
+            "options": [ "build", "deploy", "run" ]
+        },
+        {
+            "type": "promptString",
+            "id": "ctmDepDesc",
+            "description": "Deploy Descriptor file name",
+            "default": "deploy_descriptor.json"
+        }
+    ]
+}

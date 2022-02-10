@@ -1,0 +1,12 @@
+// Place your key bindings in this file to override the defaults
+[
+    {
+        "key": "alt+t",
+        "command": "workbench.action.tasks.runTask"
+    },
+    {
+        "key": "alt+c",
+        "command": "workbench.action.tasks.runTask",
+        "args": "ctm aapi - build/deploy/run"
+    }
+]
