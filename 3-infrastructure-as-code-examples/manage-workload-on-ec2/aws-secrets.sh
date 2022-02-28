@@ -6,6 +6,12 @@ url-secret='"https://ip-172-31-50-204.us-west-2.compute.internal:8443/automation
 aws secretsmanager create-secret --region us-west-2 --name ctmprod-url \
     --description "Control-M URL" \
     --secret-string ${url-secret}
+
+# Control-M Server
+aws secretsmanager create-secret --region us-west-2 --name ctmprod-server \
+    --description "Control-M Server name" \
+    --secret-string "smprod"
+
 # Control-M username
 aws secretsmanager create-secret --region us-west-2 --name ctmprod-user \
     --description "Control-M user name" \
@@ -15,6 +21,7 @@ aws secretsmanager create-secret --region us-west-2 --name ctmprod-user \
 aws secretsmanager create-secret --region us-west-2 --name ctmprod-password \
     --description "Control-M password" \
     --secret-string "2Mzpah7msYUA94ZyzPztqBrn"
+
 # Agent username
 aws secretsmanager create-secret --region us-west-2 --name ctmprod-agentuser \
     --description "Control-M Agent username" \

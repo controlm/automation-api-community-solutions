@@ -2,22 +2,18 @@
 
 # Create secrets for Control-M "ctmprod" environment
 # URL of the Automation API endpoint
-url-secret='"https://ip-172-31-50-204.us-west-2.compute.internal:8443/automation-api"'
-aws secretsmanager create-secret --region us-west-2 --name ctmprod-url \
-    --description "Control-M URL" \
-    --secret-string ${url-secret}
+printf "https://ip-172-31-50-204.us-west-2.compute.internal:8443/automation-api" | gcloud secrets create ctmprod-url --data-file=- 
+printf "https://smprod.ctmdemo.com:8443/automation-api" | gcloud secrets versions add ctmprod-url --data-file=-
 # Control-M username
-aws secretsmanager create-secret --region us-west-2 --name ctmprod-user \
-    --description "Control-M user name" \
-    --secret-string "apiuser"
+printf "apiuser" | gcloud secrets create ctmprod-user --data-file=-
 
 # Control-M password
-aws secretsmanager create-secret --region us-west-2 --name ctmprod-password \
-    --description "Control-M password" \
-    --secret-string "2Mzpah7msYUA94ZyzPztqBrn"
-# Agent username
-aws secretsmanager create-secret --region us-west-2 --name ctmprod-agentuser \
-    --description "Control-M Agent username" \
-    --secret-string "ctmagent"
+printf "2Mzpah7msYUA94ZyzPztqBrn" | gcloud secrets create ctmprod-password --data-file=-
 
-aws secretsmanager update-secret --secret-id ctmprod-url --region us-west-2 --secret-string '"https://smprod.ctmdemo.com:8443/automation-api"'
+# Agent username
+printf "ctmagent" | gcloud secrets create ctmprod-agentuser --data-file=-
+
+# Control-M Server name
+printf "smprod" | gcloud secrets create ctmprod-server --data-file=-
+
+printf "https://smprod.ctmdemo.com:8443/automation-api" | gcloud secrets versions add ctmprod-url --data-file=-
