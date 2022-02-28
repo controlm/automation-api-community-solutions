@@ -1,5 +1,5 @@
 # Tutorial - Build Docker Image and run containers with embedded Control-M Agent
-The contents in this folder are intended to be used together with text and video instructions found in [this tutorial](https://docs.bmc.com/docs/display/ctmapitutorials/Manage+workload+in+Docker+Containers) that describes one specific implementation for building a Docker image and then running containers that connect to a Control-M environment and process work. The tutorial suggests a method for specifying the target environment dynamically so that the same image can be connected to a test, dev, QA or production environment. The binding to the target environment is achieved by accessing endpoint information dynamically. 
+The content in this folder describes one specific implementation for building a Docker image with an embedded Control-M Agent. When instantiating containers, they connect to a Control-M environment and process work. The tutorial describes a method for specifying the target environment dynamically so that the same image can be connected to a test, dev, QA or production environment. The binding to the target environment is achieved by dynamically accessing endpoint information. 
 
 File|Description
 ---------|-------
