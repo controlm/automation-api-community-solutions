@@ -1,0 +1,72 @@
+{
+    "mol-glue-demo-folder" : {
+      "Type" : "Folder",
+      "ControlmServer" : "smprod",
+      "OrderMethod" : "Manual",
+      "ActiveRetentionPolicy" : "CleanEndedOK",
+      "CreatedBy" : "moladugb",
+      "Application" : "mol-app",
+      
+      
+        "glue-job" : {
+            "Type" : "Job:AWS Glue",
+            "ConnectionProfile" : "MOL-GLUE-CONNECTION-PROFILE",
+            "Glue Job Name" : "mol-glue-job-run",
+            "Glue Job Arguments" : "unchecked",
+            "CreatedBy" : "moladugb",
+            "Host" :"glueagents",
+            "Application" : "mol-app"
+    },
+        "command-job-1" : {
+            "Type" :"Job:Command",
+            "Command" : "echo Hello World!",
+            "RunAs" : "ctmagent",
+            "Host" : "glueagents",
+            "Application" :"mol-app"
+            
+        
+    },
+        "command-job-2" : {
+            "Type" :"Job:Command",
+            "Command" : "echo Hello World!",
+            "RunAs" : "ctmagent",
+            "Host" : "glueagents",
+            "Application":"mol-app"
+      
+    },
+        "command-job-3" : {
+            "Type" :"Job:Command",
+            "Command" : "echo I am out",
+            "RunAs" : "ctmagent",
+            "Host" : "glueagents",
+            "Application":"mol-app"
+      
+    },
+    
+        "command-job-4" : {
+            "Type" :"Job:Command",
+            "Command" : "echo Bye now",
+            "RunAs" : "ctmagent",
+            "Host" : "glueagents",
+            "Application":"mol-app"
+    },
+        "Flow1" : {
+            "Type": "Flow",
+            "Sequence" : ["command-job-1","glue-job" ]
+        },
+        "Flow2" : {
+            "Type": "Flow",
+            "Sequence" : ["glue-job", "command-job-2"]
+        },
+        "Flow3" : {
+            "Type": "Flow",
+            "Sequence" : ["glue-job", "command-job-3"]
+        
+        },
+        "Flow4" : {
+            "Type":"Flow",
+            "Sequence" :["glue-job","command-job-4"]
+        }
+    }
+  }
+  

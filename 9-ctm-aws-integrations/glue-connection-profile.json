@@ -1,0 +1,12 @@
+{
+    "GLUECONNECTIONIAM": {
+      "Type": "ConnectionProfile:AWS Glue",
+      "AI-IAM Role": "GLUEEC2IAMROLE",
+      "AI-Authentication": "NOSECRET",
+      "AI-AWS_REGION": "eu-west-2",
+      "AI-Glue url": "glue.eu-west-2.amazonaws.com",
+      "AI-Connection Timeout": "40",
+      "Description": "",
+      "Centralized": true
+    }
+  }
