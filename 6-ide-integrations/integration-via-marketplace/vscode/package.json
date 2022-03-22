@@ -1,0 +1,54 @@
+{
+    "name": "job-as-code",
+    "displayName": "Control-M Job-As-Code Code Snippets",
+    "description": "All snippets you need for Control-M Workflow development",
+    "version": "0.1.6",
+    "license": "SEE LICENSE IN LICENSE.txt",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/controlm/automation-api-community-solutions/6-ide-integrations/integration-via-marketplace/vscode"
+    },
+    "author": {
+        "name": "BMC Software",
+        "email": "orchestrator@bmc.com",
+        "url": "http://www.bmc.com"
+    },
+    "bugs": {
+        "url": "https://github.com/controlm",
+        "email": "orchestrator@bmc.com"
+    },
+    "publisher": "bmcsoftware",
+    "engines": {
+        "vscode": "^1.65.0"
+    },
+    "categories": [
+        "Debuggers",
+        "Programming Languages",
+        "Snippets",
+        "Other"
+    ],
+    "keywords": [
+        "job-as-code",
+        "controlm",
+        "ctm",
+        "bmc",
+        "snippet"
+    ],
+    "homepage": "https://github.com/controlm/automation-api-community-solutions/blob/master/6-ide-integrations/integration-via-marketplace/vscode/README.md",
+    "icon": "images/icon.128.png",
+    "galleryBanner": {
+        "color": "#ACD1EC",
+        "theme": "light"
+    },
+    "contributes": {
+        "snippets": [{
+                "language": "json",
+                "path": "./snippets/ctm.json.code-snippets"
+            },
+            {
+                "language": "python",
+                "path": "./snippets/ctm.python.code-snippets"
+            }
+        ]
+    }
+}

@@ -1,0 +1,217 @@
+{
+    "Array": {
+        "prefix": "jac.Array",
+        "body": "\"${key}\": [] ",
+        "description": "new JSON array"
+    },
+    "FileTransfer Connection Profile All": {
+        "prefix": "jac.Connection.Profile.FileTransfer.FTP.All",
+        "body": "\"FTPConn\" : {\r\n   \"Type\" : \"ConnectionProfile:FileTransfer:FTP\",\r\n   \"TargetAgent\" : \"AgentHost\",\r\n   \"TargetCTM\" : \"CTMHost\",\r\n   \"WorkloadAutomationUsers\":[\"john\",\"bob\"],\r\n   \"HostName\": \"FTPServer\",\r\n   \"Port\": \"21\",\r\n   \"User\" : \"FTPUser\",\r\n   \"Password\" : \"ftp password\",\r\n   \"HomeDirectory\": \"/home/FTPUser\",\r\n   \"OsType\": \"Unix\"\r\n}",
+        "description": "FTP connection Profile with Basic properties"
+    },
+    "FileTransfer Connection Profile Basic": {
+        "prefix": "jac.Connection.Profile.FileTransfer.FTP.Basic",
+        "body": "\"FTPConn\" : {\r\n   \"Type\" : \"ConnectionProfile:FileTransfer:FTP\",\r\n   \"TargetAgent\" : \"AgentHost\",\r\n   \"TargetCTM\" : \"CTMHost\",\r\n   \"HostName\": \"FTPServer\",\r\n   \"User\" : \"FTPUser\",\r\n   \"Password\" : \"ftp password\"\r\n}",
+        "description": "FTP connection Profile with Basic properties"
+    },
+    "Hadoop Connection Profile": {
+        "prefix": "jac.Connection.Profile.Hadoop.All",
+        "body": "\"HADOOP_CONNECTION_PROFILE\": {\r\n   \"Type\" : \"ConnectionProfile:Hadoop\",\r\n   \"TargetAgent\" : \"AgentHost\",\r\n   \"TargetCTM\" : \"CTMHost\"\r\n}",
+        "description": "FTP connection Profile with Basic properties"
+    },
+    "Apache Spark Connection Profile": {
+        "prefix": "jac.Connection.Profile.Apache.Spark.All",
+        "body": "\"SPARK_CONNECTION_PROFILE\" : {\r\n   \"Type\" : \"ConnectionProfile:Hadoop\",\r\n   \"TargetAgent\" : \"AgentHost\",\r\n   \"Spark\" : {\r\n   \"CustomPath\" : \"/home\"\r\n}",
+        "description": "Apache Spark connection Profile with Basic properties"
+    },
+    "Apache Oozie Connection Profile": {
+        "prefix": "jac.Connection.Profile.Apache.Oozie.All",
+        "body": "\"OOZIE_CONNECTION_PROFILE\" : {\r\n   \"Type\" : \"ConnectionProfile:Hadoop\",\r\n   \"TargetAgent\" : \"AgentHost\",\r\n   \"Centralized\" : false,\r\n   \"Oozie\" : {\r\n   \"SslEnabled\" : false,\r\n   \"Host\" : \"Oozie.Server.Host\",\r\n   \"Port\" : \"11000\",\r\n   \"ExtractionRules\": [{\r\n   \"RuleName\" : \"rule_name1\",\r\n   \"WorkFlowName\" : \"work_flow_name1\",\r\n   \"WorkFlowUserName\" : \"work_flow_user_name1\",\r\n   \"FolderName\" : \"folder_name1\",\r\n   \"JobName\" : \"job_name1\"},{\r\n   \"RuleName\" : \"rule_name2\",\r\n   \"WorkFlowName\" : \"work_flow_name2\",\r\n   \"WorkFlowUserName\" : \"work_flow_user_name2\",\r\n   \"FolderName\" : \"folder_name2\",\r\n   \"JobName\" : \"job_name2\"\r\n   }\r\n]\r\n}\r\n}",
+        "description": "Apache Oozie connection Profile with Basic properties"
+    },
+    "Defaults": {
+        "prefix": "jac.Defaults",
+        "body": "\"Defaults\" : {\r\n\t\r\n}\r\n",
+        "description": "inserts Defaults object"
+    },
+    "Flow": {
+        "prefix": "jac.Flow",
+        "body": "\"flowName\": {\r\n\t\t\t\"Type\":\"Flow\",\r\n\t\t\t\"Sequence\":[\"job1\", \"job2\", \"job3\"]\r\n\t\t}\t\t",
+        "description": "Inserts a flow object"
+    },
+    "Folder All": {
+        "prefix": "jac.Folder.All",
+        "body": "\"FolderSampleAll\": {\r\n        \"Type\": \"Folder\",\r\n        \"AdjustEvents\": true,\r\n        \"ControlmServer\": \"controlm\",\r\n        \"SiteStandard\": \"\",\r\n        \"OrderMethod\": \"Manual\",\r\n        \"Application\": \"ApplicationName\",\r\n        \"SubApplication\" : \"SubApplicationName\",\r\n        \"RunAs\" : \"controlm\",\r\n        \"When\" : {\r\n            \"WeekDays\": [\"SUN\"]\r\n        },\r\n        \"ActiveRetentionPolicy\": \"KeepAll\",\r\n        \"DaysKeepActiveIfNotOk\" : \"41\",\r\n        \"mut1\" : {\r\n            \"Type\": \"Resource:Mutex\",\r\n            \"MutexType\": \"Exclusive\"\r\n        },\r\n        \"Notify1\": {\r\n            \"Type\": \"Notify:ExecutionTime\",\r\n            \"Criteria\": \"LessThan\",\r\n            \"Value\": \"3\",\r\n            \"Message\": \"Less than expected\"\r\n        }\r\n    }",
+        "description": "Inserts a folder with all the properties"
+    },
+    "Basic Folder": {
+        "prefix": "jac.Folder.Basic",
+        "body": "\"FolderSampleBasic\": {\r\n\t\t\"Type\": \"Folder\",\r\n\t}",
+        "description": "Inserts a folder with just the basic property"
+    },
+    "Sub Folder": {
+        "prefix": "jac.Folder.Sub.Folder",
+        "body": "\"SubFolder\" : {\r\n\t\t\t\"Type\" : \"SubFolder\",\r\n\t\t}",
+        "description": "Sub folder object"
+    },
+    "Application Property": {
+        "prefix": "jac.Property.Application.Sub.Application",
+        "body": "\"Application\": \"ApplicationName\",\r\n\"SubApplication\": \"SubApplicationName\",",
+        "description": "Inserts attributes for Application and sub application"
+    },
+    "Comment": {
+        "prefix": "jac.Property.Comment",
+        "body": "\"Comment\" : \"code reviewed by Orchestrator\",",
+        "description": ""
+    },
+    "Confirm Property": {
+        "prefix": "jac.Property.Confirm",
+        "body": "\"Confirm\" : true",
+        "description": "Allows you to define a job or subfolder that requires user confirmation"
+    },
+    "Controlm Server Property": {
+        "prefix": "jac.Property.Controlm.Server",
+        "body": "\"ControlmServer\": \"controlm\"",
+        "description": "Inserts the Control-M Server property"
+    },
+    "Description": {
+        "prefix": "jac.Property.Description",
+        "body": "\"Description\": \"description\"\r\n",
+        "description": "Insters the description property"
+    },
+    "Manual Order Method": {
+        "prefix": "jac.Property.Folder.Order.Method",
+        "body": "\"OrderMethod\": \"Manual\"",
+        "description": "Sets the Order Method attribute"
+    },
+    "Host Property": {
+        "prefix": "jac.Property.Host",
+        "body": "\"Host\": \"agent\"",
+        "description": "Inserts the Host property to specify the agent where the job will run"
+    },
+    "Job Post Command": {
+        "prefix": "jac.Property.Job.Post.Command",
+        "body": "\"PostCommand\": \"echo after running the job\"",
+        "description": "Inserts a post command to be executed after the job"
+    },
+    "Job Pre Command": {
+        "prefix": "jac.Property.Job.Pre.Command",
+        "body": "\"PreCommand\": \"echo before running the job\"\t",
+        "description": "Inserts a pre command to be executed before the job"
+    },
+    "RunAs Property": {
+        "prefix": "jac.Property.RunAs",
+        "body": "\"RunAs\": \"user1\"",
+        "description": "inserts the run as user"
+    },
+    "When Date Time Property": {
+        "prefix": "jac.Property.When.Date.Time",
+        "body": "\"When\" : {\r\n    \"Schedule\":\"Never\",\r\n\t\"Months\": [\"JAN\", \"OCT\", \"DEC\"],\r\n    \"MonthDays\":[\"22\",\"1\",\"11\"],\r\n    \"WeekDays\":[\"MON\",\"TUE\"],\r\n    \"FromTime\":\"1500\",\r\n\t\"ToTime\":\"1800\"      \r\n}",
+        "description": "When objet that defines scheduling based on a combination of date and time constraints"
+    },
+    "Azure Blob Copy Blob Job": {
+        "prefix": "jac.Job.Azure.Blob.Copy.Blob",
+        "body": "\"AzureBlobCopyBlob\": {\r\n\t\t\t\t\"Type\": \"Job:ApplicationIntegrator:AI Azure Blob Storage\",\r\n\t\t\t\t\"ConnectionProfile\": \"<CONNECTION_PROFILE NAME>\",\r\n\r\n\t\t\t\t\"AI-Action\": \"Copy\",\r\n\t\t\t\t\"AI-Source-uri\": \"<AZURE SOURCE-URI FOR SOURCE BLOB>\",\r\n\t\t\t\t\"AI-Destination container\": \"<AZURE BLOB CONTAINER NAME>\",\r\n\t\t\t\t\"AI-Destination blob name\": \"<AZURE BLOB BLOB NAME>\"\r\n\t\t\t}",
+        "description": "Job that copies a blob from one container to another"
+    },
+    "Azure Blob Create Container Job": {
+        "prefix": "jac.Job.Azure.Blob.Create.Container",
+        "body": "\"AzureBlobCreateContainer\": {\r\n\t\t\t\t\"Type\": \"Job:ApplicationIntegrator:AI Azure Blob Storage\",\r\n\t\t\t\t\"ConnectionProfile\": \"<CONNECTION_PROFILE NAME>\",\r\n\t\t\t\r\n\t\t\t\t\"AI-Action\": \"Create container\",\r\n\t\t\t\t\"AI-Container (Create/Delete)\": \"<AZURE BLOB CONTAINER NAME>\",\r\n\t\t\t\t\"AI-Public Access\": \"Off\"\r\n\t\t\t}\r\n",
+        "description": "Job that creates a new Azure blob container"
+    },
+    "Azure Blob Delete Blob Job": {
+        "prefix": "jac.Job.Azure.Blob.Delete.Blob",
+        "body": "\"AzureBlobDeleteBlob\": {\r\n\t\t\t\t\"Type\": \"Job:ApplicationIntegrator:AI Azure Blob Storage\",\r\n\t\t\t\t\"ConnectionProfile\": \"<CONNECTION_PROFILE NAME>\",\r\n\r\n\t\t\t\t\"AI-Action\": \"Delete\",\r\n\t\t\t\t\"AI-Container (Delete)\": \"<AZURE BLOB CONTAINER NAME>\",\r\n\t\t\t\t\"AI-Blob name (Delete)\": \"<BLOB_NAME>\"\r\n\t\t\t}",
+        "description": "Job that deletes a blob from a container"
+    },
+    "Azure Blob Delete Container Job": {
+        "prefix": "jac.Job.Azure.Blob.Delete.Container",
+        "body": "\"AzureBlobDeleteContainer\": {\r\n\t\t\t\t\"Type\": \"Job:ApplicationIntegrator:AI Azure Blob Storage\",\r\n\t\t\t\t\"ConnectionProfile\": \"<CONNECTION_PROFILE NAME>\",\r\n\r\n\t\t\t\t\"AI-Action\": \"Delete container\",\r\n\t\t\t\t\"AI-Container (Create/Delete)\": \"<AZURE BLOB CONTAINER NAME>\"\r\n\t\t\t}",
+        "description": "Job that deletes a contianer including any blobs inside"
+    },
+    "Azure Blob Download Job": {
+        "prefix": "jac.Job.Azure.Blob.Download",
+        "body": "\"AzureBlobDownloadBlob\": {\r\n\t\t\t\t\"Type\": \"Job:ApplicationIntegrator:AI Azure Blob Storage\",\r\n\t\t\t\t\"ConnectionProfile\": \"<CONNECTION_PROFILE NAME>\",\r\n\r\n\t\t\t\t\"AI-Action\": \"Download\",\r\n\t\t\t\t\"AI-Container (Up/Download)\": \"<AZURE BLOB CONTAINER NAME>\",\r\n\t\t\t\t\"AI-Blob name (Up/Download)\": \"<BLOB_NAME>\",\r\n\t\t\t\t\"AI-File path\": \"<PATH TO FILE ON AGENT FILE SYSTEM>\"\r\n\t\t\t}",
+        "description": "Job that uploads a file into a azure blob"
+    },
+    "Azure Blob List Files Job": {
+        "prefix": "jac.Job.Azure.Blob.List.Files",
+        "body": "\"AzureBlobListBlobs\": {\r\n\t\t\t\t\"Type\": \"Job:ApplicationIntegrator:AI Azure Blob Storage\",\r\n\t\t\t\t\"ConnectionProfile\": \"<CONNECTION_PROFILE NAME>\",\r\n\t\t\t\r\n\t\t\t\t\"AI-Action\": \"List\",\r\n\t\t\t\t\"AI-Output\": \"table\",\r\n\t\t\t\t\"AI-Container (List)\": \"<AZURE BLOB CONTAINER NAME>\"\r\n\t\t\t}",
+        "description": "List blobs in a container"
+    },
+    "Azure Blob Upload Job": {
+        "prefix": "jac.Job.Azure.Blob.Upload",
+        "body": "\"AzureBlobUploadBlob\": {\r\n\t\t\t\t\"Type\": \"Job:ApplicationIntegrator:AI Azure Blob Storage\",\r\n\t\t\t\t\"ConnectionProfile\": \"<CONNECTION_PROFILE NAME>\",\r\n\r\n\t\t\t\t\"AI-Action\": \"Upload\",\r\n\t\t\t\t\"AI-Container (Up/Download)\": \"<AZURE BLOB CONTAINER NAME>\",\r\n\t\t\t\t\"AI-Blob name (Up/Download)\": \"<BLOB_NAME>\",\r\n\t\t\t\t\"AI-File path\": \"<PATH TO FILE ON AGENT FILE SYSTEM>\"\r\n\t\t\t}",
+        "description": "Job that uploads a file into a azure blob"
+    },
+    "Command Job": {
+        "prefix": "jac.Job.Command.Job",
+        "body": "\"CommandJob1\": {\r\n\t\t\t\"Type\" : \"Job:Command\",\r\n\t\t\t\"Command\" : \"echo hello\",\r\n\t\t\t\"RunAs\" : \"user1\"\r\n\t\t}",
+        "description": ""
+    },
+    "Database SQL Script Job All": {
+        "prefix": "jac.Job.Database.SQL.Script.All",
+        "body": "\"databaseJob\": {\r\n\t\t\t\"Type\": \"Job:Database:SQLScript\",\r\n\t\t\t\"Host\": \"AgentHost\",\r\n\t\t\t\"SQLScript\": \"/home/controlm/sqlscripts/selectOrclParm.sql\",\r\n\t\t\t\"ConnectionProfile\": \"OracleConnectionProfileSample\",\r\n\t\t\t\"Parameters\": [\r\n\t\t\t\t{\"firstParamName\": \"firstParamValue\"},\r\n\t\t\t\t{\"secondParamName\": \"secondParamValue\"}\r\n\t\t\t],\r\n\t\t\t\"Autocommit\": \"N\",\r\n\t\t\t\"OutputExcecutionLog\": \"Y\",\r\n\t\t\t\"OutputSQLOutput\": \"Y\",\r\n\t\t\t\"SQLOutputFormat\": \"XML\"\r\n\t\t}",
+        "description": "A database job that can run SQL Scripts on a (remote) database"
+    },
+    "Database SQL Script Job Basic": {
+        "prefix": "jac.Job.Database.SQL.Script.Basic",
+        "body": "\"databaseJob\": {\r\n\t\t\t\"Type\": \"Job:Database:SQLScript\",\r\n\t\t\t\"Host\": \"app-redhat\",\r\n\t\t\t\"SQLScript\": \"/home/controlm/sqlscripts/selectOrclParm.sql\",\r\n\t\t\t\"ConnectionProfile\": \"OracleConnectionProfileSample\"\r\n\t\t}",
+        "description": "A database job with only the basic properties to run a SQL script on a (remote) database"
+    },
+    "Embedded Script Job": {
+        "prefix": "jac.Job.Embedded.Script",
+        "body": "\"EmbeddedScriptJob\":{\r\n    \"Type\":\"Job:EmbeddedScript\",\r\n    \"Script\":\"echo hello\",\r\n    \"Host\":\"myhost.mycomp.com\",\r\n    \"RunAs\":\"user1\",\r\n    \"FileName\":\"optional filename for the script\"\r\n}",
+        "description": "Inserts an Embedded Script job"
+    },
+    "File Transfer Job": {
+        "prefix": "jac.Job.File.Transfer",
+        "body": "\"TransferFromLocalToSFTP\" : {\r\n\t\"Type\" : \"Job:FileTransfer\",\r\n\t\"ConnectionProfileSrc\" : \"LocalConn\",\r\n\t\"ConnectionProfileDest\" : \"SftpConn\",\r\n\t\"Host\": \"AgentHost\",\r\n\t\"FileTransfers\" : [\r\n\t\t{\r\n\t\t\t\"Src\" : \"/home/controlm/file1\",\r\n\t\t\t\"Dest\" : \"/home/controlm/file2\",\r\n\t\t\t\"TransferType\": \"Binary\",\r\n\t\t\t\"TransferOption\": \"SrcToDest\"\r\n\t\t},\r\n\t\t{\r\n\t\t\t\"Src\" : \"/home/controlm/otherFile1\",\r\n\t\t\t\"Dest\" : \"/home/controlm/otherFile2\",\r\n\t\t\t\"TransferOption\": \"DestToSrc\"\r\n\t\t} ]\r\n}",
+        "description": "Inserts a file transfer job"
+    },
+    "File Watcher Delete Job": {
+        "prefix": "jac.Job.File.Watcher.Delete",
+        "body": "    \"FWJobDelete\" : {\r\n        \"Type\" : \"Job:FileWatcher:Delete\",\r\n        \"RunAs\":\"controlm\",\r\n        \"Path\" : \"C:/path.txt\",\r\n        \"SearchInterval\" : \"45\",\r\n        \"TimeLimit\" : \"22\",\r\n        \"StartTime\" : \"201805041535\",\r\n        \"StopTime\" : \"201905041535\"\r\n    }",
+        "description": "Watch for a file to be deleted"
+    },
+    "File Watcher Create Job": {
+        "prefix": "jac.Job.File.Watcher.Create",
+        "body": "\"FWJobCreate\" : {\r\n\t\t\t\"Type\" : \"Job:FileWatcher:Create\",\r\n\t\t\t\"RunAs\":\"controlm\",\r\n\t\t \t\"Path\" : \"C:/path*.txt\",\r\n\t\t\t\"SearchInterval\" : \"45\",\r\n\t\t\t\"TimeLimit\" : \"22\",\r\n\t\t\t\"StartTime\" : \"201705041535\",\r\n\t\t\t\"StopTime\" : \"201805041535\",\r\n\t\t\t\"MinimumSize\" : \"10B\",\r\n\t\t\t\"WildCard\" : true,\r\n\t\t\t\"MinimalAge\" : \"1Y\",\r\n\t\t\t\"MaximalAge\" : \"1D2H4MIN\"\r\n\t\t},",
+        "description": "Watch for a file to be created"
+    },
+    "Script Job": {
+        "prefix": "jac.Job.Script",
+        "body": "\"JobWithPreAndPost\": {\r\n    \"Type\" : \"Job:Script\",\r\n    \"FileName\" : \"task1123.sh\",\r\n    \"FilePath\" : \"/home/user1/scripts\",\r\n}",
+        "description": "Inserts a script job"
+    },
+    "Secret Object": {
+        "prefix": "jac.Secret.Object",
+        "body": "\"<parameter>\" :  {\"Secret\": \"<secret name>\"}",
+        "description": "Add a reference to a named secret as defined in the Control-M vault"
+    },
+    "Secret Short": {
+        "prefix": "jac.Secret.Short",
+        "body": "{\"Secret\": \"<secret name>\"}",
+        "description": "Add a reference to a named secret as defined in the Control-M vault"
+    },
+    "Object": {
+        "prefix": "jac.Object",
+        "body": "{\"${key}\": \"${value}\"}",
+        "description": "new JSON object"
+    },
+    "Package json": {
+        "prefix": "jac.Package.json",
+        "body": "{\n  \"name\": \"\",\n  \"version\": \"1.0.0\",\n  \"description\": \"\",\n  \"main\": \"index.js\",\n  \"scripts\": {},\n  \"keywords\": [],\n  \"author\": \"${user}\",\n  \"license\": \"EPL\",\n  \"dependencies\": {},\n  \"devDependencies\": {}\n}\n",
+        "description": "new package.json"
+    },
+    "Pair": {
+        "prefix": "jac.Pair",
+        "body": "\"${key}\": \"${value}\"",
+        "description": "new JSON pair"
+    },
+    "SLA": {
+        "prefix": "jac.SLA",
+        "body": "    \"SLA\": {\r\n      \"Type\": \"Job:SLAManagement\",\r\n      \"ServiceName\": \"SLA-GOOD\",\r\n      \"ServicePriority\": \"1\",\r\n      \"CreatedBy\": \"emuser\",\r\n      \"RunAs\": \"DUMMYUSR\",\r\n      \"JobRunsDeviationsTolerance\": \"2\",\r\n      \"CompleteIn\": {\r\n        \"Time\": \"00:01\"\r\n      },\r\n      \"eventsToWaitFor\": {\r\n        \"Type\": \"WaitForEvents\",\r\n        \"Events\": [\r\n          {\r\n            \"Event\": \"Hello-TO-SLA_Job_for_SLA-GOOD\"\r\n          }\r\n        ]\r\n      },\r\n      \"eventsToDelete\": {\r\n        \"Type\": \"DeleteEvents\",\r\n        \"Events\": [\r\n          {\r\n            \"Event\": \"Hello-TO-SLA_Job_for_SLA-GOOD\"\r\n          }\r\n        ]\r\n      }\r\n    }",
+        "description": "SLA Management job type"
+    }
+}
