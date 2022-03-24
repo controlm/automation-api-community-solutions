@@ -1,8 +1,13 @@
+# BMC Software Control-M Job-As-Code README
+
 # Control-M Code Snippets #
 [![](https://badgen.net/github/release/controlm/automation-api-community-solutions/stable)]() [![](https://badgen.net/github/tag/controlm/automation-api-community-solutions)]() [![](https://badgen.net/github/status/controlm/automation-api-community-solutions)]() [![](https://badgen.net/github/stars/controlm/automation-api-community-solutions)]() [![](https://badgen.net/github/label-issues/controlm/automation-api-community-solutions/help-wanted/open)]() [![](https://badgen.net/github/commits/controlm/automation-api-community-solutions)]() [![](https://badgen.net/github/releases/controlm/automation-api-community-solutions)]() [![](https://badgen.net/github/license/controlm/automation-api-community-solutions)]() [![](https://badgen.net/github/contributors/controlm/automation-api-community-solutions)]() 
 
-Now you can write and debug Control-M Workflow Job-As-Code scripts using the excellent IDE-like interface
-that Visual Studio Code provides.
+## Overview
+
+This extension enables key features from BMC Software's Control-M product that will allow users to integrate their Workflow Job-As-Code, Git, and Visual Studio Code development processes. Now you can write and debug Control-M Workflow Job-As-Code scripts using the excellent IDE-like interface that Visual Studio Code provides.
+
+
 
 ## Supported file types or languages
 
@@ -22,7 +27,9 @@ For example if there is an image subfolder under your extension project workspac
 
 > Tip: start entering **jac** to get a list of predefined code snippets.
 
-## Instalation
+## Install the Control-M Visual Studio Code extension
+
+The Control-M extension can be found in the Visual Studio Code Extension Marketplace. More information on adding extensions to Visual Studio Code can be found [here](https://code.visualstudio.com/docs/introvideos/extend).
 
 As in any Visual Studio Code Extension you have several options to install:
 
@@ -30,7 +37,7 @@ As in any Visual Studio Code Extension you have several options to install:
 * Inside Visual Studio Code, enter in the Extensios panel, search for _Control-M Code Snippets_ and click on _Install_ button
 * Run the following command in the Command Palette:
 	```
-	ext install bmcsoftware.job-as-code
+	code --install-extension job-as-code-*.vsix
 	```
 
 ## Platform Support
@@ -64,3 +71,13 @@ TBD
 
 Please see the [BMC License](https://github.com/controlm/automation-api-community-solutions/license.html) file for details on the project.
 
+## Release Notes
+
+### 0.1.*
+
+Initial Alpha Test Version
+
+### 1.0.*
+Initial release of the Control-M extension. The extension supports code snippets for Python and JSON Job-As-Code files.
+
+https://code.visualstudio.com/docs/languages/identifiers

@@ -1,0 +1,32 @@
+{
+    "FolderSampleAll": {
+            "Type": "Folder",
+            "AdjustEvents": true,
+            "ControlmServer": "ABCD",
+            "SiteStandard": "",
+            "OrderMethod": "Manual",
+            "Application": "VS-Code",
+            "SubApplication" : "Extension",
+            "RunAs" : "emuser",
+            "When" : {
+                "WeekDays": ["SUN"]
+            },
+            "ActiveRetentionPolicy": "KeepAll",
+            "DaysKeepActiveIfNotOk" : "41",
+            "mut1" : {
+                "Type": "Resource:Mutex",
+                "MutexType": "Exclusive"
+            },
+            "Notify1": {
+                "Type": "Notify:ExecutionTime",
+                "Criteria": "LessThan",
+                "Value": "3",
+                "Message": "Less than expected"
+            },
+            "vsce-cmd": {
+                        "Type" : "Job:Command",
+                        "Command" : "echo hello",
+                        "RunAs" : "emuser"
+                    }
+        }
+}

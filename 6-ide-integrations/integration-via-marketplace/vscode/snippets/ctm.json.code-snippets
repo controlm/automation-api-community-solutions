@@ -213,5 +213,30 @@
         "prefix": "jac.SLA",
         "body": "    \"SLA\": {\r\n      \"Type\": \"Job:SLAManagement\",\r\n      \"ServiceName\": \"SLA-GOOD\",\r\n      \"ServicePriority\": \"1\",\r\n      \"CreatedBy\": \"emuser\",\r\n      \"RunAs\": \"DUMMYUSR\",\r\n      \"JobRunsDeviationsTolerance\": \"2\",\r\n      \"CompleteIn\": {\r\n        \"Time\": \"00:01\"\r\n      },\r\n      \"eventsToWaitFor\": {\r\n        \"Type\": \"WaitForEvents\",\r\n        \"Events\": [\r\n          {\r\n            \"Event\": \"Hello-TO-SLA_Job_for_SLA-GOOD\"\r\n          }\r\n        ]\r\n      },\r\n      \"eventsToDelete\": {\r\n        \"Type\": \"DeleteEvents\",\r\n        \"Events\": [\r\n          {\r\n            \"Event\": \"Hello-TO-SLA_Job_for_SLA-GOOD\"\r\n          }\r\n        ]\r\n      }\r\n    }",
         "description": "SLA Management job type"
+    },
+    "Deploy Descriptor Basic": {
+        "prefix": "jac.deploy.descriptor.basic",
+        "body": "{        \"DeployDescriptor\": [{\r\n      \"Comment\": \"Assign Control-M Server of a Job.\",\r\n      \"Property\": \"ControlmServer\",\r\n      \"Assign\": \"${CTM SERVER}\"\r\n      },\r\n      {\r\n      \"Comment\": \"Assign Control-M Agent of a Job.\",\r\n      \"ApplyOn\": { \"Type\": \"Job.*\" },\r\n      \"Property\": \"Host\",\r\n      \"Assign\": \"${CTM AGENT}\"\r\n      }]}",
+        "description": "Deploy Descriptor to manage basic server and agent assignment"
+    },
+    "Deploy Descriptor Advanced": {
+        "prefix": "jac.deploy.descriptor.advanced",
+        "body": "{        \"DeployDescriptor\": [{\r\n      \"Comment\": \"Assign Control-M Server of a Job.\",\r\n      \"Property\": \"ControlmServer\",\r\n      \"Assign\": \"${CTM SERVER}\"\r\n      },\r\n      {\r\n      \"Comment\": \"Assign Control-M Agent of a Job.\",\r\n      \"ApplyOn\": { \"Type\": \"Job.*\" },\r\n      \"Property\": \"Host\",\r\n      \"Assign\": \"${CTM AGENT}\"\r\n      },\r\n      {\r\n      \"Comment\": \"Assign Control-M SLM Service.\",\r\n      \"ApplyOn\": { \"Type\": \"Job:SLAManagement\" },\r\n      \"Property\": \"ServiceName\",\r\n      \"Replace\": [{ \"ABCD_(.*)\": \"1234_$1\" }]\r\n      },\r\n      {\r\n      \"Comment\": \"Assign Control-M Folder of a Job.\",\r\n      \"ApplyOn\": { \"Type\": \"Folder\" },\r\n      \"Property\": \"@\",\r\n      \"Replace\": [{ \"ABCD_(.*)\": \"1234_$1\" }]\r\n      },\r\n      {\r\n      \"Comment\": \"Assign Control-M Application of a Job.\",\r\n      \"Property\": \"Application\",\r\n      \"Replace\": [{ \"ABCD_(.*)\": \"1234_$1\" }]\r\n      },\r\n      {\r\n      \"Comment\": \"Assign Control-M Sub Application of a Job.\",\r\n      \"Property\": \"SubApplication\",\r\n      \"Replace\": [{ \"ABCD_(.*)\": \"1234_$1\" }]\r\n      },\r\n      {\r\n      \"Comment\": \"Assign Control-M Site Standard.\",\r\n      \"Property\": \"SiteStandard\",\r\n      \"Assign\": \"${CTM Site Standard}\"\r\n      }]}\"",
+        "description": "Deploy Descriptor to manage basic server, agent, application and site standard assignment"
+    },
+    "Deploy Descriptor No Folder Schedule": {
+        "prefix": "jac.deploy.descriptor.folder.schedule.no",
+        "body": "    {\r\n      \"Comment\": \"Adjust Job Schedule\",\r\n      \"ApplyOn\": {\r\n      \"Type\": \"Folder\",\r\n      \"@\": \"@.When\"\r\n      },\r\n      \"Property\": \"Schedule\",\r\n      \"Assign\": \"Never\"\r\n      },",
+        "description": "Deploy Descriptor to change folder schedule to never"
+    },
+    "Deploy Descriptor manual folder schedule": {
+        "prefix": "jac.deploy.descriptor.folder.schedule.manual",
+        "body": "{\r\n      \"Comment\": \"Assign Control-M Schedule order manual.\",\r\n      \"ApplyOn\": {\r\n      \"Type\": \"Folder\"\r\n      },\r\n      \"Add\": {\r\n      \"Path\": \"@\",\r\n      \"propertyName\": \"OrderMethod\"\r\n      \"propertyValue\": \"Manual\"\r\n       }\r\n      },",
+        "description": "Deploy Descriptor to change folder schedule manual"
+    },
+    "Deploy Descriptor assign variable": {
+        "prefix": "jac.deploy.descriptor.folder.variable.assign",
+        "body": "    {\r\n      \"Comment\": \"Assign Control-M JQ Path.\",\r\n      \"ApplyOn\": {\r\n      \"Type\": \"Folder\",\r\n      \"@\": \".*\"\r\n      },\r\n      \"Property\": \"@.Variables..${Variable Name}\",\r\n      \"Assign\": \"${Variable Value}\"\r\n      },",
+        "description": "Deploy Descriptor to assign variable value"
     }
 }
