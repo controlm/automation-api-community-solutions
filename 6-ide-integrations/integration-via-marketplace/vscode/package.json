@@ -2,7 +2,7 @@
     "name": "job-as-code",
     "displayName": "Job-As-Code Toolbelt for Control-M",
     "description": "All snippets and tools you need for Control-M Workflow development",
-    "version": "0.1.11",
+    "version": "0.1.13",
     "license": "BSD-3-Clause",
     "repository": {
         "type": "git",

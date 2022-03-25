@@ -41,7 +41,7 @@ Control-M Automation API is a set of programmatic interfaces that give developer
 
 <div style="width: 20%; height: 20%">
   
-  [![Alt text for your video](images/ctm.api.getting.started.video.bumper.png)](https://youtu.be/7QAuMDym9cw "Click to watch")
+  [![CTM AAPI Introduction Video](https://github.com/Orch3strator/automation-api-community-solutions/blob/master/6-ide-integrations/integration-via-marketplace/vscode/images/ctm.api.getting.started.video.bumper.png)](https://youtu.be/7QAuMDym9cw "Click to watch")
   
 </div>
 
@@ -66,13 +66,13 @@ The extension _should_ work anywhere VS Code itself is [supported].
 Read the [Start using a Jobs-as-Code approach to build workflows with Control-M](https://controlm.github.io/)
 to get more details on how to use the extension on these platforms.
 
-
+https://docs.bmc.com/docs/automation-api/monthly/tutorials-1064010699.html
 ## API Support
 
 Control-M Automation API [Swagger](http://aapi-swagger-doc.s3-website-us-west-2.amazonaws.com/swagger.json) builds the basis of the job-as-code integration and code snippets.
 
 
-## Control-M objects in JSON code
+### Control-M objects in JSON code
 
 Control-M Automation API enables you to manage jobs through JSON code. See [Code Reference](https://docs.bmc.com/docs/display/workloadautomation/Control-M+Automation+API+-+Code+Reference) for more details.
 
@@ -100,10 +100,12 @@ The Control-M Automation API allows you to automate and work interactively with 
 
 
 
-## Usage
+## Usage / Tutorials
 
-TBD
+To get you started, BMC provides you with a group of tutorials to introduce you to common best practices of using Control-M Automation API. See [Tutorials](https://docs.bmc.com/docs/automation-api/monthly/tutorials-1064010699.html).
 
+Create a new *.json or *.py file. Enter "jac." to utilize provided code snippets.
+**Right-Mouse-Click* to invoke the Visual Studio Code conext menus to activate the Control-M AAPI commands.
 
 ## License
 
@@ -113,7 +115,7 @@ Please see the [BMC License](https://github.com/controlm/automation-api-communit
 
 ### 0.1.*
 
-Initial Alpha Test Version
+Initial Alpha Test Versions
 
 ### 1.0.*
 Initial release of the Control-M extension. The extension supports code snippets for Python and JSON Job-As-Code files.
