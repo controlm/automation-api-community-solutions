@@ -123,16 +123,24 @@ export namespace CliUtils {
       // deploy transform <definitionsFile> <deployDescriptorFile>
       let deployDescriptorFile: string = path.basename(selectedFiles[1].fsPath);
       let definitionsFile: string = path.basename(selectedFiles[0].fsPath);
+      
+      // construct output file name
+      const definitionsFileBase = path.basename(definitionsFile);
+      const definitionsFileExtension = path.extname(definitionsFile);
+      const definitionsFileBaseNoExt = path.basename(definitionsFileBase, definitionsFileExtension);
+      let transformFile: string = definitionsFileBaseNoExt + '.transformed.' + Date.now() + '.json';
 
-      cmd = 'ctm ' + operation + ' "' + definitionsFile + '" "' + deployDescriptorFile + '"';
+      OutputUtils.getOutputChannel().appendLine(procNumString + ' Transformed Output File: ' + transformFile);
+
+      cmd = 'ctm ' + operation + ' "' + definitionsFile + '" "' + deployDescriptorFile + '" > "' + transformFile + '"';
     } else {
       cmd = 'ctm ' + operation + ' "' + definitionsFile + '"';
     }
 
     // log ctm and file info
-
     OutputUtils.getOutputChannel().appendLine(procNumString + ' CTM AAPI: ' + cmd);
 
+    // execute ctm aapi
     const child = cp.spawn(cmd, {
       shell: true,
       cwd: ctmPath

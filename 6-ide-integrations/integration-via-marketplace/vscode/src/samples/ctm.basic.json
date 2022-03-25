@@ -2,7 +2,7 @@
     "FolderSampleAll": {
             "Type": "Folder",
             "AdjustEvents": true,
-            "ControlmServer": "ABCD",
+            "ControlmServer": "ctmcor",
             "SiteStandard": "",
             "OrderMethod": "Manual",
             "Application": "VS-Code",

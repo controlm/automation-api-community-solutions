@@ -4,10 +4,14 @@ ctmArtifacts.tar
 .DS_Store
 /.pydevproject
 3-infrastructure-as-code-examples/kubernetes-agent-application-pods/Images/runKjobConnectionProfile.png
-6-ide-integrations/integration-via-marketplace/vscode/job-as-code-0.1.7.vsix
 /*.vsix
+
+.gitignore
+
 6-ide-integrations/integration-via-marketplace/vscode/node_modules
 6-ide-integrations/integration-via-marketplace/vscode/package-lock.json
 6-ide-integrations/integration-via-marketplace/vscode/.vscodeignore
-.gitignore
 6-ide-integrations/integration-via-marketplace/vscode/out/*
+6-ide-integrations/integration-via-marketplace/vscode/*.vsix
+6-ide-integrations/integration-via-marketplace/vscode/src/samples/*
+6-ide-integrations/integration-via-marketplace/vscode/src/samples/ctm.basic.json
