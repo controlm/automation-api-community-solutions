@@ -8,12 +8,18 @@ This extension enables key features from BMC Software's Control-M product that w
 
 > Tip: No prior experience with Control-M is required to write jobs.
 
+<br/>
+<br/>
+
 ## Supported file types or languages
 | language    | extension                | description                 |
 | ----------- | ------------------------ | --------------------------- |
 | JSON        | .json                    | job-as-code script files    |
 | Python      | .py                      | job-as-code python files    |
 
+
+<br/>
+<br/>
 
 ## Features
 - Use pre-built code snippets while writing and debugging your Control-M Workflow Job-As-Code scripts. 
@@ -23,6 +29,9 @@ This extension enables key features from BMC Software's Control-M product that w
 > Tip: start entering ***jac*** to get a list of predefined code snippets in your json file.
 
 
+
+<br/>
+<br/>
 
 ## Install the Control-M Visual Studio Code extension
 The Control-M extension can be found in the Visual Studio Code Extension Marketplace. More information on adding extensions to Visual Studio Code can be found [here](https://code.visualstudio.com/docs/introvideos/extend).
@@ -35,6 +44,9 @@ As in any Visual Studio Code Extension you have several options to install:
 	```
 	code --install-extension job-as-code-*.vsix
 	```
+
+<br/>
+<br/>
 
 ## Getting Started & Installing the Control-M Automation CLI
 Control-M Automation API is a set of programmatic interfaces that give developers and DevOps engineers access to the capabilities of Control-M within the modern application release process. Job flows and related configuration objects are built in JSON and managed together with other application artifacts in any source code management solution, such as GIT. This approach enables capabilities such as sophisticated scheduling, flow control, and SLA management to be built in right from inception and used during the running of batch applications as they are automatically deployed in dev, test, and production environments. Click on the image to watch the introduction video:
@@ -59,6 +71,9 @@ In general these are the two steps: ***download*** **ctm-cli.tgz**, then run ***
 	npm -g install ctm-cli.tgz
 
 
+<br/>
+<br/>
+
 ## Platform Support
 
 The extension _should_ work anywhere VS Code itself is [supported]. 
@@ -66,11 +81,16 @@ The extension _should_ work anywhere VS Code itself is [supported].
 Read the [Start using a Jobs-as-Code approach to build workflows with Control-M](https://controlm.github.io/)
 to get more details on how to use the extension on these platforms.
 
-https://docs.bmc.com/docs/automation-api/monthly/tutorials-1064010699.html
+
+<br/>
+<br/>
+
 ## API Support
 
 Control-M Automation API [Swagger](http://aapi-swagger-doc.s3-website-us-west-2.amazonaws.com/swagger.json) builds the basis of the job-as-code integration and code snippets.
 
+<br/>
+<br/>
 
 ### Control-M objects in JSON code
 
@@ -81,6 +101,8 @@ Control-M Automation API enables you to manage jobs through JSON code. See [Code
 
 The Control-M Automation API allows you to automate and work interactively with Control-M. Services are groups of API commands available via either a CLI (Command Line Interface) or as REST API commands. Using the services, you can build job definitions to test whether they are valid, test-run a job to debug job definitions , combine multiple definition files into a package, deploy job definitions and packages to Control-M, provision a Control-M/Agent, manage environments, and more. Click on the link below for more information. 
 
+<br/>
+<br/>
 
 | Name           | description              | 
 | -----------    | ------------------------ |
@@ -98,7 +120,8 @@ The Control-M Automation API allows you to automate and work interactively with 
 | [session]() | The Session service allows you to log in and log out of Control-M and receive a token that can be reused in subsequent requests. | 
 | usage          | Run the usage service in order to get a usage report. Supported only in Control-M SaaS | 
 
-
+<br/>
+<br/>
 
 ## Usage / Tutorials
 
@@ -107,9 +130,15 @@ To get you started, BMC provides you with a group of tutorials to introduce you 
 Create a new *.json or *.py file. Enter "jac." to utilize provided code snippets.
 **Right-Mouse-Click* to invoke the Visual Studio Code conext menus to activate the Control-M AAPI commands.
 
+<br/>
+<br/>
+
 ## License
 
 Please see the [BMC License](https://github.com/controlm/automation-api-community-solutions/license.html) file for details on the project.
+
+<br/>
+<br/>
 
 ## Release Notes
 
