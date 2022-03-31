@@ -1,9 +1,9 @@
 {
     "name": "job-as-code",
-    "displayName": "Control-M Job-As-Code Code Snippets",
-    "description": "All snippets you need for Control-M Workflow development",
-    "version": "0.1.6",
-    "license": "SEE LICENSE IN LICENSE.txt",
+    "displayName": "Job-As-Code Toolbelt for Control-M",
+    "description": "All snippets and tools you need for Control-M Workflow development",
+    "version": "0.1.13",
+    "license": "BSD-3-Clause",
     "repository": {
         "type": "git",
         "url": "https://github.com/controlm/automation-api-community-solutions/6-ide-integrations/integration-via-marketplace/vscode"
@@ -19,7 +19,7 @@
     },
     "publisher": "bmcsoftware",
     "engines": {
-        "vscode": "^1.65.0"
+        "vscode": "^1.63.0"
     },
     "categories": [
         "Debuggers",
@@ -30,9 +30,10 @@
     "keywords": [
         "job-as-code",
         "controlm",
-        "ctm",
+        "ctm-py",
         "bmc",
-        "snippet"
+        "snippet",
+        "scm"
     ],
     "homepage": "https://github.com/controlm/automation-api-community-solutions/blob/master/6-ide-integrations/integration-via-marketplace/vscode/README.md",
     "icon": "images/icon.128.png",
@@ -40,8 +41,16 @@
         "color": "#ACD1EC",
         "theme": "light"
     },
+    "activationEvents": [
+        "onCommand:CTM.build",
+        "onCommand:CTM.run",
+        "onCommand:CTM.deploy",
+        "onCommand:CTM.deploy.transform"
+    ],
+    "main": "./out/extension.js",
     "contributes": {
-        "snippets": [{
+        "snippets": [
+            {
                 "language": "json",
                 "path": "./snippets/ctm.json.code-snippets"
             },
@@ -49,6 +58,132 @@
                 "language": "python",
                 "path": "./snippets/ctm.python.code-snippets"
             }
+        ],
+        "submenus": [
+            {
+                "id": "ctm",
+                "label": "Control-M: Job-As-Code",
+                "group": "ctm",
+                "icon": "$(gear)"
+            }
+        ],
+        "menus": {
+            "editor/context": [
+                {
+                    "label": "Control-M",
+                    "submenu": "ctm",
+                    "when": "resourceLangId == json && !editorReadonly",
+                    "group": "ctm@1"
+                }
+            ],
+            "explorer/context": [
+                {
+                    "label": "Control-M",
+                    "submenu": "ctm",
+                    "when": "resourceLangId == json && !editorReadonly",
+                    "group": "ctm@1"
+                }
+            ],
+            "ctm": [
+                {
+                    "when": "resourceLangId == json && !editorReadonly",
+                    "command": "CTM.build",
+                    "group": "ctm@1"
+                },
+                {
+                    "when": "resourceLangId == json && !editorReadonly",
+                    "command": "CTM.run",
+                    "group": "ctm@2"
+                },
+                {
+                    "when": "resourceLangId == json && !editorReadonly",
+                    "command": "CTM.deploy",
+                    "group": "ctm@3"
+                },
+                {
+                    "when": "resourceLangId == json && !editorReadonly",
+                    "command": "CTM.deploy.transform",
+                    "group": "ctm@4"
+                }
+            ],
+            "commandPalette": [
+                {
+                    "command": "CTM.build",
+                    "group": "ctm@1",
+                    "when": "resourceLangId == json"
+                },
+                {
+                    "command": "CTM.run",
+                    "group": "ctm@2",
+                    "when": "resourceLangId == json"
+                },
+                {
+                    "command": "CTM.deploy",
+                    "group": "ctm@3",
+                    "when": "resourceLangId == json"
+                },
+                {
+                    "command": "CTM.deploy.transform",
+                    "group": "ctm@4",
+                    "when": "resourceLangId == json"
+                }
+            ]
+        },
+        "commands": [
+            {
+                "command": "CTM.build",
+                "title": "CTM: Build"
+            },
+            {
+                "command": "CTM.run",
+                "title": "CTM: Run"
+            },
+            {
+                "command": "CTM.deploy",
+                "title": "CTM: Deploy"
+            },
+            {
+                "command": "CTM.deploy.transform",
+                "title": "CTM: Deploy Transform"
+            }
         ]
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run lint && npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run lint && npm run compile",
+        "lint": "eslint src --ext ts",
+        "generate-source-doc": "npx typedoc src",
+        "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.2.14",
+        "@types/mocha": "^8.2.0",
+        "@typescript-eslint/eslint-plugin": "^4.15.0",
+        "@typescript-eslint/parser": "^4.15.0",
+        "chai": "^4.3.0",
+        "esbuild": "^0.14.27",
+        "eslint": "^7.22.0",
+        "mocha": "^8.2.1",
+        "nyc": "^15.1.0",
+        "tape": "^5.1.1",
+        "typedoc": "^0.20.23",
+        "vsce": "^1.103.1"
+    },
+    "dependencies": {
+        "@types/glob": "^7.1.3",
+        "@types/js-yaml": "^4.0.0",
+        "@types/node": "^12.11.7",
+        "@types/vscode": "^1.52.0",
+        "glob": "^7.1.6",
+        "global-var": "^0.1.0",
+        "js-yaml": "^4.0.0",
+        "lodash": "^4.17.20",
+        "ts-node": "^9.1.1",
+        "typescript": "^4.1.3",
+        "utf-8-validate": "^5.0.4",
+        "vscode-test": "^1.4.1",
+        "ws": "^7.4.2"
     }
 }
