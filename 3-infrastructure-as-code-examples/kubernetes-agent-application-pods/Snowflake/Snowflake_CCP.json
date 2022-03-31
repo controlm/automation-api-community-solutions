@@ -1,0 +1,21 @@
+{
+    "SNOWFLAKE_BMC": {
+      "Type": "Driver:Jdbc:Database",
+      "TargetAgent":"agent.bmc.com",
+      "StringTemplate":"jdbc:snowflake://<HOST>:<PORT>/?db=<DATABASE>",
+      "DriverJarsFolder":"/opt/agentuser/custom/jdbc",
+      "ClassName":"net.snowflake.client.jdbc.SnowflakeDriver",
+      "LineComment" : "--",
+      "StatementSeparator" : ";"
+   },
+    "SNOWF_JDBC_BMC": {
+      "Type": "ConnectionProfile:Database:JDBC",
+      "User":"CTMDEMO",
+      "Centralized": true,
+      "Host": "bmc.snowflakecomputing.com",
+      "Driver":"SNOWFLAKE_BMC",
+      "Port":"443",
+      "Password": "xyxyxyxy",
+      "DatabaseName":"TEST_DB"
+    }
+  }
