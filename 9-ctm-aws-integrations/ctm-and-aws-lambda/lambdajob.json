@@ -1,0 +1,10 @@
+{
+  "AwsLambdaJob": {
+  "Type": "Job:AWS:Lambda",
+  "ConnectionProfile": "AWS_CONNECTION",
+  "FunctionName": "LambdaFunction",
+  "Version": "1",
+  "Payload" : "{\"myVar\" :\"value1\" \\n\"myOtherVar\" : \"value2\"}", 
+  "AppendLog": true
+ } 
+}

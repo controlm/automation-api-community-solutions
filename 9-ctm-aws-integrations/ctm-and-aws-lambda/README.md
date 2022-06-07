@@ -1,20 +1,22 @@
-# Steps for setting up and running an AWS Glue job in Control-M
+# How to Integrate Control-M with AWS Lambda in Five Easy Steps
 
 <br>
 
 
-All code artifacts for this demo can found in this repository. To succesfully complete this tutorial, some knowledge of Control-M is required. Knowlegde of AWS services like [IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html), [EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html)  and AWS [Glue](https://docs.aws.amazon.com/glue/latest/dg/what-is-glue.html) is also required. Make sure you have the Control-M for Glue [plug-in](https://docs.bmc.com/docs/automation-api/monthly/deploy-service-1064010746.html#Deployservice-jobtype_deploy) installed in your Control-M enviroment.  If you are new to AWS Glue, follow this [link](https://aws.amazon.com/glue/?whats-new-cards.sort-by=item.additionalFields.postDateTime&whats-new-cards.sort-order=desc) to learn more about AWS Glue Job. <br><br>
-## In five steps, this exercise will walk you through setting up and  running an AWS Glue job in Control-M
+ To succesfully complete this integration, having some Control-M knowledge and access to a Control-M enviroment is required. Knowlegde of AWS services like [IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html), [EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html)  and AWS [lambda](https://aws.amazon.com/lambda/l) is also required. Make sure you have the Control-M for Glue [plug-in](https://docs.bmc.com/docs/automation-api/monthly/deploy-service-1064010746.html#Deployservice-jobtype_deploy) installed in your Control-M enviroment.  If you are new to AWS Glue, follow this [link](https://aws.amazon.com/glue/?whats-new-cards.sort-by=item.additionalFields.postDateTime&whats-new-cards.sort-order=desc) to learn more about AWS Glue. This integration can  also be completed via the Control-M's Web client.<br><br> 
+## In five steps, this exercise will walk you through setting up and  running an AWS lambda job in Control-M
 1. Install the Control-M Automation CLI
 2. Deploy a Connection Profile 
 3. Define The Glue Job 
 4. Run The Glue Job
-5. Monitor the Glue job in Helix Control-M SaaS GUI
+5. Monitor the Glue job in the Control-M GUI
 <br>
 <br>
+
+# Getting Started <br> <br>
 ### Step 1 -  ``Install the Control-M Automation CLI`` <br>  
 
-The Control-M Automation CLI allows you to automate and work interactively with Control-M which enables you to automate your jobs in  Control-M. Follow this [link](https://docs.bmc.com/docs/automation-api/monthly/installation-1064010696.html) to install the Control-M Automation CLI.   
+The Control-M Automation CLI allows you to automate and work interactively with Control-M. Follow this [link](https://docs.bmc.com/docs/automation-api/monthly/installation-1064010696.html) to install the Control-M CLI.   
 
 <br> <br>
 ### Step 2 - ``Deploy a Connection Profile`` 
@@ -65,11 +67,12 @@ You should receive a returned payload like the image shown below :<br>
 <br>
 
 
-### Step 3 - ```Define the Glue Job```
-Now that our connection profile is deployed. Let us define our Glue job. To run an AWS Glue job with Control-M , you must already have your job defined in your AWS enviroment. In reality, the Glue job would be part of a large ETL pipeline. 
+### Step 3 - ```Defining the AWS Glue Job in Control-M```
+Now our connection profile is deployed. To run an AWS Glue job in Control-M , the job should already be defined in your AWS enviroment.
 
 - Create a file and name it     ***`ctm-glue-job.json`***
-- Copy the codes in [ctm-glue-job.json](./ctm-glue-job.json) to the json file you just created. This glue job is a part of different command jobs workflow. 
+- Copy the codes in [ctm-glue-job.json](./ctm-glue-job.json) to the json file you just created.
+- In a real work situation, the AWS Glue job would be part of a large ETL pipeline.
 ```json
 {
   "mol-glue-demo-folder" : {
@@ -145,8 +148,8 @@ Now that our connection profile is deployed. Let us define our Glue job. To run 
 
 ```
 
-\* Fill in the appropriate objects like the Control-M Sever, Application, Host and Connection Profile that was deplopyed earlier <br> <br>
-### Step 4 - ``Run The Glue Job`` 
+\* Fill in the appropriate objects like the Control-M Sever, Application, Host and Connection Profile that was deployed earlier <br> <br>
+### Step 4 - ``Running The AWS Glue Job`` 
 
 <br>
 
@@ -169,9 +172,9 @@ ctm run status <run Id>
 <br>
 <br>
 
-### Step 5 - ``Monitor the Glue job in the Helix Control-M SaaS GUI``
+### Step 5 - ``Monitor the Glue job in Control-M``
 
-You can also monitor your job in the SaaS GUI by using the viewpoints in the monitoring domain. The monitoring domain enables the users to monitor the processing of jobs. In this domain , you can perfrom critical user tasks and handle problems. 
+You can also monitor your job in the Control-M GUI by using the viewpoints in the monitoring domain. The monitoring domain enables users to monitor the processing of the jobs. In this domain , you can perfrom critical user tasks and handle problems. 
 <br>
 <br>
 <img src="images/monitoring domain.png">
