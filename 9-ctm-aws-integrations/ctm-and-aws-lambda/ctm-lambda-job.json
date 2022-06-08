@@ -50,6 +50,36 @@
             "Host" : "glueagents",
             "Application":"mol-app"
     },
+        "Check-Inventory-Lambda-Job": {
+            "Type":"Job:AWS:Lambda",
+            "Application":"mol-app",
+            "ConnectionProfile": "MOL-AWS",
+            "FunctionName": "online-store-checkout-workflow-dev-checkInventory",
+            "AppendLog" : true
+        },
+        "Calculate-Total-Lambda-Job": {
+            "Type":"Job:AWS:Lambda",
+            "Application":"mol-app",
+            "ConnectionProfile": "MOL-AWS",
+            "FunctionName": "online-store-checkout-workflow-dev-calculateTotal",
+            "AppendLog" : true
+
+        },
+        "Process-payment-Total-Lambda-Job": {
+            "Type":"Job:AWS:Lambda",
+            "Application":"mol-app",
+            "ConnectionProfile": "MOL-AWS",
+            "FunctionName": "online-store-checkout-workflow-dev-StartPaymentProcess",
+            "AppendLog" : true
+        },
+        "WaitJob" : {
+			"Type" : "Job:Command",
+			"Command" : "sleep 30",
+            "RunAs" : "ctmagent",
+            "Host" : "glueagents",
+            "Application":"mol-app"
+        },
+
         "Flow1" : {
             "Type": "Flow",
             "Sequence" : ["command-job-1","glue-job" ]
@@ -66,7 +96,35 @@
         "Flow4" : {
             "Type":"Flow",
             "Sequence" :["glue-job","command-job-4"]
+        },
+        "Flow5" :{
+            "Type":"Flow",
+            "Sequence":["command-job-3", "Check-Inventory-Lambda-Job"]
+        },
+        "Flow6" :{
+            "Type":"Flow",
+            "Sequence":["Check-Inventory-Lambda-Job","Calculate-Total-Lambda-Job"]
+        },
+        "Flow7" :{
+            "Type":"Flow",
+            "Sequence":["command-job-4","WaitJob"]
+        },
+        "Flow8" :{
+            "Type":"Flow",
+            "Sequence":["WaitJob","Process-payment-Total-Lambda-Job"]
+        },
+        "Flow9" :{
+            "Type" : "Flow",
+            "Sequence":["Calculate-Total-Lambda-Job","Process-payment-Total-Lambda-Job"]
+        },
+        "Flow10" :{
+            "Type":"Flow",
+            "Sequence":["Check-Inventory-Lambda-Job","WaitJob"]
+        },
+        "Flow11" :{
+            "Type":"Flow",
+            "Sequence":["command-job-2","WaitJob"]
         }
-    }
   }
+}
   
