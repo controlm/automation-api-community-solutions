@@ -1,162 +1,132 @@
-# How to Integrate Control-M with AWS Lambda in Five Easy Steps
-
-<br>
+# How to Integrate AWS Lambda with Control-M and BMC Helix Control-M<BR>
 
 
- To succesfully complete this integration, having some Control-M knowledge and access to a Control-M enviroment is required. Knowlegde of AWS services like [IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html), [EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html)  and AWS [lambda](https://aws.amazon.com/lambda/l) is also required. Make sure you have the Control-M for Glue [plug-in](https://docs.bmc.com/docs/automation-api/monthly/deploy-service-1064010746.html#Deployservice-jobtype_deploy) installed in your Control-M enviroment.  If you are new to AWS Glue, follow this [link](https://aws.amazon.com/glue/?whats-new-cards.sort-by=item.additionalFields.postDateTime&whats-new-cards.sort-order=desc) to learn more about AWS Glue. This integration can  also be completed via the Control-M's Web client.<br><br> 
-## In five steps, this exercise will walk you through setting up and  running an AWS lambda job in Control-M
+
+ ### To succesfully complete this integration, an AWS account is required. Access to a Control-M enviroment is also required and some Control-M knowledge is expected. Knowlegde of AWS services like [IAM](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html), [EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html)  and AWS [lambda](https://aws.amazon.com/lambda/) is expected.  This integration can also be completed via the Control-M's Web Client.<br><br> 
+## In five steps, this exercise will walk you through setting up and executing an AWS lambda job in Control-M
+1. Create the Lambda function in AWS
 1. Install the Control-M Automation CLI
 2. Deploy a Connection Profile 
-3. Define The Glue Job 
-4. Run The Glue Job
-5. Monitor the Glue job in the Control-M GUI
+3. Define and run your Control-M Job 
+5. Monitor the job in the Control-M GUI
 <br>
 <br>
 
-# Getting Started <br> <br>
-### Step 1 -  ``Install the Control-M Automation CLI`` <br>  
+## Getting Started <br> <br>
 
-The Control-M Automation CLI allows you to automate and work interactively with Control-M. Follow this [link](https://docs.bmc.com/docs/automation-api/monthly/installation-1064010696.html) to install the Control-M CLI.   
 
-<br> <br>
-### Step 2 - ``Deploy a Connection Profile`` 
--   Create a json file and name it ***`glue-connection-profile.json`***
+### Step 1 -  ``Create a Lambda function in AWS`` <br>  
+Follow this  [link](https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html) to get started with Lambda and create your first function
 
--   Copy the codes in [glue-connection-profile.json](./glue-connection-profile.json) to the json file you created 
+### Step 2 -  ``Install the Control-M Automation CLI`` <br>  
+
+The Control-M Automation CLI allows you to automate and work interactively with Control-M. Follow this [link](https://docs.bmc.com/docs/automation-api/monthly/installation-993192247.html) to install the Control-M CLI. <br> <br>
+### Step 3 - ``Deploy a Connection Profile`` 
+-   Create a json file and name it ***`ctm-lambda-connection-profile.json`***
+
+-   Copy the codes in [ctm-lambda-connection-profile.json](./ctm-lambda-connection-profile.json) to the json file you created 
 <br>
 <br>
 ``` json
 {
-    "GLUECONNECTIONIAM": {
-      "Type": "ConnectionProfile:AWS Glue",
-      "AI-IAM Role": "GLUEEC2IAMROLE",
-      "AI-Authentication": "NOSECRET",
-      "AI-AWS_REGION": "eu-west-2",
-      "AI-Glue url": "glue.eu-west-2.amazonaws.com",
-      "AI-Connection Timeout": "40",
-      "Description": "",
-      "Centralized": true
+    "AWS_CONNECTION": {
+      "Type": "ConnectionProfile:AWS",
+      "TargetAgent": "AgentHost",
+      "TargetCTM": "CTMHost",
+      "AccessKey": "1234",
+      "SecretAccessKey": "mysecret",
+      "Region": "ap-northeast-1"
     }
   }
 
 ```
+## The Following parameters should be specified
 
+\*  `TargetAgent`: The Control-M/Agent to which the connection profile will be deployed. 
 
-\*  Change `AI-IAM Role` to the name of the already created IAM role in AWS 
+\*  `TargetCTM`: The Control-M/Server to which the connection profile will be deployed. If there is only one Control-M/Server, that is the default
 
-\*  Make sure `AI-Authentication` is set to "NOSECRET" 
+\*  `AccessKey`: AWS account Access Key.
 
-\*  Change the `AI-AWS_REGION` to the AWS region you have your Glue job defined
+\*  `SecretAccessKey`: AWS account Secret Access Key. Use [`Secrets in code`](https://docs.bmc.com/docs/automation-api/monthly/secrets-in-code-993192286.html) to avoid exposing your AWS Secret Access Key in code. 
 
-\*  Add a `Description` to the connection profile (optional)
+\* `Region`: Location of the AWS user. 
 
-\* Save and Deploy the Connection profile by running the command below 
+\* `Save and Deploy the Connection profile by running the command below` 
 <br>
 
 ``` json
-ctm deploy glue-connection-profile.json
+ctm deploy ctm-lambda-connection-profile.json
 
 
 ```
-<br>
-You should receive a returned payload like the image shown below :<br>
-<br>
-<img src="images/Connection Profile Deploy.png" width = "800">
 
-<br>
 <br>
 
 
-### Step 3 - ```Defining the AWS Glue Job in Control-M```
-Now our connection profile is deployed. To run an AWS Glue job in Control-M , the job should already be defined in your AWS enviroment.
-
-- Create a file and name it     ***`ctm-glue-job.json`***
-- Copy the codes in [ctm-glue-job.json](./ctm-glue-job.json) to the json file you just created.
-- In a real work situation, the AWS Glue job would be part of a large ETL pipeline.
-```json
+### Step 4 - ```Define the Control-M job```
+### Here is a JSON example of a Lambda job definition in Control-M. <br> <br> 
+``` json
 {
-  "mol-glue-demo-folder" : {
-    "Type" : "Folder",
-    "ControlmServer" : "smprod",
-    "OrderMethod" : "Manual",
-    "ActiveRetentionPolicy" : "CleanEndedOK",
-    "CreatedBy" : "moladugb",
-    "Application" : "mol-app",
-    
-    
-      "glue-job" : {
-          "Type" : "Job:AWS Glue",
-          "ConnectionProfile" : "MOL-GLUE-CONNECTION-PROFILE",
-          "Glue Job Name" : "mol-glue-job-run",
-          "Glue Job Arguments" : "unchecked",
-          "CreatedBy" : "moladugb",
-          "Host" :"glueagents",
-          "Application" : "mol-app"
-  },
-      "command-job-1" : {
-          "Type" :"Job:Command",
-          "Command" : "echo Hello World!",
-          "RunAs" : "ctmagent",
-          "Host" : "glueagents",
-          "Application" :"mol-app"
-          
-      
-  },
-      "command-job-2" : {
-          "Type" :"Job:Command",
-          "Command" : "echo Hello World!",
-          "RunAs" : "ctmagent",
-          "Host" : "glueagents",
-          "Application":"mol-app"
-    
-  },
-      "command-job-3" : {
-          "Type" :"Job:Command",
-          "Command" : "echo I am out",
-          "RunAs" : "ctmagent",
-          "Host" : "glueagents",
-          "Application":"mol-app"
-    
-  },
-  
-      "command-job-4" : {
-          "Type" :"Job:Command",
-          "Command" : "echo Bye now",
-          "RunAs" : "ctmagent",
-          "Host" : "glueagents",
-          "Application":"mol-app"
-  },
-      "Flow1" : {
-          "Type": "Flow",
-          "Sequence" : ["command-job-1","glue-job" ]
-      },
-      "Flow2" : {
-          "Type": "Flow",
-          "Sequence" : ["glue-job", "command-job-2"]
-      },
-      "Flow3" : {
-          "Type": "Flow",
-          "Sequence" : ["glue-job", "command-job-3"]
-      
-      },
-      "Flow4" : {
-          "Type":"Flow",
-          "Sequence" :["glue-job","command-job-4"]
-      }
-  }
+    "AwsLambdaJob": {
+    "Type": "Job:AWS:Lambda",
+    "ConnectionProfile": "AWS_CONNECTION",
+    "FunctionName": "LambdaFunction",
+    "Version": "1",
+    "Payload" : "{\"myVar\" :\"value1\" \\n\"myOtherVar\" : \"value2\"}",
+    "AppendLog": true }
+
 }
-
 ```
+## Specify the following parameters: <br> 
 
-\* Fill in the appropriate objects like the Control-M Sever, Application, Host and Connection Profile that was deployed earlier <br> <br>
-### Step 4 - ``Running The AWS Glue Job`` 
+\*  `ConnectionProfile`: Use the connection profile deployed in the previous step. 
+
+\*  `FunctionName`: The AWS Lambda function to execute
+
+\* `Version` : The version of the Lambda function. The default is $Latest
+
+\*  `Paylaod`: (Optional) The Lambda function payload, in JSON.
+
+\*  `AppendLog` : Whether to add the log to the job’s output, either true (the default) or false. 
 
 <br>
 
-Save the json file and run the command below <br>
+I will be adding these three Lambda jobs to an existing Control-M workflow which can be found in  [this](./ctm-lambda-job.json) file.
+
+``` json
+{
+"Check-Inventory-Lambda-Job": {
+    "Type":"Job:AWS:Lambda",
+    "Application":"mol-app",
+    "ConnectionProfile": "MOL-AWS",
+    "FunctionName": "online-store-checkout-workflow-dev-checkInventory",
+    "AppendLog" : true
+},
+"Calculate-Total-Lambda-Job": {
+    "Type":"Job:AWS:Lambda",
+    "Application":"mol-app",
+    "ConnectionProfile": "MOL-AWS",
+    "FunctionName": "online-store-checkout-workflow-dev-calculateTotal",
+    "AppendLog" : true
+
+},
+"Process-payment-Total-Lambda-Job": {
+    "Type":"Job:AWS:Lambda",
+    "Application":"mol-app",
+    "ConnectionProfile": "MOL-AWS",
+    "FunctionName": "online-store-checkout-workflow-dev-StartPaymentProcess",
+    "AppendLog" : true }
+}
+```
+
+- Create a file and name it     ***`ctm-lambda-job.json`***
+- Copy the codes in [ctm-lambda-job.json](./ctm-lambda-job.json) to the json file you just created.
+- Edit the parameters to match your own job definitions.
+- Save the json file and run the command below <br>
 
 ```
-ctm run ctm-glue-job.json
+ctm run ctm-lambda-job.json
 ```
 - You should receive an output with the ***run Id***
 
@@ -165,16 +135,11 @@ ctm run ctm-glue-job.json
 ctm run status <run Id>
 
 ```
-- If succesfull, you should receive a payload like the image below <br> <br>
 
-<img src="images/Capture.png" width = "800">
+### Step 5 - ``Monitor the job in  Control-M GUI``
 
+In the Control-M (or BMC Helix Control-M) GUI, you can view the status of your job, review logs and outputs, perform critical user tasks, and resolve various issues. 
 <br>
 <br>
+<img src="images/Capture.png" width = "1800">
 
-### Step 5 - ``Monitor the Glue job in Control-M``
-
-You can also monitor your job in the Control-M GUI by using the viewpoints in the monitoring domain. The monitoring domain enables users to monitor the processing of the jobs. In this domain , you can perfrom critical user tasks and handle problems. 
-<br>
-<br>
-<img src="images/monitoring domain.png">
