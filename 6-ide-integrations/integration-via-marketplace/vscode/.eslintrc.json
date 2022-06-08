@@ -1,0 +1,37 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "rules": {
+        "@typescript-eslint/naming-convention": "off",
+        "@typescript-eslint/semi": "error",
+        "curly": "error",
+        "eqeqeq": "error",
+        "no-throw-literal": "warn",
+        "no-implicit-coercion": "warn",
+        "semi": "error",
+        "no-extra-parens": "warn",
+        "no-extra-semi": "warn",
+        "no-dupe-args": "error",
+        "no-dupe-keys": "error",
+        "no-duplicate-case": "error",
+        "no-unreachable": "error",
+        "no-unsafe-negation": "error",
+        "valid-typeof": "warn",
+        "block-scoped-var": "error",
+        "complexity": ["warn", { "max": 15 }],
+        "default-case": "warn",
+        "no-octal": "warn",
+        "no-sequences": "error",
+        "no-self-assign": "warn",
+        "max-depth": ["warn", { "max": 4 }],
+        "no-unneeded-ternary": "warn",
+        "object-property-newline": "warn"
+    }
+}
