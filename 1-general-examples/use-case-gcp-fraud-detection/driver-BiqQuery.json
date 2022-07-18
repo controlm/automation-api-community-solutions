@@ -1,0 +1,11 @@
+{
+	"BigQuery": {
+		"Type": "Driver:Jdbc:Database",
+			"TargetAgent":"ip-172-31-16-53",
+			"StringTemplate": "jdbc:bigquery://https://www.googleapis.com/bigquery/v2:443;ProjectId=sso-gcp-dba-ctm4-pub-cc10274;OAuthType=0;OAuthServiceAcctEmail=jogoldbectm@sso-gcp-dba-ctm4-pub-cc10274.iam.gserviceaccount.com;OAuthPvtKeyPath=/home/ctmagent/gcpServiceAccountPvtKeyFile.p12;",
+			"DriverJarsFolder":"/home/ctmagent/jdbc/bigquery",
+			"ClassName":"com.simba.googlebigquery.jdbc.Driver",
+			"LineComment" : "--",
+			"StatementSeparator" : ";"
+	}
+}

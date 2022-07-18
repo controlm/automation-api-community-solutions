@@ -1,0 +1,95 @@
+{
+    "Defaults" : {"RunAs" : "ctmagent", "OrderMethod": "Manual", "Application" : "multicloud", "SubApplication" : "jog-mc-fraud-modeling", 
+        "Job" : {"SemQR": { "Type": "Resource:Semaphore", "Quantity": "1"},
+            "actionIfError" : {"Type": "If", "CompletionStatus":"NOTOK", "mailTeam": 
+              {"Type": "Mail", "Message": "Job %%JOBNAME failed", "Subject": "Error occurred", "To": "joe_goldberg@bmc.com"}}}
+    },
+
+    "jog-mc-gcp-fraud-detection": {
+        "Type": "Folder",
+        "Comment" : "Update fraud history, run, train and score models",
+
+      "jog-gcs-download" : {"Type" : "Job:FileTransfer",
+        "Host" : "ftpagents",
+        "ConnectionProfileSrc" : "smprodMFT",
+        "ConnectionProfileDest" : "joggcp",
+        "S3BucketName" : "prj1968-bmc-data-platform-foundation",
+        "Description" : "First data ingest that triggers downstream applications",
+        "FileTransfers" : [
+          {
+            "TransferType" : "Binary",
+            "TransferOption" : "SrcToDestFileWatcher",
+            "Src" : "/bmc_personal_details.csv",
+            "Dest" : "/bmc_personal_details.csv"
+          },
+          {
+            "TransferType" : "Binary",
+            "TransferOption" : "SrcToDestFileWatcher",
+            "Src" : "/bmc_fraud_details.csv",
+            "Dest" : "/bmc_fraud_details.csv"
+          },
+          {
+            "TransferType" : "Binary",
+            "TransferOption" : "SrcToDestFileWatcher",
+            "Src" : "/bmc_transaction_details.csv",
+            "Dest" : "/bmc_transaction_details.csv"
+          } 
+        ]
+      },
+      
+      "jog-dflow-gcs-to-bq-fraud": {"Type": "Job:ApplicationIntegrator:AI Google DataFlow",
+        "AI-Location": "us-central1",
+        "AI-Parameters (JSON Format)": "{\"jobName\": \"jog-dflow-gcs-to-bq-fraud\",    \"environment\": {        \"bypassTempDirValidation\": false,        \"tempLocation\": \"gs://prj1968-bmc-data-platform-foundation/bmc_fraud_details/temp\",        \"ipConfiguration\": \"WORKER_IP_UNSPECIFIED\",        \"additionalExperiments\": []    },    \"parameters\": {        \"javascriptTextTransformGcsPath\": \"gs://prj1968-bmc-data-platform-foundation/bmc_fraud_details/bmc_fraud_details_transform.js\",        \"JSONPath\": \"gs://prj1968-bmc-data-platform-foundation/bmc_fraud_details/bmc_fraud_details_schema.json\",        \"javascriptTextTransformFunctionName\": \"transform\",        \"outputTable\": \"sso-gcp-dba-ctm4-pub-cc10274:bmc_dataplatform_foundation.bmc_fraud_details_V2\",        \"inputFilePattern\": \"gs://prj1968-bmc-data-platform-foundation/bmc_fraud_details/bmc_fraud_details.csv\",        \"bigQueryLoadingTemporaryDirectory\": \"gs://prj1968-bmc-data-platform-foundation/bmc_fraud_details/tmpbq\"    }}",
+        "AI-Log Level": "INFO",
+        "AI-Template Location (gs://)": "gs://dataflow-templates-us-central1/latest/GCS_Text_to_BigQuery",
+        "AI-Project ID": "sso-gcp-dba-ctm4-pub-cc10274",
+        "AI-Template Type": "Classic Template",
+        "ConnectionProfile": "JOG-DFLOW-MIDENTITY",
+        "Host": "gcpagents"
+      },
+
+      "jog-dflow-gcs-to-bq-transactions": {"Type": "Job:ApplicationIntegrator:AI Google DataFlow",
+        "AI-Location": "us-central1",
+        "AI-Parameters (JSON Format)": "{    \"jobName\": \"jog-dflow-gcs-to-bq-transactions\",    \"environment\": {        \"bypassTempDirValidation\": false,        \"tempLocation\": \"gs://prj1968-bmc-data-platform-foundation/bmc_transaction_details/temp\",        \"ipConfiguration\": \"WORKER_IP_UNSPECIFIED\",        \"additionalExperiments\": []    },    \"parameters\": {        \"javascriptTextTransformGcsPath\": \"gs://prj1968-bmc-data-platform-foundation/bmc_transaction_details/bmc_transaction_details_transform.js\",        \"JSONPath\": \"gs://prj1968-bmc-data-platform-foundation/bmc_transaction_details/bmc_transactions_schema.json\",        \"javascriptTextTransformFunctionName\": \"transform\",        \"outputTable\": \"sso-gcp-dba-ctm4-pub-cc10274:bmc_dataplatform_foundation.bmc_transaction_details_V2\",        \"inputFilePattern\": \"gs://prj1968-bmc-data-platform-foundation/bmc_transaction_details/bmc_transaction_details.csv\",        \"bigQueryLoadingTemporaryDirectory\": \"gs://prj1968-bmc-data-platform-foundation/bmc_transaction_details/tmpbq\"    }}",
+        "AI-Log Level": "INFO",
+        "AI-Template Location (gs://)": "gs://dataflow-templates-us-central1/latest/GCS_Text_to_BigQuery",
+        "AI-Project ID": "sso-gcp-dba-ctm4-pub-cc10274",
+        "AI-Template Type": "Classic Template",
+        "ConnectionProfile": "JOG-DFLOW-MIDENTITY",
+        "Host": "gcpagents"
+      },
+
+      "jog-dflow-gcs-to-bq-personal": {"Type": "Job:ApplicationIntegrator:AI Google DataFlow",
+        "AI-Location": "us-central1",
+        "AI-Parameters (JSON Format)": "{    \"jobName\": \"jog-dflow-gcs-to-bq-personal\",    \"environment\": {        \"bypassTempDirValidation\": false,        \"tempLocation\": \"gs://prj1968-bmc-data-platform-foundation/bmc_personal_details/temp\",        \"ipConfiguration\": \"WORKER_IP_UNSPECIFIED\",        \"additionalExperiments\": []    },    \"parameters\": {        \"javascriptTextTransformGcsPath\": \"gs://prj1968-bmc-data-platform-foundation/bmc_personal_details/bmc_personal_details_transform.js\",        \"JSONPath\": \"gs://prj1968-bmc-data-platform-foundation/bmc_personal_details/bmc_personal_details.json\",        \"javascriptTextTransformFunctionName\": \"transform\",        \"outputTable\": \"sso-gcp-dba-ctm4-pub-cc10274:bmc_dataplatform_foundation.bmc_personal_details_V2\",        \"inputFilePattern\": \"gs://prj1968-bmc-data-platform-foundation/bmc_personal_details/bmc_personal_details.csv\",        \"bigQueryLoadingTemporaryDirectory\": \"gs://prj1968-bmc-data-platform-foundation/bmc_personal_details/tmpbq\"    }}",
+        "AI-Log Level": "INFO",
+        "AI-Template Location (gs://)": "gs://dataflow-templates-us-central1/latest/GCS_Text_to_BigQuery",
+        "AI-Project ID": "sso-gcp-dba-ctm4-pub-cc10274",
+        "AI-Template Type": "Classic Template",
+        "ConnectionProfile": "JOG-DFLOW-MIDENTITY",
+        "Host": "gcpagents"
+      },
+
+      "jog-mc-bq-query": {"Type": "Job:Database:EmbeddedQuery",
+        "Query": "SELECT * FROM `sso-gcp-dba-ctm4-pub-cc10274.bmc_dataplatform_foundation.bmc_fraud_details` LIMIT 1000",
+        "Autocommit": "Y",
+        "OutputSQLOutput": "Y",
+        "ConnectionProfile": "BQ",
+        "Host": "ip-172-31-16-53"
+      },
+
+      "jog-mc-fm-service": {"Type": "Job:SLAManagement",
+			  "ServiceName": "Model testing and scoring for fraud detection",
+			  "ServicePriority": "3",
+			  "JobRunsDeviationsTolerance": "3",
+			  "CompleteIn": {
+			    "Time": "20:00"
+			  }
+	  	}, 
+		
+      "flow00": {"Type":"Flow", "Sequence":["jog-gcs-download", "jog-dflow-gcs-to-bq-fraud", "jog-mc-bq-query", "jog-mc-fm-service"]},
+      "flow01": {"Type":"Flow", "Sequence":["jog-gcs-download", "jog-dflow-gcs-to-bq-transactions", "jog-mc-bq-query", "jog-mc-fm-service"]},
+      "flow02": {"Type":"Flow", "Sequence":["jog-gcs-download", "jog-dflow-gcs-to-bq-personal", "jog-mc-bq-query", "jog-mc-fm-service"]}
+
+    }
+}

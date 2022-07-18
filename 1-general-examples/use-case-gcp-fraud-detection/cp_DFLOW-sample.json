@@ -1,0 +1,10 @@
+{
+  "DFLOW-631873438236": {
+    "Type": "ConnectionProfile:ApplicationIntegrator:AI Google DataFlow",
+    "AI-Identity Type": "service_account",
+    "AI-DataFlow URL": "https://dataflow.googleapis.com",
+    "AI-Service Account Key (JSON Format)": "<service account key in json format goes here>",
+    "TargetAgent": "ip-172-31-16-53",
+    "TargetCTM": "smprod"
+  }
+}

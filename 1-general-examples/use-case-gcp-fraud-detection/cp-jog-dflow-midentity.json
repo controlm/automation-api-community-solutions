@@ -1,0 +1,10 @@
+{
+  "JOG-DFLOW-MIDENTITY": {
+    "Type": "ConnectionProfile:ApplicationIntegrator:AI Google DataFlow",
+    "AI-Identity Type": "os_user",
+    "AI-DataFlow URL": "https://dataflow.googleapis.com",
+    "AI-Service Account Key (JSON Format)": "{ }",
+    "Description": "",
+    "Centralized": true
+  }
+}
