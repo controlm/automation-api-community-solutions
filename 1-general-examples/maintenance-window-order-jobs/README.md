@@ -58,7 +58,7 @@ After any unwanted jobs have been cleaned up, deactivate the policy that prevent
 
 **ctm run workloadpolicy::deactivate SAP_STOP**
 	
-Now that the maintenanc window has been completed, there amay be jobs that you wish to order manually. Use the script in the next section to accomplish that without having to manually select the desired jobs.	
+Now that the maintenance window has been completed, there may be jobs that you wish to order manually. Use the script in the next section to accomplish that without having to manually select the desired jobs.	
 
 ## **Powershell Script**
 **OrderManualJobs.ps1**	

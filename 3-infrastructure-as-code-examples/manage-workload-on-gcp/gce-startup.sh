@@ -5,7 +5,7 @@ sudo apt-get install -yq openjdk-11-jdk wget psmisc
 wget https://<your control-m em url>:8443/automation-api/ctm-cli.tgz --no-check-certificate
 sudo curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
 sudo apt-get install -y nodejs
-iid=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"`
+GCP_Instance_ID=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"`
 iname=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/name" -H "Metadata-Flavor: Google"`
 zone=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/zone" -H "Metadata-Flavor: Google"`
 CTM_ENV=`gcloud compute instances describe $(hostname) --zone=${zone} --format="text(labels)" | grep ctmenvironment | cut -f 2 -d ':' | sed s/[^a-zA-Z0-9_-]//g`
@@ -27,5 +27,22 @@ sudo useradd -d /home/${agentuser} -m -s /bin/bash ${agentuser}
 sudo wget https://smprod.ctmdemo.com:8443/automation-api/ctm-cli.tgz --no-check-certificate
 sudo npm install -g ctm-cli.tgz
 sudo su - ${agentuser} -c "ctm env add ctm ${ctmurl} ${ctmuser} ${ctmpswd}"
-sudo su - ${agentuser} -c "ctm provision install Agent_20.200.Linux ${ctmserver} ${newhost}"
-sudo su - ${agentuser} -c "ctm config server:hostgroup:agent::add ${ctmserver} ${ctmhgroup} ${newhost}"
+ALIAS=${newhost}:gcp-$GCP_Instance_ID
+len=`expr length "${ALIAS}"`
+if [[ $len -gt 85 ]]
+then
+	echo Agent name ${ALIAS} too long >> $GCP_LOG
+	exit 99
+else
+    echo Agent name ${ALIAS} will be used
+	echo Agent name ${ALIAS} will be used >> $GCP_LOG
+fi
+sudo su - ${agentuser} -c "ctm provision install Agent_20.200.Linux ${ctmserver} ${ALIAS}"
+sudo su - ${agentuser} -c "ctm config server:hostgroup:agent::add ${ctmserver} ${ctmhgroup} ${ALIAS}"
+
+echo STARTED > /home/ctmagent/ctm/data/ctm_agent_status.dat
+
+sudo wget -O /etc/rc.d/init.d/ctmagent https://raw.githubusercontent.com/controlm/automation-api-community-solutions/master/3-infrastructure-as-code-examples/manage-workload-on-gcp/rc.GCP_Agent_sample
+
+sudo chmod +x /etc/rc.d/init.d/ctmagent
+sudo chkconfig --level 345 ctmagent on

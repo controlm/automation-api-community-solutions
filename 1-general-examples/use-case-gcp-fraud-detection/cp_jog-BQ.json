@@ -1,0 +1,13 @@
+{
+  "BQ": {
+    "Type": "ConnectionProfile:Database:JDBC",
+    "User": "jogoldbe",
+    "Driver": "BigQuery",
+    "Port": "443",
+    "DatabaseName": "bmc-dataplatform-foundation",
+    "Host": "https://www.googleapis.com/bigquery/v2",
+    "Password": "*****",
+    "Centralized": true
+
+  }
+}

@@ -17,7 +17,7 @@ GCP_Info() {
 #	Get Instance ID and zone
 
 	GCP_Instance_ID=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/id" -H "Metadata-Flavor: Google"`
-	GCP_Zone=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/zone" -H "Metadata-Flavor: Google" | grep region | cut -f 2 -d ':' | sed s/[^a-zA-Z0-9_-]//g`
+	GCP_Zone=`curl -s "http://metadata.google.internal/computeMetadata/v1/instance/zone" -H "Metadata-Flavor: Google"`
 
 #	Get Control-M Server Name to connect to and Control-M Hostgroup to join
 	thishost=`hostname`
@@ -159,10 +159,9 @@ fi
 agent_owner=`grep AGENT_OWNER $config_file | awk '{print $2}'`
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------
-#		Set up agent on EC2 
+#		Set up agent on GCE 
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 GCP_Setup $agent_owner
-
 
 if [ "$STATE_ACTION" = "start" ] ; then 
 
