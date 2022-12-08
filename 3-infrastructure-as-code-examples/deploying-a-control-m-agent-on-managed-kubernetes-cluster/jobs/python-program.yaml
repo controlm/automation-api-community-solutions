@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sleep-on-thep-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: sleep-container
+        image: busybox
+        #command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+        args:
+          - sleep
+          - "60"
+      restartPolicy: Never
+  
