@@ -7,13 +7,13 @@
                     "Type": "Job:Command",
                     "Command": "python2.7 runJob.py -y /home/controlm/sleep_for_20sec_job.yaml",
                     "RunAs": "controlm",
-                    "Host": "statefulset-agent-0"
+                    "Host": "my-statefulset-agent-0"
             },
             "echo_message": {
                     "Type": "Job:Command",
                     "Command": "python2.7 runJob.py --jobname echo-message --image ubuntu --command /bin/bash --args '-c' --args 'echo Hello World!'",
                     "RunAs": "controlm",
-                    "Host": "statefulset-agent-0"
+                    "Host": "my-statefulset-agent-0"
             }
     }
 }
