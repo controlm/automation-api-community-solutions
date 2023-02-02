@@ -1,0 +1,16 @@
+{
+  "joggcp": {
+    "Type": "ConnectionProfile:FileTransfer:S3:Compatible",
+    "AdditionalParameters": [
+      {
+        "Name": "s3.set.api.version",
+        "Value": "1"
+      }
+    ],
+    "SecretAccessKey": "<AWS Secret Access Key goes here>",
+    "RestEndPoint": "storage.googleapis.com",
+    "AccessKey": "<AWS access key id goes here>",
+    "Description": "Google Cloud Storage Interoperability credentials",
+    "Centralized": true
+  }
+}

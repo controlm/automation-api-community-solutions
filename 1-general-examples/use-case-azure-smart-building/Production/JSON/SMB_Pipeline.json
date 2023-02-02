@@ -11,8 +11,7 @@
       "Command": "pwsh \"C:\\Production\\scripts\\SetCtmVars.ps1\"",
 	  "eventsToAdd": {
         "Type": "AddEvents",
-        "Events": [{"Event": "SMB_Set_Variable-TO-SMB_Blob_Watch_Incoming"},
-				   {"Event": "SMB_Set_Variables-TO-SMB_SOR_DataExtracts"}]
+        "Events": [{"Event": "SMB_Set_Variables-TO-SMB_SOR_DataExtracts"}]
       }
     },
     
@@ -23,19 +22,7 @@
       "AI-BlobWatch Container": "smartbuilding",
       "AI-BlobWatch Blob Name": "files/buildingdata.csv",
       "AI-BlobWatch Sleep Interval": "30",
-      "ConnectionProfile": "FY21DEMO",
-	  "eventsToWaitFor": {
-        "Type": "WaitForEvents",
-        "Events": [{"Event": "SMB_Set_Variable-TO-SMB_Blob_Watch_Incoming"}]
-      },
-      "eventsToDelete": {
-        "Type": "DeleteEvents",
-        "Events": [{"Event": "SMB_Set_Variable-TO-SMB_Blob_Watch_Incoming"}]
-      },
-      "eventsToAdd": {
-        "Type": "AddEvents",
-        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-SMB_ADF_SparkPipeline"}]
-      }
+      "ConnectionProfile": "FY21DEMO"
     },
 	
     "SMB_ADF_SparkPipeline": {
@@ -43,59 +30,20 @@
       "AI-Azure Data Factory": "%%AZDF",
       "AI-Resource Group": "%%AZRG",
       "AI-Pipeline": "SmartBuilding_SparkPipeline",
-      "ConnectionProfile": "ADF",
-      "eventsToWaitFor": {
-        "Type": "WaitForEvents",
-        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-SMB_ADF_SparkPipeline"},
-				   {"Event": "SMB_SOR_DataExtract-TO-SMB_ADF_SparkPipeline"}]
-      },
-      "eventsToAdd": {
-        "Type": "AddEvents",
-        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_SMS_Notification"},
-				   {"Event": "SMB_ADF_SparkPipeline-TO-SMB_Email_Notification"}]
-      },
-      "eventsToDelete": {
-        "Type": "DeleteEvents",
-        "Events": [{"Event": "SMB_Blob_Watch_Incoming-TO-SMB_ADF_SparkPipeline"},
-				   {"Event": "SMB_SOR_DataExtract-TO-SMB_ADF_SparkPipeline"}]
-      }
+      "ConnectionProfile": "ADF"
     },
 	
     "SMB_SMS_Notification": {
       "Type": "Job:Command",
       "RunAs": "ctmadmin",
-      "Command": "python c:\\Production\\scripts\\twilio_send.py -m \"some text\" -n \"+14167225672\" -f \"C:\\Production\\Data\\TwilioCreds.txt\"",
-      "eventsToWaitFor": {
-        "Type": "WaitForEvents",
-        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_SMS_Notification"}]
-      },
-	  "eventsToAdd": {
-        "Type": "AddEvents",
-        "Events": [{"Event": "SMB_SMS_Notification-TO-SMB_Blob_Delete"}]
-      },
-      "eventsToDelete": {
-        "Type": "DeleteEvents",
-        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_SMS_Notification"}]
-      }
+      "Command": "python c:\\Production\\scripts\\twilio_send.py -m \"some text\" -n \"+14167225672\" -f \"C:\\Production\\Data\\TwilioCreds.txt\""
     },
     "SMB_Email_Notification": {
       "Type": "Job:ApplicationIntegrator:AI AzureLogicApps",
       "AI-Resource Group": "%%AZRG",
       "AI-TriggerName": "manual",
       "AI-Workflow": "SendEmail",
-      "ConnectionProfile": "AZ_LOGICAPPS",
-      "eventsToWaitFor": {
-        "Type": "WaitForEvents",
-        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_Email_Notification"}]
-      },
-	  "eventsToAdd": {
-        "Type": "AddEvents",
-        "Events": [{"Event": "SMB_Email_Notification-TO-SMB_Blob_Delete"}]
-      },
-      "eventsToDelete": {
-        "Type": "DeleteEvents",
-        "Events": [{"Event": "SMB_ADF_SparkPipeline-TO-SMB_Email_Notification"}]
-      }
+      "ConnectionProfile": "AZ_LOGICAPPS"
     },
 	
 	"SMB_Blob_Delete": {
@@ -104,16 +52,15 @@
       "AI-Blob name (Delete)": "files/buildingdata.csv",
       "AI-Public Access": "Off",
       "AI-Container (Delete)": "smartbuilding",
-      "ConnectionProfile": "FY21DEMO",
-	  "eventsToWaitFor": {
-        "Type": "WaitForEvents",
-        "Events": [{"Event": "SMB_Email_Notification-TO-SMB_Blob_Delete"}, 
-				   {"Event": "SMB_SMS_Notification-TO-SMB_Blob_Delete"}]
-      },
-      "eventsToDelete": {
-        "Type": "DeleteEvents",
-        "Events": [{"Event": "SMB_Email_Notification-TO-SMB_Blob_Delete"},
-				   {"Event": "SMB_SMS_Notification-TO-SMB_Blob_Delete"}]
+      "ConnectionProfile": "FY21DEMO"
+    },
+	
+	"SMB_RunPipeline_Service": {
+      "Type": "Job:SLAManagement",
+      "ServiceName": "Smart Building Data Pipeline",
+      "ServicePriority": "1", "RunAs": "DUMMYUSR",
+      "CompleteIn": {
+        "Time": "00:30"
       }
     },
 	
@@ -156,6 +103,9 @@
         "Type": "DeleteEvents",
         "Events": [{"Event": "SMB_Set_Variables-TO-SMB_SOR_DataExtracts"}]
       }
-    }
+    },
+	
+	"flow00" : {"Type":"Flow", "Sequence":["SMB_Set_Variables", "SMB_Blob_Watch_Incoming", "SMB_ADF_SparkPipeline", "SMB_SMS_Notification", "SMB_Blob_Delete"]},
+    "flow01" : {"Type":"Flow", "Sequence":["SMB_ADF_SparkPipeline", "SMB_Email_Notification", "SMB_Blob_Delete", "SMB_RunPipeline_Service"]}
   }
 }

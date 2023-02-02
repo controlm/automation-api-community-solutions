@@ -1,0 +1,10 @@
+{
+    "AWS_CONNECTION": {
+      "Type": "ConnectionProfile:AWS",
+      "TargetAgent": "AgentHost",
+      "TargetCTM": "CTMHost",
+      "AccessKey": "1234",
+      "SecretAccessKey": "mysecret",
+      "Region": "ap-northeast-1"
+    }
+  }
