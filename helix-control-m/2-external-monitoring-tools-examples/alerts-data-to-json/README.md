@@ -1,15 +1,45 @@
 ## Description
 
-The External Alert Management service from BMC Helix Control-M Automation API allows to define a script to trigger each time an alert is received (via the [**run alerts:listener:script::set**](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alerts_listener_script_set) service).
+This Linux (bash) script converts the received alert data to JSON, which can be useful when an external tool is expecting the input data in such format.
 
-This sample script can be useful if it is required to run more than one script for each received alert (e.g. for integration with multiple external tools). It is executed each time an alert is received and triggers all scripts in a predefined path, passing all parameters received to each of them.
+As an example, the alert data is saved into a file, but this could be replaced by any other action (e.g. sending the alert data in JSON via a webhook).
 
 ## Usage
 
-- Update the **alert_scripts_dir** variable in the script with the path to the directory which stores your custom scripts.
+- If you use the script as it is (saving the JSON data into a file), update the **alerts_dir** and **alerts_file** variables with your custom file location.
+
+- If you have modified the default JSON template for alerts (which determines the information to provide: alert fields, names and order of appearance - as documented in the [**Alerts Template reference**](https://docs.bmc.com/docs/saas-api/alerts-template-reference-1144242602.html)), remember to update the **field_names** variable in the script with the corresponding field names and their order.
 
 ## Additional information
 
-- The scripts are executed as background processes.
+The alert data is passed as parameters to the script with the format `<field1>: <value1> <field2>: <value2> [...]`, as in the following example:
 
-- In this example, only scripts with the ".sh" extension are executed.
+    eventType: I id: 2193 server: IN01 fileName: runId: 00q2e severity: V status: 0 time: 20221126150057 user: updateTime: message: Ended not OK runAs: ctmagent subApplication: application: my-demos jobName: my-sample-job host: zzz-linux-agent-1 type: R closedByControlM: ticketNumber: runNo: 00001 notes:
+
+The script parses the input data and converts it to JSON format, starting with the "*alertFields*" key and followed by an array containing all the alert fields and their corresponding values. This is the same JSON structure as the one received when connecting to the External Alerts service via a WebSocket client, as in the following example:
+
+    {
+       "alertFields" : [
+          {"eventType" : "I"},
+          {"id" : "2193"},
+          {"server" : "IN01"},
+          {"fileName" : ""},
+          {"runId" : "00q2e"},
+          {"severity" : "V"},
+          {"status" : "0"},
+          {"time" : "20221126150057"},
+          {"user" : ""},
+          {"updateTime" : ""},
+          {"message" : "Ended not OK"},
+          {"runAs" : "ctmagent"},
+          {"subApplication" : ""},
+          {"application" : "my-demos"},
+          {"jobName" : "my-sample-job"},
+          {"host" : "zzz-linux-agent-1"},
+          {"type" : "R"},
+          {"closedByControlM" : ""},
+          {"ticketNumber" : ""},
+          {"runNo" : "00001"},
+          {"notes" : ""}
+        ]
+    }
