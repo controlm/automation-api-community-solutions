@@ -25,7 +25,7 @@ Helix Control-M Alerts to Remedy ITSM
 
 ## Download
 
-* [Click this to download a zip of the PlugIn jobtype](resources/AI_SAPIBP.zip)  
+* [Click this to download a zip of the PlugIn jobtype](alerts-to-RemedyITSM/alerts-to-RemedyITSM.zip)  
    Click download and unzip the archive. Then, import the file into the Application Integrator designer.
 * [Click this for the uncompressed raw AI_SAPIBP.ctmai file](resources/AI_SAPIBP.ctmai)  
    This will allow you to retrieve the raw ctmai file as described in the repository [Readme](https://github.com/controlm/integrations-plugins-community-solutions#saving-application-integrator-files-for-use).
