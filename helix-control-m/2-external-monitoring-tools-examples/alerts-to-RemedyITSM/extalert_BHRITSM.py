@@ -3,6 +3,12 @@ import json
 import sys
 import logging
 
+# To write the log and output to files for attaching.
+import tempfile
+import os
+from os import getcwd, path
+from socket import getfqdn
+
 # Importing Control-M Python Client
 from ctm_python_client.core.workflow import *
 from ctm_python_client.core.comm import *
@@ -18,18 +24,9 @@ from extalert_functions import dbg_assign_var
 #Not just the RemedyAPI from pipy
 from remedy_py.RemedyAPIClient import RemedyClient as itsm_cli
 
-# To write the log and output to files for attaching.
-import tempfile
-import os
-from os import getcwd, path
-from socket import getfqdn
-
-from pprint import pprint
-
-
 # To see if we need to set initial debug. If not, can be set at tktvars,
-#    but logging will not be as throrugh in the beginning.
-# need to pip install  python-dotenv
+#    but logging will not be as throrough in the beginning.
+# need to pip install python-dotenv
 from dotenv import dotenv_values
 
 # Set exit code for the procedure

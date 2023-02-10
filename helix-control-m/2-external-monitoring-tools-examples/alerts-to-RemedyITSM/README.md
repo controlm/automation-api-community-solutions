@@ -25,75 +25,57 @@ Helix Control-M Alerts to Remedy ITSM
 
 ## Download
 
-* [Click this to download a zip of the PlugIn jobtype](alerts-to-RemedyITSM/alerts-to-RemedyITSM.zip)  
+* [Click this to download a zip of the required files](alerts-to-RemedyITSM.zip)  
    Click download and unzip the archive. Then, import the file into the Application Integrator designer.
-* [Click this for the uncompressed raw AI_SAPIBP.ctmai file](resources/AI_SAPIBP.ctmai)  
-   This will allow you to retrieve the raw ctmai file as described in the repository [Readme](https://github.com/controlm/integrations-plugins-community-solutions#saving-application-integrator-files-for-use).
-* Or use the following command:
-
-   ```bash
-   wget -O AI_SAPIBP.ctmai https://github.com/controlm/integrations-plugins-community-solutions/raw/master/104-erp-integrations/sapibp/resources/AI_SAPIBP.ctmai
-   ```
 
 ## Pre requisites
+### Python packages
 
-### Control-M
+1. Remedy_py
+
+Need to install the current fork of the remedy_py package. A pull request is pending for it to be available in PyPI
+
+   ```bash
+   pip install git+https://github.com/dcompane/remedy-py
+   ```
+
+2. Control-M Python Client
+
+   ```bash
+   pip install ctm-python-client
+   ```
+
+   Control-M Python Client documentation is available at <https://controlm.github.io/ctm-python-client/>
+
+3. Other packages
+
+   * dotenv
+
+      ```bash
+      pip install python-dotenv
+      ```
+
+### BMC Helix Control-M
 
 * Helix Control-M
-* Helix Control-M Agent v9.0.20.180+ **only on Linux**.
-* Application pack v9.0.20.180+
+* Automation API CLI
 
-> NOTE: It is likely compatible with Control-M on-premise systems, but it has not yet been tested with it.
+> NOTE: It is likely compatible with Control-M on-premise systems, with the proper fields file (as per the documentation on the [Alerts template reference](https://docs.bmc.com/docs/display/ctmSaaSAPI/Alerts+Template+reference).
 
-### SAP IBP
+### BMC Helix ITSM
 
-Uses the published [SAP IBP API](resources/ExternalJobScheduling_Official.pdf)
+BMC Helix Remedy ITSM or on-prem with REST APIs enabled.
+Tested with version BMC Helix ITSM 20.08
 
 ## Features
 
-* Authentication: Uses Basic Authentication
-* Connection Profile:
-  * Enter the host, port, Communication User and Password. The Password will be obscured.
-    > The jobtype does not check for User locked. This may return rc=14 (Unknown return code)  
-    Hostname should include the "-api" section. (See rc=10 below)
-* Job Fields
-  * Can be specified with a choice of the Template Name or the Template Text. Most users know the Template Text, but the API requires the Template Name to start the job.
-  * Allows to specify the Maximum Duration (timeout) expected on each job.  
-     If the jobs surpasses the Maximum Duration, you can select to attempt to kill the SAP IBP job, or let it continue.  
-     In either case, you should validate, per the SAP IBP API manual, that all components have completed.  
-     See OData Call to Cancel / Unschedule a Job on the [API documentation](resources/ExternalJobScheduling_Official.pdf)
-  * Includes a configurable cycle time to avoid overloading the SAP IBP platform with excessive verification requests (default=60 seconds)
-* Return Codes
-  * rc=0: IBP Reported completion successfully. JobStatus="F".
-  * rc=10: URL for SAP IBP is malformed. Likely cause it is missing the "-api".
-  * rc=11: The Template Text or Name specified could not be found.
-  * rc=12: The execution in SAP IBP still continues after Control-M job ended. Likely a timeout without a request for termination. JobStatus="R".
-  * rc=13: The execution in SAP IBP terminated with JobStatus=A. The job was cancelled in SAP IBP, or a timeout with termination occurred. JobStatus="A".
-  * rc=14: There was an unknown return code (JobStatus different from A, F, or R)
-  * rc=15: The job was manually killed from Control-M. An attempt to terminate the SAP IBP job was automatically sent.
-  * rc=24: An attempt to run on a **Windows agent** made the job fail.
-
-## Test information
-
-### Sample CCP provided
-
-* [See Connection Profile](resources/AI_Jobs_and_CCP/AI_SAP_IBP_CP.json)
-
-### Test Jobs provided
-
-* [See Sample JSON Test Jobs](resources/AI_Jobs_and_CCP/AI_SAP_IBP_Test_Jobs.json)
-
-## Overall flow for the plugin
-
-[Download Flow PDF](images/AppInt_Flow.pdf)
-![SAP IBP Plugin flow](images/AppInt_Flow.png)
-
-## Scripts
-
-The following scripts were used in the AI Steps.  
->NOTE: The scripts do not have names in the AI. They were given names to be saved here.
-
-* [CTM_AI_StartJob.sh](resources\AI_Scripts\CTM_AI_StartJob.sh): This is the Abort operation of the Verification Step
-* [CTM_Kill_job.sh](resources/AI_Scripts/CTM_Kill_Job.sh): This is the Abort operation of the Verification Step
-* [CTM_IBP_Terminate.sh](resources/AI_Scripts/CTM_IBP_Terminate.sh): This is the IBP termination if Max Duration (Timeout) was exceeded
-* [CTM_AI_PostProc.sh](resources/AI_Scripts/CTM_Kill_Job.sh): This is the Post Processing script
+* Authentication: 
+  * only Username and password has been developed.
+    * The token generated will be expired (logout) at the end of the script.
+  * Unaware at this time if there are other methods possible, but reach out if you need other methods (OAuth, etc.)
+* Script 
+  * will add the log and output to the ticket if configured on the config file (tktvars.json)
+  * does not include updates to the ticket.
+    * As of the BMC Helix Control-M October 2022 version, there is no API to update tickets
+    * When available, special care will be needed for feedback loops as ticket updates will trigger an updated alert to the script.
+    will compose a URL for the case to display, if the alert is that of a job.

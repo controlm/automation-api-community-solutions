@@ -1,0 +1,26 @@
+{
+    "fields":
+    [
+    {"eventType": "eventType"},
+    {"id": "id"},
+    {"server": "server"},
+    {"fileName": "fileName"},
+    {"runId": "runId"},
+    {"severity":"severity"},
+    {"status": "status"},
+    {"time": "time"},
+    {"user": "user"},
+    {"updateTime": "updateTime"},
+    {"message": "message"},
+    {"runAs": "runAs"},
+    {"subApplication": "subApplication"},
+    {"application": "application"},
+    {"jobName": "jobName"},
+    {"host": "host"},
+    {"type": "type"},
+    {"closedByControlM": "closedByControlM"},
+    {"ticketNumber": "ticketNumber"},
+    {"runNo": "runNo"},
+    {"notes": "notes"}
+    ]
+}
