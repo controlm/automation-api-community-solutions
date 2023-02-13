@@ -1,13 +1,10 @@
+### See send_mail function in extalert_functions
+
 # Basic imports
 import json
 import sys
 import logging
-
-# To write the log and output to files for attaching.
-import tempfile
-import os
-from os import getcwd, path
-from socket import getfqdn
+import smtplib
 
 # Importing Control-M Python Client
 from ctm_python_client.core.workflow import *
@@ -17,42 +14,34 @@ from aapi import *
 
 # Importing functions
 from extalert_functions import args2dict
-from extalert_functions import parsing_args
 from extalert_functions import init_dbg_log
 from extalert_functions import dbg_assign_var
+from extalert_functions import send_mail
+
+# To write the log and output to files for attaching.
+import tempfile
+import os
+from os import getcwd, path
+from socket import getfqdn
+
+# To see if we need to set initial debug. If not, can be set at tktvars,
+#    but logging will not be as throrugh in the beginning.
+# need to pip install  python-dotenv
+from dotenv import dotenv_values
 
 #Not just the RemedyAPI from pipy
 from remedy_py.RemedyAPIClient import RemedyClient as itsm_cli
 
-# To see if we need to set initial debug. If not, can be set at tktvars,
-#    but logging will not be as throrough in the beginning.
-# need to pip install python-dotenv
-from dotenv import dotenv_values
 
 # Set exit code for the procedure
 exitrc = 0
 
+config = {}
+
 # Initialize logging
-dbg_logger=init_dbg_log()
+dbg_logger, config = init_dbg_log()
 
-try:
-    env_file = getcwd() + path.sep + '.env.debug'
-    config = dotenv_values(env_file)  # could render config = {"DEBUG": "true"}
-    dbg_logger.info(f'file {env_file} was loaded. Setting debug to {config["DEBUG"]}.')
-    debug = True if config['DEBUG'] == 'true' else False
-except:
-    dbg_logger.info(f'file {env_file} is not available. Setting debug to False.')
-    config = {}
-    config['DEBUG'] = 'false'
-    debug = False
-
-# Setting logging level according to .env
-if debug:
-    dbg_logger.setLevel(logging.DEBUG)
-    dbg_logger.info('Startup logging to file level adjusted to debug (verbose)')
-else:
-    dbg_logger.setLevel(logging.INFO)
-    dbg_logger.info('Startup logging to file level is INFO')
+debug = True if config['DEBUG'].lower() == 'true' else False
 
 try:
     dbg_logger.info('Opening field_names.json')
@@ -94,9 +83,8 @@ except FileNotFoundError as e:
 
 if (config['pgmvars']['crttickets'] == 'no'):
     dbg_logger.info ('*' * 20 + ' Alert not sent to ticketing system.')
-    dbg_logger.info()
+    #dbg_logger.info()
     exitrc = 12
-    sys.exit(exitrc)
 
 #Set debug mode. It will be shown in the log. DO NOT POLLUTE!
 if (config['pgmvars']['debug'] == 'yes'):
@@ -131,15 +119,16 @@ else:
 
 
 # Ticket variables from tktvars.json
-tkt_url = dbg_assign_var(config['tktvars']['tkturl'], 'Ticketing URL',dbg_logger, debug)
-tkt_port = dbg_assign_var(config['tktvars']['tktport'],"Ticketing port", dbg_logger, debug)
-tkt_user = dbg_assign_var(config['tktvars']['tktuser'],"Ticketing user", dbg_logger, debug)
+tkt_url = dbg_assign_var(config['tktvars']['tkturl'], 'URL',dbg_logger, debug)
+tkt_port = dbg_assign_var(config['tktvars']['tktport'],"Port", dbg_logger, debug)
+tkt_user = dbg_assign_var(config['tktvars']['tktuser'],"User", dbg_logger, debug)
+tkt_verifySSL = dbg_assign_var(True if (config['tktvars']['tktverifySSL']== "yes") else False,"Verify SSL", dbg_logger, debug)
 tkt_pass = config['tktvars']['tktpasswd']
 #NewLine for RITSM messages
-NL='\n';
+NL='\n'
 
 # Configure RITSM client
-itsm_client = itsm_cli(host=tkt_url, port=tkt_port, username=tkt_user, password=tkt_pass, verify=True)
+itsm_client = itsm_cli(host=tkt_url, port=tkt_port, username=tkt_user, password=tkt_pass, verify=tkt_verifySSL)
 
 # Load ctmvars
 #   Set AAPI variables and create workflow object
@@ -182,9 +171,6 @@ tkt_work_list=dbg_assign_var('dcompazrctm@gmail.com', 'Ticket worklist (RITSM sp
 tkt_assigned_group=dbg_assign_var('CTM GROUP', 'Ticket assigned group (RITSM specific)', dbg_logger, debug, alert_id)
 tkt_short_description=dbg_assign_var(f"{alert[keywords_json['jobName']]} {alert[keywords_json['message']]}",
                         'Ticket Short Description', dbg_logger, debug, alert_id)
-
-# Configure Helix Control-M AAPI client
-
 
 
 # If the alert is about a job
@@ -288,23 +274,29 @@ if ctmattachlogs and alert_is_job:
     log = dbg_assign_var(monitor.get_log(f"{alert[keywords_json['server']]}:{alert[keywords_json['runId']]}"), "Log of Job", dbg_logger, debug, alert_id)
     job_log = (job_log + NL + log)
 
-    output = dbg_assign_var(monitor.get_output(f"{alert[keywords_json['server']]}:{alert[keywords_json['runId']]}",
+
+    try:
+       output = dbg_assign_var(monitor.get_output(f"{alert[keywords_json['server']]}:{alert[keywords_json['runId']]}",
             run_no=alert[keywords_json['runNo']]), "Output of job", dbg_logger, debug, alert_id)
+    except:
+        output = None
+    finally:
+       dbg_logger.info(f'RunID: {alert[keywords_json["runId"]]} RunNo {alert[keywords_json["runNo"]]}')
+
 
     if output is None :
         output = (job_output + NL +  f"*" * 70 + NL +
                     "NO OUTPUT AVAILABLE FOR THIS JOB" + NL + f"*" * 70 )
     job_output = (job_output + NL +  output)
 
-    file_log = f"log_{alert[keywords_json['runId']]}_{alert[keywords_json['runNo']]}.txt"
-    file_output = f"output_{alert[keywords_json['runId']]}_{alert[keywords_json['runNo']]}.txt"
+    file_log = f"log_{alert[keywords_json['runId']]}_{alert[keywords_json['runNo']]}_{alert_id}.txt"
+    file_output = f"output_{alert[keywords_json['runId']]}_{alert[keywords_json['runNo']]}_{alert_id}.txt"
 
     # Write log
     # Declare object to open temporary file for writing
     tmpdir = tempfile.gettempdir()
-    file_name =tmpdir+os.sep+file_log
-    fh = open(file_name,'w')
-    # content = job_log.replace('\n', '\r\n')
+    log_file_name =tmpdir+os.sep+file_log
+    fh = open(log_file_name,'w')
     content = job_log
     try:
         # Print message before writing
@@ -314,7 +306,7 @@ if ctmattachlogs and alert_is_job:
         # Close the file after writing
         fh.close()
         # Attach to Incident
-        updated_incident, status_code = itsm_client.attach_file_to_incident(incident_id, filepath=tmpdir, filename=file_log,
+        updated_incident, status_code = itsm_client.attach_file_to_incident(incident_id, filepath=tmpdir, filename=log_file_name,
                 details=f"{'Helix ' if ctm_is_helix else ''} Control-M Log file")
     except Exception as ex:
         message = f"Exception type {type(ex).__name__} occurred. Arguments:\n{str(ex.args)}"
@@ -324,14 +316,11 @@ if ctmattachlogs and alert_is_job:
         # Print a message before reading
         dbg_logger.debug("Log data section completed. Log may have been added to the ticket")
 
-    os.remove(file_name)
-
     # Write output
     # Declare object to open temporary file for writing
     tmpdir = tempfile.gettempdir()
-    file_name =tmpdir+os.sep+file_output
-    fh = open(file_name,'w')
-    # content = job_output.replace('\n', '\r\n')
+    out_file_name =tmpdir+os.sep+file_output
+    fh = open(out_file_name,'w')
     content = job_output
     try:
         # Print message before writing
@@ -341,7 +330,7 @@ if ctmattachlogs and alert_is_job:
         # Close the file after writing
         fh.close()
         # Attach to Incident
-        updated_incident, status_code = itsm_client.attach_file_to_incident(incident_id, filepath=tmpdir, filename=file_output,
+        updated_incident, status_code = itsm_client.attach_file_to_incident(incident_id, filepath=tmpdir, filename=out_file_name,
                 details=f"{'Helix ' if ctm_is_helix else ''} Control-M Output file")
     except Exception as ex:
         message = f"Exception type {type(ex).__name__} occurred. Arguments:\n{str(ex.args)}"
@@ -351,8 +340,33 @@ if ctmattachlogs and alert_is_job:
         # Print a message before reading
         dbg_logger.debug("Output data section completed. Output may have been added to the ticket")
 
-    os.remove(file_name)
-
 itsm_client.release_token()
+
+send_email = dbg_assign_var(config['pgmvars']['sendemail'], 'Send email',dbg_logger, debug)
+if send_email == "yes":
+    # Ticket variables from tktvars.json
+    smtp_url = dbg_assign_var(config['emailvars']['smtpurl'], 'SMTP URL',dbg_logger, debug)
+    smtp_port = dbg_assign_var(config['emailvars']['smtpport'], 'SMTP Port',dbg_logger, debug)
+    smtp_SSL = dbg_assign_var(config['emailvars']['smtpverifySSL'], 'SMTP SSL',dbg_logger, debug)
+    smtp_sender = dbg_assign_var(config['emailvars']['smtpsender'], 'SMTP Sender',dbg_logger, debug)
+    smtp_recipient = dbg_assign_var(config['emailvars']['smtprecipient'], 'SMTP Recipient',dbg_logger, debug)
+    smtp_username = dbg_assign_var(config['emailvars']['smtpuser'], 'SMTP User',dbg_logger, debug)
+    smtp_password = dbg_assign_var(config['emailvars']['smtppasswd'], 'SMTP URL',dbg_logger, debug)
+
+    tkt_work_notes = f"Email created automatically by {'Helix' if ctm_is_helix else ''} Control-M " + \
+             (f" for {alert[keywords_json['server']]}:{alert[keywords_json['runId']]}::{alert[keywords_json['runNo']]}"
+                     if alert_is_job else f"alert: {alert_id}")
+    tkt_provenance = f"Email sent from {getfqdn()}. Entry ID: {updated_incident['values']['Entry ID']}"
+
+    tkt_comments = tkt_comments + NL * 2 + tkt_work_notes + NL * 2 + tkt_provenance
+
+    send_mail(smtp_sender, [smtp_recipient], tkt_short_description, tkt_comments,
+                files=[log_file_name, out_file_name],
+                server=smtp_url, port=smtp_port, use_tls=smtp_SSL,
+                username=smtp_username, password=smtp_password)
+
+if ctmattachlogs and alert_is_job:
+    os.remove(log_file_name)
+    os.remove(out_file_name)
 
 sys.exit(exitrc)
