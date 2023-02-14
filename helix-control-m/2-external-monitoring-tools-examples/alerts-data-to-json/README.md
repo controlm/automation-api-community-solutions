@@ -4,7 +4,11 @@ This Linux (bash) script converts the received alert data to JSON, which can be 
 
 As an example, the alert data is saved into a file, but this could be replaced by any other action (e.g. sending the alert data in JSON via a webhook).
 
-## Usage
+## Versions
+
+- 2023-02-03 : David Fernández : First release
+
+## Instructions
 
 - If you use the script as it is (saving the JSON data into a file), update the **alerts_dir** and **alerts_file** variables with your custom file location.
 

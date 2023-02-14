@@ -6,7 +6,11 @@ This simplifies using any alert fields in the script, which then can be used as 
 
 As an example, the alert data is saved into a file, but this could be replaced by any other action.
 
-## Usage
+## Versions
+
+- 2023-02-03 : David Fernández : First release
+
+## Instructions
 
 - If you use the script as it is (saving the alert data into a file), update the **alerts_dir** and **alerts_file** variables with your custom file location.
 
