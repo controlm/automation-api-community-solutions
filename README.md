@@ -29,5 +29,3 @@ To contribute, please follow these guidelines.
 
 ## Questions/Feedback
 Please use issues on GitHub for questions or feedback about the examples included in this repository.
-
-SAMPLE UPDATE
