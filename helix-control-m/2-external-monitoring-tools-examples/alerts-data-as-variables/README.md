@@ -25,3 +25,9 @@ The alert data is passed as parameters to the script with the format `<field1>: 
 As some fields can have an empty value, it is not possible to simply reference the input parameters as $1, $2, $3, etc - as the order may change. This scripts simplifies using each field value in the script, which can be referenced simply as variables with the same field name, as in the the following example:
 
     echo "$time | $id | $severity | $runId | $application | $jobName | $host | $message" >> myfile.txt
+
+## Versions
+
+| Date | Updated by | Changes |
+| - | - | - |
+| 2023-02-03 | David Fernández | First release |

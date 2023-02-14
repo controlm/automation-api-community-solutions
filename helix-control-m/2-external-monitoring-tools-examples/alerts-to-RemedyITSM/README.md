@@ -2,9 +2,11 @@
 
 Send BMC Helix Control-M alerts to BMC Helix ITSM / BMC Remedy.
 
+It has been tested with BMC Helix ITSM (version 20.08), but should also work with BMC Remedy on-prem with REST APIs enabled.
+
 ## Pre-requisites
 
-### Python packages
+The following Python packages need to be installed:
 
 1. Remedy_py
 
@@ -19,18 +21,13 @@ Send BMC Helix Control-M alerts to BMC Helix ITSM / BMC Remedy.
    ```bash
    pip install ctm-python-client
    ```
-   You can find more information in the [Control-M Python Client documentation](https://controlm.github.io/ctm-python-client/).
+   You can find related information in the [Control-M Python Client documentation](https://controlm.github.io/ctm-python-client/).
      
 3. Dotenv
    
       ```bash
       pip install python-dotenv
       ```
-
-### BMC Helix ITSM
-
-- BMC Helix ITSM or BMC Remedy on-prem with REST APIs enabled.
-- Tested with BMC Helix ITSM version 20.08.
 
 ## Instructions
 
@@ -52,10 +49,10 @@ Special thanks to (in no particular order!):
 - Cecilia Lasecki : Helped with setting up BMC Demo Cloud instances.
 - Enrique Perez del Razo : Provided knowledge and made ITSM system available for tests.
 - Marta Zamorano Justel : Helped with setting up BMC Demo Cloud instances.
-- Wendel Bordelon : Sanity Check (hard work!) and suggestions for improving the ticket content.
+- Wendel Bordelon : Sanity check (hard work!) and suggestions for improving the ticket content.
 
 ## Versions
 
-| Date | Who | What |
+| Date | Updated by | Changes |
 | - | - | - |
 | 2023-02-09 | Daniel Companeetz | First release |
