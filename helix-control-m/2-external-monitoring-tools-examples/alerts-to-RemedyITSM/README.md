@@ -2,7 +2,7 @@
 
 Send BMC Helix Control-M alerts to BMC Helix ITSM / BMC Remedy.
 
-It has been tested with BMC Helix ITSM (version 20.08), but should also work with BMC Remedy on-prem with REST APIs enabled.
+*It has been tested with BMC Helix ITSM (version 20.08), but should also work with BMC Remedy on-prem with REST APIs enabled.*
 
 ## Pre-requisites
 
