@@ -1,6 +1,6 @@
 ## Description
 
-Send BMC Helix Control-M alerts to BMC Remedy ITSM
+Send BMC Helix Control-M alerts to BMC Helix ITSM / BMC Remedy.
 
 ## Pre-requisites
 
@@ -27,68 +27,35 @@ Send BMC Helix Control-M alerts to BMC Remedy ITSM
       pip install python-dotenv
       ```
 
-### BMC Helix Control-M
-
-- Helix Control-M
-- Automation API CLI
-
-``NOTE: It is likely compatible with Control-M on-premise systems, with the proper fields file (as per the documentation on the [Alerts template reference](https://docs.bmc.com/docs/display/ctmSaaSAPI/Alerts+Template+reference)).``
-
 ### BMC Helix ITSM
 
 - BMC Helix ITSM or BMC Remedy on-prem with REST APIs enabled.
 - Tested with BMC Helix ITSM version 20.08.
 
-## Features
+## Instructions
 
-* Authentication
-  * only Username and password has been developed.
-    * The token generated will be expired (logout) at the end of the script.
-  * Unaware at this time if there are other methods possible, but reach out if you need other methods (OAuth, etc.)
-* The script
-  * will add the log and output to the ticket if configured on the config file (tktvars.json)
-  * does not include updates to the ticket.
-    * As of the BMC Helix Control-M October 2022 version, there is no API to update tickets (estimated for June 2023)
-    * When available, special care will be needed for feedback loops as ticket updates will trigger an updated alert to the script.
-  * will compose a URL for the case to display, if the alert is that of a job.
+*MISSING*
 
+## Additional information
+
+- Only username and password authentication has been developed.
+- The token generated will be expired (logout) at the end of the script.
+- The script will add the job log and output to the ticket if configured on the config file (*tktvars.json*).
+- The script does not include updates to the ticket (as it it not supported yet in BMC Helix Control-M).
+- If the alert is related to a job, a URL is created for access to the Helix Control-M web interface (directly to a monitoring viewpoint showing the problematic job and its neighborhood).
 
 ## Recognition
 
-* The ones below help on the good outcomes.(no particular order!)
-* The bad ones are me to blame for!
+Special thanks to (in no particular order!):
 
-| Date | Who | What |
-| - | - | - |
-| 2023-02-09 | Carin Sinclair | Provided knowledge and made ITSM system available for tests |
-| 2023-02-09 | Cecilia Lasecki | Helped with setting up BMC Demo Cloud instances |
-| 2023-02-09 | Enrique Perez del Razo | Provided knowledge and made ITSM system available for tests |
-| 2023-02-09 | Marta Zamorano Justel | Helped with setting up BMC Demo Cloud instances |
-| 2023-02-09 | Wendel Bordelon | Sanity Check (hard work!) and suggestions for improving the ticket content |
-
-## Contributions
-| Date | Who | What |
-| - | - | - |
-|  |  |  |
-## Who is using it
-
-| Date | Who | Notes |
-| - | - | - |
-|  | |  |
+- Carin Sinclair : Provided knowledge and made ITSM system available for tests.
+- Cecilia Lasecki : Helped with setting up BMC Demo Cloud instances.
+- Enrique Perez del Razo : Provided knowledge and made ITSM system available for tests.
+- Marta Zamorano Justel : Helped with setting up BMC Demo Cloud instances.
+- Wendel Bordelon : Sanity Check (hard work!) and suggestions for improving the ticket content.
 
 ## Versions
 
 | Date | Who | What |
 | - | - | - |
 | 2023-02-09 | Daniel Companeetz | First release |
-
-
-
-## Instructions
-
-BLABLABLA
-
-
-## Additional information
-
-BLABLABLA
