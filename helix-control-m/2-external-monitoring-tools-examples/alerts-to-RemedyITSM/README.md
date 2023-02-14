@@ -39,10 +39,10 @@ Send BMC Helix Control-M alerts to BMC Helix ITSM / BMC Remedy.
 ## Additional information
 
 - Only username and password authentication has been developed.
-- The token generated will be expired (logout) at the end of the script.
+- The token generated will expire (logout) at the end of the script.
 - The script will add the job log and output to the ticket if configured on the config file (*tktvars.json*).
 - The script does not include updates to the ticket (as it it not supported yet in BMC Helix Control-M).
-- If the alert is related to a job, a URL is created for access to the Helix Control-M web interface (directly to a monitoring viewpoint showing the problematic job and its neighborhood).
+- If the alert is related to a job, a URL is created for access to the Helix Control-M web interface - directly to a monitoring viewpoint showing the problematic job and its neighborhood.
 
 ## Recognition
 
