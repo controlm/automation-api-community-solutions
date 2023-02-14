@@ -2,47 +2,42 @@
 
 Send BMC Helix Control-M alerts to BMC Remedy ITSM
 
-## Versions
-
-- 2023-02-09 : Daniel Companeetz : First release
-
 ## Pre-requisites
 
 ### Python packages
 
-1. Remedy_py : Need to install the current fork of the *remedy_py* package. A pull request is pending for it to be available in PyPI.
+1. Remedy_py
 
-   ``bash
+   The current fork of the *remedy_py* package needs to be installed. A pull request is pending for it to be available in PyPI.
+
+   ```bash
    pip install git+https://github.com/dcompane/remedy-py
-   ``
+   ```
 
 2. Control-M Python Client
 
    ```bash
    pip install ctm-python-client
    ```
-
-   Control-M Python Client documentation is available at <https://controlm.github.io/ctm-python-client/>
-
-3. Other packages
-
-   * dotenv
-
+   You can find more information in the [Control-M Python Client documentation](https://controlm.github.io/ctm-python-client/).
+     
+3. Dotenv
+   
       ```bash
       pip install python-dotenv
       ```
 
 ### BMC Helix Control-M
 
-* Helix Control-M
-* Automation API CLI
+- Helix Control-M
+- Automation API CLI
 
-> NOTE: It is likely compatible with Control-M on-premise systems, with the proper fields file (as per the documentation on the [Alerts template reference](https://docs.bmc.com/docs/display/ctmSaaSAPI/Alerts+Template+reference).
+``NOTE: It is likely compatible with Control-M on-premise systems, with the proper fields file (as per the documentation on the [Alerts template reference](https://docs.bmc.com/docs/display/ctmSaaSAPI/Alerts+Template+reference)).``
 
 ### BMC Helix ITSM
 
-BMC Helix Remedy ITSM or on-prem with REST APIs enabled.
-* Tested with version BMC Helix ITSM 20.08
+- BMC Helix ITSM or BMC Remedy on-prem with REST APIs enabled.
+- Tested with BMC Helix ITSM version 20.08.
 
 ## Features
 
@@ -81,19 +76,19 @@ BMC Helix Remedy ITSM or on-prem with REST APIs enabled.
 | - | - | - |
 |  | |  |
 
+## Versions
+
+| Date | Who | What |
+| - | - | - |
+| 2023-02-09 | Daniel Companeetz | First release |
+
+
 
 ## Instructions
 
-- If you use the script as it is (saving the alert data into a file), update the **alerts_dir** and **alerts_file** variables with your custom file location.
+BLABLABLA
 
-- If you have modified the default JSON template for alerts (which determines the information to provide: alert fields, names and order of appearance - as documented in the [**Alerts Template reference**](https://docs.bmc.com/docs/saas-api/alerts-template-reference-1144242602.html)), remember to update the **field_names** variable in the script with the corresponding field names and their order.
 
 ## Additional information
 
-The alert data is passed as parameters to the script with the format `<field1>: <value1> <field2>: <value2> [...]`, as in the following example:
-
-    eventType: I id: 2193 server: IN01 fileName: runId: 00q2e severity: V status: 0 time: 20221126150057 user: updateTime: message: Ended not OK runAs: ctmagent subApplication: application: my-demos jobName: my-sample-job host: zzz-linux-agent-1 type: R closedByControlM: ticketNumber: runNo: 00001 notes:
-
-As some fields can have an empty value, it is not possible to simply reference the input parameters as $1, $2, $3, etc - as the order may change. This scripts simplifies using each field value in the script, which can be referenced simply as variables with the same field name, as in the the following example:
-
-    echo "$time | $id | $severity | $runId | $application | $jobName | $host | $message" >> myfile.txt
+BLABLABLA
