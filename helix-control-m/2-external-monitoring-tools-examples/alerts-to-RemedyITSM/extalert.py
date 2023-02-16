@@ -319,15 +319,13 @@ if ctmattachlogs and alert_is_job:
        output = dbg_assign_var(monitor.get_output(f"{alert[keywords_json['server']]}:{alert[keywords_json['runId']]}",
             run_no=alert[keywords_json['runNo']]), "Output of job", dbg_logger, debug, alert_id)
     except:
-        output = None
+        output = f"*" * 70 + NL + "NO OUTPUT AVAILABLE FOR THIS JOB" + NL + f"*" * 70
     finally:
        dbg_logger.info(f'RunID: {alert[keywords_json["runId"]]} RunNo {alert[keywords_json["runNo"]]}')
 
 
-    if output is None :
-        output = (job_output + NL +  f"*" * 70 + NL +
-                    "NO OUTPUT AVAILABLE FOR THIS JOB" + NL + f"*" * 70 )
     job_output = (job_output + NL +  output)
+
 
     file_log = f"log_{alert[keywords_json['runId']]}_{alert[keywords_json['runNo']]}_{alert_id}.txt"
     file_output = f"output_{alert[keywords_json['runId']]}_{alert[keywords_json['runNo']]}_{alert_id}.txt"
@@ -335,18 +333,18 @@ if ctmattachlogs and alert_is_job:
     # Write log
     # Declare object to open temporary file for writing
     tmpdir = tempfile.gettempdir()
-    log_file_name = dbg_assign_var(tmpdir+os.sep+file_log, "Log Filename", dbg_logger, debug, alert_id)
+    file_name = dbg_assign_var(file_log, "Log Filename", dbg_logger, debug, alert_id)
     content = job_log
     try:
-        fh = open(log_file_name,'w')
+        fh = open(tmpdir+os.sep+file_name,'w')
         # Print message before writing
-        dbg_logger.debug(f'Write data to log file {log_file_name}')
+        dbg_logger.debug(f'Write data to log file {tmpdir+os.sep+file_name}')
         # Write data to the temporary file
         fh.write(content)
         # Close the file after writing
         fh.close()
         # Attach to Incident
-        updated_incident, status_code = itsm_client.attach_file_to_incident(incident_id, filepath=tmpdir, filename=log_file_name,
+        updated_incident, status_code = itsm_client.attach_file_to_incident(incident_id, filepath=tmpdir, filename=file_name,
                 details=f"{'Helix ' if ctm_is_helix else ''} Control-M Log file")
     except Exception as ex:
         message = f"Exception type {type(ex).__name__} occurred. Arguments:\n{str(ex.args)}"
@@ -359,18 +357,18 @@ if ctmattachlogs and alert_is_job:
     # Write output
     # Declare object to open temporary file for writing
     tmpdir = tempfile.gettempdir()
-    out_file_name = dbg_assign_var(tmpdir+os.sep+file_output, "Output Filename", dbg_logger, debug, alert_id)
+    file_name = dbg_assign_var(file_output, "Output Filename", dbg_logger, debug, alert_id)
     content = job_output
     try:
-        fh = open(out_file_name,'w')
+        fh = open(tmpdir+os.sep+file_name,'w')
         # Print message before writing
-        dbg_logger.debug(f'Write data to output file {out_file_name}')
+        dbg_logger.debug(f'Write data to output file {tmpdir+os.sep+file_name}')
         # Write data to the temporary file
         fh.write(content)
         # Close the file after writing
         fh.close()
         # Attach to Incident
-        updated_incident, status_code = itsm_client.attach_file_to_incident(incident_id, filepath=tmpdir, filename=out_file_name,
+        updated_incident, status_code = itsm_client.attach_file_to_incident(incident_id, filepath=tmpdir, filename=file_name,
                 details=f"{'Helix ' if ctm_is_helix else ''} Control-M Output file")
     except Exception as ex:
         message = f"Exception type {type(ex).__name__} occurred. Arguments:\n{str(ex.args)}"
