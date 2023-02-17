@@ -29,7 +29,6 @@
   "tktvars": {
     "comment00": "These are config vars to access the Incident Management system",
     "comment01": "may need additional customization depending on the ticketing system",
-    "comment02": "as this was developed for Service Now",
     "tkturl": "<fqdn of the REST endpoint Remedy ITSM instance. for example>",
     "tktport": "<port or 443 if default SSL",
     "tktuser": "Allen",
