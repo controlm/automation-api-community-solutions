@@ -11,6 +11,8 @@ It parses the alert data coming from BMC Helix Control-M (HCTM) into JSON format
 - Create the event class in BHOM using the [bhom_ControlMEvent_class.json](bhom_ControlMEvent_class.json) file.
 
 
+  "parentClassName": "MonitorEvent"
+
 1. Remedy_py
 
    The current fork of the *remedy_py* package needs to be installed. A pull request is pending for it to be available in PyPI.

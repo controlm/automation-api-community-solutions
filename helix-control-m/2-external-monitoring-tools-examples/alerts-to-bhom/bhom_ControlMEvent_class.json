@@ -1,0 +1,25 @@
+﻿{
+   "name": "ControlMEvent",
+   "parentClassName": "MonitorEvent",
+   "attributes": [
+      { "name": "eventType",        "dataType": "STRING"  },
+      { "name": "id",               "dataType": "INTEGER" },
+      { "name": "server",           "dataType": "STRING"  },
+      { "name": "fileName",         "dataType": "STRING"  },
+      { "name": "runId",            "dataType": "STRING"  },
+      { "name": "alertStatus",      "dataType": "STRING"  },
+      { "name": "alertTime",        "dataType": "DATE"    },
+      { "name": "user",             "dataType": "STRING"  },
+      { "name": "updateTime",       "dataType": "DATE"    },
+      { "name": "runAs",            "dataType": "STRING"  },
+      { "name": "subApplication",   "dataType": "STRING"  },
+      { "name": "application",      "dataType": "STRING"  },
+      { "name": "jobName",          "dataType": "STRING"  },
+      { "name": "type",             "dataType": "STRING"  },
+      { "name": "closedByControlM", "dataType": "STRING"  },
+      { "name": "ticketNumber",     "dataType": "STRING"  },
+      { "name": "runNo",            "dataType": "INTEGER" },
+      { "name": "notes",            "dataType": "STRING"  },
+      { "name": "jobLink",          "dataType": "STRING"  }
+   ]
+}
