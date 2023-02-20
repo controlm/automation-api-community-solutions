@@ -1,15 +1,12 @@
 ## Description
 
-This Linux (bash) script sends BMC Helix Control-M alerts to BMC Helix Operations Management.
+Send BMC Helix Control-M alerts to BMC Helix ITSM / BMC Remedy.
 
-It parses the alert data coming from BMC Helix Control-M (HCTM) into JSON format, and then sends it to BMC Helix Operations Management (BHOM) using its event ingestion API. The JSON data is structured according to a provided event class which has to be previously created in BHOM.
-
-
+*It has been tested with BMC Helix ITSM (version 20.08), but should also work with BMC Remedy on-prem with REST APIs enabled.*
 
 ## Pre-requisites
 
-- Create the event class in BHOM using the [bhom_ControlMEvent_class.json](bhom_ControlMEvent_class.json) file.
-
+The following Python packages need to be installed:
 
 1. Remedy_py
 
