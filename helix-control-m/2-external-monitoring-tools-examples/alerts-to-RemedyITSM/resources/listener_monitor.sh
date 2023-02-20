@@ -15,11 +15,12 @@ echo `date` "- Alerts Listener for $ctmenv on $(hostname -f) is being tested. Re
 while [ ".$status" != ".OK" ]; do
    ctm run alerts:listener::stop
    echo `date` "- Alerts Listener for $ctmenv on $(hostname -f) was terminated." >> /tmp/listener_monitor.log
-   # mailx -s "Alerts Listener for $(ctm env show | grep -i "current environment" | awk '{print $3}') on $(hostname -f) was terminated" dcompane@bmc.com <<EOF
-# No message
+   # mailx -s "Alerts Listener for $(ctm env show | grep -i "current environment" | awk '{print $3}') on $(hostname -f) was terminated" your @email.com <<EOF
+# Problems with the Helix Control-M Alert Listener
 # EOF
    sleep 30
    status=`ctm run alerts:stream::status | grep 'status":'| awk -F '"' '{print $4}'`
+   echo `date` "- Alerts Listener for $ctmenv on $(hostname -f) is being re-tested. Result $status" >> /tmp/listener_monitor.log
 done
 
 
