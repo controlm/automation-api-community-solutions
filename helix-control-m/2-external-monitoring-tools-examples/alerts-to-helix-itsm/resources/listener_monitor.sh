@@ -19,6 +19,7 @@ while [ ".$status" != ".OK" ]; do
 # Problems with the Helix Control-M Alert Listener
 # EOF
    sleep 30
+   ctm run alerts:listener::start
    status=`ctm run alerts:stream::status | grep 'status":'| awk -F '"' '{print $4}'`
    echo `date` "- Alerts Listener for $ctmenv on $(hostname -f) is being re-tested. Result $status" >> /tmp/listener_monitor.log
 done
