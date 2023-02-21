@@ -62,6 +62,8 @@ Do NOT modify the following parameters:
 
 - Mapping HCTM data to BHOM in hte script [...]
 
+- Versions information?
+
 ## Versions
 
 | Date | Updated by | Changes |
