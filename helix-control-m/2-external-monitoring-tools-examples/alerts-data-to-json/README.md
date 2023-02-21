@@ -1,8 +1,8 @@
 ## Description
 
-This Linux (bash) script converts the received alert data to JSON, which can be useful when an external tool is expecting the input data in such format.
+This shell script ([**alerts_json.sh**](alerts_json.sh)) converts the alert data to JSON, which can be useful when an external tool is expecting the input in such format.
 
-As an example, the alert data is saved into a file, but this could be replaced by any other action (e.g. sending the alert data in JSON via a webhook).
+As an example, the alert data is saved into a file, but this could be replaced by any other action (e.g. sending the alert data as a JSON payload via a webhook).
 
 ## Instructions
 
@@ -15,7 +15,7 @@ As an example, the alert data is saved into a file, but this could be replaced b
 The alert data is passed as parameters to the script with the format `<field1>: <value1> <field2>: <value2> [...]`, as in the following example:
 
     eventType: I id: 2193 server: IN01 fileName: runId: 00q2e severity: V status: 0 time: 20221126150057 user: updateTime: message: Ended not OK runAs: ctmagent subApplication: application: my-demos jobName: my-sample-job host: zzz-linux-agent-1 type: R closedByControlM: ticketNumber: runNo: 00001 notes:
-
+\
 The script parses the input data and converts it to JSON format, starting with the "*alertFields*" key and followed by an array containing all the alert fields and their corresponding values - as in the example below. This is the same JSON structure as the one received when connecting to the External Alerts service via a WebSocket client.
 
     {
