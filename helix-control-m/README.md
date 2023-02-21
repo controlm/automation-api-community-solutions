@@ -19,6 +19,8 @@ To contribute, please follow these guidelines.
       + 5-bots-and-dashboard-examples
       + 6-ide-integrations
       + 8-jobs-as-code
+      + 9-ctm-aws-integrations
+      + helix-control-m
 
 2. For consistent ordering **create all folders in lowercase**.
 

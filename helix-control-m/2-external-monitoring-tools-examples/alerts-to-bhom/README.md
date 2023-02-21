@@ -18,9 +18,9 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
       - update existing events coming from HCTM if they already exist in BHOM (which happens when the alert "Status", "Urgency" or "Comment" fields are updated in HCTM), and
       - close the event in BHOM if the alert is marked as "Closed" in HCTM.
 
-   To import the event policy from the BHOM web interface, go to the "Configuration" menu and select "Event Policies", click on the import button (on the top right corner of the screen, right to the "Create" button) and attach the json file. Once imported, remember to select the policy name and click on the "Enable" button.
+   To import the event policy from the BHOM console, go to the "Configuration" menu and select "Event Policies", click on the import button (on the top right corner of the screen, right to the "Create" button) and attach the json file. Once imported, remember to select the policy name and click on the "Enable" button.
 
-   If you want to import it using the API, follow the BHOM documentation for [Event policy management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-policy-management-endpoints-in-the-rest-api-1160751484.html), and use the "/event_policies" endpoint.
+   To import the event policy using the API, follow the BHOM documentation for [Event policy management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-policy-management-endpoints-in-the-rest-api-1160751484.html), and use the "/event_policies" endpoint.
 
    If you decide to use this event policy, remember to set the "alert_updates" variable in the script as "Y" (*if not, alert updates are not sent to BHOM and the policy will never apply*).
 
@@ -31,7 +31,7 @@ The [**alerts_bhom.sh**](alerts_bhom.sh) script is intended to be used with the 
 Before using the script, please update the following parameters:
 
 - **hctm_url** : enter the URL for your HCTM tenant (e.g. "*https://\<tenant name\>.us1.controlm.com*").
-- **hctm_server** : leave as is ("IN01") for the default HCTM internal Server name.
+- **hctm_server** : leave as is ("IN01") to use the default HCTM internal Server name.
 - **bhom_url** : enter the BHOM event data endpoint (e.g. "*https://\<BMC Helix Portal URL\>/events-service/api/v1.0/events*"), as described in the BHOM documentation for [Policy, event data, and metric data management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/policy-event-data-and-metric-data-management-endpoints-in-the-rest-api-1160751457.html).
 - **bhom_api_key** : enter a valid BHOM API key, which you can obtain from the BHOM console in the "Administration" menu, selecting "Repository" and clicking on "Copy API Key".
 - **sev_V/U/R** : update the three parameters to set the HCTM to BHOM correspondence for the "severity" field according to your preferences (alerts coming from HCTM can be Very urgent, Urgent or Regular, while BHOM event severity can be CRITICAL, MAJOR, MINOR, WARNING, INFO, OK or UNKNOWN).
@@ -51,7 +51,7 @@ Do NOT modify the following parameters:
    - In the "Selection Query" section, go to "Event Selection Criteria" and add "Class Equals ControlMEvent".
    - Save the Group. Now you can go to the "Monitoring" menu, select "Groups" and click the one you just created to view only events related to HCTM.
 
-- You can create a custom **Table View** in BHOM to show the HCTM alert fields of your choice in the main "Events" or "Groups" dashboards.
+- You can create a custom **Table View** in BHOM to show any HCTM alert fields of your choice in the main "Events" or "Groups" dashboards.
 
    - Follow the steps in the BHOM documentation for [Creating table views](https://docs.bmc.com/docs/helixoperationsmanagement/231/creating-table-views-1160750840.html).
    - For example, a custom table view can be used to show the "jobLink" field in the main event dashboard, which when clicked will open the HCTM web interface with a monitoring viewpoint showing the problematic job and its neighborhood (when the alert is related to a job, and as long as the user is already logged in the HCTM web interface).
