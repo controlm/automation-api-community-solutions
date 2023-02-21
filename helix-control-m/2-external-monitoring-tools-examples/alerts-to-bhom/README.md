@@ -6,7 +6,7 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
 
 ## Pre-requisites
 
-- **Create a new Event Class** in BHOM, using the definition from the [bhom_ctm_event_class.json](bhom_ctm_event_class.json) file.
+- **Create a new Event Class** in BHOM, using the definition from the [**bhom_ctm_event_class.json**](bhom_ctm_event_class.json) file.
 
    This event class called "ControlMEvent" includes all the fields from the HCTM alert data, plus one additional field to include a link to the job that generated the alert (when applicable). Some HCTM alert fields are not included in this class, as they are existing BHOM event fields inherited from the parent class "MonitorEvent".
 
