@@ -49,8 +49,7 @@ Do NOT modify the following parameters:
    - In the BHOM console, go to the "Configuration" menu and select "Groups".
    - In the "Group Information" section, enter the group name (e.g. "Helix Control-M") and a description.
    - In the "Selection Query" section, go to "Event Selection Criteria" and add "Class Equals ControlMEvent".
-   - Save the Group.
-   - Now you can go to the "Monitoring" menu, select "Groups" and click the one you just created to view only events related to HCTM.
+   - Save the Group. Now you can go to the "Monitoring" menu, select "Groups" and click the one you just created to view only events related to HCTM.
 
 - You can create a custom **Table View** in BHOM to show the HCTM alert fields of your choice in the main "Events" or "Groups" dashboards.
 
