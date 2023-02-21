@@ -2,7 +2,7 @@
 
 This Linux (bash) script sends BMC Helix Control-M alerts as events to BMC Helix Operations Management.
 
-It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format, and then sends it to Helix Operations Management (**BHOM**) using its event ingestion API. The JSON data is mapped according to an event class which has to be previously created in BHOM.
+It parses the alert data coming from Helix Control-M (*HCTM*) into JSON format, and then sends it to Helix Operations Management (**BHOM**) using its event ingestion API. The JSON data is mapped according to an event class which has to be previously created in BHOM.
 
 
 
