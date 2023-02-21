@@ -1,7 +1,7 @@
 # Control-M Automation API community solutions
 
 This repository contains code samples and how-to for Control-M Automation API.  
-+ [**Download Workbench for Oracle Virtual Box**](https://s3-us-west-2.amazonaws.com/controlm-appdev/release/latest/workbench_oracle_virtual_box.ova),  [**Download Workbench for VMWare**](https://s3-us-west-2.amazonaws.com/controlm-appdev/release/latest/workbench_vmware.ova) or [**Download Workbench for Docker**](https://docs.bmc.com/docs/automation-api/9019monthly/installation-928607473.html#Installation-InstallingtheControl-MWorkbenchonDocker) - the latest development Control-M environment. 
++ [**Download Workbench for Oracle Virtual Box**](https://s3-us-west-2.amazonaws.com/controlm-appdev/release/latest/workbench_oracle_virtual_box.ova),  [**Download Workbench for VMWare**](https://s3-us-west-2.amazonaws.com/controlm-appdev/release/latest/workbench_vmware.ova) or [**Download Workbench for Docker**](https://hub.docker.com/repository/docker/controlm/workbench) - the latest development Control-M environment. 
 + [**Download Automation API CLI**](https://s3-us-west-2.amazonaws.com/controlm-appdev/release/latest/ctm-cli.tgz) (ctm-cli.tgz).  
 + [**Installation instructions**](https://docs.bmc.com/docs/display/public/workloadautomation/Control-M+Automation+API+-+Installation).  
 
@@ -23,6 +23,8 @@ To contribute, please follow these guidelines.
       + 6-ide-integrations
       + 7-api-gateway-integrations
       + 8-jobs-as-code
+      + 9-ctm-aws-integrations
+      + helix-control-m
 
 2. For consistent ordering **create all folders in lowercase**.
 3. Include a **README.md** file that explains the sample. A good description helps other community members to understand your sample. The README.md uses [Github Flavored Markdown](https://guides.github.com/features/mastering-markdown/) for formatting text. If you want to add images to your README.md file, store the images in the **images** folder. Reference the images in the README.md with a relative path (e.g. `![alt text](images/sampleImage.png "Sample Image Text")`). This ensures the link will reference the target repository if the source repository is forked.
