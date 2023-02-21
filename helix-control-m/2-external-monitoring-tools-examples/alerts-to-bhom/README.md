@@ -28,7 +28,7 @@ The [**alerts_bhom.sh**](alerts_bhom.sh) script is intended to be used with the 
 
 Before using the script, please update the following parameters:
 
-- **hctm_url** : enter the URL for your HCTM tenant (e.g. "*https://mytenant.us1.controlm.com*").
+- **hctm_url** : enter the URL for your HCTM tenant (e.g. "*https://\<tenant name\>.us1.controlm.com*").
 - **hctm_server** : leave as is ("IN01") for the default HCTM internal Server name.
 - **bhom_url** : enter the BHOM event data endpoint (e.g. "*https://\<BMC Helix Portal URL\>/events-service/api/v1.0/events*"), as described in the BHOM documentation for [Policy, event data, and metric data management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/policy-event-data-and-metric-data-management-endpoints-in-the-rest-api-1160751457.html).
 - **bhom_api_key** : enter a BHOM API key, which you can obtain from the BHOM console in the "Administration" menu, selecting "Repository" and clicking on "Copy API Key".
