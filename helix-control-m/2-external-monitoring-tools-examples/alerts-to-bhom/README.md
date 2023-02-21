@@ -8,31 +8,21 @@ It parses the alert data coming from BMC Helix Control-M (HCTM) into JSON format
 
 ## Pre-requisites
 
-- Create the event class in BHOM using the [bhom_ControlMEvent_class.json](bhom_ControlMEvent_class.json) file.
+1. **Create a new Event Class in BHOM** as defined in the [bhom_ControlMEvent_class.json](bhom_ControlMEvent_class.json) file.
 
+   To create the event class, follow the BHOM documentation for [Event management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-management-endpoints-in-the-rest-api-1160751462.html) (remember to select your product version), and use the */events/classes* endpoint from the REST API.
 
-  "parentClassName": "MonitorEvent"
-
-1. Remedy_py
-
-   The current fork of the *remedy_py* package needs to be installed. A pull request is pending for it to be available in PyPI.
-
-   ```bash
-   pip install git+https://github.com/dcompane/remedy-py
-   ```
-
-2. Control-M Python Client
-
-   ```bash
-   pip install ctm-python-client
-   ```
-   You can find related information in the [Control-M Python Client documentation](https://controlm.github.io/ctm-python-client/).
-     
-3. Dotenv
+   This event class called "ControlMEvent" includes all the fields from the HCTM alert data, plus one additional field to include a link to the job that generated the alert (when applicable). Some HCTM alert fields are not included in this class, as they are existing BHOM event fields inherited from the parent class "MonitorEvent".
    
-      ```bash
-      pip install python-dotenv
-      ```
+2. \* [OPTIONAL] \* **Import the Event Policy** provided in the [bhom_update_ctm_events_policy.json](bhom_update_ctm_events_policy.json) file.
+
+   To import the event policy from the BHOM web interface, go to the "Configuration" menu and select "Event Policies", click on the import button (on the top right corner of the screen, right to the "Create" button) and attach the json file. Once imported, remember to select the policy name and click on the "Enable" button.
+
+   If you want to import it using the API, follow the BHOM documentation for [Event policy management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-policy-management-endpoints-in-the-rest-api-1160751484.html), and use the */event_policies* endpoint.
+
+   This policy has been created to automatically 1) update existing events coming from HCTM if they already exist in BHOM (which happens when the alert "Status", "Urgency" or "Comment" fields are updated in HCTM), and 2) close the event in BHOM if the alert is marked as "Closed" in HCTM.
+
+   If you use this event policy, remember to define the "alert_updates" variable in the script with the "Y" value (if not, alert updates are not sent to BHOM and the policy does not make sense).
 
 ## Instructions
 
