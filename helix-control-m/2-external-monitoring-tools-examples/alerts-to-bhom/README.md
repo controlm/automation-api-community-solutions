@@ -12,7 +12,7 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
 
    To create the event class, follow the BHOM documentation for [Event management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-management-endpoints-in-the-rest-api-1160751462.html) (*remember to select your product version*), and use the "/events/classes" endpoint from the REST API.
    
--  **Import an Event Policy** in BHOM, using the [bhom_ctm_event_policy.json](bhom_ctm_event_policy.json) file.  **[OPTIONAL]**
+-  **Import an Event Policy** in BHOM, using the [**bhom_ctm_event_policy.json**](bhom_ctm_event_policy.json) file.  **[OPTIONAL]**
 
    This policy has been created to automatically 1) update existing events coming from HCTM if they already exist in BHOM (which happens when the alert "Status", "Urgency" or "Comment" fields are updated in HCTM), and 2) close the event in BHOM if the alert is marked as "Closed" in HCTM.
 
@@ -24,11 +24,11 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
 
 ## Instructions
 
-The [alerts_bhom.sh](alerts_bhom.sh) script is intended to be used with the **External Alert Management** service from the Helix Control-M Automation API, which allows to define a script to trigger each time an alert is received (for more information, see the HCTM documentation for [Setting Up External Alerts](https://documents.bmc.com/supportu/controlm-saas/en-US/Documentation/Alerts.htm#SettingUpExternalAlerts) and [External Alert Management](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alert_managementExternalAlertManagement)).
+The [**alerts_bhom.sh**](alerts_bhom.sh) script is intended to be used with the **External Alert Management** service from the Automation API, which allows to define a script to trigger each time an alert is received (for more information, see the HCTM documentation for [Setting Up External Alerts](https://documents.bmc.com/supportu/controlm-saas/en-US/Documentation/Alerts.htm#SettingUpExternalAlerts) and [External Alert Management](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alert_managementExternalAlertManagement)).
 
 Before using the script, please update the following parameters:
 
-- **hctm_url** : enter the URL for your HCTM tenant (e.g. "https://mytenant.us1.controlm.com").
+- **hctm_url** : enter the URL for your HCTM tenant (e.g. "*https://mytenant.us1.controlm.com*").
 - **hctm_server** : leave as is ("IN01") for the default HCTM internal Server name.
 - **bhom_url** : enter the BHOM event data endpoint (e.g. "https://<BMC Helix Portal URL>/events-service/api/v1.0/events"), as described in the BHOM documentation for [Policy, event data, and metric data management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/policy-event-data-and-metric-data-management-endpoints-in-the-rest-api-1160751457.html).
 - **bhom_api_key** : enter a BHOM API key, which you can obtain from the BHOM console in the "Administration" menu, selecting "Repository" and clicking on "Copy API Key".
