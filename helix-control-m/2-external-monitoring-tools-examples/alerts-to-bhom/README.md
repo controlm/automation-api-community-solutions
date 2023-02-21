@@ -14,7 +14,9 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
    
 -  **Import an Event Policy** in BHOM, using the [**bhom_ctm_event_policy.json**](bhom_ctm_event_policy.json) file.  **[OPTIONAL]**
 
-   This policy has been created to automatically 1) update existing events coming from HCTM if they already exist in BHOM (which happens when the alert "Status", "Urgency" or "Comment" fields are updated in HCTM), and 2) close the event in BHOM if the alert is marked as "Closed" in HCTM.
+   This policy has been created to automatically:
+     1) update existing events coming from HCTM if they already exist in BHOM (which happens when the alert "Status", "Urgency" or "Comment" fields are updated in HCTM), and
+     2) close the event in BHOM if the alert is marked as "Closed" in HCTM.
 
    To import the event policy from the BHOM web interface, go to the "Configuration" menu and select "Event Policies", click on the import button (on the top right corner of the screen, right to the "Create" button) and attach the json file. Once imported, remember to select the policy name and click on the "Enable" button.
 
@@ -58,6 +60,8 @@ Do NOT modify the following parameters:
 - If you get the error "*curl: (48) An unknown option was passed in to libcurl*" when testing the script, uncomment the following line: 
 
   ``export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"``
+
+- Mapping HCTM data to BHOM in hte script [...]
 
 ## Versions
 
