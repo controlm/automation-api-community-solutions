@@ -42,10 +42,6 @@ Do NOT modify the following parameters:
 
 ## Additional information
 
-- If you get the error "*curl: (48) An unknown option was passed in to libcurl*" when testing the script, uncomment the following line: 
-
-  ``export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"``
-
 - You can create an **Event Group** in BHOM for HCTM alerts:
 
    - In the BHOM console, go to the "Configuration" menu and select "Groups".
@@ -58,6 +54,10 @@ Do NOT modify the following parameters:
 
    - Follow the steps in the BHOM documentation for [Creating table views](https://docs.bmc.com/docs/helixoperationsmanagement/231/creating-table-views-1160750840.html).
    - For example, a custom table view can be used to show the "jobLink" field in the main event dashboard, which when clicked will open the HCTM web interface with a monitoring viewpoint showing the problematic job and its neighborhood (when the alert is related to a job, and as long as the user is already logged in the HCTM web interface).
+
+- If you get the error "*curl: (48) An unknown option was passed in to libcurl*" when testing the script, uncomment the following line: 
+
+  ``export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"``
 
 ## Versions
 
