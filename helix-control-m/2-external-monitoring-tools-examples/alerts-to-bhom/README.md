@@ -1,8 +1,8 @@
 ## Description
 
-This Linux (bash) script sends BMC Helix Control-M alerts to BMC Helix Operations Management.
+This Linux (bash) script sends BMC Helix Control-M alerts as events to BMC Helix Operations Management.
 
-It parses the alert data coming from BMC Helix Control-M (HCTM) into JSON format, and then sends it to BMC Helix Operations Management (BHOM) using its event ingestion API. The JSON data is structured according to a provided event class which has to be previously created in BHOM.
+It parses the alert data coming from Helix Control-M (HCTM) into JSON format, and then sends it to Helix Operations Management (BHOM) using its event ingestion API. The JSON data is mapped according to an event class which has to be previously created in BHOM.
 
 
 
@@ -20,9 +20,9 @@ It parses the alert data coming from BMC Helix Control-M (HCTM) into JSON format
 
    To import the event policy from the BHOM web interface, go to the "Configuration" menu and select "Event Policies", click on the import button (on the top right corner of the screen, right to the "Create" button) and attach the json file. Once imported, remember to select the policy name and click on the "Enable" button.
 
-   If you want to import it using the API, follow the BHOM documentation for [Event policy management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-policy-management-endpoints-in-the-rest-api-1160751484.html), and use the */event_policies* endpoint.
+   If you want to import it using the API, follow the BHOM documentation for [Event policy management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-policy-management-endpoints-in-the-rest-api-1160751484.html), and use the "/event_policies" endpoint.
 
-   If you use this event policy, remember to define the "alert_updates" variable in the script with the "Y" value (if not, alert updates are not sent to BHOM and the policy does not make sense).
+   If you decide to use this event policy, remember to set the "alert_updates" variable in the script as "Y" (*if not, alert updates are not sent to BHOM and the policy will never apply*).
 
 ## Instructions
 
