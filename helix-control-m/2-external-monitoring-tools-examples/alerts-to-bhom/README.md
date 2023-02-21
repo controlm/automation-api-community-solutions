@@ -12,7 +12,7 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
 
    To create the event class, follow the BHOM documentation for [Event management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-management-endpoints-in-the-rest-api-1160751462.html) (*remember to select your product version*), and use the "/events/classes" endpoint from the REST API.
    
--  **Import an Event Policy** in BHOM, using the [bhom_ctm_event_policy.json](bhom_ctm_event_policy.json) file. **[OPTIONAL]**
+-  **Import an Event Policy** in BHOM, using the [bhom_ctm_event_policy.json](bhom_ctm_event_policy.json) file.  **[OPTIONAL]**
 
    This policy has been created to automatically 1) update existing events coming from HCTM if they already exist in BHOM (which happens when the alert "Status", "Urgency" or "Comment" fields are updated in HCTM), and 2) close the event in BHOM if the alert is marked as "Closed" in HCTM.
 
