@@ -31,7 +31,7 @@ Before using the script, please update the following parameters:
 - **hctm_url** : enter the URL for your HCTM tenant (e.g. "*https://\<tenant name\>.us1.controlm.com*").
 - **hctm_server** : leave as is ("IN01") for the default HCTM internal Server name.
 - **bhom_url** : enter the BHOM event data endpoint (e.g. "*https://\<BMC Helix Portal URL\>/events-service/api/v1.0/events*"), as described in the BHOM documentation for [Policy, event data, and metric data management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/policy-event-data-and-metric-data-management-endpoints-in-the-rest-api-1160751457.html).
-- **bhom_api_key** : enter a BHOM API key, which you can obtain from the BHOM console in the "Administration" menu, selecting "Repository" and clicking on "Copy API Key".
+- **bhom_api_key** : enter a valid BHOM API key, which you can obtain from the BHOM console in the "Administration" menu, selecting "Repository" and clicking on "Copy API Key".
 - **sev_V/U/R** : update the three parameters to set the HCTM to BHOM correspondence for the "severity" field, according to your preferences (alerts coming from HCTM can be "Very urgent", "Urgent" or "Regular", while BHOM event severity can be CRITICAL, MAJOR, MINOR, WARNING, INFO, OK or UNKNOWN).
 - **alert_updates** : select whether you want to send or not updates of existing HCTM alerts to BHOM (which happens when the alert "Status", "Urgency" or "Comment" fields are updated in HCTM).
 
@@ -43,9 +43,10 @@ Do NOT modify the following parameters:
 ## Additional information
 
 - If you get the error "*curl: (48) An unknown option was passed in to libcurl*" when testing the script, uncomment the following line: 
-``export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"``
 
-- You can create an BHOM **Event Group** for HCTM alerts:
+  ``export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"``
+
+- You can create an **Event Group** in BHOM for HCTM alerts:
 
    - In the BHOM console, go to the "Configuration" menu and select "Groups".
    - In the "Group Information" section, enter the group name (e.g. "Helix Control-M") and a description.
