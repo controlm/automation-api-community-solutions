@@ -23,5 +23,3 @@ while [ ".$status" != ".OK" ]; do
    status=`ctm run alerts:stream::status | grep 'status":'| awk -F '"' '{print $4}'`
    echo `date` "- Alerts Listener for $ctmenv on $(hostname -f) is being re-tested. Result $status" >> /tmp/listener_monitor.log
 done
-
-
