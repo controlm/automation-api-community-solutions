@@ -84,3 +84,5 @@ BMC Helix Remedy ITSM or on-prem with REST APIs enabled.
     * As of the BMC Helix Control-M October 2022 version, there is no API to update tickets (estimated for June 2023)
     * When available, special care will be needed for feedback loops as ticket updates will trigger an updated alert to the script.
   * will compose a URL for the case to display, if the alert is that of a job.
+  * There is a feature for those that want to send an email.
+    * If you want to send an email and not the ticket, you will need to comment all lines that send the ticket and ensure variables set at the return are not used in messages later.

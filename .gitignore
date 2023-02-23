@@ -5,6 +5,8 @@ ctmArtifacts.tar
 /.pydevproject
 3-infrastructure-as-code-examples/kubernetes-agent-application-pods/Images/runKjobConnectionProfile.png
 /*.vsix
+__pycache__
+launch.json
 
 .gitignore
 

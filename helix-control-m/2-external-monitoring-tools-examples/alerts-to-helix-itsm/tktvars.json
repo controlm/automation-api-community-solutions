@@ -14,8 +14,8 @@
   "pgmvars": {
     "comment00": "These are program variables for debug and operational purposes.",
     "comment01": "create ticket if yes.",
-    "crttickets": "no",
-    "sendemail": "yes",
+    "crttickets": "yes",
+    "sendemail": "no",
     "comment02": "Update CTM Alert with ticket number. Feature not available in Helix Control-M October 2022",
     "addtkt2alert": "no",
     "comment03": "Verbose informtion written to autoticket.log file",
@@ -29,7 +29,6 @@
   "tktvars": {
     "comment00": "These are config vars to access the Incident Management system",
     "comment01": "may need additional customization depending on the ticketing system",
-    "comment02": "as this was developed for Service Now",
     "tkturl": "<fqdn of the REST endpoint Remedy ITSM instance. for example>",
     "tktport": "<port or 443 if default SSL",
     "tktuser": "Allen",

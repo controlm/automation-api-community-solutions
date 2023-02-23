@@ -1,4 +1,44 @@
-### See send_mail function in extalert_functions
+"""
+(c) 2020 - 2022 Daniel Companeetz, BMC Software, Inc.
+All rights reserved.
+
+BSD 3-Clause License
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+3. Neither the name of the copyright holder nor the names of its
+   contributors may be used to endorse or promote products derived from
+   this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# SPDX-License-Identifier: BSD-3-Clause
+For information on SDPX, https://spdx.org/licenses/BSD-3-Clause.html
+
+Change Log
+Date (YMD)    Name                  What
+--------      ------------------    ------------------------
+20230201      Daniel Companeetz     Initial work
+20230215      Daniel Companeetz     Misc. fixes
+
+"""
 
 # Basic imports
 import json
@@ -279,15 +319,13 @@ if ctmattachlogs and alert_is_job:
        output = dbg_assign_var(monitor.get_output(f"{alert[keywords_json['server']]}:{alert[keywords_json['runId']]}",
             run_no=alert[keywords_json['runNo']]), "Output of job", dbg_logger, debug, alert_id)
     except:
-        output = None
+        output = f"*" * 70 + NL + "NO OUTPUT AVAILABLE FOR THIS JOB" + NL + f"*" * 70
     finally:
        dbg_logger.info(f'RunID: {alert[keywords_json["runId"]]} RunNo {alert[keywords_json["runNo"]]}')
 
 
-    if output is None :
-        output = (job_output + NL +  f"*" * 70 + NL +
-                    "NO OUTPUT AVAILABLE FOR THIS JOB" + NL + f"*" * 70 )
     job_output = (job_output + NL +  output)
+
 
     file_log = f"log_{alert[keywords_json['runId']]}_{alert[keywords_json['runNo']]}_{alert_id}.txt"
     file_output = f"output_{alert[keywords_json['runId']]}_{alert[keywords_json['runNo']]}_{alert_id}.txt"
@@ -295,18 +333,18 @@ if ctmattachlogs and alert_is_job:
     # Write log
     # Declare object to open temporary file for writing
     tmpdir = tempfile.gettempdir()
-    log_file_name =tmpdir+os.sep+file_log
-    fh = open(log_file_name,'w')
+    file_name = dbg_assign_var(file_log, "Log Filename", dbg_logger, debug, alert_id)
     content = job_log
     try:
+        fh = open(tmpdir+os.sep+file_name,'w')
         # Print message before writing
-        dbg_logger.debug(f'Write data to log file {file_name}')
+        dbg_logger.debug(f'Write data to log file {tmpdir+os.sep+file_name}')
         # Write data to the temporary file
         fh.write(content)
         # Close the file after writing
         fh.close()
         # Attach to Incident
-        updated_incident, status_code = itsm_client.attach_file_to_incident(incident_id, filepath=tmpdir, filename=log_file_name,
+        updated_incident, status_code = itsm_client.attach_file_to_incident(incident_id, filepath=tmpdir, filename=file_name,
                 details=f"{'Helix ' if ctm_is_helix else ''} Control-M Log file")
     except Exception as ex:
         message = f"Exception type {type(ex).__name__} occurred. Arguments:\n{str(ex.args)}"
@@ -319,18 +357,18 @@ if ctmattachlogs and alert_is_job:
     # Write output
     # Declare object to open temporary file for writing
     tmpdir = tempfile.gettempdir()
-    out_file_name =tmpdir+os.sep+file_output
-    fh = open(out_file_name,'w')
+    file_name = dbg_assign_var(file_output, "Output Filename", dbg_logger, debug, alert_id)
     content = job_output
     try:
+        fh = open(tmpdir+os.sep+file_name,'w')
         # Print message before writing
-        dbg_logger.debug(f'Write data to output file {file_name}')
+        dbg_logger.debug(f'Write data to output file {tmpdir+os.sep+file_name}')
         # Write data to the temporary file
         fh.write(content)
         # Close the file after writing
         fh.close()
         # Attach to Incident
-        updated_incident, status_code = itsm_client.attach_file_to_incident(incident_id, filepath=tmpdir, filename=out_file_name,
+        updated_incident, status_code = itsm_client.attach_file_to_incident(incident_id, filepath=tmpdir, filename=file_name,
                 details=f"{'Helix ' if ctm_is_helix else ''} Control-M Output file")
     except Exception as ex:
         message = f"Exception type {type(ex).__name__} occurred. Arguments:\n{str(ex.args)}"
@@ -351,7 +389,7 @@ if send_email == "yes":
     smtp_sender = dbg_assign_var(config['emailvars']['smtpsender'], 'SMTP Sender',dbg_logger, debug)
     smtp_recipient = dbg_assign_var(config['emailvars']['smtprecipient'], 'SMTP Recipient',dbg_logger, debug)
     smtp_username = dbg_assign_var(config['emailvars']['smtpuser'], 'SMTP User',dbg_logger, debug)
-    smtp_password = dbg_assign_var(config['emailvars']['smtppasswd'], 'SMTP URL',dbg_logger, debug)
+    smtp_password = config['emailvars']['smtppasswd']
 
     tkt_work_notes = f"Email created automatically by {'Helix' if ctm_is_helix else ''} Control-M " + \
              (f" for {alert[keywords_json['server']]}:{alert[keywords_json['runId']]}::{alert[keywords_json['runNo']]}"
@@ -360,13 +398,22 @@ if send_email == "yes":
 
     tkt_comments = tkt_comments + NL * 2 + tkt_work_notes + NL * 2 + tkt_provenance
 
+    dbg_logger.info("Sending email")
+
     send_mail(smtp_sender, [smtp_recipient], tkt_short_description, tkt_comments,
                 files=[log_file_name, out_file_name],
                 server=smtp_url, port=smtp_port, use_tls=smtp_SSL,
                 username=smtp_username, password=smtp_password)
 
 if ctmattachlogs and alert_is_job:
-    os.remove(log_file_name)
-    os.remove(out_file_name)
+    try:
+        message = f"Removing files {log_file_name} and {out_file_name}"
+        dbg_logger.info(message)
+        os.remove(log_file_name)
+        os.remove(out_file_name)
+    except Exception as ex:
+        message = f"Exception type {type(ex).__name__} occurred. Arguments:\n{str(ex.args)}"
+        dbg_logger.info(message)
+        exitrc = 31
 
 sys.exit(exitrc)
