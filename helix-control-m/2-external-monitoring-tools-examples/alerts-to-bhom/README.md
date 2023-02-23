@@ -30,9 +30,8 @@ The [**alerts_bhom.sh**](alerts_bhom.sh) script is intended to be used with the 
 
 Before using the script, please update the following parameters:
 
-- **hctm_url** : enter the URL for your HCTM tenant (e.g. "*https://\<tenant name\>.us1.controlm.com*").
-- **hctm_server** : leave as is ("IN01") if you want to use the default HCTM internal Server name.
-- **bhom_url** : enter the BHOM event data endpoint (e.g. "*https://\<BMC Helix Portal URL\>/events-service/api/v1.0/events*"), as described in the BHOM documentation for [Policy, event data, and metric data management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/policy-event-data-and-metric-data-management-endpoints-in-the-rest-api-1160751457.html).
+- **hctm_url** : enter the URL for the HCTM tenant (e.g. "*https://\<tenant name\>.us1.controlm.com*").
+- **bhom_url** : enter the URL for the BHOM event data endpoint (e.g. "*https://\<BMC Helix Portal URL\>/events-service/api/v1.0/events*"), as described in the BHOM documentation for [Policy, event data, and metric data management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/policy-event-data-and-metric-data-management-endpoints-in-the-rest-api-1160751457.html).
 - **bhom_api_key** : enter a valid BHOM API key, which you can obtain from the BHOM console in the "Administration" menu, selecting "Repository" and clicking on "Copy API Key".
 - **sev_V/U/R** : update the three parameters to set the HCTM to BHOM correspondence for the "severity" field according to your preferences (alerts coming from HCTM can be Very urgent, Urgent or Regular, while BHOM event severity can be CRITICAL, MAJOR, MINOR, WARNING, INFO, OK or UNKNOWN).
 - **alert_updates** : select whether you want to send or not updates of existing HCTM alerts to BHOM (which happens when the alert "Status", "Urgency" or "Comment" fields are updated in HCTM).
@@ -60,7 +59,11 @@ Do NOT modify the following parameters:
 
     ``export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"``
 
-- Mapping HCTM data to BHOM in hte script [...]
+- Misc information about the script:
+
+   - Some HCTM alert field names are changed to avoid conflicts with BHOM fields inherited from the event parent classes (such as "status" > "alertStatus" and "time" > "alertTime").
+   - Some HCTM alert field names are changed to map them to BHOM event fields (such as "message" > "msg" and "host" > "source_hostname").
+   - Add link to job (only if "host" was not empty, meaning it is an alert related to a job), job link is created with the "runId", "server", "jobName"
 
 - Versions information?
 

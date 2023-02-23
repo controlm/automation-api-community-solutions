@@ -9,7 +9,7 @@ You can find the latest BMC Helix Control-M Automation API documentation, includ
 To contribute, please follow these guidelines.
 
 ### Files, folders and naming conventions
-1. Every sample and its associated files must be contained in its own **folder**. Name this folder as something that describes what your sample does. Please clasify your sample, according you its purpose, using one of the existing directories.
+1. Every sample and its associated files must be contained in its own **folder**. Name this folder as something that describes what your sample does. Please classify your sample (according to its purpose) using one of the existing directories.
 
       For consistent categorization, please comply to the following folder structure:
       + 1-general-examples
