@@ -14,11 +14,11 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
    
 -  **Import an Event Policy in BHOM**, using the [**bhom_ctm_event_policy.json**](bhom_ctm_event_policy.json) file.  **[OPTIONAL]**
 
-   This policy has been created to automatically:
-      - update existing events coming from HCTM if they already exist in BHOM (which happens when the alert "Status", "Urgency" or "Comment" fields are updated in HCTM), and
+   This event policy will automatically:
+      - update existing events coming from HCTM if they already exist in BHOM (which happens when the alert "Status", "Urgency" or "Comment" are updated in HCTM), and
       - map the HCTM alert status to the BHOM event (e.g. close the event in BHOM if the alert is closed in HCTM).
 
-   To import the event policy from the BHOM console, go to the "Configuration" menu and select "Event Policies", click on the import button (on the top right corner of the screen, right to the "Create" button) and attach the json file. Once imported, remember to select the policy name and click on the "Enable" button.
+   To import the event policy from the BHOM console, go to the "Configuration" menu and select "Event Policies", click on the import button (located on the top right corner, right to the "Create" button) and attach the json file. Once imported, remember to select the policy name and click on the "Enable" button.
 
    To import the event policy using the API, follow the BHOM documentation for [Event policy management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-policy-management-endpoints-in-the-rest-api-1160751484.html), and use the "POST /event_policies" endpoint.
 
@@ -33,8 +33,8 @@ Before using the script, please update the following parameters:
 - **hctm_url** : enter the URL for the HCTM tenant (e.g. "*https://\<tenant name\>.us1.controlm.com*").
 - **bhom_url** : enter the URL for the BHOM event data endpoint (e.g. "*https://\<BMC Helix Portal URL\>/events-service/api/v1.0/events*"), as described in the BHOM documentation for [Policy, event data, and metric data management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/policy-event-data-and-metric-data-management-endpoints-in-the-rest-api-1160751457.html).
 - **bhom_api_key** : enter a valid BHOM API key, which you can obtain from the BHOM console in the "Administration" menu, selecting "Repository" and clicking on "Copy API Key".
-- **sev_V/U/R** : update the three parameters to set the HCTM to BHOM correspondence for the "severity" field according to your preferences (alerts coming from HCTM can be Very urgent, Urgent or Regular, while BHOM event severity can be CRITICAL, MAJOR, MINOR, WARNING, INFO, OK or UNKNOWN).
-- **alert_updates** : select whether you want to send or not updates of existing HCTM alerts to BHOM (which happens when the alert "Status", "Urgency" or "Comment" fields are updated in HCTM).
+- **sev_V/U/R** : update the three parameters to set the HCTM to BHOM correspondence for the "severity" field according to your preferences (alerts coming from HCTM can be Very urgent, Urgent or Regular; while BHOM event severity can be CRITICAL, MAJOR, MINOR, WARNING, INFO, OK or UNKNOWN).
+- **alert_updates** : select whether you want to send or not updates of existing HCTM alerts to BHOM (which happens when the alert "Status", "Urgency" or "Comment" are updated in HCTM).
 
 Do NOT modify the following parameters:
 
@@ -43,7 +43,7 @@ Do NOT modify the following parameters:
 
 ## Additional information
 
-- You can create an **Event Group** in BHOM for HCTM alerts:
+- You can create an **Event Group** in BHOM to show HCTM alerts only:
 
    - In the BHOM console, go to the "Configuration" menu and select "Groups".
    - In the "Group Information" section, enter the group name (e.g. "Helix Control-M") and a description.
