@@ -18,11 +18,11 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
 
    This policy has been created to automatically:
       - update existing events coming from HCTM if they already exist in BHOM (which happens when the alert "Status", "Urgency" or "Comment" fields are updated in HCTM), and
-      - close the event in BHOM if the alert is marked as "Closed" in HCTM.
+      - map the HCTM alert status to the BHOM event (e.g. close the event in BHOM if the alert is closed in HCTM).
 
    To import the event policy from the BHOM console, go to the "Configuration" menu and select "Event Policies", click on the import button (on the top right corner of the screen, right to the "Create" button) and attach the json file. Once imported, remember to select the policy name and click on the "Enable" button.
 
-   To import the event policy using the API, follow the BHOM documentation for [Event policy management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-policy-management-endpoints-in-the-rest-api-1160751484.html), and use the "/event_policies" endpoint.
+   To import the event policy using the API, follow the BHOM documentation for [Event policy management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-policy-management-endpoints-in-the-rest-api-1160751484.html), and use the "POST /event_policies" endpoint.
 
    If you decide to use this event policy, remember to set the "alert_updates" variable in the script as "Y" (*if not, alert updates are not sent to BHOM and the policy will never apply*).
 
@@ -67,6 +67,8 @@ Do NOT modify the following parameters:
    - Some HCTM alert field names are changed to map them to BHOM event fields (such as "message" > "msg" and "host" > "source_hostname").
    - Add link to job (only if "host" was not empty, meaning it is an alert related to a job), job link is created with the "runId", "server", "jobName"
 
+- The following table shows the correspondence between the HCTM and BHOM field names, and any additional field modifications done in the script.
+
 - Versions information?
 
 ## Versions
@@ -74,3 +76,32 @@ Do NOT modify the following parameters:
 | Date | Updated by | Changes |
 | - | - | - |
 | 2023-02-09 | David Fernández | First release |
+
+
+| HCTM field name | BHOM field name | Comments |
+| - | - | - |
+| eventType | eventType | Not modified. |
+
+
+eventType			eventType					
+id				alertId			Y		
+server			ctmServer			Y		
+fileName			fileName					
+runId				runId						
+severity			severity							N
+status			alertStatus		Y
+time				alertTime			Y
+user				ctmUser			Y
+updateTime			updateTime			
+message			msg				Y				N
+runAs				runAs				
+subApplication		subApplication		
+application		application		
+jobName			jobName			
+host				source_hostname		Y				N
+type				alertType			Y
+closedByControlM	closedByControlM	
+ticketNumber		ticketNumber		
+runNo				runNo				
+notes				alertNotes			Y
+				jobLink			Y
