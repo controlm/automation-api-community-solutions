@@ -16,9 +16,6 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
 
    This event policy will automatically 1) update existing events coming from HCTM if they already exist in BHOM (which happens when the alert "Status", "Urgency" or "Comment" are updated in HCTM), and 2) map the HCTM alert status to the BHOM event (e.g. close the event in BHOM if the alert is closed in HCTM).
 
-      - update existing events coming from HCTM if they already exist in BHOM (which happens when the alert "Status", "Urgency" or "Comment" are updated in HCTM), and
-      - map the HCTM alert status to the BHOM event (e.g. close the event in BHOM if the alert is closed in HCTM).
-
    To import the event policy from the BHOM console, go to the "Configuration" menu and select "Event Policies", click on the import button (located on the top right corner, right to the "Create" button) and attach the json file. Once imported, remember to select the policy name and click on the "Enable" button.
 
    To import the event policy using the API, follow the BHOM documentation for [Event policy management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-policy-management-endpoints-in-the-rest-api-1160751484.html), and use the "POST /event_policies" endpoint.
