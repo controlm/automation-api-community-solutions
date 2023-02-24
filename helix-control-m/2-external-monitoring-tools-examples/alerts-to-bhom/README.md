@@ -43,6 +43,11 @@ Do NOT modify the following parameters:
 
 ## Additional information
 
+- The integration has been tested with:
+
+   - BMC Helix Control-M 9.0.21.080
+   - BMC Helix Operations Management 23.1
+
 - You can create an **Event Group** in BHOM to show HCTM alerts only:
 
    - In the BHOM console, go to the "Configuration" menu and select "Groups".
@@ -58,11 +63,6 @@ Do NOT modify the following parameters:
 - If you get the error "*curl: (48) An unknown option was passed in to libcurl*" when testing the script, uncomment the following line: 
 
     ``export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"``
-
-- The integration has been tested with:
-
-   - BMC Helix Control-M 9.0.21.080
-   - BMC Helix Operations Management 23.1
 
 - The following table shows the correspondence between the HCTM and BHOM field names, and any additional field modifications done in the script.
 
