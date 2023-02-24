@@ -60,34 +60,34 @@ Do NOT modify the following parameters:
 
 - If you get the error "*curl: (48) An unknown option was passed in to libcurl*" when testing the script, uncomment the following line: 
 
-   - ``export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"``
+    ``export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"``
 
 - The following table shows the correspondence between the HCTM and BHOM field names, and any additional field modifications done in the script.
 
-      | HCTM field | BHOM field | Comments |
-      | - | - | - |
-      | eventType | eventType | |
-      | id | alertId | Updated to avoid conflicts with existing BHOM event field names. |
-      | server | ctmServer | Updated to avoid conflicts with existing BHOM event field names. |
-      | fileName | fileName | |
-      | runId | runId | |
-      | severity | severity | The value is updated to map the HCTM to BHOM correspondence. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
-      | status | alertStatus | Updated to avoid conflicts with existing BHOM event field names. |
-      | time | alertTime | Updated to avoid conflicts with existing BHOM event field names. The value is converted to the format expected by BHOM: Epoch (local) time, in milisecs. |
-      | user | ctmUser | Updated to avoid conflicts with existing BHOM event field names. |
-      | updateTime | updateTime | |
-      | message | msg | Updated to map it to an existing BHOM field. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
-      | runAs | runAs | |
-      | subApplication | subApplication | |
-      | application | application | |
-      | jobName | jobName | |
-      | host | source_hostname | Updated to map it to an existing BHOM field. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
-      | type | alertType | Updated to avoid conflicts with existing BHOM event field names. |
-      | closedByControlM | closedByControlM | |
-      | ticketNumber | ticketNumber | |
-      | runNo | runNo | |
-      | notes | alertNotes | Updated to avoid conflicts with existing BHOM event field names. |
-      | *N/A* | jobLink | Additional field included in the ControlMAlert class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
+   | HCTM field | BHOM field | Comments |
+   | - | - | - |
+   | eventType | eventType | |
+   | id | alertId | Updated to avoid conflicts with existing BHOM event field names. |
+   | server | ctmServer | Updated to avoid conflicts with existing BHOM event field names. |
+   | fileName | fileName | |
+   | runId | runId | |
+   | severity | severity | The value is updated to map the HCTM to BHOM correspondence. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
+   | status | alertStatus | Updated to avoid conflicts with existing BHOM event field names. |
+   | time | alertTime | Updated to avoid conflicts with existing BHOM event field names. The value is converted to the format expected by BHOM: Epoch (local) time, in milisecs. |
+   | user | ctmUser | Updated to avoid conflicts with existing BHOM event field names. |
+   | updateTime | updateTime | |
+   | message | msg | Updated to map it to an existing BHOM field. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
+   | runAs | runAs | |
+   | subApplication | subApplication | |
+   | application | application | |
+   | jobName | jobName | |
+   | host | source_hostname | Updated to map it to an existing BHOM field. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
+   | type | alertType | Updated to avoid conflicts with existing BHOM event field names. |
+   | closedByControlM | closedByControlM | |
+   | ticketNumber | ticketNumber | |
+   | runNo | runNo | |
+   | notes | alertNotes | Updated to avoid conflicts with existing BHOM event field names. |
+   | *N/A* | jobLink | Additional field included in the ControlMAlert class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
 
 ## Versions
 
