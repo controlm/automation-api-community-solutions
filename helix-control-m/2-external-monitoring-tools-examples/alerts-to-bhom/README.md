@@ -71,7 +71,7 @@ Do NOT modify the following parameters:
 
 | HCTM field | BHOM field | Comments |
 | - | - | - |
-| eventType | eventType | *Not modified.* |
+| eventType | eventType | |
 | id | alertId | Updated to avoid conflicts with existing BHOM event field names. |
 | server | ctmServer | Updated to avoid conflicts with existing BHOM event field names. |
 | fileName | fileName | |
@@ -80,17 +80,17 @@ Do NOT modify the following parameters:
 | status | alertStatus | Updated to avoid conflicts with existing BHOM event field names. |
 | time | alertTime | Updated to avoid conflicts with existing BHOM event field names. The value is converted to BHOM format: Epoch (local) time, in milisecs. |
 | user | ctmUser | Updated to avoid conflicts with existing BHOM event field names. |
-| updateTime | updateTime | *Not modified.* |
-| message | msg | Updated to map it to the BHOM field. Not included in the ControlMEvent class as it already exists in the base class "Event". |
-| runAs | runAs | *Not modified.* |
-| subApplication | subApplication | *Not modified.* |
-| application | application | *Not modified.* |
-| jobName | jobName | *Not modified.* |
-| host | source_hostname | Updated to map it to the BHOM field. Not included in the ControlMEvent class as it already exists in the base class "Event". |
+| updateTime | updateTime | |
+| message | msg | Updated to map it to an existing BHOM field. Not included in the ControlMEvent class as it already exists in the base class "Event". |
+| runAs | runAs | |
+| subApplication | subApplication | |
+| application | application | |
+| jobName | jobName | |
+| host | source_hostname | Updated to map it to an existing BHOM field. Not included in the ControlMEvent class as it already exists in the base class "Event". |
 | type | alertType | Updated to avoid conflicts with existing BHOM event field names. |
-| closedByControlM | closedByControlM | *Not modified.* |
-| ticketNumber | ticketNumber | *Not modified.* |
-| runNo | runNo | *Not modified.* |
+| closedByControlM | closedByControlM | |
+| ticketNumber | ticketNumber | |
+| runNo | runNo | |
 | notes | alertNotes | Updated to avoid conflicts with existing BHOM event field names. |
 | *N/A* | jobLink | Additional field included in the ControlMEvent class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
 
