@@ -69,32 +69,35 @@ Do NOT modify the following parameters:
 
 - The following table shows the correspondence between the HCTM and BHOM field names, and any additional field modifications done in the script.
 
-| HCTM field | BHOM field | Comments |
-| - | - | - |
-| eventType | eventType | |
-| id | alertId | Updated to avoid conflicts with existing BHOM event field names. |
-| server | ctmServer | Updated to avoid conflicts with existing BHOM event field names. |
-| fileName | fileName | |
-| runId | runId | |
-| severity | severity | The value is updated to map the HCTM to BHOM correspondence. Not included in the ControlMEvent class as it already exists in the base class "Event". |
-| status | alertStatus | Updated to avoid conflicts with existing BHOM event field names. |
-| time | alertTime | Updated to avoid conflicts with existing BHOM event field names. The value is converted to BHOM format: Epoch (local) time, in milisecs. |
-| user | ctmUser | Updated to avoid conflicts with existing BHOM event field names. |
-| updateTime | updateTime | |
-| message | msg | Updated to map it to an existing BHOM field. Not included in the ControlMEvent class as it already exists in the base class "Event". |
-| runAs | runAs | |
-| subApplication | subApplication | |
-| application | application | |
-| jobName | jobName | |
-| host | source_hostname | Updated to map it to an existing BHOM field. Not included in the ControlMEvent class as it already exists in the base class "Event". |
-| type | alertType | Updated to avoid conflicts with existing BHOM event field names. |
-| closedByControlM | closedByControlM | |
-| ticketNumber | ticketNumber | |
-| runNo | runNo | |
-| notes | alertNotes | Updated to avoid conflicts with existing BHOM event field names. |
-| *N/A* | jobLink | Additional field included in the ControlMEvent class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
+   | HCTM field | BHOM field | Comments |
+   | - | - | - |
+   | eventType | eventType | |
+   | id | alertId | Updated to avoid conflicts with existing BHOM event field names. |
+   | server | ctmServer | Updated to avoid conflicts with existing BHOM event field names. |
+   | fileName | fileName | |
+   | runId | runId | |
+   | severity | severity | The value is updated to map the HCTM to BHOM correspondence. Not included in the ControlMEvent class as it already exists in the base class "Event". |
+   | status | alertStatus | Updated to avoid conflicts with existing BHOM event field names. |
+   | time | alertTime | Updated to avoid conflicts with existing BHOM event field names. The value is converted to BHOM format: Epoch (local) time, in milisecs. |
+   | user | ctmUser | Updated to avoid conflicts with existing BHOM event field names. |
+   | updateTime | updateTime | |
+   | message | msg | Updated to map it to an existing BHOM field. Not included in the ControlMEvent class as it already exists in the base class "Event". |
+   | runAs | runAs | |
+   | subApplication | subApplication | |
+   | application | application | |
+   | jobName | jobName | |
+   | host | source_hostname | Updated to map it to an existing BHOM field. Not included in the ControlMEvent class as it already exists in the base class "Event". |
+   | type | alertType | Updated to avoid conflicts with existing BHOM event field names. |
+   | closedByControlM | closedByControlM | |
+   | ticketNumber | ticketNumber | |
+   | runNo | runNo | |
+   | notes | alertNotes | Updated to avoid conflicts with existing BHOM event field names. |
+   | *N/A* | jobLink | Additional field included in the ControlMEvent class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
 
-- Versions information?
+- The integration has been tested with:
+
+   - BMC Helix Operations Management 23.1
+   - BMC Helix Control-M 9.0.21.080
 
 ## Versions
 
