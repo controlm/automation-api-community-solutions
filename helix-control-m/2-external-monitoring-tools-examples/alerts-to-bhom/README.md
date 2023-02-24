@@ -74,8 +74,8 @@ Do NOT modify the following parameters:
 | eventType | eventType | *Not modified.* |
 | id | alertId | Updated to avoid conflicts with existing BHOM event field names. |
 | server | ctmServer | Updated to avoid conflicts with existing BHOM event field names. |
-| fileName | fileName | *Not modified.* |
-| runId | runId | *Not modified.* |
+| fileName | fileName | |
+| runId | runId | |
 | severity | severity | The value is updated to map the HCTM to BHOM correspondence. Not included in the ControlMEvent class as it already exists in the base class "Event". |
 | status | alertStatus | Updated to avoid conflicts with existing BHOM event field names. |
 | time | alertTime | Updated to avoid conflicts with existing BHOM event field names. The value is converted to BHOM format: Epoch (local) time, in milisecs. |
