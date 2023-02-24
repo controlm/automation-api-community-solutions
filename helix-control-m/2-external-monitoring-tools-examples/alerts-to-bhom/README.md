@@ -69,7 +69,7 @@ Do NOT modify the following parameters:
 
 - The following table shows the correspondence between the HCTM and BHOM field names, and any additional field modifications done in the script.
 
-| HCTM field name | BHOM field name | Comments |
+| HCTM field | BHOM field | Comments |
 | - | - | - |
 | eventType | eventType | *Not modified.* |
 | id | alertId | Updated to avoid conflicts with existing BHOM event field names. |
