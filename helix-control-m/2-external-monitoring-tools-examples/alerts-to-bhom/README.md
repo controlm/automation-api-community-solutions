@@ -8,9 +8,11 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
 
 - **Create a new Event Class** in BHOM, using the definition from the [**bhom_ctm_event_class.json**](bhom_ctm_event_class.json) file.
 
-   This event class called "ControlMEvent" includes all the fields from the HCTM alert data, plus one additional field to include a link to the job that generated the alert (when applicable). Some HCTM alert fields are not included in this class, as they are existing BHOM event fields inherited from the parent class "MonitorEvent".
-
-   To create the event class, follow the BHOM documentation for [Event management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-management-endpoints-in-the-rest-api-1160751462.html) (*remember to select your product version*), and use the "/events/classes" endpoint from the REST API.
+   This event class called "ControlMEvent" includes all the fields from the HCTM alert data, plus one additional field to include a link to the job that generated the alert (when applicable).
+   
+   *Some HCTM alert fields are not included in this class, as they already exist in its parent class "MonitorEvent" or in the base class "Event".*
+   
+   To create the event class, follow the BHOM documentation for [Event management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-management-endpoints-in-the-rest-api-1160751462.html) (*remember to select your product version*), and use the "POST /events/classes" endpoint.
    
 -  **Import an Event Policy** in BHOM, using the [**bhom_ctm_event_policy.json**](bhom_ctm_event_policy.json) file.  **[OPTIONAL]**
 
