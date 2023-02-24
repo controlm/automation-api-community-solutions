@@ -91,8 +91,8 @@ Do NOT modify the following parameters:
 
 - The integration has been tested with:
 
-   - BMC Helix Operations Management 23.1
    - BMC Helix Control-M 9.0.21.080
+   - BMC Helix Operations Management 23.1
 
 ## Versions
 
