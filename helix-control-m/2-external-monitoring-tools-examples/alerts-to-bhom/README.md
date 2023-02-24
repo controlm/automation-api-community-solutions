@@ -61,12 +61,6 @@ Do NOT modify the following parameters:
 
     ``export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"``
 
-- Misc information about the script:
-
-   - Some HCTM alert field names are changed to avoid conflicts with BHOM fields inherited from the event parent classes (such as "status" > "alertStatus" and "time" > "alertTime").
-   - Some HCTM alert field names are changed to map them to BHOM event fields (such as "message" > "msg" and "host" > "source_hostname").
-   - Add link to job (only if "host" was not empty, meaning it is an alert related to a job), job link is created with the "runId", "server", "jobName"
-
 - The following table shows the correspondence between the HCTM and BHOM field names, and any additional field modifications done in the script.
 
    | HCTM field | BHOM field | Comments |
@@ -94,6 +88,7 @@ Do NOT modify the following parameters:
    | notes | alertNotes | Updated to avoid conflicts with existing BHOM event field names. |
    | *N/A* | jobLink | Additional field included in the ControlMEvent class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
 
+\ 
 - The integration has been tested with:
 
    - BMC Helix Operations Management 23.1
