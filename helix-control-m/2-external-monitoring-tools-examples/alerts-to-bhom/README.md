@@ -2,19 +2,17 @@
 
 This Linux (bash) script sends BMC Helix Control-M alerts as events to BMC Helix Operations Management.
 
-It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format, and then sends it to Helix Operations Management (**BHOM**) using its event ingestion API. The JSON data is mapped according to an event class which has to be previously created in BHOM.
+It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format, and then sends it to Helix Operations Management (**BHOM**) using its event ingestion API. The JSON data is structured according to an event class which has to be previously created in BHOM.
 
 ## Pre-requisites
 
 - **Create a new Event Class in BHOM**, using the definition from the [**bhom_ctm_event_class.json**](bhom_ctm_event_class.json) file.
 
-   This event class called "ControlMEvent" includes all the fields from the HCTM alert data, plus one additional field to include a link to the job that generated the alert (when applicable).
-   
-   *Some HCTM alert fields are not included in this class, as they already exist in its parent class "MonitorEvent" or in the base class "Event".*
+   This event class called "ControlMAlert" includes all the fields from the HCTM alert data, plus one additional field to include a link to the job that generated the alert (when applicable). The class inherits all fields from its parent class "MonitorEvent" and from the BHOM base class "Event".
    
    To create the event class, follow the BHOM documentation for [Event management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-management-endpoints-in-the-rest-api-1160751462.html) (*remember to select your product version*), and use the "POST /events/classes" endpoint.
    
--  **Import an Event Policy** in BHOM, using the [**bhom_ctm_event_policy.json**](bhom_ctm_event_policy.json) file.  **[OPTIONAL]**
+-  **Import an Event Policy in BHOM**, using the [**bhom_ctm_event_policy.json**](bhom_ctm_event_policy.json) file.  **[OPTIONAL]**
 
    This policy has been created to automatically:
       - update existing events coming from HCTM if they already exist in BHOM (which happens when the alert "Status", "Urgency" or "Comment" fields are updated in HCTM), and
@@ -40,7 +38,7 @@ Before using the script, please update the following parameters:
 
 Do NOT modify the following parameters:
 
-- **bhom_class** : leave as is to use the previously imported "ControlMEvent" event class.
+- **bhom_class** : leave as is to use the previously imported "ControlMAlert" event class.
 - **alert_updates** : leave as is to use the default field names for HCTM alerts. If you have previously modified the JSON template for alerts in HCTM, restore the default alert fields (as documented in the [Alerts Template reference](https://docs.bmc.com/docs/saas-api/alerts-template-reference-1144242602.html)).
 
 ## Additional information
@@ -49,7 +47,7 @@ Do NOT modify the following parameters:
 
    - In the BHOM console, go to the "Configuration" menu and select "Groups".
    - In the "Group Information" section, enter the group name (e.g. "Helix Control-M") and a description.
-   - In the "Selection Query" section, go to "Event Selection Criteria" and add "Class Equals ControlMEvent".
+   - In the "Selection Query" section, go to "Event Selection Criteria" and add "Class Equals ControlMAlert".
    - Save the Group. Now you can go to the "Monitoring" menu, select "Groups" and click the one you just created to view only events related to HCTM.
 
 - You can create a custom **Table View** in BHOM to show any HCTM alert fields of your choice in the main "Events" or "Groups" dashboards.
@@ -70,23 +68,23 @@ Do NOT modify the following parameters:
    | server | ctmServer | Updated to avoid conflicts with existing BHOM event field names. |
    | fileName | fileName | |
    | runId | runId | |
-   | severity | severity | The value is updated to map the HCTM to BHOM correspondence. Not included in the ControlMEvent class as it already exists in the base class "Event". |
+   | severity | severity | The value is updated to map the HCTM to BHOM correspondence. Not included in the ControlMAlert class as it already exists in the base class "Event". |
    | status | alertStatus | Updated to avoid conflicts with existing BHOM event field names. |
    | time | alertTime | Updated to avoid conflicts with existing BHOM event field names. The value is converted to BHOM format: Epoch (local) time, in milisecs. |
    | user | ctmUser | Updated to avoid conflicts with existing BHOM event field names. |
    | updateTime | updateTime | |
-   | message | msg | Updated to map it to an existing BHOM field. Not included in the ControlMEvent class as it already exists in the base class "Event". |
+   | message | msg | Updated to map it to an existing BHOM field. Not included in the ControlMAlert class as it already exists in the base class "Event". |
    | runAs | runAs | |
    | subApplication | subApplication | |
    | application | application | |
    | jobName | jobName | |
-   | host | source_hostname | Updated to map it to an existing BHOM field. Not included in the ControlMEvent class as it already exists in the base class "Event". |
+   | host | source_hostname | Updated to map it to an existing BHOM field. Not included in the ControlMAlert class as it already exists in the base class "Event". |
    | type | alertType | Updated to avoid conflicts with existing BHOM event field names. |
    | closedByControlM | closedByControlM | |
    | ticketNumber | ticketNumber | |
    | runNo | runNo | |
    | notes | alertNotes | Updated to avoid conflicts with existing BHOM event field names. |
-   | *N/A* | jobLink | Additional field included in the ControlMEvent class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
+   | *N/A* | jobLink | Additional field included in the ControlMAlert class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
 
 
 - The integration has been tested with:
