@@ -88,7 +88,7 @@ Do NOT modify the following parameters:
    | notes | alertNotes | Updated to avoid conflicts with existing BHOM event field names. |
    | *N/A* | jobLink | Additional field included in the ControlMEvent class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
 
-\ 
+
 - The integration has been tested with:
 
    - BMC Helix Operations Management 23.1
