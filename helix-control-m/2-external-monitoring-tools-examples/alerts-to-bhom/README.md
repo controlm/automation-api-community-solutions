@@ -8,7 +8,7 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
 
 - **Create a new Event Class in BHOM**, using the definition from the [**bhom_ctm_event_class.json**](bhom_ctm_event_class.json) file.
 
-   This event class called "ControlMAlert" includes all the fields from the HCTM alert data, plus one additional field to include a link to the job that generated the alert (when applicable). It inherits all fields from its parent class "MonitorEvent" and from the BHOM base class "Event".
+  This event class called "ControlMAlert" includes all the fields from the HCTM alert data, plus one additional field to include a link to the job that generated the alert (when applicable). It inherits all fields from its parent class "MonitorEvent" and from the BHOM base class "Event".
    
    To create the event class, follow the BHOM documentation for [Event management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-management-endpoints-in-the-rest-api-1160751462.html) (*remember to select your product version*), and use the "POST /events/classes" endpoint.
    
@@ -60,7 +60,7 @@ Do NOT modify the following parameters:
 
 - If you get the error "*curl: (48) An unknown option was passed in to libcurl*" when testing the script, uncomment the following line: 
 
-    ``export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"``
+        ``export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"``
 
 - The following table shows the correspondence between the HCTM and BHOM field names, and any additional field modifications done in the script.
 
