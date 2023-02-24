@@ -80,11 +80,12 @@ Do NOT modify the following parameters:
 
 | HCTM field name | BHOM field name | Comments |
 | - | - | - |
-| eventType | eventType | Not modified. |
+| eventType | eventType | *Not modified* |
+| id | alertId | Updated to avoid conflicts with existing BHOM event field names |
 
 
-eventType			eventType					
-id				alertId			Y		
+
+
 server			ctmServer			Y		
 fileName			fileName					
 runId				runId						
