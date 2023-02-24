@@ -69,6 +69,31 @@ Do NOT modify the following parameters:
 
 - The following table shows the correspondence between the HCTM and BHOM field names, and any additional field modifications done in the script.
 
+| HCTM field name | BHOM field name | Comments |
+| - | - | - |
+| eventType | eventType | *Not modified.* |
+| id | alertId | Updated to avoid conflicts with existing BHOM event field names. |
+| server | ctmServer | Updated to avoid conflicts with existing BHOM event field names. |
+| fileName | fileName | *Not modified.* |
+| runId | runId | *Not modified.* |
+| severity | severity | The value is updated to map the HCTM to BHOM correspondence. Not included in the ControlMEvent class as it already exists in the base class "Event". |
+| status | alertStatus | Updated to avoid conflicts with existing BHOM event field names. |
+| time | alertTime | Updated to avoid conflicts with existing BHOM event field names. The value is converted to BHOM format: Epoch (local) time, in milisecs. |
+| user | ctmUser | Updated to avoid conflicts with existing BHOM event field names. |
+| updateTime | updateTime | *Not modified.* |
+| message | msg | Updated to map it to the BHOM field. Not included in the ControlMEvent class as it already exists in the base class "Event". |
+| runAs | runAs | *Not modified.* |
+| subApplication | subApplication | *Not modified.* |
+| application | application | *Not modified.* |
+| jobName | jobName | *Not modified.* |
+| host | source_hostname | Updated to map it to the BHOM field. Not included in the ControlMEvent class as it already exists in the base class "Event". |
+| type | alertType | Updated to avoid conflicts with existing BHOM event field names. |
+| closedByControlM | closedByControlM | *Not modified.* |
+| ticketNumber | ticketNumber | *Not modified.* |
+| runNo | runNo | *Not modified.* |
+| notes | alertNotes | Updated to avoid conflicts with existing BHOM event field names. |
+| *N/A* | jobLink | Additional field included in the ControlMEvent class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
+
 - Versions information?
 
 ## Versions
@@ -76,33 +101,3 @@ Do NOT modify the following parameters:
 | Date | Updated by | Changes |
 | - | - | - |
 | 2023-02-09 | David Fernández | First release |
-
-
-| HCTM field name | BHOM field name | Comments |
-| - | - | - |
-| eventType | eventType | *Not modified* |
-| id | alertId | Updated to avoid conflicts with existing BHOM event field names |
-
-
-
-
-server			ctmServer			Y		
-fileName			fileName					
-runId				runId						
-severity			severity							N
-status			alertStatus		Y
-time				alertTime			Y
-user				ctmUser			Y
-updateTime			updateTime			
-message			msg				Y				N
-runAs				runAs				
-subApplication		subApplication		
-application		application		
-jobName			jobName			
-host				source_hostname		Y				N
-type				alertType			Y
-closedByControlM	closedByControlM	
-ticketNumber		ticketNumber		
-runNo				runNo				
-notes				alertNotes			Y
-				jobLink			Y
