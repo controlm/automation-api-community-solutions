@@ -5,6 +5,7 @@
 | Date | Who | What |
 | - | - | - |
 | 2023-02-09 | Daniel Companeetz | First release |
+| 2023-03-03 | Daniel Companeetz | Readme Changes |
 
 ## Recognition
 
@@ -65,7 +66,7 @@ Need to install the current fork of the remedy_py package. A pull request is pen
 * Helix Control-M
 * Automation API CLI
 
-> NOTE: It is likely compatible with Control-M on-premise systems, with the proper fields file (as per the documentation on the [Alerts template reference](https://docs.bmc.com/docs/display/ctmSaaSAPI/Alerts+Template+reference).
+> NOTE: It likely is compatible with Control-M on-premise systems, with the proper fields file (as per the documentation on the [Alerts template reference](https://docs.bmc.com/docs/display/ctmSaaSAPI/Alerts+Template+reference).
 
 ### BMC Helix ITSM
 
@@ -86,3 +87,20 @@ BMC Helix Remedy ITSM or on-prem with REST APIs enabled.
   * will compose a URL for the case to display, if the alert is that of a job.
   * There is a feature for those that want to send an email.
     * If you want to send an email and not the ticket, you will need to comment all lines that send the ticket and ensure variables set at the return are not used in messages later.
+
+## How to use it
+
+### Installation
+
+* Clone this repository
+
+* Install the Automation API CLI in the system you will use to receive the alerts and process them to forward to Helix ITSM.
+
+### Configuration
+
+* Modify your tktvars.json with the appropriate information for your environment
+  * You will need credentials and other information from both Helix Control-M and Helix ITSM
+
+* Make your Helix Control-M necessary configurations using the CTM CLI or the scripts in the resources directory
+
+* Test and modify the script as you see necessary. Please remember that this is __*NOT*__ a BMC supported product.
