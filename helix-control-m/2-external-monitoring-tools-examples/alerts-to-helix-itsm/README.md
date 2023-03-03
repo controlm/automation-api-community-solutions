@@ -21,9 +21,11 @@
 | 2023-02-09 | Wendel Bordelon | Sanity Check (hard work!) and suggestions for improving the ticket content |
 
 ## Contributions
+
 | Date | Who | What |
 | - | - | - |
 |  |  |  |
+
 ## Who is using it
 
 | Date | Who | Notes |
@@ -35,6 +37,7 @@
 Helix Control-M Alerts to Remedy ITSM
 
 ## Pre requisites
+
 ### Python packages
 
 1. Remedy_py
@@ -53,7 +56,7 @@ Need to install the current fork of the remedy_py package. A pull request is pen
 
    Control-M Python Client documentation is available at <https://controlm.github.io/ctm-python-client/>
 
-3. Other packages
+1. Other packages
 
    * dotenv
 
@@ -71,6 +74,7 @@ Need to install the current fork of the remedy_py package. A pull request is pen
 ### BMC Helix ITSM
 
 BMC Helix Remedy ITSM or on-prem with REST APIs enabled.
+
 * Tested with version BMC Helix ITSM 20.08
 
 ## Features
