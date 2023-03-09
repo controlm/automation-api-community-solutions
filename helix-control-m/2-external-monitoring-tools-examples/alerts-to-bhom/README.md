@@ -8,11 +8,11 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
 
 - **Create a new Event Class in BHOM**, using the definition from the [**bhom_ctm_event_class.json**](bhom_ctm_event_class.json) file.
 
-  This event class called "ControlMAlert" includes all the required fields from the HCTM alert data, plus one additional field to include a link to the job that generated the alert (when applicable). It also inherits all fields from its parent classes "IIMonitorEvent", "MonitorEvent" and the "Event" base class (check the BHOM documentation on [Event classification and formatting](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-classification-and-formatting-1160751038.html) for more details).
-
-  *If the "IIMonitorEvent" event class is not available in your BHOM environment, you can update the json file to use the "MonitorEvent" class instead.*
+  This event class called "**ControlMAlert**" includes all the required fields from the HCTM alert data, plus one additional field to include a link to the job that generated the alert (when applicable). It also inherits all fields from its parent classes "IIMonitorEvent", "MonitorEvent" and the "Event" base class (check the BHOM documentation on [Event classification and formatting](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-classification-and-formatting-1160751038.html) for more details).
 
   - To create the event class, contact your BHOM administrator or follow the documentation for [Event management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-management-endpoints-in-the-rest-api-1160751462.html) (*remember to select your product version*), and use the "POST /events/classes" endpoint.
+
+  - If the "IIMonitorEvent" event class is not available in your BHOM environment, you can update the json file to use the "MonitorEvent" class instead.
    
 - **Import an Event Policy in BHOM**, using the [**bhom_ctm_event_policy.json**](bhom_ctm_event_policy.json) file.  **[OPTIONAL]**
 
@@ -28,7 +28,7 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
 
 ## Instructions
 
-The [**alerts_bhom.sh**](alerts_bhom.sh) script is intended to be used with the **External Alert Management** service from the Automation API, which allows to define a script to trigger each time an alert is received (for more information, see the HCTM documentation for [Setting Up External Alerts](https://documents.bmc.com/supportu/controlm-saas/en-US/Documentation/Alerts.htm#SettingUpExternalAlerts) and [External Alert Management](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alert_managementExternalAlertManagement)).
+The [**alerts_to_bhom.sh**](alerts_to_bhom.sh) script is intended to be used with the **External Alert Management** service from the Automation API, which allows to define a script to trigger each time an alert is received (for more information, see the HCTM documentation for [Setting Up External Alerts](https://documents.bmc.com/supportu/controlm-saas/en-US/Documentation/Alerts.htm#SettingUpExternalAlerts) and [External Alert Management](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alert_managementExternalAlertManagement)).
 
 Before using the script, update the following parameters:
 
