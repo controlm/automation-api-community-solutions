@@ -73,8 +73,8 @@ Do NOT modify the following parameters:
 
   | HCTM alert field | BHOM event slot | Comments |
   | - | - | - |
-  | eventType | eventType | |
-  | id | alertId | Updated to avoid conflicts with existing BHOM event field names. |
+  | ``eventType`` | ``eventType`` | |
+  | ``id`` | ``alertId`` | Updated to avoid conflicts with existing BHOM event field names. |
   | server | ctmServer | Updated to avoid conflicts with existing BHOM event field names. |
   | fileName | fileName | |
   | runId | runId | |
