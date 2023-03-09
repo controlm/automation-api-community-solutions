@@ -75,26 +75,28 @@ Do NOT modify the following parameters:
   | - | - | - |
   | ``eventType`` | ``eventType`` | |
   | ``id`` | ``alertId`` | Updated to avoid conflicts with existing BHOM event field names. |
-  | server | ctmServer | Updated to avoid conflicts with existing BHOM event field names. |
-  | fileName | fileName | |
-  | runId | runId | |
-  | severity | severity | The value is updated to map the HCTM to BHOM correspondence. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
-  | status | alertStatus | Updated to avoid conflicts with existing BHOM event field names. |
-  | time | alertTime | Updated to avoid conflicts with existing BHOM event field names. The value is converted to the format expected by BHOM: Epoch (local) time, in milisecs. |
-  | user | ctmUser | Updated to avoid conflicts with existing BHOM event field names. |
-  | updateTime | updateTime | |
-  | message | msg | Updated to map it to an existing BHOM field. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
-  | runAs | runAs | |
-  | subApplication | subApplication | |
-  | application | application | |
-  | jobName | jobName | |
-  | host | source_hostname | Updated to map it to an existing BHOM field. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
-  | type | alertType | Updated to avoid conflicts with existing BHOM event field names. |
-  | closedByControlM | closedByControlM | |
-  | ticketNumber | ticketNumber | |
-  | runNo | runNo | |
-  | notes | alertNotes | Updated to avoid conflicts with existing BHOM event field names. |
-  | | jobLink | Additional field included in the ControlMAlert class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
+  | ``server`` | ``ctmServer`` | Updated to avoid conflicts with existing BHOM event field names. |
+  | ``fileName`` | ``fileName`` | |
+  | ``runId`` | ``runId`` | |
+  | ``severity`` | ``severity`` | The value is updated to map the HCTM to BHOM correspondence. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
+  | ``status`` | ``alertStatus`` | Updated to avoid conflicts with existing BHOM event field names. |
+  | ``time`` | ``creation_time`` | Updated to avoid conflicts with existing BHOM event field names. The value is converted to the format expected by BHOM: Epoch (local) time, in milisecs. |
+  | ``user`` | ``ctmUser`` | Updated to avoid conflicts with existing BHOM event field names. |
+  | ``updateTime`` | ``updateTime`` | |
+  | ``message`` | ``msg`` | Updated to map it to an existing BHOM field. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
+  | ``runAs`` | ``runAs`` | |
+  | ``subApplication`` | ``subApplication`` | |
+  | ``application`` | ``application`` | |
+  | ``jobName`` | ``jobName`` | |
+  | ``host`` | ``source_hostname`` | Updated to map it to an existing BHOM field. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
+  | ``type`` | ``alertType`` | Updated to avoid conflicts with existing BHOM event field names. |
+  | ``closedByControlM`` | ``closedByControlM`` | |
+  | ``ticketNumber`` | ``ticketNumber`` | |
+  | ``runNo`` | ``runNo`` | |
+  | ``notes`` | ``alertNotes`` | Updated to avoid conflicts with existing BHOM event field names. |
+  | | ``jobLink`` | Additional field included in the ControlMAlert class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
+  | | ``location`` | XXX  |
+  | | ``source_identifier`` | XXX  |
 
 ## Versions
 
