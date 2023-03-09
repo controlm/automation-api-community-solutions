@@ -94,7 +94,7 @@ Do NOT modify the following parameters:
   | ticketNumber | ticketNumber | |
   | runNo | runNo | |
   | notes | alertNotes | Updated to avoid conflicts with existing BHOM event field names. |
-  | *N/A* | jobLink | Additional field included in the ControlMAlert class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
+  | | jobLink | Additional field included in the ControlMAlert class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
 
 ## Versions
 
