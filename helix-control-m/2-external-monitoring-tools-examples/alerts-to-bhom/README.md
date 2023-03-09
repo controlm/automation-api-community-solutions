@@ -74,29 +74,29 @@ Do NOT modify the following parameters:
   | HCTM alert field | BHOM event slot | Comments |
   | - | - | - |
   | ``eventType`` | ``eventType`` | |
-  | ``id`` | ``alertId`` | Field name is updated to avoid conflicts with BHOM event slots. |
-  | ``server`` | ``ctmServer`` | Updated to avoid conflicts with existing BHOM event field names. |
+  | ``id`` | ``alertId`` | The name is updated to avoid conflicts with existing BHOM event slots. |
+  | ``server`` | ``ctmServer`` | The name is updated to avoid conflicts with existing BHOM event slots. |
   | ``fileName`` | ``fileName`` | |
   | ``runId`` | ``runId`` | |
-  | ``severity`` | ``severity`` | The value is updated to map the HCTM to BHOM correspondence. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
-  | ``status`` | ``alertStatus`` | Updated to avoid conflicts with existing BHOM event field names. |
-  | ``time`` | ``creation_time`` | Updated to avoid conflicts with existing BHOM event field names. The value is converted to the format expected by BHOM: Epoch (local) time, in milisecs. |
-  | ``user`` | ``ctmUser`` | Updated to avoid conflicts with existing BHOM event field names. |
-  | ``updateTime`` | ``updateTime`` | |
-  | ``message`` | ``msg`` | Updated to map it to an existing BHOM field. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
+  | ``severity`` | ``severity`` | The value is updated to map the HCTM to BHOM correspondence. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
+  | ``status`` | ``alertStatus`` | The name is updated to avoid conflicts with existing BHOM event slots. |
+  | ``time`` | ``creation_time`` | The name is updated to map it to an existing BHOM event slot. The value is converted to the format expected by BHOM (Epoch time, in milisecs). |
+  | ``user`` | ``ctmUser`` | The name is updated to avoid conflicts with existing BHOM event slots. |
+  | ``updateTime`` | ``updateTime`` | The value is converted to the format expected by BHOM (Epoch time, in milisecs). |
+  | ``message`` | ``msg`` | The name is updated to map it to an existing BHOM event slot. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
   | ``runAs`` | ``runAs`` | |
   | ``subApplication`` | ``subApplication`` | |
   | ``application`` | ``application`` | |
   | ``jobName`` | ``jobName`` | |
-  | ``host`` | ``source_hostname`` | Updated to map it to an existing BHOM field. Not included in the ControlMAlert class, as it already exists in the base class "Event". |
-  | ``type`` | ``alertType`` | Updated to avoid conflicts with existing BHOM event field names. |
+  | ``host`` | ``source_hostname`` | The name is updated to map it to an existing BHOM event slot. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". When the alert "host" value is empty, it defaults to the "source identifier" event slot. |
+  | ``type`` | ``alertType`` | The name is updated to avoid conflicts with existing BHOM event slots. |
   | ``closedByControlM`` | ``closedByControlM`` | |
   | ``ticketNumber`` | ``ticketNumber`` | |
   | ``runNo`` | ``runNo`` | |
-  | ``notes`` | ``alertNotes`` | Updated to avoid conflicts with existing BHOM event field names. |
-  | | ``jobLink`` | Additional field included in the ControlMAlert class, which is constructed with the HCTM URL, runId, ctmServer and jobName.  |
-  | | ``location`` | XXX  |
-  | | ``source_identifier`` | XXX  |
+  | ``notes`` | ``alertNotes`` | The name is updated to avoid conflicts with existing BHOM event slots. |
+  | | ``jobLink`` | Additional slot included in the "ControlMAlert" class, which value is assigned in the script using the HCTM URL, runId, ctmServer and jobName.  |
+  | | ``location`` | Default is "Helix Control-M", but can be customized via the "hctm_name" variable in the script. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event".  |
+  | | ``source_identifier`` | The value is assigned in the script using the HCTM tenant URL (removing the "https://"). Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
 
 ## Versions
 
