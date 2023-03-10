@@ -4,7 +4,7 @@
 #
 # Notes : - The alert data is sent in JSON format to BHOM using its event ingestion API
 #         - The "ControlMAlert" event class must be previously imported in BHOM
-#         - Update all variables below according to your environment and preferences
+#         - Update variables below according to your environment and preferences
 #
 
 # Set HCTM parameters
