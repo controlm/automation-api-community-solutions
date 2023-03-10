@@ -1,6 +1,6 @@
 ﻿{
    "name": "ControlMAlert",
-   "parentClassName": "MonitorEvent",
+   "parentClassName": "IIMonitorEvent",
    "attributes": [
       { "name": "eventType",        "dataType": "STRING"  },
       { "name": "alertId",          "dataType": "INTEGER" },
@@ -8,9 +8,8 @@
       { "name": "fileName",         "dataType": "STRING"  },
       { "name": "runId",            "dataType": "STRING"  },
       { "name": "alertStatus",      "dataType": "STRING"  },
-      { "name": "alertTime",        "dataType": "DATE"    },
       { "name": "ctmUser",          "dataType": "STRING"  },
-      { "name": "updateTime",       "dataType": "DATE"    },
+		{ "name": "updateTime",       "dataType": "DATE"    },
       { "name": "runAs",            "dataType": "STRING"  },
       { "name": "subApplication",   "dataType": "STRING"  },
       { "name": "application",      "dataType": "STRING"  },
