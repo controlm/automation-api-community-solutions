@@ -82,9 +82,9 @@ Do NOT modify the following variables:
   | ``runId`` | ``runId`` | |
   | ``severity`` | ``severity`` | The value is updated to map the HCTM to BHOM correspondence. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
   | ``status`` | ``alertStatus`` | The name is updated to avoid conflicts with existing BHOM event slots. |
-  | ``time`` | ``creation_time`` | The name is updated to map it to an existing BHOM event slot. The value is converted to the format expected by BHOM (Epoch time, in milisecs). |
+  | ``time`` | ``creation_time`` | The name is updated to map it to an existing BHOM event slot. The value is converted to the format expected by BHOM (Epoch time, in milliseconds). |
   | ``user`` | ``ctmUser`` | The name is updated to avoid conflicts with existing BHOM event slots. |
-  | ``updateTime`` | ``updateTime`` | The value is converted to the format expected by BHOM (Epoch time, in milisecs). |
+  | ``updateTime`` | ``updateTime`` | The value is converted to the format expected by BHOM (Epoch time, in milliseconds). |
   | ``message`` | ``msg`` | The name is updated to map it to an existing BHOM event slot. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
   | ``runAs`` | ``runAs`` | |
   | ``subApplication`` | ``subApplication`` | |
