@@ -97,7 +97,7 @@ Do NOT modify the following parameters:
   | ``runNo`` | ``runNo`` | |
   | ``notes`` | ``alertNotes`` | The name is updated to avoid conflicts with existing BHOM event slots. |
   | | ``jobLink`` | Additional slot included in the "ControlMAlert" class, which value is assigned in the script using the HCTM URL, runId, ctmServer and jobName.  |
-  | | ``location`` | Default is "Helix Control-M", but can be customized via the "hctm_name" variable in the script. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event".  |
+  | | ``location`` | Default is "Helix Control-M", can be customized via the "hctm_name" variable in the script. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event".  |
   | | ``source_identifier`` | The value is assigned in the script using the HCTM tenant URL (removing the "https://"). Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
 
 ## Versions
