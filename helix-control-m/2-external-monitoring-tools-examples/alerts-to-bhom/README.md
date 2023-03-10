@@ -96,7 +96,7 @@ Do NOT modify the following variables:
   | ``ticketNumber`` | ``ticketNumber`` | |
   | ``runNo`` | ``runNo`` | |
   | ``notes`` | ``alertNotes`` | The name is updated to avoid conflicts with existing BHOM event slots. |
-  | | ``jobLink`` | Additional slot included in the "ControlMAlert" class, which value is defined in the script using the HCTM URL, runId, ctmServer and jobName.  |
+  | | ``jobLink`` | Additional slot included in the "ControlMAlert" class, which value is defined in the script using the HCTM tenant URL, runId, ctmServer and jobName.  |
   | | ``location`` | The value is defined in the script using the "hctm_name" variable. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event".  |
   | | ``source_identifier`` | The value is defined in the script using the HCTM tenant URL (removing the "https://"). Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
 
