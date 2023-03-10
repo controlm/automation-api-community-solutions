@@ -9,7 +9,7 @@
       { "name": "runId",            "dataType": "STRING"  },
       { "name": "alertStatus",      "dataType": "STRING"  },
       { "name": "ctmUser",          "dataType": "STRING"  },
-		{ "name": "updateTime",       "dataType": "DATE"    },
+      { "name": "updateTime",       "dataType": "DATE"    },
       { "name": "runAs",            "dataType": "STRING"  },
       { "name": "subApplication",   "dataType": "STRING"  },
       { "name": "application",      "dataType": "STRING"  },
