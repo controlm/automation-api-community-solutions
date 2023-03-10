@@ -30,16 +30,16 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
 
 The [**alerts_to_bhom.sh**](alerts_to_bhom.sh) script is intended to be used with the **External Alert Management** service from the Automation API, which allows to define a script to trigger each time an alert is received (for more information, see the HCTM documentation for [Setting Up External Alerts](https://documents.bmc.com/supportu/controlm-saas/en-US/Documentation/Alerts.htm#SettingUpExternalAlerts) and [External Alert Management](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alert_managementExternalAlertManagement)).
 
-Before using the script, update the following parameters:
+Before using the script, update the following variables:
 
 - **hctm_url** : enter the URL for the HCTM tenant (e.g. "*https://\<tenant name\>.us1.controlm.com*").
 - **hctm_name** : the default is "Helix Control-M", but can be updated to e.g. use different names for multiple HCTM environments (the value is assigned to the BHOM "location" field).
 - **bhom_url** : enter the URL for the BHOM event data endpoint (e.g. "*https://\<BMC Helix Portal URL\>/events-service/api/v1.0/events*"), as described in the BHOM documentation for [Policy, event data, and metric data management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/policy-event-data-and-metric-data-management-endpoints-in-the-rest-api-1160751457.html).
 - **bhom_api_key** : enter a valid BHOM API key, which you can obtain from the BHOM console in the "Administration" menu, selecting "Repository" and clicking on "Copy API Key".
-- **sev_V/U/R** : update the three parameters to set the HCTM to BHOM correspondence for the "severity" field according to your preferences (alerts coming from HCTM can be Very urgent, Urgent or Regular; while BHOM event severity can be CRITICAL, MAJOR, MINOR, WARNING, INFO, OK or UNKNOWN).
+- **sev_V/U/R** : update the three variables to set the HCTM to BHOM correspondence for the "severity" field according to your preferences (alerts coming from HCTM can be Very urgent, Urgent or Regular; while BHOM event severity can be CRITICAL, MAJOR, MINOR, WARNING, INFO, OK or UNKNOWN).
 - **alert_updates** : select whether you want to send or not updates of existing HCTM alerts to BHOM (which happens when the alert "Status", "Urgency" or "Comment" are updated in HCTM).
 
-Do NOT modify the following parameters:
+Do NOT modify the following variables:
 
 - **bhom_class** : leave as is to use the previously imported "ControlMAlert" event class.
 - **field_names** : leave as is to use the default field names for HCTM alerts. If you have previously modified the JSON template for alerts in HCTM, restore the default alert fields (as documented in the [Alerts Template reference](https://docs.bmc.com/docs/saas-api/alerts-template-reference-1144242602.html)).
@@ -96,12 +96,12 @@ Do NOT modify the following parameters:
   | ``ticketNumber`` | ``ticketNumber`` | |
   | ``runNo`` | ``runNo`` | |
   | ``notes`` | ``alertNotes`` | The name is updated to avoid conflicts with existing BHOM event slots. |
-  | | ``jobLink`` | Additional slot included in the "ControlMAlert" class, which value is assigned in the script using the HCTM URL, runId, ctmServer and jobName.  |
-  | | ``location`` | Default is "Helix Control-M", can be customized via the "hctm_name" variable in the script. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event".  |
-  | | ``source_identifier`` | The value is assigned in the script using the HCTM tenant URL (removing the "https://"). Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
+  | | ``jobLink`` | Additional slot included in the "ControlMAlert" class, which value is defined in the script using the HCTM URL, runId, ctmServer and jobName.  |
+  | | ``location`` | The value is defined in the script using the "hctm_name" variable. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event".  |
+  | | ``source_identifier`` | The value is defined in the script using the HCTM tenant URL (removing the "https://"). Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
 
 ## Versions
 
 | Date | Updated by | Changes |
 | - | - | - |
-| 2023-03-09 | David Fernández | First release |
+| 2023-03-10 | David Fernández | First release |
