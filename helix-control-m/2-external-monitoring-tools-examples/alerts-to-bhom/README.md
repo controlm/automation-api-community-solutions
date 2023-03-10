@@ -69,7 +69,7 @@ Do NOT modify the following parameters:
 
   ``export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"``
 
-- The following table shows the correspondence between the HCTM alert fields and the BHOM event slots (either defined in the "ControlMAlert" class or inherited from its parent classes), plus additional information for fields which are modified in the script.
+- The following table shows the correspondence between the HCTM alert fields and the BHOM event slots (defined in the "ControlMAlert" class or inherited from its parent classes), plus additional information for fields which are modified in the script.
 
   For more information on the HCTM alert fields, check the [Alerts Template reference](https://docs.bmc.com/docs/saas-api/alerts-template-reference-1144242602.html) documentation.
 
