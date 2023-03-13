@@ -128,7 +128,7 @@ done
 # See https://bmcsites.force.com/casemgmt/sc_KnowledgeArticle?sfdcid=kA33n000000YHinCAG&type=Solution
 # export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"
 
-# Send alert data to BHOM
+# Send HCTM alert data to BHOM
 curl -X POST $bhom_url -H "Authorization: apiKey $bhom_api_key" -H 'Content-Type: application/json' -d "$json_data"
 
 exit 0
