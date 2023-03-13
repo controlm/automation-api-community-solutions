@@ -104,4 +104,4 @@ Do NOT modify the following variables:
 
 | Date | Updated by | Changes |
 | - | - | - |
-| 2023-03-10 | David Fernández | First release |
+| 2023-03-13 | David Fernández | First release |
