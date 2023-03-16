@@ -326,13 +326,12 @@ if ctmattachlogs and alert_is_job:
 
     job_output = (job_output + NL +  output)
 
-
+    tmpdir = tempfile.gettempdir()
     file_log = f"log_{alert[keywords_json['runId']]}_{alert[keywords_json['runNo']]}_{alert_id}.txt"
     file_output = f"output_{alert[keywords_json['runId']]}_{alert[keywords_json['runNo']]}_{alert_id}.txt"
 
     # Write log
     # Declare object to open temporary file for writing
-    tmpdir = tempfile.gettempdir()
     file_name = dbg_assign_var(file_log, "Log Filename", dbg_logger, debug, alert_id)
     content = job_log
     try:
@@ -356,7 +355,6 @@ if ctmattachlogs and alert_is_job:
 
     # Write output
     # Declare object to open temporary file for writing
-    tmpdir = tempfile.gettempdir()
     file_name = dbg_assign_var(file_output, "Output Filename", dbg_logger, debug, alert_id)
     content = job_output
     try:
@@ -401,16 +399,16 @@ if send_email == "yes":
     dbg_logger.info("Sending email")
 
     send_mail(smtp_sender, [smtp_recipient], tkt_short_description, tkt_comments,
-                files=[log_file_name, out_file_name],
+                files=[tmpdir+os.sep+file_log, tmpdir+os.sep+file_output],
                 server=smtp_url, port=smtp_port, use_tls=smtp_SSL,
                 username=smtp_username, password=smtp_password)
 
 if ctmattachlogs and alert_is_job:
     try:
-        message = f"Removing files {log_file_name} and {out_file_name}"
+        message = f"Removing files {file_log} and {file_output}"
         dbg_logger.info(message)
-        os.remove(log_file_name)
-        os.remove(out_file_name)
+        os.remove(tmpdir+os.sep+file_log)
+        os.remove(tmpdir+os.sep+file_output)
     except Exception as ex:
         message = f"Exception type {type(ex).__name__} occurred. Arguments:\n{str(ex.args)}"
         dbg_logger.info(message)

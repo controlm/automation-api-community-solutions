@@ -48,7 +48,7 @@ Need to install the current fork of the remedy_py package. A pull request is pen
    pip install git+https://github.com/dcompane/remedy-py
    ```
 
-2. Control-M Python Client
+1. Control-M Python Client
 
    ```bash
    pip install ctm-python-client
