@@ -42,7 +42,8 @@ Before using the script, update the following variables:
 Do NOT modify the following variables:
 
 - **bhom_class** : leave as is to use the previously imported "ControlMAlert" event class.
-- **field_names** : leave as is to use the default field names for HCTM alerts. If you have previously modified the JSON template for alerts in HCTM, restore the default alert fields (as documented in the [Alerts Template reference](https://docs.bmc.com/docs/saas-api/alerts-template-reference-1144242602.html)).
+- **alert_fields** : leave as is to use the default field names for HCTM alerts. If you have previously modified the JSON template for alerts in HCTM, restore the default alert fields (as documented in the [Alerts Template reference](https://docs.bmc.com/docs/saas-api/alerts-template-reference-1144242602.html)).
+- **bhom_slots** : leave as is to use the default event slots defined in the "ControlMAlert" class.
 
 ## Additional information
 
@@ -76,26 +77,26 @@ Do NOT modify the following variables:
   | HCTM alert field | BHOM event slot | Comments |
   | - | - | - |
   | ``eventType`` | ``eventType`` | |
-  | ``id`` | ``alertId`` | The name is updated to avoid conflicts with existing BHOM event slots. |
-  | ``server`` | ``ctmServer`` | The name is updated to avoid conflicts with existing BHOM event slots. |
+  | ``id`` | ``alertId`` | |
+  | ``server`` | ``ctmServer`` | |
   | ``fileName`` | ``fileName`` | |
   | ``runId`` | ``runId`` | |
   | ``severity`` | ``severity`` | The value is updated to map the HCTM to BHOM correspondence. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
-  | ``status`` | ``alertStatus`` | The name is updated to avoid conflicts with existing BHOM event slots. |
-  | ``time`` | ``creation_time`` | The name is updated to map it to an existing BHOM event slot. The value is converted to the format expected by BHOM (Epoch time, in milliseconds). |
-  | ``user`` | ``ctmUser`` | The name is updated to avoid conflicts with existing BHOM event slots. |
+  | ``status`` | ``alertStatus`` | |
+  | ``time`` | ``creation_time`` | The value is converted to the format expected by BHOM (Epoch time, in milliseconds). Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
+  | ``user`` | ``ctmUser`` | |
   | ``updateTime`` | ``updateTime`` | The value is converted to the format expected by BHOM (Epoch time, in milliseconds). |
-  | ``message`` | ``msg`` | The name is updated to map it to an existing BHOM event slot. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
+  | ``message`` | ``msg`` | Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
   | ``runAs`` | ``runAs`` | |
   | ``subApplication`` | ``subApplication`` | |
   | ``application`` | ``application`` | |
   | ``jobName`` | ``jobName`` | |
-  | ``host`` | ``source_hostname`` | The name is updated to map it to an existing BHOM event slot. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". When the alert "host" value is empty, it defaults to the "source identifier" event slot. |
-  | ``type`` | ``alertType`` | The name is updated to avoid conflicts with existing BHOM event slots. |
+  | ``host`` | ``source_hostname`` | When the alert "host" value is empty, it defaults to the "source_identifier" event slot. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
+  | ``type`` | ``alertType`` | |
   | ``closedByControlM`` | ``closedByControlM`` | |
   | ``ticketNumber`` | ``ticketNumber`` | |
   | ``runNo`` | ``runNo`` | |
-  | ``notes`` | ``alertNotes`` | The name is updated to avoid conflicts with existing BHOM event slots. |
+  | ``notes`` | ``alertNotes`` | |
   | | ``jobLink`` | Additional slot included in the "ControlMAlert" class, which value is defined in the script using the HCTM tenant URL, runId, ctmServer and jobName.  |
   | | ``location`` | The value is defined in the script using the "hctm_name" variable. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event".  |
   | | ``source_identifier`` | The value is defined in the script using the HCTM tenant URL (removing the "https://"). Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
@@ -104,4 +105,4 @@ Do NOT modify the following variables:
 
 | Date | Updated by | Changes |
 | - | - | - |
-| 2023-03-13 | David Fernández | First release |
+| 2023-03-18 | David Fernández | First release |
