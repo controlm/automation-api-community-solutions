@@ -8,7 +8,7 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
 
 - **Configure the HCTM "External Alert Management" service** from the Automation API to execute the script every time an alert is raised.
  
-  - For more information, check the HCTM documentation for [Setting Up External Alerts](https://documents.bmc.com/supportu/controlm-saas/en-US/Documentation/Alerts.htm#SettingUpExternalAlerts) and [External Alert Management](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alert_managementExternalAlertManagement).
+  - For more information, check the HCTM documentation for [Setting Up External Alerts](https://documents.bmc.com/supportu/controlm-saas/en-US/Documentation/Alerts.htm#SettingUpExternalAlerts) and the HCTM Automation API documentation for [External Alert Management](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alert_managementExternalAlertManagement).
 
   - As explained in the documentation, you need to use "run alerts:listener:script::set" to define the path to the script - and then open the alerts stream and start the alerts listener process.
 
