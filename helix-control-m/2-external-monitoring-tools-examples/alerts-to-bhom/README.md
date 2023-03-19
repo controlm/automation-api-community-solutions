@@ -68,8 +68,6 @@ Do NOT modify the following variables:
    - Follow the steps in the BHOM documentation for [Creating table views](https://docs.bmc.com/docs/helixoperationsmanagement/231/creating-table-views-1160750840.html).
    - For example, a custom table view can be used to show the "jobLink" field in the main event dashboard, which when clicked will open the HCTM web interface with a monitoring viewpoint showing the problematic job and its neighborhood (when the alert is related to a job, and as long as the user is already logged in the HCTM web interface).
 
-- The script could be modified to also pass the "**external_id**" slot from the "IIMonitorEvent" class, in order to associate the event with a CI (configuration item).
-
 - If you get the error "*curl: (48) An unknown option was passed in to libcurl*" when testing the script, uncomment the following line: 
 
   ``export LD_LIBRARY_PATH="/usr/lib64:$LD_LIBRARY_PATH"``
@@ -104,6 +102,9 @@ Do NOT modify the following variables:
   | | ``jobLink`` | Additional slot included in the "ControlMAlert" class, which value is defined in the script using the HCTM tenant URL, runId, ctmServer and jobName.  |
   | | ``location`` | The value is defined in the script using the "hctm_name" variable. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event".  |
   | | ``source_identifier`` | The value is defined in the script using the HCTM tenant URL (removing the "https://"). Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
+
+> The script could be modified to also pass the "**external_id**" slot from the "IIMonitorEvent" class, in order to associate the event with a CI (configuration item).
+
 
 ## Versions
 
