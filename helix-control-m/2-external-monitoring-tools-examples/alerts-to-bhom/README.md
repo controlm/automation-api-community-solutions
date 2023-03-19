@@ -103,7 +103,7 @@ Do NOT modify the following variables:
   | | ``location`` | The value is defined in the script using the "hctm_name" variable. Not included in the "ControlMAlert" class, as it is inherited from the base class "Event".  |
   | | ``source_identifier`` | The value is defined in the script using the HCTM tenant URL (removing the "https://"). Not included in the "ControlMAlert" class, as it is inherited from the base class "Event". |
 
-  *The script could be modified to also pass the ``external_id`` slot from the "IIMonitorEvent" class, in order to associate the event with a CI (configuration item).*
+  *The script could be modified to also pass the* ``external_id`` *slot from the "IIMonitorEvent" class, in order to associate the event with a CI (configuration item).*
 
 ## Versions
 
