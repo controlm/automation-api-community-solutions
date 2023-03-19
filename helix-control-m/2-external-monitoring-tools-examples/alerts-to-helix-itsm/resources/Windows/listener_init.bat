@@ -26,9 +26,3 @@ call ctm run alerts:stream::close true
 echo Explicitly opening  External Alerts stream
 call ctm run alerts:stream::open
 
-echo Starting External Alerts listener
-call ctm run alerts:listener::start
-
-echo External Alerts status, again. Should be OK.
-call ctm run alerts:stream::status
-
