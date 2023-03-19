@@ -8,7 +8,9 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
 
 - **Configure your HCTM environment to execute the script when an alert is raised**.
 
-  This is achieved via the **External Alert Management** service from the Automation API, which allows to define a script to trigger each time an alert is received. For more information, check the HCTM documentation for [Setting Up External Alerts](https://documents.bmc.com/supportu/controlm-saas/en-US/Documentation/Alerts.htm#SettingUpExternalAlerts) and [External Alert Management](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alert_managementExternalAlertManagement).
+  This is achieved via the **External Alert Management** service from the Automation API, which allows to define a script to trigger every time an alert is generated.
+  
+  - For more information, check the HCTM documentation for [Setting Up External Alerts](https://documents.bmc.com/supportu/controlm-saas/en-US/Documentation/Alerts.htm#SettingUpExternalAlerts) and [External Alert Management](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alert_managementExternalAlertManagement).
 
 - **Create a new Event Class in BHOM**, using the definition from the [**bhom_ctm_event_class.json**](bhom_ctm_event_class.json) file.
 
