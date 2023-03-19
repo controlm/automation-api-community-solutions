@@ -38,6 +38,12 @@ Helix Control-M Alerts to Remedy ITSM
 
 ## Pre requisites
 
+* Users will need to be familiar with the
+  * [External Alerts](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alert_managementExternalAlertManagement) mechanism of the Helix Control-M platform
+  * [Control-M Python Client](https://github.com/controlm/ctm-python-client)
+  * [Remedy-py](https://github.com/dcompane/remedy-py) package and methods, if there is a need to customize the ITSM interface
+  * General Python programming
+  
 ### Python packages
 
 1. Remedy_py
@@ -69,7 +75,7 @@ Need to install the current fork of the remedy_py package. A pull request is pen
 * Helix Control-M
 * Automation API CLI
 
-> NOTE: It likely is compatible with Control-M on-premise systems, with the proper fields file (as per the documentation on the [Alerts template reference](https://docs.bmc.com/docs/display/ctmSaaSAPI/Alerts+Template+reference).
+> NOTE: It has not been tested with on-prem systems, but it should work with the proper fields file (as per the documentation on the [Alerts template reference](https://docs.bmc.com/docs/display/ctmSaaSAPI/Alerts+Template+reference))
 
 ### BMC Helix ITSM
 
@@ -102,7 +108,7 @@ BMC Helix Remedy ITSM or on-prem with REST APIs enabled.
 
 ### Configuration
 
-* Modify your tktvars.json with the appropriate information for your environment
+* Modify your tktvars.json with the information requested in the file, appropriate for your environment
   * You will need credentials and other information from both Helix Control-M and Helix ITSM
 
 * Make your Helix Control-M necessary configurations using the CTM CLI or the scripts in the resources directory
