@@ -6,6 +6,10 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
 
 ## Pre-requisites
 
+- **Configure your HCTM environment to execute the script when an alert is raised**.
+
+  This is achieved via the **External Alert Management** service from the Automation API, which allows to define a script to trigger each time an alert is received. For more information, check the HCTM documentation for [Setting Up External Alerts](https://documents.bmc.com/supportu/controlm-saas/en-US/Documentation/Alerts.htm#SettingUpExternalAlerts) and [External Alert Management](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alert_managementExternalAlertManagement).
+
 - **Create a new Event Class in BHOM**, using the definition from the [**bhom_ctm_event_class.json**](bhom_ctm_event_class.json) file.
 
   This event class called "**ControlMAlert**" includes all the required fields from the HCTM alert data, plus one additional field to include a link to the job that generated the alert (when applicable). It also inherits all fields from its parent classes "IIMonitorEvent", "MonitorEvent" and the "Event" base class (check the BHOM documentation on [Event classification and formatting](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-classification-and-formatting-1160751038.html) for more details).
@@ -27,8 +31,6 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
   - To import the event policy using the API, follow the BHOM documentation for [Event policy management endpoints in the REST API](https://docs.bmc.com/docs/helixoperationsmanagement/231/event-policy-management-endpoints-in-the-rest-api-1160751484.html), and use the "POST /event_policies" endpoint.
 
 ## Instructions
-
-The [**alerts_to_bhom.sh**](alerts_to_bhom.sh) script is intended to be used with the **External Alert Management** service from the Automation API, which allows to define a script to trigger each time an alert is received (for more information, see the HCTM documentation for [Setting Up External Alerts](https://documents.bmc.com/supportu/controlm-saas/en-US/Documentation/Alerts.htm#SettingUpExternalAlerts) and [External Alert Management](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alert_managementExternalAlertManagement)).
 
 Before using the script, update the following variables:
 
