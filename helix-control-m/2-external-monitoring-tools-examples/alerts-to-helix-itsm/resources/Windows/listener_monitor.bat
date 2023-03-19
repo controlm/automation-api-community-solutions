@@ -36,7 +36,7 @@ del %TEMP%\status.tmp
 
 
 echo "Entering wait for next cycle (%cycle% seconds)" >> %TEMP%\listener_alerts.log
-waitfor /T %cycle% Wait4Cycle
+timeout /T %cycle% /NOBREAK > NUL
 
 goto Start
 
