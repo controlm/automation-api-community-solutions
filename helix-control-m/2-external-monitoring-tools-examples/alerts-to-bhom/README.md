@@ -10,7 +10,7 @@ It parses the alert data coming from Helix Control-M (**HCTM**) into JSON format
  
   - For more information, check the HCTM documentation for [Setting Up External Alerts](https://documents.bmc.com/supportu/controlm-saas/en-US/Documentation/Alerts.htm#SettingUpExternalAlerts) and [External Alert Management](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alert_managementExternalAlertManagement).
 
-  - As explained in the documentation, you need to use the "run alerts:listener:script::set" service to define the path to the script - and then open the alerts stream and start the alerts listener process.
+  - As explained in the documentation, you need to use "run alerts:listener:script::set" to define the path to the script - and then open the alerts stream and start the alerts listener process.
 
 - **Create a new Event Class in BHOM**, using the definition from the [**bhom_ctm_event_class.json**](bhom_ctm_event_class.json) file.
 
