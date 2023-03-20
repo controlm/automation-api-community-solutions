@@ -138,4 +138,5 @@ Some comments:
 * It may be possible to create a Windows Task Scheduler similar to the cron job, but I also run into multiple instances of the listener_monitor.bat program.
 * If you want to run the listener monitoring as a job, the listener_monitor_job.json is a workspace export of a couple of jobs that can be used to set the environment and run the listener_monitor.bat script.
   * It should take only one execution a day (unless it fails and needs to be restarted)
+  * The output (as the workspace attached in configured) will only show when the listener was not OK. If you want a detailed output to the job, remove the "Y" from the command line being executed.
 
