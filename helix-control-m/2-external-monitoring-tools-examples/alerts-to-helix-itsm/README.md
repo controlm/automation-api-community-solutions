@@ -114,3 +114,28 @@ BMC Helix Remedy ITSM or on-prem with REST APIs enabled.
 * Make your Helix Control-M necessary configurations using the CTM CLI or the scripts in the resources directory
 
 * Test and modify the script as you see necessary. Please remember that this is __*NOT*__ a BMC supported product.
+
+### Resources
+
+The resources files contain SAMPLE scripts that can be used for initialization and management of the alerts. The names and content should be self-explanatory, so please open an issue if you have questions.
+
+While they are samples, they work on my test systems.
+
+#### Linux
+
+The files scripts allow to not having to memorize the commands.
+
+* NOTE: The ctmalerts.service file can be used to set the listener as a Linux service. Ensure you work with your Linux Administrator to set the file properly
+* For additional resiliency, I am running the listener_monitor.sh on a cron job. See the script for instructions on setting up the crontab
+
+#### Windows
+
+The files scripts allow to not having to memorize the commands.  
+
+Some comments:
+
+* At this point, I was not able to make work the service method (using the WinSW tool and the alerts_listener.xml). If the process is set to Automatic, multiple instances will respawn at the same time.
+* It may be possible to create a Windows Task Scheduler similar to the cron job, but I also run into multiple instances of the listener_monitor.bat program.
+* If you want to run the listener monitoring as a job, the listener_monitor_job.json is a workspace export of a couple of jobs that can be used to set the environment and run the listener_monitor.bat script.
+  * It should take only one execution a day (unless it fails and needs to be restarted)
+
