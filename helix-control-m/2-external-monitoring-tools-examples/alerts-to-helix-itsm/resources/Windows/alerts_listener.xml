@@ -1,0 +1,23 @@
+<service>
+	<id>alerts_listener</id>
+	<name>Control-M Alerts Listener</name>
+	<description>__This service runs Control-M Alerts Listener</description>
+	<serviceaccount>
+		<username>LocalSystem</username>
+		<allowservicelogon>true</allowservicelogon>
+		 <prompt>console</prompt>
+	</serviceaccount>
+	<env name="LOGS_HOME" value="C:\WinSW\Logs"/>
+	<executable>C:\Users\dcompane\Documents\alerts-to-helix-itsm\resources\Windows\listener_monitor.bat</executable>
+	<arguments>Y</arguments>
+	<stopexecutable>C:\Users\dcompane\Documents\alerts-to-helix-itsm\resources\Windows\listener_stop.bat</stopexecutable>
+	<startmode>Automatic</startmode>
+	<onfailure action="restart"/>
+	<autoRefresh>true</autoRefresh>
+	<priority>normal</priority>
+	<log mode="roll-by-time">
+	    <pattern>yyyyMMdd</pattern>
+		<keepFiles>5</keepFiles>
+    </log>
+	<logpath>%LOGS_HOME%</logpath>
+</service>
