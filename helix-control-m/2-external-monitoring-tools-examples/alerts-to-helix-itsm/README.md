@@ -109,7 +109,7 @@ BMC Helix Remedy ITSM or on-prem with REST APIs enabled.
 ### Configuration
 
 * Modify your tktvars.json with the information requested in the file, appropriate for your environment
-  * You will need credentials and other information from both Helix Control-M and Helix ITSM
+  * You will need credentials and connectivity information from both Helix Control-M and Helix ITSM
 
 * Make your Helix Control-M necessary configurations using the CTM CLI or the scripts in the resources directory
 
@@ -117,26 +117,31 @@ BMC Helix Remedy ITSM or on-prem with REST APIs enabled.
 
 ### Resources
 
-The resources files contain SAMPLE scripts that can be used for initialization and management of the alerts. The names and content should be self-explanatory, so please open an issue if you have questions.
+The [resources](resources) files contain SAMPLE scripts that can be used for initialization and management of the alerts. The names and content should be self-explanatory, so please open an issue if you have questions.
 
 While they are samples, they work on my test systems.
 
 #### Linux
 
-The files scripts allow to not having to memorize the commands.
+The files and scripts allow to not having to memorize the commands.
 
-* NOTE: The ctmalerts.service file can be used to set the listener as a Linux service. Ensure you work with your Linux Administrator to set the file properly
-* For additional resiliency, I am running the listener_monitor.sh on a cron job. See the script for instructions on setting up the crontab
+* NOTE: The [ctmalerts.service](resources\Linux\ctmalerts.service) file can be used to set the listener as a Linux service. Ensure you work with your Linux Administrator to set the file properly
+* You could also run the listener_monitor.sh on a cron job if you wanted additional verifications. See the script for instructions on setting up the crontab
 
 #### Windows
 
-The files scripts allow to not having to memorize the commands.  
+The files and scripts allow to not having to memorize the commands.  
 
 Some comments:
 
-* At this point, I was not able to make work the service method (using the WinSW tool and the alerts_listener.xml). If the process is set to Automatic, multiple instances will respawn at the same time.
-* It may be possible to create a Windows Task Scheduler similar to the cron job, but I also run into multiple instances of the listener_monitor.bat program.
-* If you want to run the listener monitoring as a job, the listener_monitor_job.json is a workspace export of a couple of jobs that can be used to set the environment and run the listener_monitor.bat script.
-  * It should take only one execution a day (unless it fails and needs to be restarted)
-  * The output (as the workspace attached in configured) will only show when the listener was not OK. If you want a detailed output to the job, remove the "Y" from the command line being executed.
+* Create a service using [WinSW](https://github.com/controlm/automation-api-quickstart/blob/master/helix-control-m/302-external-monitoring-tools-example/WindowsService.md): The [alerts_listener.xml](resources\Windows\alerts_listener.xml) is a working sample of how to create the service.
+  *Note that the start option contains a "true" option to run the listener in forground (Attached), as per the [documentation](https://docs.bmc.com/docs/saas-api/run-service-941879047.html#Runservice-alerts_listener_startrunalerts:listener::start).
+* You could also run the listener_monitor.bat on a cron job if you wanted additional verifications. See the script for instructions on setting up the crontab
+* Other scripts in the directory are for general management and should self explanatory.
 
+
+## Contributions
+
+All contributions are welcome to improve and augment this work as per the [Contribution Guidelines](https://github.com/controlm/automation-api-community-solutions#contribution-guide)
+
+If you have questions or comments about this sub-project, please use the [BMC Community](https://community.bmc.com/s/topic/0TO3n000000Wdn1GAC/bmc-helix-controlm), and ensure to tag your entry with the BMC Helix Control-M tag.

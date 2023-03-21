@@ -3,7 +3,7 @@
       "Type" : "Folder",
       "ControlmServer" : "IN01",
       "SubApplication" : "DCO_Ext_Alerts",
-      "CreatedBy" : "some@email.none",
+      "CreatedBy" : "daniel_companeetz@bmc.com",
       "Application" : "DCO",
       "When" : {
         "RuleBasedCalendars" : {
@@ -22,8 +22,8 @@
         "Type" : "Job:Command",
         "SubApplication" : "DCO_Ext_Alerts",
         "Host" : "win-vm-qa_v21",
-        "CreatedBy" : "some@email.none",
-        "RunAs" : "userid",
+        "CreatedBy" : "daniel_companeetz@bmc.com",
+        "RunAs" : "dcompane",
         "Application" : "DCO",
         "Command" : "cd C:\\Users\\dcompane\\Documents\\automation-api-community-solutions\\helix-control-m\\2-external-monitoring-tools-examples\\alerts-to-helix-itsm\\resources\\Windows\\ && listener_monitor_job.bat",
         "When" : {
@@ -36,8 +36,8 @@
           "CompletionStatus" : "NOTOK",
           "Mail_0" : {
             "Type" : "Action:Mail",
-            "Subject" : "Monitor for External Alerts failed in instance.",
-            "To" : "some@email.none",
+            "Subject" : "Monitor for External Alerts failed in se-sbx",
+            "To" : "dcompane@bmc.com",
             "Message" : "Check the alerts monitor",
             "AttachOutput" : true,
             "Urgency" : "VeryUrgent"
@@ -48,10 +48,10 @@
         "Type" : "Job:Command",
         "SubApplication" : "DCO_Ext_Alerts",
         "Host" : "win-vm-qa_v21",
-        "CreatedBy" : "some@email.none",
-        "RunAs" : "userid",
+        "CreatedBy" : "daniel_companeetz@bmc.com",
+        "RunAs" : "dcompane",
         "Application" : "DCO",
-        "Command" : "cd C:\\alerts-to-helix-itsm\\resources\\Windows\\ && listener_init.bat",
+        "Command" : "cd C:\\Users\\dcompane\\Documents\\automation-api-community-solutions\\helix-control-m\\2-external-monitoring-tools-examples\\alerts-to-helix-itsm\\resources\\Windows\\ && listener_init.bat",
         "When" : {
           "WeekDays" : [ "NONE" ],
           "Months" : [ "NONE" ],
@@ -64,7 +64,7 @@
           "Mail_0" : {
             "Type" : "Action:Mail",
             "Subject" : "Monitor for External Alerts failed in se-sbx",
-            "To" : "some@email.none",
+            "To" : "dcompane@bmc.com",
             "Message" : "Check the alerts monitor",
             "AttachOutput" : true,
             "Urgency" : "VeryUrgent"
