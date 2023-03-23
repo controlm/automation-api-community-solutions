@@ -104,7 +104,7 @@ BMC Helix Remedy ITSM or on-prem with REST APIs enabled.
 
 * Clone this repository
 
-* Install the Automation API CLI in the system you will use to receive the alerts and process them to forward to Helix ITSM.
+* Install the Automation API CLI in the system you will employ to receive the alerts and process them to forward to Helix ITSM.
 
 ### Configuration
 
@@ -139,8 +139,7 @@ Some comments:
 * You could also run the listener_monitor.bat on a cron job if you wanted additional verifications. See the script for instructions on setting up the crontab
 * Other scripts in the directory are for general management and should self explanatory.
 
-
-## Contributions
+## Do you want to contribute?
 
 All contributions are welcome to improve and augment this work as per the [Contribution Guidelines](https://github.com/controlm/automation-api-community-solutions#contribution-guide)
 
