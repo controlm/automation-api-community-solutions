@@ -25,7 +25,7 @@
         "CreatedBy" : "daniel_companeetz@bmc.com",
         "RunAs" : "dcompane",
         "Application" : "DCO",
-        "Command" : "cd C:\\Users\\dcompane\\Documents\\automation-api-community-solutions\\helix-control-m\\2-external-monitoring-tools-examples\\alerts-to-helix-itsm\\resources\\Windows\\ && listener_monitor_job.bat",
+        "Command" : "cd C:\\Users\\dcompane\\Documents\\alerts-to-helix-itsm\\resources\\Windows\\ && listener_monitor_job.bat",
         "When" : {
           "WeekDays" : [ "NONE" ],
           "MonthDays" : [ "ALL" ],
@@ -51,7 +51,7 @@
         "CreatedBy" : "daniel_companeetz@bmc.com",
         "RunAs" : "dcompane",
         "Application" : "DCO",
-        "Command" : "cd C:\\Users\\dcompane\\Documents\\automation-api-community-solutions\\helix-control-m\\2-external-monitoring-tools-examples\\alerts-to-helix-itsm\\resources\\Windows\\ && listener_init.bat",
+        "Command" : "cd C:\\Users\\dcompane\\Documents\\alerts-to-helix-itsm\\resources\\Windows\\ && listener_init.bat",
         "When" : {
           "WeekDays" : [ "NONE" ],
           "Months" : [ "NONE" ],
