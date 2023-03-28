@@ -1,12 +1,12 @@
 ## Description
 
-This Linux (bash) script parses the alert data into individual variables.
+This shell script ([**alerts_variables.sh**](alerts_variables.sh)) parses the alert data into individual variables.
 
-This simplifies using any alert fields in the script, which then can be used as `$<field>` (e.g. $runId, $message, $jobName, etc) when calling the command used to send the alerts to an external tool.
+It simplifies using any alert fields in the script, which can be then used as `$<field>` (e.g. $runId, $message, $jobName, etc) when calling the command used to send alerts to an external tool.
 
 As an example, the alert data is saved into a file, but this could be replaced by any other action.
 
-## Usage
+## Instructions
 
 - If you use the script as it is (saving the alert data into a file), update the **alerts_dir** and **alerts_file** variables with your custom file location.
 
@@ -21,3 +21,9 @@ The alert data is passed as parameters to the script with the format `<field1>: 
 As some fields can have an empty value, it is not possible to simply reference the input parameters as $1, $2, $3, etc - as the order may change. This scripts simplifies using each field value in the script, which can be referenced simply as variables with the same field name, as in the the following example:
 
     echo "$time | $id | $severity | $runId | $application | $jobName | $host | $message" >> myfile.txt
+
+## Versions
+
+| Date | Updated by | Changes |
+| - | - | - |
+| 2023-02-03 | David Fernández | First release |
