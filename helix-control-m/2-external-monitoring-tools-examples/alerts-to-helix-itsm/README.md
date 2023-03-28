@@ -180,10 +180,6 @@ Some comments:
 
 ## Do you want to contribute?
 
-All contributions are welcome to improve and augment this work as per the [Contribution Guidelines](https://github.com/controlm/automation-api-community-solutions#contribution-guide)
-
-If you have questions or comments about this sub-project, please use the [BMC Community](https://community.bmc.com/s/topic/0TO3n000000Wdn1GAC/bmc-helix-controlm), and ensure to tag your entry with the BMC Helix Control-M tag.
-
 ## Changes on this version
 
 | Date | Who | What |
