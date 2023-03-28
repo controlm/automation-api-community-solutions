@@ -1,38 +1,6 @@
 # Helix Control-M Alerts to Remedy ITSM
 
-## Changes on this version
-
-| Date | Who | What |
-| - | - | - |
-| 2023-02-09 | Daniel Companeetz | First release |
-| 2023-03-03 | Daniel Companeetz | Readme Changes |
-
-## Recognition
-
-* The ones below help on the good outcomes.(no particular order!)
-* The bad ones are me to blame for!
-
-| Date | Who | What |
-| - | - | - |
-| 2023-02-09 | Carin Sinclair | Provided knowledge and made ITSM system available for tests |
-| 2023-02-09 | Cecilia Lasecki | Helped with setting up BMC Demo Cloud instances |
-| 2023-02-09 | Enrique Perez del Razo | Provided knowledge and made ITSM system available for tests |
-| 2023-02-09 | Marta Zamorano Justel | Helped with setting up BMC Demo Cloud instances |
-| 2023-02-09 | Wendel Bordelon | Sanity Check (hard work!) and suggestions for improving the ticket content |
-
-## Contributions
-
-| Date | Who | What |
-| - | - | - |
-|  |  |  |
-
-## Who is using it
-
-| Date | Who | Notes |
-| - | - | - |
-|  | |  |
-
-## Short description
+## Description
 
 Helix Control-M Alerts to Remedy ITSM
 
@@ -115,6 +83,79 @@ BMC Helix Remedy ITSM or on-prem with REST APIs enabled.
 
 * Test and modify the script as you see necessary. Please remember that this is __*NOT*__ a BMC supported product.
 
+## In a nutshell
+
+### What you need
+
+* A user account with the AAPI ctm client installed
+* the appropriate token to invoke the alert listener
+* if you also want to query the Helix Control-M platform to augment the alert information, the token needs to have the appropriate roles.
+* The listener will have to be able to connect to the Helix Control-M Platform.
+* Start the listener as a service, with automatic restart. (See [this](alerts-to-RemedyITSM/resources/ctmalerts.service) example for Linux )
+* A script that processes the alert and does something (create ticket, update ticket, email, etc.)
+
+### Steps to implement
+
+1. Define an environment with the token to the Helix Control-M platform
+
+```bash
+ctm environment saas::add <env> <endPoint> <token>
+```
+
+1. Set up External Alert management for environment ```<env>```
+
+```bash
+ctm run alerts:listener:environment::set <env>
+```
+
+1. Set up External Alert management script to ```<script>```
+
+```bash
+ctm run alerts:listener:script::set <script>
+```
+
+1. Set up External Alert management template to ```<fields_file>```
+
+```bash
+ctm run alerts:stream:template::set -f <fields_file>
+```
+
+1. Enable External Alerts on BMC Helix Control-M
+
+```bash
+ctm config systemsettings::set enableExternalAlerts true
+```
+
+1. Check  External Alerts status
+
+```bash
+ctm run alerts:stream::status
+```
+
+1. If open or running somewhere else, close the External Alerts stream
+
+```bash
+ctm run alerts:stream::close true
+```
+
+1. Explicitly open the External Alerts stream
+
+```bash
+ctm run alerts:stream::open
+```
+
+1. Start the External Alerts listener
+
+```bash
+ctm run alerts:listener::start
+```
+
+1. Re-check the External Alerts status, again. Should be OK.
+
+```bash
+ctm run alerts:stream::status
+```
+
 ### Resources
 
 The [resources](resources) files contain SAMPLE scripts that can be used for initialization and management of the alerts. The names and content should be self-explanatory, so please open an issue if you have questions.
@@ -144,3 +185,42 @@ Some comments:
 All contributions are welcome to improve and augment this work as per the [Contribution Guidelines](https://github.com/controlm/automation-api-community-solutions#contribution-guide)
 
 If you have questions or comments about this sub-project, please use the [BMC Community](https://community.bmc.com/s/topic/0TO3n000000Wdn1GAC/bmc-helix-controlm), and ensure to tag your entry with the BMC Helix Control-M tag.
+
+## Changes on this version
+
+| Date | Who | What |
+| - | - | - |
+| 2023-02-09 | Daniel Companeetz | First release |
+| 2023-03-03 | Daniel Companeetz | Readme Changes |
+| 2023-03-30 | Daniel Companeetz | Multiple commits |
+
+## Recognition
+
+* The ones below help on the good outcomes.(no particular order!)
+* The bad ones are me to blame for!
+
+| Date | Who | What |
+| - | - | - |
+| 2023-02-09 | Carin Sinclair | Provided knowledge and made ITSM system available for tests |
+| 2023-02-09 | Cecilia Lasecki | Helped with setting up BMC Demo Cloud instances |
+| 2023-02-09 | Enrique Perez del Razo | Provided knowledge and made ITSM system available for tests |
+| 2023-02-09 | Marta Zamorano Justel | Helped with setting up BMC Demo Cloud instances |
+| 2023-02-09 | Wendel Bordelon | Sanity Check (hard work!) and suggestions for improving the ticket content |
+
+## Contributions
+
+| Date | Who | What |
+| - | - | - |
+|  |  |  |
+
+### Do you want to contribute?
+
+All contributions are welcome to improve and augment this work as per the [Contribution Guidelines](https://github.com/controlm/automation-api-community-solutions#contribution-guide)
+
+If you have questions or comments about this sub-project, please use the [BMC Community](https://community.bmc.com/s/topic/0TO3n000000Wdn1GAC/bmc-helix-controlm), and ensure to tag your entry with the BMC Helix Control-M tag.
+
+## Who is using it
+
+| Date | Who | Notes |
+| - | - | - |
+|  | |  |

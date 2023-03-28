@@ -24,16 +24,15 @@ if .%1 == .Y (
 	set filedate=%filedate:~4,10%
 	set "log_dev=>>%TEMP%\%filename%-%filedate%.log"
 	set "log_file=%TEMP%\%filename%-%filedate%.log"
-	REM And remove old logs
-	set keeplogdays=7
-	FORFILES /D -%keeplogdays% /M %filename%*.log /C "cmd /c echo Removing @path && del @path" 
+	REM And remove old logs. Note the minus sign (-7) to get days in the past
+	FORFILES /P %TEMP% /D -7 /M %filename%*.log /C "cmd /c echo Removing @path && del @path" 
 ) else (
 	REM Output to STDOUT (maybe driven from a job or output to console)
 	set log_file=StdOut
 	set log_dev=
 )
 
-REM Log start cript time
+REM Log start script time
 echo Entered the script at %date% %time% %log_dev%
 echo Logging to %log_file%
 
@@ -90,10 +89,11 @@ echo Logging to %log_file%
 			REM setting a timeout (60 + 10 seconds) to exit the next day
 			REM   so the restarted script will not attempt to start on this same day
 			REM Allowing to show the timeout count to the log file
-			timeout /T 70 /NOBREAK %log_dev%
-		) else (	
+			cmd /c "timeout /T 70 %log_dev%"
+		) else (
 			echo Entering wait for next cycle [%cycle% seconds] at %time% %log_dev%
-			timeout /T %cycle% /NOBREAK > NUL
+			REM Redirect to NUL so it does not show the countdown.
+			cmd /c "timeout /T %cycle% > NUL"
 			REM Loop back to :start of the cycle
 			goto start
 		)
