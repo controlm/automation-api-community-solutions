@@ -102,55 +102,53 @@ BMC Helix Remedy ITSM or on-prem with REST APIs enabled.
 ctm environment saas::add <env> <endPoint> <token>
 ```
 
-1. Set up External Alert management for environment ```<env>```
+2. Set up External Alert management for environment ```<env>```
 
 ```bash
 ctm run alerts:listener:environment::set <env>
 ```
 
-1. Set up External Alert management script to ```<script>```
+3. Set up External Alert management script to ```<script>```
 
 ```bash
 ctm run alerts:listener:script::set <script>
 ```
 
-1. Set up External Alert management template to ```<fields_file>```
+4. Set up External Alert management template to ```<fields_file>```
 
 ```bash
 ctm run alerts:stream:template::set -f <fields_file>
 ```
 
-1. Enable External Alerts on BMC Helix Control-M
+5. Enable External Alerts on BMC Helix Control-M seetings
 
-```bash
-ctm config systemsettings::set enableExternalAlerts true
-```
+Work via the Web interface, or use the config service.
 
-1. Check  External Alerts status
+6. Check  External Alerts status
 
 ```bash
 ctm run alerts:stream::status
 ```
 
-1. If open or running somewhere else, close the External Alerts stream
+7. If open or running somewhere else, close the External Alerts stream
 
 ```bash
 ctm run alerts:stream::close true
 ```
 
-1. Explicitly open the External Alerts stream
+8. Explicitly open the External Alerts stream
 
 ```bash
 ctm run alerts:stream::open
 ```
 
-1. Start the External Alerts listener
+9. Start the External Alerts listener
 
 ```bash
 ctm run alerts:listener::start
 ```
 
-1. Re-check the External Alerts status, again. Should be OK.
+10. Re-check the External Alerts status, again. Should be OK.
 
 ```bash
 ctm run alerts:stream::status
