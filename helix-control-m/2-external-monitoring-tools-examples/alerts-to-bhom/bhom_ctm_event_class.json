@@ -1,0 +1,24 @@
+﻿{
+   "name": "ControlMAlert",
+   "parentClassName": "IIMonitorEvent",
+   "attributes": [
+      { "name": "eventType",        "dataType": "STRING"  },
+      { "name": "alertId",          "dataType": "INTEGER" },
+      { "name": "ctmServer",        "dataType": "STRING"  },
+      { "name": "fileName",         "dataType": "STRING"  },
+      { "name": "runId",            "dataType": "STRING"  },
+      { "name": "alertStatus",      "dataType": "STRING"  },
+      { "name": "ctmUser",          "dataType": "STRING"  },
+      { "name": "updateTime",       "dataType": "DATE"    },
+      { "name": "runAs",            "dataType": "STRING"  },
+      { "name": "subApplication",   "dataType": "STRING"  },
+      { "name": "application",      "dataType": "STRING"  },
+      { "name": "jobName",          "dataType": "STRING"  },
+      { "name": "alertType",        "dataType": "STRING"  },
+      { "name": "closedByControlM", "dataType": "STRING"  },
+      { "name": "ticketNumber",     "dataType": "STRING"  },
+      { "name": "runNo",            "dataType": "INTEGER" },
+      { "name": "alertNotes",       "dataType": "STRING"  },
+      { "name": "jobLink",          "dataType": "STRING"  }
+   ]
+}
