@@ -34,6 +34,7 @@
     "tktuser": "Allen",
     "tktpasswd": "<password>",
     "tktverifySSL": "yes"
+  }
 ,
   "emailvars": {
     "comment00": "These are config vars to send emails. Copy them to tktvars.",
