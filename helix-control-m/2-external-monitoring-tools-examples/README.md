@@ -1,6 +1,6 @@
 # BMC Helix Control-M API - External Monitoring Tools Examples
 
-This folder contains sample scripts that can be used to transfer alerts to external tools, such as an event management system or a monitoring solution.
+This folder contains sample scripts that can be used to send BMC Helix Control-M alerts to external applications, such as event management systems, monitoring tools or ITSM solutions.
 
 ## Description
 
