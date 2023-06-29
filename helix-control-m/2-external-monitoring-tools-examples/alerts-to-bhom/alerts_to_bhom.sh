@@ -39,7 +39,7 @@ hctm_tenant=`echo $hctm_url | cut -c 9-`
 json_data="[ { \"class\" : \"$bhom_class\", \"location\" : \"$hctm_name\", \"source_identifier\" : \"$hctm_tenant\""
 
 # Start creating url for the job link
-job_link=$hctm_url"/ControlM//Monitoring/Neighborhood/?"
+job_link=$hctm_url"/ControlM/Monitoring/Neighborhood/?"
 
 # START PROCESSING ALERT DATA
 num_fields=${#alert_fields[@]}
