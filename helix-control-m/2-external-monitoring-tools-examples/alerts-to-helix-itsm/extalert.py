@@ -197,7 +197,7 @@ dbg_logger.debug('params: ' + args)
 dbg_logger.debug('dict is ' + str(alert))
 
 # Exit if alert should not be sent.
-if (ctmupdatetkt and alert[keywords_json['eventType']]):
+if (ctmupdatetkt and (alert[keywords_json['eventType']] == 'U')):
     exitrc = 24
     sys.exit(exitrc)
 
@@ -257,8 +257,11 @@ tkt_comments =  \
             f"The job can be seen on the {'Helix' if ctm_is_helix else ''} " + \
             f"Control-M Self Service site. Click the link below. {NL}" + \
             f"{NL}" + \
-            f"https://{ctmweb}/ControlM/#Neighborhood:id={alert[keywords_json['runId']]}&ctm={alert[keywords_json['server']]}&name={alert[keywords_json['jobName']]}"+ \
-            f"&date={order_date}&direction=3&radius=3" + \
+            # With 21.1 the following commented lines are now obsolete. May be needed if OP prior to 21.1
+            # f"https://{ctmweb}/ControlM/#Neighborhood:id={alert[keywords_json['runId']]}&ctm={alert[keywords_json['server']]}&name={alert[keywords_json['jobName']]}"+ \
+            # f"&date={order_date}&direction=3&radius=3" + \
+            f"https://{ctmweb}/ControlM/#Neighborhood/{alert[keywords_json['runId']]}_3_3&ctm={alert[keywords_json['server']]}&name={alert[keywords_json['jobName']]}"+ \
+            f"&odate=&direction=3&radius=3" + \
             f"{NL}{NL}" if alert_is_job else "This alert is not job related"
 
 tkt_work_notes = f"Ticket created automatically by {'Helix' if ctm_is_helix else ''} Control-M via Restful API" + \
