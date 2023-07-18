@@ -245,6 +245,10 @@ if(alert[keywords_json['runId']] != '00000'):
 #Order date has been simplified for this example. The orderDate should be taken from the job and not the first status.
 # https://stackoverflow.com/questions/7079241/python-get-a-dict-from-a-list-based-on-something-inside-the-dict
 
+            # With 21.1 the following commented lines are now obsolete. May be needed if OP prior to 21.1
+            # f"https://{ctmweb}/ControlM/#Neighborhood:id={alert[keywords_json['runId']]}&ctm={alert[keywords_json['server']]}&name={alert[keywords_json['jobName']]}"+ \
+            # f"&date={order_date}&direction=3&radius=3" + \
+
 tkt_comments =  \
             f"Agent Name                  : {alert[keywords_json['host']]} {NL}" + \
             f"Folder Name                 : {folder} {NL}" + \
@@ -257,10 +261,7 @@ tkt_comments =  \
             f"The job can be seen on the {'Helix' if ctm_is_helix else ''} " + \
             f"Control-M Self Service site. Click the link below. {NL}" + \
             f"{NL}" + \
-            # With 21.1 the following commented lines are now obsolete. May be needed if OP prior to 21.1
-            # f"https://{ctmweb}/ControlM/#Neighborhood:id={alert[keywords_json['runId']]}&ctm={alert[keywords_json['server']]}&name={alert[keywords_json['jobName']]}"+ \
-            # f"&date={order_date}&direction=3&radius=3" + \
-            f"https://{ctmweb}/ControlM/#Neighborhood/{alert[keywords_json['runId']]}_3_3&ctm={alert[keywords_json['server']]}&name={alert[keywords_json['jobName']]}"+ \
+            f"https://{ctmweb}/ControlM/#Neighborhood/{alert[keywords_json['runId']]}_3_3?ctm={alert[keywords_json['server']]}&name={alert[keywords_json['jobName']]}"+ \
             f"&odate=&direction=3&radius=3" + \
             f"{NL}{NL}" if alert_is_job else "This alert is not job related"
 
