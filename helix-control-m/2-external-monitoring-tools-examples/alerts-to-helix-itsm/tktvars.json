@@ -1,0 +1,51 @@
+{
+  "comment00": "This file must be in the same directory that the script that uses it",
+  "comment01": "Numbers in comments are so comments will show up be a valid json",
+  "comment02": "IMPORTANT: fields with <field> need to be replaced by real values",
+  "ctmvars": {
+    "comment02": "next is used for the self-service url in the ticket body",
+    "ctmweb": "test.us1.controlm.com",
+    "comment03": "AAPI via REST variables (assuming CTM 21 and higher, or Helix Control-M)",
+    "ctmaapi": "test-aapi.us1.controlm.com/automation-api",
+    "ctmtoken": "UFJER0ZQQjRlNotHingE3fThjNWItNGI3NC05ZjAyLWFlNjN0ODY3MzEyNDpicTA3eU4wN28wL3YrajZNb1lCUHRXT2QxNE50eG5PcHU4nmxUl1o1UFRvPQ==",
+    "comment05": "Platform should be empty or Helix. If different than Helix is assumed on-prem.",
+    "ctmplatform": "Helix"
+  },
+  "pgmvars": {
+    "comment00": "These are program variables for debug and operational purposes.",
+    "comment01": "create ticket if yes.",
+    "crttickets": "yes",
+    "sendemail": "no",
+    "comment02": "Update CTM Alert with ticket number. Feature not available in Helix Control-M October 2022",
+    "addtkt2alert": "no",
+    "comment03": "Verbose informtion written to autoticket.log file",
+    "debug": "yes",
+    "comment08": "job output and log is attached to ticket.",
+    "ctmattachlogs": "yes",
+    "comment40": "Update alerts (type <> 'I') will not be added to the ticket. Sending updates to cases is NOT IMPLEMENTED",
+    "comment41": "  and will be created as new records. Do not set to yes unless you are sure!",
+    "ctmupdatetkt": "no"
+  },
+  "tktvars": {
+    "comment00": "These are config vars to access the Incident Management system",
+    "comment01": "may need additional customization depending on the ticketing system",
+    "tkturl": "<fqdn of the REST endpoint Remedy ITSM instance. for example>",
+    "tktport": "<port or 443 if default SSL",
+    "tktuser": "Allen",
+    "tktpasswd": "<password>",
+    "tktverifySSL": "yes"
+  }
+,
+  "emailvars": {
+    "comment00": "These are config vars to send emails. Copy them to tktvars.",
+    "comment01": "may need additional customization depending on the email relay",
+    "comment02": "copy to tktvars",
+    "smtpurl": "<smtp url>",
+    "smtpport": "<smtp server port>",
+    "smtpverifySSL": "yes",
+    "smtpsender": "no_reply@someorg.not",
+    "smtprecipient": "<recipient@someorg.com>",
+    "smtpuser": "<loginuser@smtpserver.com>",
+    "smtppasswd": "<password>"
+  }
+}

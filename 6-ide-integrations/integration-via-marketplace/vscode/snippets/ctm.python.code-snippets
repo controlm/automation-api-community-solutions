@@ -1,0 +1,9 @@
+{
+    "folder()": {
+        "description": "Inserts a folder with all the properties",
+        "prefix": "jac.Folder.All",
+        "body": [
+            "FolderSampleAll(${1:})"
+        ]
+    }
+}

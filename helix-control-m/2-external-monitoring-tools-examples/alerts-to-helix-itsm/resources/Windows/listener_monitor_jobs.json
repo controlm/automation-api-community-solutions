@@ -1,0 +1,75 @@
+{
+    "DCO_Check_Ext_Alerts" : {
+      "Type" : "Folder",
+      "ControlmServer" : "IN01",
+      "SubApplication" : "DCO_Ext_Alerts",
+      "CreatedBy" : "daniel_companeetz@bmc.com",
+      "Application" : "DCO",
+      "When" : {
+        "RuleBasedCalendars" : {
+          "Included" : [ "EVERYDAY" ],
+          "EVERYDAY" : {
+            "Type" : "Calendar:RuleBased",
+            "When" : {
+              "DaysRelation" : "OR",
+              "WeekDays" : [ "NONE" ],
+              "MonthDays" : [ "ALL" ]
+            }
+          }
+        }
+      },
+      "DCO_Check_Win" : {
+        "Type" : "Job:Command",
+        "SubApplication" : "DCO_Ext_Alerts",
+        "Host" : "win-vm-qa_v21",
+        "CreatedBy" : "daniel_companeetz@bmc.com",
+        "RunAs" : "dcompane",
+        "Application" : "DCO",
+        "Command" : "cd C:\\Users\\dcompane\\Documents\\alerts-to-helix-itsm\\resources\\Windows\\ && listener_monitor_job.bat",
+        "When" : {
+          "WeekDays" : [ "NONE" ],
+          "MonthDays" : [ "ALL" ],
+          "DaysRelation" : "OR"
+        },
+        "IfBase:Folder:CompletionStatus_0" : {
+          "Type" : "If:CompletionStatus",
+          "CompletionStatus" : "NOTOK",
+          "Mail_0" : {
+            "Type" : "Action:Mail",
+            "Subject" : "Monitor for External Alerts failed in se-sbx",
+            "To" : "dcompane@bmc.com",
+            "Message" : "Check the alerts monitor",
+            "AttachOutput" : true,
+            "Urgency" : "VeryUrgent"
+          }
+        }
+      },
+      "DCO_Init_Win" : {
+        "Type" : "Job:Command",
+        "SubApplication" : "DCO_Ext_Alerts",
+        "Host" : "win-vm-qa_v21",
+        "CreatedBy" : "daniel_companeetz@bmc.com",
+        "RunAs" : "dcompane",
+        "Application" : "DCO",
+        "Command" : "cd C:\\Users\\dcompane\\Documents\\alerts-to-helix-itsm\\resources\\Windows\\ && listener_init.bat",
+        "When" : {
+          "WeekDays" : [ "NONE" ],
+          "Months" : [ "NONE" ],
+          "MonthDays" : [ "NONE" ],
+          "DaysRelation" : "OR"
+        },
+        "IfBase:Folder:CompletionStatus_0" : {
+          "Type" : "If:CompletionStatus",
+          "CompletionStatus" : "NOTOK",
+          "Mail_0" : {
+            "Type" : "Action:Mail",
+            "Subject" : "Monitor for External Alerts failed in se-sbx",
+            "To" : "dcompane@bmc.com",
+            "Message" : "Check the alerts monitor",
+            "AttachOutput" : true,
+            "Urgency" : "VeryUrgent"
+          }
+        }
+      }
+    }
+  }

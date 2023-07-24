@@ -1,0 +1,24 @@
+# cat /etc/systemd/system/ctmalerts.service
+# To enable and run the service, use
+#      systemctl enable ctmalerts
+#      systemctl start ctmalerts
+#  To check the status of the service
+#      systemctl status ctmalerts
+
+[Unit]
+Description=BMC Helix Control-M Alert Listener
+RequiresMountsFor=/home/saasaapi
+After=network.target
+
+[Service]
+Type=forking
+# Ensure the next line is not used (or is commented)
+# RemainAfterExit=yes
+ExecStart=/home/saasaapi/ctm_cli/alerts_listener.rc start
+ExecStop=/home/saasaapi/ctm_cli/alerts_listener.rc stop
+Restart=always
+RestartSec=3
+User=saasaapi
+
+[Install]
+WantedBy=multi-user.target

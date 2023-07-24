@@ -1,0 +1,24 @@
+{
+"Check-Inventory-Lambda-Job": {
+    "Type":"Job:AWS:Lambda",
+    "Application":"mol-app",
+    "ConnectionProfile": "MOL-AWS",
+    "FunctionName": "online-store-checkout-workflow-dev-checkInventory",
+    "AppendLog" : true
+},
+"Calculate-Total-Lambda-Job": {
+    "Type":"Job:AWS:Lambda",
+    "Application":"mol-app",
+    "ConnectionProfile": "MOL-AWS",
+    "FunctionName": "online-store-checkout-workflow-dev-calculateTotal",
+    "AppendLog" : true
+
+},
+"Process-payment-Total-Lambda-Job": {
+    "Type":"Job:AWS:Lambda",
+    "Application":"mol-app",
+    "ConnectionProfile": "MOL-AWS",
+    "FunctionName": "online-store-checkout-workflow-dev-StartPaymentProcess",
+    "AppendLog" : true
+}
+}

@@ -1,0 +1,17 @@
+{
+    "DeployDescriptor": [
+        {
+            "Comment": "Assign Control-M Server of a Job.",
+            "Property": "ControlmServer",
+            "Assign": "ctmcore"
+        },
+        {
+            "Comment": "Assign Control-M Agent of a Job.",
+            "ApplyOn": {
+                "Type": "Job.*"
+            },
+            "Property": "Host",
+            "Assign": "ctmcore"
+        }
+    ]
+}

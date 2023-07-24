@@ -1,0 +1,25 @@
+<service>
+	<id>alerts_listener</id>
+	<name>Helix Control-M Alerts Listener</name>
+	<description>This service runs the Control-M Alerts Listener</description>
+	<serviceaccount>
+		<username>LocalSystem</username>
+		<allowservicelogon>true</allowservicelogon>
+		 <prompt>console</prompt>
+	</serviceaccount>
+	<env name="LOGS_HOME" value="C:\WinSW\Logs"/>
+	<env name="AAPI_HOME" value="C:\Program Files\BMC Software\Control-M CLI\ctm_cli\9.0.21.100"/>
+	<executable>%AAPI_HOME%\ctm.cmd</executable>
+	<startarguments>run alerts:listener::start true</startarguments>
+    <stopexecutable>%AAPI_HOME%\ctm.cmd</stopexecutable>
+    <stoparguments>run alerts:listener::stop</stoparguments>
+	<startmode>Automatic</startmode>
+	<onfailure action="restart"/>
+	<autoRefresh>true</autoRefresh>
+	<priority>normal</priority>
+	<log mode="roll-by-time">
+	    <pattern>yyyyMMdd</pattern>
+		<keepFiles>5</keepFiles>
+    </log>
+	<logpath>%LOGS_HOME%</logpath>
+</service>
