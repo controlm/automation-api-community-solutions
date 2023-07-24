@@ -1,0 +1,107 @@
+{
+	"Defaults" : {
+		"Application" : "dataops", 
+		"SubApplication" : "pm",  
+		"Folder" : {"OrderMethod": "Automatic", "SiteStandard" : ""},
+		"Job" : {
+			"RunAs" : "ctmagent", 
+			"Host" : "awsemragents",
+			"total-jobs": { "Type": "Resource:Semaphore", "Quantity": "1"},
+			"actionIfError" : {
+				"Type": "If", "CompletionStatus":"NOTOK", "mailTeam": 
+						{"Type": "Mail", "Message": "Job %%JOBNAME failed", "Subject": "Error occurred", "To": "dataops_support@bmc.com"}
+			}
+		}
+	},
+
+	"dataops-pm-pipeline": {"Type": "Folder",
+		"Comment" : "Predictive maintenance analysis based on vehicle sensor data",
+		"dataops-pm-pipeline-running" : {
+			"Type" : "Resource:Lock",
+			"LockType" : "Shared"
+		},
+		"dataops-pm-MasterData-sync": {"Type" : "Job:FileTransfer",
+			"ConnectionProfileSrc" : "smprodMFT",
+			"ConnectionProfileDest" : "MFTS3",
+			"S3BucketName" : "623469066856-predictive-maintenance",
+			"Host" : "ftpagents",
+			"FileTransfers" :[
+				{"Src": "/customer.dat", "Dest" : "/", "TransferOption": "SrcToDest"},
+				{"Src" : "/parts.dat", "Dest" : "/", "TransferOption": "SrcToDest"},
+				{"Src": "/warranty.dat", "Dest" : "/", "TransferOption": "SrcToDest"},
+				{"Src" : "/servicecalendar.dat", "Dest" : "/", "TransferOption": "SrcToDest"},
+				{"Src" : "/vehiclehistory.dat", "Dest" : "/", "TransferOption": "SrcToDest"}
+			]
+		},
+
+		"dataops-pm-databrew-clean-telematics-data" : {"Type" : "Job:AWS Glue DataBrew",
+			"ConnectionProfile" : "ADB-SMPROD",
+			"Job Name" : "clean-telematics-data",
+			"Output Job Logs" : "unchecked",
+			"Host" : "AWSGlueDatabrewAgents",
+			"Output" : { }
+		},
+
+		"dataops-pm-analyze" : {"Type" : "Job:Script",
+			"Description" : "Run EMR Serverless job to predict vehicles requiring service",
+			"FileName" : "run-logregression.sh",
+			"FilePath" : "/mnt/efs/Production/scripts/",
+			"Host" : "awsemragents",
+			"Arguments" : [ "00fa8aj6ls0isg0l", "%%ORDERID._%%RUNCOUNT", "20" ],
+			"Output" : {
+			  "Destination" : "/mnt/efs/ftshome/ctmagent/ViJ.log",
+			  "Operation" : "Copy"
+			}
+		},
+
+		"dataops-pm-Notify": {"Type" : "Job:EmbeddedScript",
+			"Description" : "Notify owner that vehicle maintenance is required",
+			"Script" : "#!/bin/bash\\nPhone=\"+14167225672\"\\ncp -f /mnt/efs/ftshome/ctmagent/ViJ.log .\\nPressure=$(cat ViJ.log | grep -m 1 \"|Provider\" | cut -d \"|\" -f 4)\\nMoisture=$(cat ViJ.log | grep -m 1 \"|Provider\" | cut -d \"|\" -f 5)\\nTemperature=$(cat ViJ.log | grep -m 1 \"|Provider\" | cut -d \"|\" -f 6)\\nresp=$(aws sns publish --phone-number $Phone --message \"BMC Vehicle in Jeopardy Program: Please visit your service center. Your vehicle is indicating Pressure: $Pressure, Moisture: $Moisture, Temperature: $Temperature\")\\nrm ViJ.log\\n",
+			"FileName" : "notify.sh",
+			"Host" : "ftpagents",
+			"RunAs" : "ctmagent"
+		},
+
+		"dataops-pm-WaitAWhile": {"Type" : "Job:Command",
+			"Description" : "Wait 10 minutes to provide time for discussion",
+			"Command" : "pwsh -command \"Start-Sleep -s 600\"",
+			"Host" : "powershellagents"
+		},
+
+		"dataops-pm-copy-to-Redshift": {"Type": "Job:AWS Glue",
+			"ConnectionProfile": "GLUE-623469066856",
+			"Glue Job Name": "GlueS3toRedshift",
+			"Glue Job Arguments": "unchecked",
+			"Host": "glueagents"
+   		},
+		
+		"dataops-pm-service": {
+			"Type": "Job:SLAManagement",
+			"ServiceName": "Predictive Maintenance for Armored Car Fleet",
+			"EndFolder": true,
+			"ServicePriority": "3",
+			"JobRunsDeviationsTolerance": "3",
+			"RunAs": "ctmagent",
+			"CompleteIn": {
+			  "Time": "35:00"
+			}
+		},
+		  
+		"flow-ingest-and-cleanse-data": {"Type":"Flow", "Sequence":[
+			"dataops-pm-databrew-clean-telematics-data",
+			"dataops-pm-analyze"
+		]},
+		"flow-MD-sync" : {"Type" : "Flow", "Sequence":[
+			"dataops-pm-MasterData-sync",
+			"dataops-pm-analyze"
+		]},
+		"flow-analytics" : {"Type" : "Flow", "Sequence":[
+			"dataops-pm-analyze",
+			"dataops-pm-copy-to-Redshift",
+			"dataops-pm-Notify",
+			"dataops-pm-WaitAWhile",
+			"dataops-pm-service"
+		]}
+		
+	}	
+}
