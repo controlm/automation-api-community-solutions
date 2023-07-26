@@ -20,7 +20,7 @@ function Select-Environment
 		Write-Host "Using Default environment $envName"
 	} else {
 		Write-Host "Environments: "
-		Write-Host "  Name `t`tUser `t`tendPoint"
+		Write-Host "  Name `t`t`tUser `t`tendPoint"
 		$envCtr = 0
 		foreach ($env in $envJson.psobject.properties) {
 			$envCtr++
@@ -31,8 +31,8 @@ function Select-Environment
 				$dfltEndpoint = $eEP
 			}
 			Write-Host "$envCtr $eName" -noNewLine
-			if ($eName.Length -lt 6) {
-				Write-Host "`t" -noNewLine
+			if ($eName.Length -lt 12) {
+				Write-Host "`t`t" -noNewLine
 			}
 			Write-Host "`t$eUser" -noNewLine
 			if ($eUser.Length -lt 8) {
