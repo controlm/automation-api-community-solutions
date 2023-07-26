@@ -8,12 +8,12 @@
 #
 
 # Set HCTM parameters
-hctm_url=https://my-hctm-tenant.us1.controlm.com
+hctm_url=https://<your_HCTM_URL>
 hctm_name="Helix Control-M"
 
 # Set BHOM parameters
-bhom_url=https://my-bmc-helix-portal.com/events-service/api/v1.0/events
-bhom_api_key=mybh0m12-1234-1234-1234-ap1k3y123456
+bhom_url=https://<your_BHOM_URL>/events-service/api/v1.0/events
+bhom_api_key=<your_BHOM_API_Key>
 bhom_class="ControlMAlert"
 
 # Set HCTM to BHOM correspondence for the "severity" field
@@ -39,7 +39,7 @@ hctm_tenant=`echo $hctm_url | cut -c 9-`
 json_data="[ { \"class\" : \"$bhom_class\", \"location\" : \"$hctm_name\", \"source_identifier\" : \"$hctm_tenant\""
 
 # Start creating url for the job link
-job_link=$hctm_url/ControlM/#Neighborhood:
+job_link=$hctm_url"/ControlM/Monitoring/Neighborhood/?"
 
 # START PROCESSING ALERT DATA
 num_fields=${#alert_fields[@]}
@@ -57,7 +57,7 @@ for (( i=0; i<=$((num_fields-1)); i++ )) ; do
          ;;
          runId)
             # Add "runId" and "server" to the job link
-            job_link=$job_link"id="$value"&ctm="$ctm_server
+            job_link=$job_link"orderId="$value"&ctm="$ctm_server
          ;;
          severity)
             # Convert "severity" format from HCTM to BHOM
@@ -72,7 +72,7 @@ for (( i=0; i<=$((num_fields-1)); i++ )) ; do
          jobName)
             # Add "jobName" to the final job link
             job_name="${value// /%20}"  # Replace spaces by "%20"
-            job_link=$job_link"&name="$job_name"&direction=1&radius=3"  # Direction and radius can be customized
+            job_link=$job_link"&name="$job_name"&odate=%20&direction=1&radius=3"  # Direction and radius can be customized
          ;;
          host)
             # Save "host" value in a variable (used to determine whether to include the job link)

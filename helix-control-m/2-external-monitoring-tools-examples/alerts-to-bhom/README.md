@@ -53,8 +53,8 @@ Do NOT modify the following variables:
 
 - The integration has been tested with:
 
-   - BMC Helix Control-M 9.0.21.080
-   - BMC Helix Operations Management 23.1
+   - BMC Helix Control-M 9.0.21.100
+   - BMC Helix Operations Management 23.2
 
 - You can create an **Event Group** in BHOM to show HCTM alerts only:
 
@@ -110,3 +110,4 @@ Do NOT modify the following variables:
 | Date | Updated by | Changes |
 | - | - | - |
 | 2023-03-18 | David Fernández | First release |
+| 2023-06-13 | David Fernández | Update job link format to work with HCTM 9.0.21.100 |
