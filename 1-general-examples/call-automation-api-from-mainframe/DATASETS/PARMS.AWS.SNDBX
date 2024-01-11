@@ -1,0 +1,41 @@
+/*====================================================================*/
+/* Dataset to hold the parms to connect to the AAPI                   */
+/*====================================================================*/
+Verbose=n                         /* Debug
+Track=y                           /* Wait untill job ordered finish
+Getsysout=y                       /* Retrieves sysout and log
+Pooling_limit=NOLIMIT             /* Times doing pooling
+Pooling_secs=10                   /* Seconds to wait before next pooling
+Cert_Check=y                      /* Do not check certificate matching
+/*=====================================================================
+/* AWS sandbox
+/* -----------
+CTMUri=https://ctm-test.com
+CTMPort=8443
+/*======================================================================
+/* RequestPath=/automation-api/run/order
+/* RequestPath=/automation-api/run
+$$END
+/*---------------------------------------------------------------------
+/* Instructions:
+/*
+/* $$END$$ ............: The rest of the parm will not read from here
+/*
+/* +--------------------
+/* | +--
+/* | |CTMUri=..........: Endpoint URL
+/* | |CTMPort=.........: Port of the Endpoint
+/* | |RequestPath=.....: Path to the API service. Default "Order" in PGM
+/* | |Track=...........: y / n. Monitor the status of the job ordered
+/* | |Pooling_limit=...: N of times to do pooling. NOLIMIT = no Timeout
+/* | |Pooling_secs=....: Seconds to wait before next pooling
+/* | +--
+/* +--------------------
+/*
+/* OPTIONAL
+/* +--------------------
+/* | +--
+/* | |Verbose=...........: y or n. Trace HTTP activity. It requires
+/* | |                     HWTHDD DD allocated with RECFM=U
+/* | +--
+/* +--------------------

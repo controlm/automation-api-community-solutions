@@ -1,0 +1,75 @@
+/*====================================================================*/
+/* Dataset to hold the credentials used to connect to the AAPI        */
+/*====================================================================*/
+/*AuthMethod=USER
+AuthMethod=TOKEN
+/*username=user00_api
+/*password=user00_api
+/*====================================================================*/
+/*Token CTM Environment
+/*-----------------                                                   */
+Token=xxxxxxxxxxxxxxxxxxxxxxxxxxx
+/*====================================================================*/
+KeyStore=FILE
+FileKeyDB=/path/dbfile
+FileKeyPwd=/path/dbfile.sth
+CertLabel=label
+ValidCipher=C02FC027C030C028009C009D003C
+/*sslTraceFile=/tmp/ssltrace.bin
+$$END$$
+$$END$$
+$$END$$
+/*KeyStore=SAF
+/*SafKeyRing=
+/*AuthMethod=USER
+/*---------------------------------------------------------------------
+/* Instructions:
+/*
+/* $$END$$ ............: The rest of the parm will not be read from here
+/*
+/* +--------------------
+/* | +--
+/* | |AuthMethod=TOKEN.: Authentication thru api-key
+/* | |Token=xxxxxx ....: TokenID created in Control-M
+/* | +--
+/* | OR
+/* | +--
+/* | |AuthMethod=USER .: Authentication thru user & pwd
+/* | |username=xxxxxx .: Control-M user
+/* | |password=xxxxxx .: Password of the user
+/* | +--
+/* +--------------------
+/* AND
+/* +--------------------
+/* | +--
+/* | |KeyStore=FILE ...: Certificate located in KeyDB in USS
+/* | |FileKeyDB= ......: Path to the key DB in USS
+/* | |FileKeyPwd= .....: Path to the stash pwd of the KeyDB
+/* | +--
+/* | OR
+/* | +--
+/* | |KeyStore=SAF ....: Certificate located in RACF
+/* | |SafKeyRing ......: RACF ring that contains the certificate
+/* | +--
+/* +--------------------
+/* AND
+/* +--------------------
+/* |CertLabel= ........: Certificate label to be used
+/* +--------------------
+/* AND
+/* +--------------------
+/* |ValidCipher= ......: Cipher to be used to secure the connection
+/* +--------------------
+/*
+/*              - Must be identified by the code of 2/4 bits
+/*                Check "Cipher suite definitions" in the manual
+/*                z/OS Cryptographic Services (System SSL Programming)
+/*              - Cipher codes they must be added without blanks
+/*
+/* OPTIONAL
+/* +--------------------
+/* |sslTraceFile=......: Path to the output trace file. The ouput
+/* +-------------------- will be in binary, so a translation will be
+/*                       required using gsktrace utility in OMVS
+/*                   IE: gsktrace ssltrace.bin > ssltrace.txt
+/*---------------------------------------------------------------------

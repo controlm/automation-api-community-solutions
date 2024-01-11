@@ -1,0 +1,1005 @@
+/*========= REXX ================================= C.Ruiz.A ==========*/
+/*                                                                    */
+/*  Name..: AAPIORDE                                                  */
+/*          --------                                                  */
+/*  Author: Carlos Ruiz                                               */
+/*                                                                    */
+/*  Note..: This sample program is distributed "AS IS", without any   */
+/*          warranty, either expressed or implied.                    */
+/*          It is not a product and does not have support for it.     */
+/*          Please, use only under your responsibility.               */
+/*                                                                    */
+/*                                                                    */
+/*                                                                    */
+/*  Description:                                                      */
+/*  ------------                                                      */
+/*  The goal of this module is to make HTTP calls to the Automation   */
+/*  API of Control-M Enterprise Manager from JCL. In this             */
+/*  example you can order a job, monitor the status and get its       */
+/*  log and output.                                                   */
+/*                                                                    */
+/*  If you are going to use HTTP(s) requests, then you need access to */
+/*  the crytpo services and use a specific SSL/TLS policy             */
+/*                                                                    */
+/*  There are 2 options available to do it:                           */
+/*     -  Make use of Policy-Agent policies                           */
+/*     -  Define the policy in the code of the program                */
+/*                                                                    */
+/*  In this sample we'll use our own policy. To do that it's required */
+/*  to setup the option HWTH_OPT_USE_SSL as HWTH_SSL_USE, which means */
+/*  that the Policy-Agent will not take care of the security.         */
+/*                                                                    */
+/*  Possible use case: JCL step executes a remote job and the step    */
+/*                     will wait until the job finished.              */
+/*                                                                    */
+/*====================================================================*/
+/*                                                                    */
+/*                                                                    */
+/*                     MODIFICATION LOG                               */
+/*                     ----------------                               */
+/*                                                                    */
+/* USER    DATE        DESCRIPTION                                    */
+/* ------- ----------  ---------------------------------------------- */
+/* RDCAUIZ 2023/09/06  Initial version.                               */
+/* XXXXXXX AAAA/MM/DD                                                 */
+/*                                                                    */
+/*====================================================================*/
+
+/*====================================================================*/
+/*=                                                                   */
+/*= Set default values                                                */
+/*=                                                                   */
+/*====================================================================*/
+"PROFILE NOPREFIX"
+RC_Control     = '0'
+Verbose        = ''
+CTMUri         = ''
+CTMPort        = ''
+RequestPath    = '/automation-api/run/order'
+RequestBody    = ''
+AuthMethod     = ''
+Token          = ''
+username       = ''
+password       = ''
+KeyStore       = ''
+FileKeyDB      = ''
+FileKeyPwd     = ''
+CertLabel      = ''
+SafKeyRing     = ''
+ValidCipher    = ''
+sslTraceFile   = ''
+Track          = 'N'
+Count_Wait     = '0'
+Pooling_limit  = ''
+Pooling_secs   = '10'
+TCPIPSTACK     = ''
+Getsysout      = 'N'
+Cert_Check     = 'N'
+
+/*======================*/
+/* Read connection file */
+/*======================*/
+"EXECIO * DISKR PARMS (FINIS STEM DATPARM."
+If RC <> 0 Then Call R_Error "EXECIO_DISKW", "FILE:PARMS"
+
+/*================*/
+/* Read JSON file */
+/*================*/
+"EXECIO * DISKR INJSON (FINIS STEM DATJSON."
+If RC <> 0 Then Call R_Error "EXECIO_DISKW", "FILE:INJSON"
+
+/*=======================*/
+/* Load JSON in variable */
+/*=======================*/
+OrderJson = ''
+
+Do N = 1 To DATJSON.0
+   OrderJson = OrderJson||Strip(DATJSON.N)
+End
+
+/*======================*/
+/* Read credential file */
+/*======================*/
+"EXECIO * DISKR CREDENTI (FINIS STEM DATCRED."
+If RC <> 0 Then Call R_Error "EXECIO_DISKW", "CREDENTI"
+
+/*===========================*/
+/* Load connection variables */
+/*===========================*/
+Do N = 1 To DATPARM.0
+
+   If Substr(Strip(DATPARM.N),1,2) = '/*' Then Iterate
+
+   Parse Value DATPARM.N with InParm '=' InParmValue  .
+
+   Interpret InParm "= Strip(InParmValue)"
+
+   If Word(DATPARM.N,1) = '$$END$$' Then Leave
+
+End
+
+/*===========================*/
+/* Load credential variables */
+/*===========================*/
+Do N = 1 To DATCRED.0
+
+   If Substr(Strip(DATCRED.N),1,2) = '/*' Then Iterate
+
+   Parse Value DATCRED.N with InParm '=' InParmValue  .
+
+   Interpret InParm "= Strip(InParmValue)"
+
+   If Word(DATCRED.N,1) = '$$END$$' Then Leave
+
+End
+
+/*================================*/
+/* Conver variables to upper case */
+/*================================*/
+Verbose    = Translate(Verbose)
+AuthMethod = Translate(AuthMethod)
+KeyStore   = Translate(KeyStore)
+Track      = Translate(Track)
+Getsysout  = Translate(Getsysout)
+Cert_Check = Translate(Cert_Check)
+
+/*==========================*/
+/* Display variables loaded */
+/*==========================*/
+Full_Text = 'BEGIN'||' '||'VARIABLES'               /*  Header       */
+Full_Foot = 'END'  ||' '||'VARIABLES'               /* Footer        */
+
+L1 = Length(Full_Text)
+L2 = 50                                             /*  Limit length */
+L3 = Trunc((L2 - L1) / 2)
+
+Say ''
+Say Copies('-',L3) Full_Text Copies('-',L3)
+
+Say 'Verbose.........:' Verbose                     /* Debug         */
+Say 'CTMUri..........:' CTMUri                      /* Server URL    */
+Say 'CTMPort.........:' CTMPort                     /* Server PORT   */
+Say 'RequestPath.....:' RequestPath                 /* API service   */
+Say 'RequestBody.....:' RequestBody                 /* Requiest Body */
+Say 'AuthMethod......:' AuthMethod                  /* Authentication*/
+Say 'Token...........:' Token                       /* HTTP method   */
+Say 'username........:' username                    /* CTM user      */
+Say 'password........: ********'                    /* CTM password  */
+Say 'KeyStore........:' KeyStore                    /* KeyStore Type */
+Say 'FileKeyDB.......:' FileKeyDB                   /* Path cert DB  */
+Say 'FileKeyPwd......:' FileKeyPwd                  /* Path pwd DB   */
+Say 'CertLabel.......:' CertLabel                   /* Cert Label    */
+Say 'SafKeyRing......:' SafKeyRing                  /* KeyRing name  */
+Say 'ValidCipher.....:' ValidCipher                 /* Cipher suite  */
+Say 'Track...........:' Track                       /* Track job ?   */
+Say 'Pooling_limit...:' Pooling_limit               /* Pooling limit */
+Say 'Pooling_secs....:' Pooling_secs                /* Pooling secs  */
+Say 'TCPIP Stack.....:' TCPIPSTACK                  /* TCPIP stack   */
+Say 'Getsysout.......:' Getsysout                   /* Get output ?  */
+Say 'Cert_Check......:' Cert_Check                  /* Check cert ?  */
+Say Copies('-',L3+1) Full_Foot Copies('-',L3+1)
+
+/*===================================================================*/
+/*                                                                   */
+/* Main procedure                                                    */
+/*                                                                   */
+/*===================================================================*/
+
+/*=============================================*/
+/* Make the HWTHTTP host environment available */
+/*=============================================*/
+Call hwtcalls 'on'
+Call syscalls 'SIGOFF'
+
+/*================*/
+/* Init variables */
+/*================*/
+DiagArea.            = ''
+ReturnCode           = 0
+ReqHandle            = 0
+ConnectHandle        = 0
+HttpStatusCode       = 0
+HttpReasonCode       = 0
+RequestBody          = ''
+ResponseBody         = ''
+RequestPath_login    = '/automation-api/session/login'
+RequestPath_status   = '/automation-api/run/status/'
+RequestMethod_POST   = "HWTH_HTTP_REQUEST_POST"
+RequestMethod_GET    = "HWTH_HTTP_REQUEST_GET"
+RequestMethod_DELETE = "HWTH_HTTP_REQUEST_DELETE"
+RequestMethod_PUT    = "HWTH_HTTP_REQUEST_PUT"
+AddJson = ,
+ '{',
+    '"username": "'username'",',
+    '"password": "'password'"',
+ '}'
+HeaderContentType    = 'Content-type: application/json'
+HeaderAccept         = 'Accept: application/json'
+
+RequestBody = OrderJson
+
+Call Init_Environment
+
+Call Init_Connection
+
+/*==============================*/
+/* Setup the connection options */
+/*==============================*/                 /* Debug ??        */
+
+/* -------------------- */
+
+If Verbose = 'Y' Then Do
+
+   Call SetConnOpt "HWTH_OPT_VERBOSE", "HWTH_VERBOSE_ON"
+   Call SetConnOpt "HWTH_OPT_VERBOSE_OUTPUT", "HWTHDD"
+
+End
+
+/* -------------------- */                         /* NO DNS CHECK    */
+
+If Cert_Check = 'N' Then Do
+
+   Call SetConnOpt "HWTH_OPT_CERT_CHECK", "HWTH_CERT_CHECK_WARN"
+
+End
+
+/* -------------------- */
+
+Call SetConnOpt "HWTH_OPT_URI", CTMUri             /* Setup URI       */
+Call SetConnOpt "HWTH_OPT_PORT", CTMPort           /* Setup PORT      */
+
+/* -------------------- */
+
+If TCPIPSTACK <> '' Then Do
+   Call SetConnOpt "HWTH_OPT_IPSTACK", TCPIPSTACK  /* Setup TCPIP STC */
+End
+
+/* -------------------- */
+
+Call SetConnOpt "HWTH_OPT_SNDTIMEOUTVAL", 10       /* Setup Timeout   */
+
+Call SetConnOpt "HWTH_OPT_RCVTIMEOUTVAL", 10       /* Setup Timeout   */
+
+Call SetConnOpt "HWTH_OPT_USE_SSL", "HWTH_SSL_USE" /* PAGENT NO.Local */
+
+/* -------------------- */
+
+If sslTraceFile \= '' Then Do                      /* Trace SSL ?     */
+   Call SetConnOpt "HWTH_OPT_SSLTRACE",,           /* Set File Path */
+                   sslTraceFile
+End
+
+/* -------------------- */
+
+Call SetConnOpt "HWTH_OPT_SSLVERSION",,            /* Force TLS v1.2 */
+                "HWTH_SSLVERSION_TLSv12"
+
+Call SetConnOpt "HWTH_OPT_SSLCIPHERSPECS ",,       /* Valid Ciphers  */
+                ValidCipher
+
+/*======*/
+/* RACF */
+/*======*/
+
+If Keystore = 'SAF' Then Do                        /* Cert in RACF ? */
+   Call SetConnOpt "HWTH_OPT_SSLKEYTYPE ",,        /* Keyring        */
+                   "HWTH_SSLKEYTYPE_KEYRINGNAME "
+
+   Call SetConnOpt "HWTH_OPT_SSLKEY ",,            /* Keyring name   */
+                   SafKeyRing
+End
+
+/*========*/
+/* DB USS */
+/*========*/
+
+Else If Keystore = 'FILE' Then Do                  /* Cert in FILE   */
+
+    Call SetConnOpt "HWTH_OPT_SSLKEYTYPE ",,       /* KeyDB          */
+                    "HWTH_SSLKEYTYPE_KEYDBFILE "
+
+    Call SetConnOpt "HWTH_OPT_SSLKEY ", FileKeyDB  /* KeyDB Path     */
+    Call SetConnOpt "HWTH_OPT_SSLKEYSTASHFILE ",,  /* Stash PWD Path */
+                    FileKeyPwd
+End
+
+/*=======*/
+/* ERROR */
+/*=======*/
+
+Else Do
+    Call R_Error "KeyStore ("||keyStore||") should be SAF or FILE"
+End
+
+Call Connect                                          /* Connect      */
+
+
+/*===================================================================*/
+/*                                                                   */
+/*  G E T  T O K E N -> User + password authentication               */
+/*  ----------------                                                 */
+/*                                                                   */
+/*===================================================================*/
+
+If AuthMethod = 'USER' Then Do                        /* User & pwd   */
+
+   sList = 0
+
+   Call Init_Request
+
+   /*===========================*/
+   /* Setup the request options */
+   /*===========================*/
+
+   Call New_Header    HeaderContentType               /* New hehader  */
+
+   Call Append_Header HeaderAccept                    /* Append header*/
+
+   Call SetReqOpt "HWTH_OPT_REQUESTMETHOD",,          /* POST, GET    */
+                   RequestMethod_POST                 /* DELETE PUT   */
+
+   Call SetReqOpt "HWTH_OPT_URI", RequestPath_login   /* Request Path */
+
+   Call SetReqOpt "HWTH_OPT_HTTPHEADERS", sList       /* Use headers  */
+
+   Call SetReqOpt "HWTH_OPT_TRANSLATE_REQBODY",,      /* EBCDIC ASCII */
+                  "HWTH_XLATE_REQBODY_E2A"
+
+   Call SetReqOpt "HWTH_OPT_TRANSLATE_RESPBODY",,     /* ASCII EBCDIC */
+                  "HWTH_XLATE_RESPBODY_A2E"
+
+   Call SetReq    "HWTH_OPT_REQUESTBODY",,            /* Use Body     */
+                  "AddJson"
+
+   Call SetReq    "HWTH_OPT_RESPONSEBODY_USERDATA",,  /* Get answer   */
+                  "ResponseBody"
+   Call MakeReq                                       /* HTTP request */
+
+   Token_User = getJsonValue(ResponseBody, 'token')
+
+   Auth_USER  = 'Authorization: Bearer' Strip(Token_User)
+
+   Say 'Token_User..:' Token_User                     /* User token   */
+
+   Call Free_header                                   /* Free header  */
+
+   Call Reset_request                                 /* Reset request*/
+
+End
+
+/*===================================================================*/
+/*                                                                   */
+/*  I N I T  M A I N  P R O C E D U R E                              */
+/*  -----------------------------------                              */
+/*                                                                   */
+/*===================================================================*/
+
+sList = 0
+
+Call Init_Request                                  /* Init request */
+
+/*=============*/
+/* Auth method */
+/*=============*/
+
+If AuthMethod = 'USER' Then Do                     /* USER ??      */
+   Authorization = 'Authorization: Bearer' Strip(Token_User)
+End
+
+   Else If AuthMethod = 'TOKEN' Then Do            /* TOKEN ??     */
+      Authorization  = 'x-api-key:' Token          /* Api-Key      */
+   End
+
+      Else Do
+         Call R_Error "Authentication method MUST be USER or TOKEN"
+      End
+
+/*-------------*/
+
+Call New_Header    HeaderContentType               /* New hehader  */
+
+Call Append_Header HeaderAccept                    /* Append header*/
+
+Call Append_Header Authorization                   /* Append header*/
+
+Call SetReqOpt "HWTH_OPT_REQUESTMETHOD",,          /* POST, GET    */
+                RequestMethod_POST                 /* DELETE PUT   */
+
+Call SetReqOpt "HWTH_OPT_URI", requestPath         /* Request Path */
+
+Call SetReqOpt "HWTH_OPT_HTTPHEADERS", sList       /* Use headers  */
+
+Call SetReqOpt "HWTH_OPT_TRANSLATE_REQBODY",,      /* EBCDIC ASCII */
+               "HWTH_XLATE_REQBODY_E2A"
+
+Call SetReqOpt "HWTH_OPT_TRANSLATE_RESPBODY",,     /* ASCII EBCDIC */
+               "HWTH_XLATE_RESPBODY_A2E"
+
+Call SetReq    "HWTH_OPT_REQUESTBODY",,            /* Use Body     */
+               "RequestBody"
+
+Call SetReq    "HWTH_OPT_RESPONSEBODY_USERDATA",,  /* Get answer   */
+               "ResponseBody"
+Call MakeReq                                       /* HTTP request */
+
+RunId = getJsonValue(ResponseBody, 'runId')
+
+Call Parse_Response ResponseBody, '15', 'ORDER'
+
+If Track = 'Y' Then Do                             /* Synch req ?? */
+
+   Say 'Checking status of the job ordered'
+
+   Do While Status <> 'Ended OK' & Status <> 'Ended Not OK'
+
+      Count_Wait  = Count_Wait + 1
+
+      RequestPath = RequestPath_status||RunId
+
+      Call SetReqOpt "HWTH_OPT_REQUESTMETHOD",,    /* POST, GET    */
+                     RequestMethod_GET             /* DELETE PUT   */
+
+      Call SetReqOpt "HWTH_OPT_URI", requestPath   /* Request Path */
+
+      ADDRESS SYSCALL "SLEEP" Pooling_secs         /* Sleep n secs */
+
+      Call MakeReq                                 /* HTTP request */
+
+      Status      = getJsonValue(ResponseBody,'status')
+
+      jobId       = getJsonValue(ResponseBody,'jobId')
+
+      outputURI   = getJsonValue(ResponseBody,'outputURI')
+
+      logURI      = getJsonValue(ResponseBody,'logURI')
+
+      Say 'Waiting' Pooling_secs 'seconds'
+
+      Say 'Status........:' Status
+
+      Call Parse_Response ResponseBody, '15', 'CHECK'
+
+      If Pooling_limit <> 'NOLIMIT' Then Do        /* Timeout ?    */
+
+         If Count_Wait > Pooling_limit Then Do
+
+            Call R_Error "TIME TO MONITOR EXCEEDED"
+
+         End
+
+      End
+
+   End
+
+   ADDRESS SYSCALL "SLEEP" Pooling_secs            /* Sleep n secs */
+
+   If Getsysout = 'Y' Then Do                         /* Get sysout   */
+
+      sList = 0
+
+      /*===========================*/
+      /* Setup the request options */
+      /*===========================*/
+
+      Call Reset_request
+
+      Call New_Header    HeaderContentType            /* New hehader  */
+
+      Call Append_Header HeaderAccept                 /* Append header*/
+
+      Call Append_Header Authorization                /* Append header*/
+
+      RequestPath = logURI
+
+      Call SetReqOpt "HWTH_OPT_REQUESTMETHOD",,       /* POST, GET    */
+                     RequestMethod_GET                /* DELETE PUT   */
+
+      Call SetReqOpt "HWTH_OPT_URI", requestPath      /* Request Path */
+
+      Call SetReqOpt "HWTH_OPT_HTTPHEADERS", sList    /* Use headers  */
+
+      Call SetReqOpt "HWTH_OPT_TRANSLATE_REQBODY",,   /* EBCDIC ASCII */
+                     "HWTH_XLATE_REQBODY_E2A"
+
+      Call SetReqOpt "HWTH_OPT_TRANSLATE_RESPBODY",,  /* ASCII EBCDIC */
+                     "HWTH_XLATE_RESPBODY_A2E"
+
+      Call SetReq    "HWTH_OPT_REQUESTBODY",,         /* Use Body     */
+                     "RequestBody"
+
+      Call SetReq    "HWTH_OPT_RESPONSEBODY_USERDATA",, /* Get answer */
+                     "ResponseBody"
+      Call MakeReq                                    /* HTTP request */
+
+      CTMRC = Word(ResponseBody,WordPos('OSCOMPSTAT',ResponseBody)+1)
+      CTMRC = Strip(Translate(CTMRC,'','.'))
+
+      Say CTMRC
+
+      Call Parse_Response ResponseBody, '15', 'LOG'
+
+      RequestPath = outputURI
+
+      Call SetReqOpt "HWTH_OPT_REQUESTMETHOD",,       /* POST, GET    */
+                     RequestMethod_GET                /* DELETE PUT   */
+
+      Call SetReqOpt "HWTH_OPT_URI", requestPath      /* Request Path */
+
+      Call MakeReq                                    /* HTTP request */
+
+      Call Parse_Response ResponseBody, '0D15', 'OUTPUT'
+
+   End
+
+   If Status <> 'Ended OK' Then Do
+
+      Call R_Error "JOB ORDERED FAILED",, CTMRC
+
+   End
+
+End
+
+Call Free_header                                     /* Free header   */
+
+Call Reset_request                                   /* Reset request */
+
+/*======================*/
+/* Close the connection */
+/*======================*/
+ADDRESS HWTHTTP "HWTHDISC"      ,
+                "ReturnCode"    ,
+                "ConnectHandle" ,
+                "DiagArea."
+
+If ReturnCode \= 0 Then Call ShowError "HWTHDISC"
+
+/*========================*/
+/* Free request work area */
+/*========================*/
+ADDRESS HWTHTTP "HWTHTERM"     ,
+                "ReturnCode"   ,
+                "ReqHandle"    ,
+                "HWTH_NOFORCE" ,
+                "DiagArea."
+
+If ReturnCode \= 0 Then Call ShowError "HWTHTERM (request)"
+
+/*===========================*/
+/* Free connection work area */
+/*===========================*/
+ADDRESS HWTHTTP "HWTHTERM"      ,
+                "ReturnCode"    ,
+                "ConnectHandle" ,
+                "DiagArea."
+
+If ReturnCode \= 0 Then Call ShowError "HWTHTERM (connection)"
+
+
+Exit
+
+
+
+
+/*===================================================================*/
+/*                                                                   */
+/*  I N I T  O F  S U B R O U T I N E S                              */
+/*  -----------------------------------                              */
+/*                                                                   */
+/*===================================================================*/
+
+
+
+/*===================================================================*/
+/*                                                                   */
+/* Routine to initialize the environment                             */
+/*                                                                   */
+/*===================================================================*/
+Init_Environment:
+
+ADDRESS HWTHTTP "HWTCONST" "ReturnCode" "DiagArea." /* Init HWT const */
+
+If ReturnCode \= 0 Then Call ShowError "HWTCONST"
+
+Return
+/*===================================================================*/
+/*                                                                   */
+/* Routine to initialize the connection                              */
+/*                                                                   */
+/*===================================================================*/
+Init_Connection:
+
+HandleType = HWTH_HANDLETYPE_CONNECTION
+ADDRESS HWTHTTP "HWTHINIT"      ,
+                "ReturnCode"    ,
+                "HandleType"    ,
+                "ConnectHandle" ,
+                "DiagArea."
+
+If ReturnCode \= 0 Then Call ShowError "HWTHINIT (connection)"
+
+Return
+/*===================================================================*/
+/*                                                                   */
+/* Routine to perform the connection                                 */
+/*                                                                   */
+/*===================================================================*/
+Connect:
+ADDRESS HWTHTTP "HWTHCONN"      ,
+                "ReturnCode"    ,
+                "ConnectHandle" ,
+                "DiagArea."
+
+If ReturnCode = 4 & Cert_Check = 'N' Then Return
+If ReturnCode \= 0 Then Call ShowError "HWTHCONN"
+Return
+
+/*===================================================================*/
+/*                                                                   */
+/* Routine to initialize the request                                 */
+/*                                                                   */
+/*===================================================================*/
+Init_Request:
+HandleType = HWTH_HANDLETYPE_HTTPREQUEST
+ADDRESS HWTHTTP "HWTHINIT"   ,
+                "ReturnCode" ,
+                "HandleType" ,
+                "ReqHandle"  ,
+                "DiagArea."
+
+If ReturnCode \= 0 Then Call ShowError "HWTHINIT (request)"
+Return
+
+/*===================================================================*/
+/*                                                                   */
+/* Routine to create a new header                                    */
+/*                                                                   */
+/*===================================================================*/
+New_Header:
+@optName  = Arg(1)
+ADDRESS HWTHTTP "HWTHSLST"          ,              /* New header   */
+                "ReturnCode"        ,
+                "ReqHandle"         ,
+                "HWTH_SLST_NEW"     ,
+                "sList"             ,
+                "@optName"          ,
+                "DiagArea."
+
+If ReturnCode \= 0 Then Call ShowError "HWTHSLST (new)" || @optName
+Return
+
+/*===================================================================*/
+/*                                                                   */
+/* Routine to append a parm into the existing header                 */
+/*                                                                   */
+/*===================================================================*/
+Append_Header:
+@optName  = Arg(1)
+ADDRESS HWTHTTP "HWTHSLST"         ,               /* Append header*/
+                "ReturnCode"       ,
+                "ReqHandle"        ,
+                "HWTH_SLST_APPEND" ,
+                "sList"            ,
+                "@optName"         ,
+                "DiagArea."
+
+If ReturnCode \= 0 Then Call ShowError "HWTHSLST (append)" || @optName
+Return
+
+/*===================================================================*/
+/*                                                                   */
+/* Routine to set HTTP connection options                            */
+/*                                                                   */
+/*===================================================================*/
+SetConnOpt:
+
+/*=================*/
+/* Input arguments */
+/*=================*/
+@optName  = Arg(1)
+@optValue = Arg(2)
+
+/*======================*/
+/* Clear current status */
+/*======================*/
+ReturnCode = -1
+DiagArea. = ''
+
+/*==================*/
+/* Perform the call */
+/*==================*/
+ADDRESS HWTHTTP "HWTHSET"       ,
+                "ReturnCode"    ,
+                "ConnectHandle" ,
+                "@optName"      ,
+                "@optValue"     ,
+                "DiagArea."
+
+/*=======================*/
+/* Check for good return */
+/*=======================*/
+If ReturnCode \= 0 Then Call ShowError "HWTHSET (conn) " || @optName
+
+Return
+
+/*===================================================================*/
+/*                                                                   */
+/* Routine to set HTTP request options                               */
+/*                                                                   */
+/*===================================================================*/
+SetReqOpt:
+
+/*=================*/
+/* Input arguments */
+/*=================*/
+@optName  = Arg(1)
+@optValue = Arg(2)
+
+/*======================*/
+/* Clear current status */
+/*======================*/
+ReturnCode = -1
+DiagArea. = ''
+
+/*==================*/
+/* Perform the call */
+/*==================*/
+ADDRESS HWTHTTP "HWTHSET"    ,
+                "ReturnCode" ,
+                "ReqHandle"  ,
+                "@optName"   ,
+                "@optValue"  ,
+                "DiagArea."
+
+/*=======================*/
+/* Check for good return */
+/*=======================*/
+If ReturnCode \= 0 Then Call ShowError "HWTHSET (req) " || @optName
+
+Return
+
+/*===================================================================*/
+/*                                                                   */
+/* Routine to remove the drudgery of setting HTTP request body       */
+/*                                                                   */
+/*===================================================================*/
+SetReq:
+
+/*=================*/
+/* Input arguments */
+/*=================*/
+@optName  = Arg(1)
+@optValue = Arg(2)
+
+/*======================*/
+/* Clear current status */
+/*======================*/
+ReturnCode = -1
+DiagArea. = ''
+
+/*==================*/
+/* Perform the call */
+/*==================*/
+ADDRESS HWTHTTP "HWTHSET"     ,
+                "ReturnCode"  ,
+                "ReqHandle"   ,
+                "@optName"    ,
+                ""@optValue"" ,
+                "DiagArea."
+
+/*=======================*/
+/* Check for good return */
+/*=======================*/
+If ReturnCode \= 0 Then Call ShowError "HWTHSET (body)" || @optName
+
+Return
+
+/*===================================================================*/
+/*                                                                   */
+/* Routine to make the HTTP request                                  */
+/*                                                                   */
+/*===================================================================*/
+MakeReq:
+
+/*======================*/
+/* Clear current status */
+/*======================*/
+ReturnCode = -1
+DiagArea. = ''
+
+/*==================*/
+/* Perform the call */
+/*==================*/
+ADDRESS HWTHTTP "HWTHRQST"       ,
+                "ReturnCode"     ,
+                "ConnectHandle"  ,
+                "ReqHandle"      ,
+                "HttpStatusCode" ,
+                "HttpReasonCode" ,
+                "DiagArea."
+
+/*=======================*/
+/* Check for http status */
+/*=======================*/
+If HttpStatusCode \= 200 Then Do
+
+   Say "============================="
+   Say "            ERROR            "
+   Say "============================="
+   Say "HTTP status.:" HttpStatusCode
+   Say "HTTP reason.:" HttpReasonCode
+   Say "Response....:" ResponseBody
+   Say "============================="
+   RC = HttpStatusCode
+   Call R_Error "ERROR_REQUEST", HttpStatusCode
+
+End
+
+/*=======================*/
+/* Check for good return */
+/*=======================*/
+If ReturnCode = 4   &,                      /* DO NOT CHECK DNS CERT */
+   Cert_Check = 'N' &,
+   DiagArea.HWTH_ReasonCode = '26' Then Return
+
+If ReturnCode \= 0 Then Call ShowError "HWTHRQST"
+
+Return
+
+/*===================================================================*/
+/*                                                                   */
+/* Routine to free the request headers                               */
+/*                                                                   */
+/*===================================================================*/
+Free_header:
+/*=================*/
+/* Input arguments */
+/*=================*/
+@optName  = Arg(1)
+
+ADDRESS HWTHTTP "HWTHSLST"          ,
+                "ReturnCode"        ,
+                "ReqHandle"         ,
+                "HWTH_SLST_FREE"    ,
+                "sList"             ,
+                "@optName"          ,
+                "DiagArea."
+
+If ReturnCode \= 0 Then Call ShowError "HWTHSLST (free)" || @optName
+
+Return
+
+/*================================*/
+/* Reset the request for next use */
+/*================================*/
+Reset_request:
+ADDRESS HWTHTTP "HWTHRSET"   ,
+                "ReturnCode" ,
+                "ReqHandle"  ,
+                "DiagArea."
+
+If ReturnCode \= 0 Then Call ShowError "HWTHRSET (free)"
+
+Return
+/*===================================================================*/
+/*                                                                   */
+/* Function:  Parse_Response                                         */
+/* Returns the value of the answer formatted                         */
+/*                                                                   */
+/*===================================================================*/
+Parse_Response:
+Http = Arg(1)
+Char = Arg(2)
+Text = Arg(3)
+
+Interpret "Char_new = '" || Char || "'x"             /* Hexadecimal  */
+
+Full_Text = 'BEGIN'||' '||Text
+Full_Foot = 'END'  ||' '||Text
+
+L1 = Length(Full_Text)
+L2 = 50                                              /* Limit length */
+L3 = Trunc((L2 - L1) / 2)
+
+Say ''
+Say Copies('-',L3) Full_Text Copies('-',L3)
+
+Do While Http <> ''                                  /* Parse answer */
+
+   Parse var Http Line (Char_new) Http
+   Say Line
+
+End
+
+Say Copies('-',L3+1) Full_Foot Copies('-',L3+1)
+
+Drop Char_new                                        /* Clear var    */
+
+Return
+/*===================================================================*/
+/*                                                                   */
+/* Function:  getJsonValue                                           */
+/* Returns the value for a JSON tag                                  */
+/*                                                                   */
+/*===================================================================*/
+getJsonValue:
+ jsondoc = arg(1)
+ tagname = arg(2)
+ jsontag = '"' || tagname || '"'
+ parse var jsondoc (jsontag) ':' '"' value '"' .
+ return value
+
+/*===================================================================*/
+/*                                                                   */
+/* Displays the diagnostic data following a bad function call and    */
+/* terminates the runtime with RC=8.                                 */
+/*                                                                   */
+/*===================================================================*/
+ShowError: Procedure Expose ReturnCode DiagArea.
+
+/*=================*/
+/* Input arguments */
+/*=================*/
+@fn = Arg(1)
+
+/*===================================================================*/
+/* Keep track of the sign of the return code (D2X must be 0 or +ve)  */
+/*===================================================================*/
+If ReturnCode >= 0 Then SignReturnCode = '' ; Else SignReturnCode = '-'
+
+/*=====================*/
+/* Say what went wrong */
+/*=====================*/
+Say @fn || ,
+    ": RC " || ReturnCode || ,
+    "=" || SignReturnCode || "'" || D2X(ABS(ReturnCode)) || "'x"
+
+/*====================*/
+/* Dump out the error */
+/*====================*/
+Say "Service =" DiagArea.HWTH_Service
+Say "Reason  =" DiagArea.HWTH_ReasonCode
+Say "Desc    =" Strip(DiagArea.HWTH_ReasonDesc,,'00'x)
+
+Exit 8
+
+Return
+
+/*===================================================================*/
+/*                                                                   */
+/* Displays what was wrong for those errors not related with HTTP    */
+/*                                                                   */
+/*===================================================================*/
+R_Error:
+
+/*=================*/
+/* Input arguments */
+/*=================*/
+P1 = Arg(1)
+P2 = Arg(2)
+P3 = Arg(3)
+
+/*===============*/
+/* Set RC to N/A */
+/*===============*/
+If RC = 0 Then RC_Control = 'N/A'
+Else RC_Control = RC
+
+/*============================*/
+/* Set RC to OSCOMPSTAT or 12 */
+/*============================*/
+RC_Exit = P3
+If RC_Exit = '' Then RC_Exit = 12
+
+/*=====================*/
+/* Say what went wrong */
+/*=====================*/
+   Say Copies('=',length(P1)+12)
+   Say Center('>>> ERROR REPORT <<<',length(P1)+12)
+   Say Copies('=',length(P1)+12)
+   Say 'ERROR.....:' P1
+   Say 'PARM......:' P2
+   Say 'RC........:' RC_Control
+   Say 'OSCOMPSTAT:' RC_Exit
+   Say Copies('=',length(P1)+12)
+
+Exit RC_Exit

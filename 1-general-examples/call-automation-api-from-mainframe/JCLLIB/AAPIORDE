@@ -1,0 +1,61 @@
+//AAPIORDE JOB CLASS=A,MSGCLASS=X,NOTIFY=&SYSUID
+//*=====================================================================
+//VAREXPOR EXPORT SYMLIST=*
+//*===============================
+// SET     HLQ='HLQ1.HLQ2'
+// SET     ENV='AWS.SNDBX'
+//*
+// JCLLIB  ORDER=&HLQ..PROCLIB
+//*===============================
+//* CALL AUTOMATION API FROM BATCH
+//*=====================================================================
+//*
+//* ORDER A JOB AND MONITOR THE STATUS
+//* ----------------------------------
+//*
+//* DESCRIPTION DD:INJSON
+//* ---------------------
+//*
+//* CONFIGURATION FILE OF THE JOB TO BE ORDERED IN JSON FORMAT.
+//* CHECK RUN ORDER SERVICE IN THE AAPI DOC FOR MORE INFO.
+//*
+//* PROC PARMS
+//* ----------
+//*
+//*      HLQ......: HIGH LEVEL QUALIFIER OF THE PARM FILES AND EXEC LIB
+//*                 "DEFINED USING SET DIRECTIVE AT THE TOP OF THE JCL"
+//*
+//*      SERVER...: SERVER NAME WHERE THE JOB / FOLDER WILL BE ORDER
+//*
+//*      FOLDER...: FOLDER TO BE ORDER
+//*
+//*      JOBNAME..: JOBNAME TO BE ORDER (WILDCARDS CAN BE USED)
+//*
+//*      ODATE....: ORDER DATE
+//*
+//*
+//*=====================================================================
+//CALLAAPI EXEC AAPIORDE,HLQ=&HLQ,
+//         SERVER='XXXXX',
+//         FOLDER='XXXXXXX',
+//         JOBNAME='XXXXXXXXX',
+//         ODATE='YYYYMMDD'
+//CREDENTI DD DISP=SHR,DSN=&HLQ..CREDENTI.&ENV
+//PARMS    DD DISP=SHR,DSN=&HLQ..PARMS.&ENV
+//INJSON   DD *,SYMBOLS=JCLONLY
+ {
+   "ctm": "&SERVER",
+   "folder": "&FOLDER",
+   "jobs": "&JOBNAME",
+   "createDuplicate": true,
+   "hold": false,
+   "ignoreCriteria": true,
+   "independentFlow": true,
+   "orderDate": "&ODATE",
+   "waitForOrderDate": false,
+   "variables": [
+      {"VARIABLE_1": "TEST_1"},
+      {"VARIABLE_2": "TEST_2"}
+   ]
+ }
+/*

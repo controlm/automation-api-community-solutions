@@ -1,0 +1,35 @@
+{
+  "os-folder" : {
+    "Type" : "Folder",
+    "ControlmServer" : "controlmserver",
+    "OrderMethod" : "Manual",
+    "ActiveRetentionPolicy" : "CleanEndedOK",
+    "SiteStandard" : "Empty",
+    "CreatedBy" : "emuser",
+    "When" : {
+      "RuleBasedCalendars" : {
+        "Included" : [ "EVERYDAY" ],
+        "EVERYDAY" : {
+          "Type" : "Calendar:RuleBased",
+          "When" : {
+            "DaysRelation" : "OR",
+            "WeekDays" : [ "NONE" ],
+            "MonthDays" : [ "ALL" ]
+          }
+        }
+      }
+    },
+    "os-job-template" : {
+      "Type" : "Job:Command",
+      "Host" : "ag01",
+      "CreatedBy" : "emuser",
+      "RunAs" : "ctmuser",
+      "Command" : "echo Hello, I have been executed from AAPI; sleep %%VAR_TIME; exit %%EXIT",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "DaysRelation" : "OR"
+      }
+        }
+  }
+}
