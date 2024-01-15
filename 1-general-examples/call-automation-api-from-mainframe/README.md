@@ -287,7 +287,7 @@ When activating the parameter **(Verbose=y)** it is necessary to create a file w
 
 #### Example:
 
-Modify the parameter **Verbose=y** in the **PARMS** file, add the DD name HWTHDD in the step and a previous delete as shown below: 
+Modify the parameter **Verbose=y** in the **PARMS** file, add the DD name HWTHDD in the step as shown below: 
 
 - Sample **AAPICOND** JCL:
 
