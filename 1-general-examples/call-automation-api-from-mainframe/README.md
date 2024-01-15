@@ -200,9 +200,9 @@ Details for the required parameters:
 
 > [!NOTE]
 > <sup>Automation API services used:<br>
-> [Session Service \> Session \> Login](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_SessionService.htm#sessionlogin) :point_up: **(Only for Control-M on-prem and *AuthMethod=USER*)** <br>
-> [Run Service \> Event \> Add](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_RunService.htm#run34)<br>
-> [Run Service \> Event \> Delete](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_RunService.htm#run35)</sup>
+> \- [Session Service \> Session \> Login](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_SessionService.htm#sessionlogin) :point_up: **(Only for Control-M on-prem and *AuthMethod=USER*)** <br>
+> \- [Run Service \> Event \> Add](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_RunService.htm#run34)<br>
+> \- [Run Service \> Event \> Delete](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_RunService.htm#run35)</sup>
 
 ### AAPIORDE
 
@@ -234,11 +234,11 @@ Details for the required parameters:
 
 > [!NOTE]
 > <sup>Automation API services used:<br>
-> [Session Service \> Session \> Login](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_SessionService.htm#sessionlogin) :point_up: **(Only for Control-M on-prem and *AuthMethod=USER*)** <br>
-> [Run Service \> Order](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_RunService.htm#run5)<br>
-> [Run Service \> Status](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_RunService.htm#run51)<br>
-> [Run Service \> Output \> Get](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_RunService.htm#run18)<br>
-> [Run Service \> Log \> Get](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_RunService.htm#run3)</sup>
+> \- [Session Service \> Session \> Login](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_SessionService.htm#sessionlogin) :point_up: **(Only for Control-M on-prem and *AuthMethod=USER*)** <br>
+> \- [Run Service \> Order](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_RunService.htm#run5)<br>
+> \- [Run Service \> Status](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_RunService.htm#run51)<br>
+> \- [Run Service \> Output \> Get](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_RunService.htm#run18)<br>
+> \- [Run Service \> Log \> Get](https://documents.bmc.com/supportu/API/Monthly/en-US/Documentation/API_Services_RunService.htm#run3)</sup>
 
 
   - Sample **INJSON** file:
@@ -291,7 +291,7 @@ Modify the parameter **Verbose=y** in the **PARMS** file, add the DD name HWTHDD
 
 - Sample **AAPICOND** JCL:
 
-```jcl
+```
 //*--------------------------------------------------
 //*   DELETE VERBOSE (HWTHDD)
 //*--------------------------------------------------
@@ -320,7 +320,7 @@ DEL CONDITION-NAME-4 ODAT SERVERNAME
 
 - Sample **AAPIORDE** JCL:
 
-```jcl
+```
 //*--------------------------------------------------
 //*   DELETE VERBOSE (HWTHDD)
 //*--------------------------------------------------
@@ -374,4 +374,4 @@ DEL CONDITION-NAME-4 ODAT SERVERNAME
 
 | Date | Updated by | Changes |
 | - | - | - |
-| 2024-01-12 | Carlos Ruiz | First release |
+| 2024-01-15 | Carlos Ruiz | First release |
