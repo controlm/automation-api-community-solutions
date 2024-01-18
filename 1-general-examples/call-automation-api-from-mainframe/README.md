@@ -2,7 +2,7 @@
 
 ## Description
 
-This example shows how to be able to connect to a Control-M (or Helix Control-M) environment from Mainframe (z/OS) and run Automation API services from JCL.
+The following example demonstrates how to connect to Control-M or Helix Control-M and run Automation API using JCL from Mainframe (z/OS).
 
 Several sample programs, JCLs, and procedures have been built to take advantage of the capabilities of the "**z/OS client web enablement toolkit**" (available from z/OS version 2.2).
 
