@@ -1,0 +1,50 @@
+//AAPICOND JOB CLASS=A,MSGCLASS=X,NOTIFY=&SYSUID
+//*=====================================================================
+// SET     HLQ='HLQ1.HLQ2'
+// SET     ENV='AWS.SNDBX'
+//*
+// JCLLIB  ORDER=&HLQ..PROCLIB
+//*===============================
+//* CALL AUTOMATION API FROM BATCH
+//*=====================================================================
+//*
+//* ADD OR REMOVE EVENTS (CONDITIONS)
+//* ---------------------------------
+//*
+//* INPUT FORMAT: OPTION CONDITION DATE SERVER
+//*               ------ --------- ---- ------
+//*
+//* DESCRIPTION DD:INPUT
+//* --------------------
+//*
+//* DD:INPUT
+//*
+//*
+//*      OPTION...: ADD / DEL. ADD OR REMOVE CONDITION
+//*
+//*      CONDITION: CONDITION NAME
+//*
+//*      DATE.....: MMDD - SPECIFIC DATE
+//*                 ODAT - CURRENT CONTROL-M DATE
+//*                 STAT
+//*
+//*      SERVER...: CONTROL-M SERVER NAME
+//*
+//*      EXAMPLE..: ADD CONDITION-NAME-1 ODAT SERVERNAME
+//*                 DEL CONDITION-NAME-1 ODAT SERVERNAME
+//*
+//* PROC PARMS
+//*
+//*      HLQ......: HIGH LEVEL QUALIFIER OF THE PARM FILES AND EXEC LIB
+//*                 "DEFINED USING SET DIRECTIVE AT THE TOP OF THE JCL"
+//*
+//*=====================================================================
+//CALLAAPI EXEC AAPICOND,HLQ=&HLQ
+//CREDENTI DD DISP=SHR,DSN=&HLQ..CREDENTI.&ENV
+//PARMS    DD DISP=SHR,DSN=&HLQ..PARMS.&ENV
+//INPUT    DD *
+ADD CONDITION-NAME-1 ODAT SERVERNAME
+ADD CONDITION-NAME-2 ODAT SERVERNAME
+DEL CONDITION-NAME-3 ODAT SERVERNAME
+DEL CONDITION-NAME-4 ODAT SERVERNAME
+/*

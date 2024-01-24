@@ -1,0 +1,67 @@
+//AAPIORD3 JOB CLASS=A,MSGCLASS=X,NOTIFY=&SYSUID
+//*=====================================================================
+//VAREXPOR EXPORT SYMLIST=*
+//*===============================
+// SET     HLQ='HLQ1.HLQ2'
+// SET     ENV='AWS.SNDBX'
+//*
+// JCLLIB  ORDER=&HLQ..PROCLIB
+//*===============================
+//* CALL AUTOMATION API FROM BATCH
+//*=====================================================================
+//*
+//* ORDER A PREDEFINED OS JOB USING VARIABLES DIRECTLY ON JSON
+//* ----------------------------------------------------------
+//*
+//* DESCRIPTION DD:INJSON
+//* ---------------------
+//*
+//* CONFIGURATION FILE OF THE JOB TO BE ORDERED IN JSON FORMAT.
+//* CHECK RUN ORDER SERVICE IN THE AAPI DOC FOR MORE INFO.
+//*
+//* PROC PARMS
+//* ----------
+//*
+//*      HLQ......: HIGH LEVEL QUALIFIER OF THE PARM FILES AND EXEC LIB
+//*                 "DEFINED USING SET DIRECTIVE AT THE TOP OF THE JCL"
+//*
+//*      SERVER...: SERVER NAME WHERE THE JOB / FOLDER WILL BE ORDER
+//*
+//*      FOLDER...: FOLDER TO BE ORDER
+//*
+//*      JOBNAME..: JOBNAME TO BE ORDER (WILDCARDS CAN BE USED)
+//*
+//*      ODATE....: ORDER DATE
+//*
+//* JSON VARS
+//* ---------
+//*
+//*      VAR_TIME.: THE JOB WILL DO SLEEP FOR "30" SECONDS
+//*
+//*      EXIT.....: THE JOB WILL EXIT WITH RETURN CODE "8" 
+//*
+//*=====================================================================
+//CALLAAPI EXEC AAPIORDE,HLQ=&HLQ,
+//         SERVER='ctmserver',
+//         FOLDER='os-folder',
+//         JOBNAME='os-job-template',
+//         ODATE='current'
+//CREDENTI DD DISP=SHR,DSN=&HLQ..CREDENTI.&ENV
+//PARMS    DD DISP=SHR,DSN=&HLQ..PARMS.&ENV
+//INJSON   DD *,SYMBOLS=JCLONLY
+ {
+   "ctm": "&SERVER",
+   "folder": "&FOLDER",
+   "jobs": "&JOBNAME",
+   "createDuplicate": true,
+   "hold": false,
+   "ignoreCriteria": true,
+   "independentFlow": true,
+   "orderDate": "&ODATE",
+   "waitForOrderDate": false,
+   "variables": [
+      {"VAR_TIME": "30"},
+      {"EXIT": "8"}
+   ]
+ }
+/*

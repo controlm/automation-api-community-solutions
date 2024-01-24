@@ -1,0 +1,78 @@
+{
+  "mft-folder" : {
+    "Type" : "SimpleFolder",
+    "ControlmServer" : "controlmserver",
+    "SiteStandard" : "None",
+    "OrderMethod" : "Manual",
+    "mft-job-template" : {
+      "Type" : "Job:FileTransfer",
+      "ConnectionProfileSrc" : "CP_DIST",
+      "ConnectionProfileDest" : "CP_MF",
+      "NumberOfRetries" : "1",
+      "SubApplication" : "REMOTE_FORCE",
+      "Host" : "ag01",
+      "CreatedBy" : "emuser",
+      "Description" : "To be order from a Mainframe JCL",
+      "RunAs" : "CP_DIST+CP_MF",
+      "Application" : "AAPIEM",
+      "Variables" : [ {
+        "FTP-LOSTYPE" : "Unix"
+      }, {
+        "FTP-CONNTYPE1" : "SFTP"
+      }, {
+        "FTP-LHOST" : "hostname"
+      }, {
+        "FTP-PORT1" : "21"
+      }, {
+        "FTP-LUSER" : "ctmuser"
+      }, {
+        "FTP-ROSTYPE" : "z/OS"
+      }, {
+        "FTP-CONNTYPE2" : "FTP"
+      }, {
+        "FTP-RHOST" : "LPAR"
+      }, {
+        "FTP-PORT2" : "21"
+      }, {
+        "FTP-RUSER" : "CTMUSER"
+      }, {
+        "FTP-CM_VER" : "9.0.00"
+      }, {
+        "FTP-OVERRIDE_WATCH_INTERVAL1" : "0"
+      } ],
+      "FileTransfers" : [ {
+        "TransferType" : "Binary",
+        "TransferOption" : "DestToSrc",
+        "Src" : "/home/%%TODSN",
+        "Dest" : "%%FROMDSN",
+        "ABSTIME" : "0",
+        "TIMELIMIT" : "0",
+        "UNIQUE" : "0",
+        "SRCOPT" : "0",
+        "IF_EXIST" : "0",
+        "DSTOPT" : "0",
+        "RECURSIVE" : "0",
+        "EXCLUDE_WILDCARD" : "0",
+        "TRIM" : "1",
+        "NULLFLDS" : "0",
+        "VERNUM" : "0",
+        "CASEIFS" : "0",
+        "FileWatcherOptions" : {
+          "VariableType" : "Global",
+          "UnitsOfTimeLimit" : "Minutes"
+        },
+        "IncrementalTransfer" : {
+          "MaxModificationAgeForFirstRunInHours" : "0"
+        },
+        "DestinationFilename" : {
+          "ModifyCase" : "No"
+        }
+      } ],
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "DaysRelation" : "OR"
+      }
+    }
+  }
+}
