@@ -16,11 +16,9 @@ Before using the script, update the following variables:
 
 - **destination** : define the SNMP destination host(s). Use commas ( , ) as delimiter for multiple hosts, and colon ( : ) to use a specific port (default port is 162). Example:
 
-    ``destination=myhost1,myhost2:2001,192.168.1.37``
+  ``destination=myhost1,myhost2:2001,192.168.1.37``
 
 - **alert_updates** : select whether you want to send or not updates of existing alerts (which happens when the alert "Status", "Urgency" or "Comment" are updated in Helix Control-M).
-
-Do NOT modify the "*base_oid*" and "*field_names*" variables.
 
 ## Additional information
 
@@ -28,13 +26,14 @@ Do NOT modify the "*base_oid*" and "*field_names*" variables.
 
 - The "snmptrap" command line is then completed by adding all the alert fields, passed as the payload of the trap. Each of them include the specific `OID`, the `type` ("s" for string) and the `value`.
 
-- The script sends all the alert fields received from Helix Control-M in the SNMP trap, including the "*notes*" field. Refer to the [**Alerts Template reference**](https://docs.bmc.com/docs/saas-api/alerts-template-reference-1144242602.html)) for more details.
+- The script sends all the alert fields received from Helix Control-M in the SNMP trap, including the "*notes*" field. Refer to the ["Alerts Template reference"](https://docs.bmc.com/docs/saas-api/alerts-template-reference-1144242602.html)) for more details.
 
 - The script uses the default alert field names for Helix Control-M. Therefore, it is NOT required to use a custom template to change the alert fields to their old names in Control-M (as detailed in ["Changing Field Names After Migrating from Onpremises ControlM"](https://documents.bmc.com/supportu/API/Helix/en-US/Documentation/API_Services_RunServices_Alerts_Template_reference.htm#ChangingFieldNamesAfterMigratingfromOnpremisesControlM)). This means that Control-M users migrating to Helix Control-M can use the script without the need to modify the default alerts template.
 
 - This is an example of all the data generated in the SNMP v1 trap:
 
-    Message Type: Trap1Message
+```
+Message Type: Trap1Message
 Time Received: 04/02/2024 17:52:49
 SNMP Version: One
 Origin Address/Port: 192.168.1.37:50775
@@ -66,11 +65,11 @@ Agent IP:192.168.182.60
 Enterprise: 1.3.6.1.4.1.1031.9.1
 Generic Trap: 6
 Specific Trap: 10
-
+```
 
 XXX format `<field1>: <value1> <field2>: <value2> [...]`, as in the following example:
 
-\
+
 The script parses the input data and converts it to JSON format, starting with the "*alertFields*" key and followed by an array containing all the alert fields and their corresponding values - as in the example below. This is the same JSON structure as the one received when connecting to the External Alerts service via a WebSocket client.
 
     {
