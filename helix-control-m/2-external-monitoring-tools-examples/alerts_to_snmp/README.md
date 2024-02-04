@@ -6,7 +6,7 @@ As an example, the alert data is saved into a file, but this could be replaced b
 
 ## Pre-requisites
 
-- Requires the **snmptrap** command line utility, which comes included in the "net-snmp-utils" package (see [net-snmp.org](http://www.net-snmp.org/){:target="_blank"}).
+- Requires the **snmptrap** command line utility, which comes included in the "net-snmp-utils" package (see [net-snmp.org](http://www.net-snmp.org/)).
 
 - The provided MIB file ([**BMC-CONTROLMEM-MIB**](BMC-CONTROLMEM-MIB.txt)) must be loaded in the SNMP destination host.
 
@@ -16,7 +16,7 @@ Before using the script, update the following variables:
 
 - **destination** : define the SNMP destination host(s). Use commas ( , ) as delimiter for multiple hosts, and colon ( : ) to use a specific port (default port is 162). Example:
 
-  ``destination=myhost1,myhost2:2001,192.168.1.37``
+    ``destination=myhost1,myhost2:2001,192.168.1.37``
 
 - **alert_updates** : select whether you want to send or not updates of existing alerts (which happens when the alert "Status", "Urgency" or "Comment" are updated in Helix Control-M).
 
