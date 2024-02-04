@@ -6,7 +6,7 @@ As an example, the alert data is saved into a file, but this could be replaced b
 
 ## Pre-requisites
 
-- Requires the **snmptrap** command line utility, which comes included in the "net-snmp-utils" package (see [net-snmp.org](http://www.net-snmp.org){:target="_blank"}).
+- Requires the **snmptrap** command line utility, which comes included in the "net-snmp-utils" package (see [net-snmp.org](http://www.net-snmp.org/){:target="_blank"}).
 
 - The provided MIB file ([**BMC-CONTROLMEM-MIB**](BMC-CONTROLMEM-MIB.txt)) must be loaded in the SNMP destination host.
 
