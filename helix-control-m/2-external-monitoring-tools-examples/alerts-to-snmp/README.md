@@ -8,11 +8,9 @@ It parses the alert data coming from Helix Control-M (via the External Alerts se
 
 - Requires the **snmptrap** command line utility, which comes included in the "*net-snmp-utils*" package (see [net-snmp.org](http://www.net-snmp.org/)). As an example, to install it with "yum" package manager:
 
-  ``# yum install net-snmp-utils``
-
-```
-# yum install net-snmp-utils
-```
+    ```
+    # yum install net-snmp-utils
+    ```
 
 - The provided [**MIB file**](BMC-CONTROLMEM-MIB.txt) (BMC-CONTROLMEM-MIB.txt) must be loaded in the SNMP destination host.
 
