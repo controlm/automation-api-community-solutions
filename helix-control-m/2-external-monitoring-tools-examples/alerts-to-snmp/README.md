@@ -73,4 +73,4 @@ Before using the script, update the following variables:
 
 | Date | Updated by | Changes |
 | - | - | - |
-| 2024-02-04 | David Fernández | First release |
+| 2024-02-05 | David Fernández | First release |
