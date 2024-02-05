@@ -8,7 +8,7 @@ It parses the alert data coming from Helix Control-M (via the External Alerts se
 
 - Requires the **snmptrap** command line utility, which comes included in the "net-snmp-utils" package (see [net-snmp.org](http://www.net-snmp.org/)).
 
-- The provided MIB file ([**BMC-CONTROLMEM-MIB**](BMC-CONTROLMEM-MIB.txt)) must be loaded in the SNMP destination host.
+- The provided [**MIB file**](BMC-CONTROLMEM-MIB.txt) (BMC-CONTROLMEM-MIB.txt) must be loaded in the SNMP destination host.
 
 ## Instructions
 
@@ -22,13 +22,15 @@ Before using the script, update the following variables:
 
 ## Additional information
 
+- The script uses the default alert field names for Helix Control-M. Therefore, it is NOT required to use a custom template to change the alert fields to their old names in Control-M (as detailed in ["Changing Field Names After Migrating from Onpremises ControlM"](https://documents.bmc.com/supportu/API/Helix/en-US/Documentation/API_Services_RunServices_Alerts_Template_reference.htm#ChangingFieldNamesAfterMigratingfromOnpremisesControlM)). This means that Control-M users migrating to Helix Control-M can use the script without the need to modify the default alerts template.
+
 - The SNMP v1 trap definition in the "snmptrap" command line contains the `community` ("public"), the destination `host`, the `enterprise-OID` (as defined in the MIB file), the `agent` (IP address of the system generating the trap, empty to use the default value), the `generic-trap` number ("6" for traps defined in a custom MIB file), the `specific-trap` ("10" as defined in the MIB file for the TRAP-TYPE macro) and the `sysUpTime` of the generating application (empty to use the system generated value).
 
 - The "snmptrap" command line is then completed by adding all the alert fields, passed as the payload of the trap. Each of them include the specific `OID`, the `type` ("s" for string) and the `value`.
 
 - The script sends all the alert fields received from Helix Control-M in the SNMP trap, including the "*notes*" field. Refer to the ["Alerts Template reference"](https://docs.bmc.com/docs/saas-api/alerts-template-reference-1144242602.html)) for more details.
 
-- The script uses the default alert field names for Helix Control-M. Therefore, it is NOT required to use a custom template to change the alert fields to their old names in Control-M (as detailed in ["Changing Field Names After Migrating from Onpremises ControlM"](https://documents.bmc.com/supportu/API/Helix/en-US/Documentation/API_Services_RunServices_Alerts_Template_reference.htm#ChangingFieldNamesAfterMigratingfromOnpremisesControlM)). This means that Control-M users migrating to Helix Control-M can use the script without the need to modify the default alerts template.
+\
 
 This is an example of all the data and details from the generated SNMP v1 trap:
 
@@ -37,7 +39,7 @@ Message Type: Trap1Message
 Time Received: 04/02/2024 17:52:49
 SNMP Version: One
 Origin Address/Port: 192.168.1.37:50775
-Destination Address/Port: 192.168.1.37:161
+Destination Address/Port: 192.168.1.37:162
 Community: public
 Variable IIDs and Values:
     1.3.6.1.4.1.1031.9.1.1 (alertTrapUpdateType): I
