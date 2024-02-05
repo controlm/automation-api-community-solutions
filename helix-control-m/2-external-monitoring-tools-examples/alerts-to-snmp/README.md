@@ -18,9 +18,7 @@ It parses the alert data coming from Helix Control-M (via the External Alerts se
 
 Before using the script, update the following variables:
 
-- **destination** : define the SNMP destination host(s). Use commas ( , ) as delimiter for multiple hosts, and colon ( : ) to use a specific port (default port is 162). Example:
-
-  ``destination=myhost1,myhost2:2001,192.168.1.37``
+- **destination** : define the SNMP destination host(s). Use commas ( , ) as delimiter for multiple hosts, and colon ( : ) to use a specific port (default port is 162). Example: ``destination=myhost1,myhost2:2001,192.168.1.37``
 
 - **alert_updates** : select whether you want to send or not updates of existing alerts (which happens when the alert "Status", "Urgency" or "Comment" are updated in Helix Control-M).
 
@@ -37,7 +35,7 @@ Before using the script, update the following variables:
 \
 This is an example of all the data and details from the generated SNMP v1 trap:
 
-```
+    ```
 Message Type: Trap1Message
 Time Received: 04/02/2024 17:52:49
 SNMP Version: One
@@ -70,7 +68,7 @@ Agent IP:192.168.182.60
 Enterprise: 1.3.6.1.4.1.1031.9.1
 Generic Trap: 6
 Specific Trap: 10
-```
+    ```
 
 ## Versions
 
