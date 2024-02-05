@@ -32,7 +32,6 @@ Before using the script, update the following variables:
 
 - The "snmptrap" command line is then completed by adding all the alert fields, passed as the payload of the trap. Each of them include the specific `OID`, the `type` ("s" for string) and the `value`.
 
-\
 - This is an example of all the data and details from the generated SNMP v1 trap:
 
     ```
@@ -69,41 +68,6 @@ Before using the script, update the following variables:
     Generic Trap: 6
     Specific Trap: 10
     ```
-
-```
-Message Type: Trap1Message
-Time Received: 04/02/2024 17:52:49
-SNMP Version: One
-Origin Address/Port: 192.168.1.37:50775
-Destination Address/Port: 192.168.1.37:162
-Community: public
-Variable IIDs and Values:
-    1.3.6.1.4.1.1031.9.1.1 (alertTrapUpdateType): I
-    1.3.6.1.4.1.1031.9.1.2 (alertTrapAlertId): 25101
-    1.3.6.1.4.1.1031.9.1.3 (alertTrapControlM): IN01
-    1.3.6.1.4.1.1031.9.1.4 (alertTrapMemName): 
-    1.3.6.1.4.1.1031.9.1.5 (alertTrapOrderId): 0e4oe
-    1.3.6.1.4.1.1031.9.1.6 (alertTrapSeverity): V
-    1.3.6.1.4.1.1031.9.1.7 (alertTrapStatus): Not_Noticed
-    1.3.6.1.4.1.1031.9.1.8 (alertTrapTime): 20240204165241
-    1.3.6.1.4.1.1031.9.1.9 (alertTrapUser): 
-    1.3.6.1.4.1.1031.9.1.10 (alertTrapUpdateTime): 
-    1.3.6.1.4.1.1031.9.1.11 (alertTrapMessage): Ended not OK
-    1.3.6.1.4.1.1031.9.1.12 (alertTrapOwner): ctmagent
-    1.3.6.1.4.1.1031.9.1.13 (alertTrapGroup): 
-    1.3.6.1.4.1.1031.9.1.14 (alertTrapApplication): dfe-demos
-    1.3.6.1.4.1.1031.9.1.15 (alertTrapJobName): dfe-job-01
-    1.3.6.1.4.1.1031.9.1.16 (alertTrapNodeId): zzz-linux-agent-0
-    1.3.6.1.4.1.1031.9.1.17 (alertTrapType): R
-    1.3.6.1.4.1.1031.9.1.18 (alertTrapClosedFromEM): 
-    1.3.6.1.4.1.1031.9.1.19 (alertTrapTicketNumber): 
-    1.3.6.1.4.1.1031.9.1.20 (alertTrapRunCounter): 00001
-    1.3.6.1.4.1.1031.9.1.21 (alertTrapNotes):
-Agent IP:192.168.182.60
-Enterprise: 1.3.6.1.4.1.1031.9.1
-Generic Trap: 6
-Specific Trap: 10
-```
 
 ## Versions
 
