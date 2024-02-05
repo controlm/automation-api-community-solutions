@@ -10,6 +10,10 @@ It parses the alert data coming from Helix Control-M (via the External Alerts se
 
   ``# yum install net-snmp-utils``
 
+```
+# yum install net-snmp-utils
+```
+
 - The provided [**MIB file**](BMC-CONTROLMEM-MIB.txt) (BMC-CONTROLMEM-MIB.txt) must be loaded in the SNMP destination host.
 
 ## Instructions
