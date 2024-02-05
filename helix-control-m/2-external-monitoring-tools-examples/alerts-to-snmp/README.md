@@ -34,7 +34,7 @@ Before using the script, update the following variables:
     snmptrap -v 1 -c public mysnmphost 1.3.6.1.4.1.1031.9.1 '' 6 10 '' 1.3.6.1.4.1.1031.9.1.1 s I 1.3.6.1.4.1.1031.9.1.2 s 25101 [...]
     ```
 
-    - The SNMP v1 trap definition in the "snmptrap" command line contains the `community` ("public"), the destination `host`, the `enterprise-OID` (as defined in the MIB file), the `agent` (IP address of the system generating the trap, empty to use the default value), the `generic-trap` number ("6" for traps defined in a custom MIB file), the `specific-trap` ("10" as defined in the MIB file for the TRAP-TYPE macro) and the `sysUpTime` of the generating application (empty to use the system generated value).
+    - The SNMP v1 trap definition contains the `community` ("public"), the destination `host`, the `enterprise-OID` (as defined in the MIB file), the `agent` (IP address of the system generating the trap, empty to use the default value), the `generic-trap` number ("6" for traps defined in a custom MIB file), the `specific-trap` ("10" as defined in the MIB file for the TRAP-TYPE macro) and the `sysUpTime` of the generating application (empty to use the system generated value).
 
     - The "snmptrap" command line is then completed by adding all the alert fields, passed as the payload of the trap. Each of them include the specific `OID`, the `type` ("s" for string) and the `value`.
 
