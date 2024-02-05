@@ -32,6 +32,12 @@ Before using the script, update the following variables:
 
 - The "snmptrap" command line is then completed by adding all the alert fields, passed as the payload of the trap. Each of them include the specific `OID`, the `type` ("s" for string) and the `value`.
 
+- This is an example of the "snmptrap" command line created by the script (showing only the first 2 alert fields - out of 21):
+
+    ```
+    snmptrap -v 1 -c public mysnmphost 1.3.6.1.4.1.1031.9.1 '' 6 10 '' 1.3.6.1.4.1.1031.9.1.1 s I 1.3.6.1.4.1.1031.9.1.2 s 25101 [...]
+    ```
+
 - This is an example of all the data and details from the generated SNMP v1 trap:
 
     ```
