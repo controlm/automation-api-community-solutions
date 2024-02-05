@@ -6,7 +6,7 @@ It parses the alert data coming from Helix Control-M (via the External Alerts se
 
 ## Pre-requisites
 
-- Requires the **snmptrap** command line utility, which comes included in the "*net-snmp-utils*" package (see [net-snmp.org](http://www.net-snmp.org/)). It must be installed with any dependent packages, i.e. with "yum" package manager:
+- Requires the **snmptrap** command line utility, which comes included in the "*net-snmp-utils*" package (see [net-snmp.org](http://www.net-snmp.org/)). As an example, to install it with "yum" package manager:
 
   ``# yum install net-snmp-utils``
 
