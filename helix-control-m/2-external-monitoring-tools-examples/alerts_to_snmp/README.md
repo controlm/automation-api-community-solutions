@@ -1,8 +1,8 @@
 ## Description
 
-This shell script ([**alerts_to_snmp**](alerts_to_snmp.sh)) sends Helix Control-M alerts data as SNMP (v1) traps.
+This shell script ([**alerts_to_snmp**](alerts_to_snmp.sh)) sends Helix Control-M alerts data as SNMP traps.
 
-As an example, the alert data is saved into a file, but this could be replaced by any other action (e.g. sending the alert data as a JSON payload via a webhook).
+It parses the alert data coming from Helix Control-M (via the External Alerts service) and sends it as a SNMP v1 trap. This can be useful for integration with any application which supports incoming SNMP traps, and especially for customers migrating from Control-M which were using its SNMP notification capabilities.
 
 ## Pre-requisites
 
@@ -30,9 +30,9 @@ Before using the script, update the following variables:
 
 - The script uses the default alert field names for Helix Control-M. Therefore, it is NOT required to use a custom template to change the alert fields to their old names in Control-M (as detailed in ["Changing Field Names After Migrating from Onpremises ControlM"](https://documents.bmc.com/supportu/API/Helix/en-US/Documentation/API_Services_RunServices_Alerts_Template_reference.htm#ChangingFieldNamesAfterMigratingfromOnpremisesControlM)). This means that Control-M users migrating to Helix Control-M can use the script without the need to modify the default alerts template.
 
-- This is an example of all the data generated in the SNMP v1 trap:
+This is an example of all the data and details from the generated SNMP v1 trap:
 
-   ```
+```
 Message Type: Trap1Message
 Time Received: 04/02/2024 17:52:49
 SNMP Version: One
@@ -65,8 +65,7 @@ Agent IP:192.168.182.60
 Enterprise: 1.3.6.1.4.1.1031.9.1
 Generic Trap: 6
 Specific Trap: 10
-   ```
-XXX format `<field1>: <value1> <field2>: <value2> [...]`, as in the following example:
+```
 
 ## Versions
 
