@@ -24,7 +24,7 @@ Before using the script, update the following variables:
 
 ## Additional information
 
-- The script uses the default alert field names for Helix Control-M. Therefore, it is NOT required to use a custom template to change the alert fields to their old names in Control-M (as detailed in ["Changing Field Names After Migrating from Onpremises ControlM"](https://documents.bmc.com/supportu/API/Helix/en-US/Documentation/API_Services_RunServices_Alerts_Template_reference.htm#ChangingFieldNamesAfterMigratingfromOnpremisesControlM)). This means that Control-M users migrating to Helix Control-M can use the script without the need to modify the default alerts template.
+- The script uses the default alert field names for Helix Control-M. Therefore, it is NOT required to use a custom template to change the alert fields to their old names in Control-M (as detailed in ["Changing Field Names After Migrating from On-premises Control-M"](https://documents.bmc.com/supportu/API/Helix/en-US/Documentation/API_Services_RunServices_Alerts_Template_reference.htm#ChangingFieldNamesAfterMigratingfromOnpremisesControlM)). This means that Control-M users migrating to Helix Control-M can use the script without the need to modify the default alerts template.
 
 - The script sends all the alert fields received from Helix Control-M in the SNMP trap, including the "*notes*" field. Refer to the ["Alerts Template reference"](https://docs.bmc.com/docs/saas-api/alerts-template-reference-1144242602.html)) for more details.
 
