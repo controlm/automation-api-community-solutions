@@ -4,9 +4,6 @@
 #
 # Sends Helix Control-M alerts as SNMP (v1) traps
 #
-# Author  : David Fernandez (david_fernandez@bmc.com)
-# Version : 1.0 (05/02/2024)
-#
 # Notes : - Requires "snmptrap" (from "net-snmp-utils" package - see http://www.net-snmp.org) 
 #         - The MIB file (BMC-CONTROLMEM-MIB) must be loaded in the SNMP destination host
 #
