@@ -1,0 +1,32 @@
+"Load_Amazon_Athena_Table": {
+  "Type": "Job:AWS Lambda",
+  "ConnectionProfile": "<YOUR_AWS_LAMBDA_CONNECTION>",
+  "Function Name": "<YOUR_ATHENA_LAMBDA_FUNCTION>",
+  "Parameters": "{}",
+  "Append Log to Output": "unchecked",
+  "Host": "<YOUR_HOST>",
+  "CreatedBy": "<<CREATOR_EMAIL>>",
+  "RunAs": "<YOUR_AWS_LAMBDA_CONNECTION>",
+  "Application": "<YOUR_APPLICATION_NAME>",
+  "When": {
+    "WeekDays": ["NONE"],
+    "MonthDays": ["ALL"],
+    "DaysRelation": "OR"
+  },
+  "eventsToWaitFor": {
+    "Type": "WaitForEvents",
+    "Events": [
+      {
+        "Event": "<YOUR_TRIGGER_EVENT>"
+      }
+    ]
+  },
+  "eventsToDelete": {
+    "Type": "DeleteEvents",
+    "Events": [
+      {
+        "Event": "<YOUR_EVENT_TO_REMOVE>"
+      }
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+"Data_Quality_Check": {
+  "Type": "Job:AWS Lambda",
+  "ConnectionProfile": "<YOUR_AWS_LAMBDA_CONNECTION>",
+  "Append Log to Output": "checked",
+  "Function Name": "<YOUR_LAMBDA_FUNCTION_NAME>",
+  "Parameters": "{}",
+  "Host": "<<HOST_DETAILS>>",
+  "CreatedBy": "<<CREATOR_EMAIL>>",
+  "Description": "This job performs a data quality check on a CSV file to ensure it has at least 5 columns and more than 1000 rows.",
+  "RunAs": "<YOUR_AWS_LAMBDA_ROLE>",
+  "Application": "<YOUR_APPLICATION_NAME>",
+  "When": {
+    "WeekDays": ["NONE"],
+    "MonthDays": ["ALL"],
+    "DaysRelation": "OR"
+  },
+  "eventsToWaitFor": {
+    "Type": "WaitForEvents",
+    "Events": [
+      {
+        "Event": "<YOUR_TRIGGER_EVENT>"
+      }
+    ]
+  },
+  "eventsToDelete": {
+    "Type": "DeleteEvents",
+    "Events": [
+      {
+        "Event": "<YOUR_EVENT_TO_REMOVE>"
+      }
+    ]
+  }
+}

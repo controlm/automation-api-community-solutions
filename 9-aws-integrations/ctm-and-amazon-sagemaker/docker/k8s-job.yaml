@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: s3-data-processing-job
+spec:
+  template:
+    spec:
+      serviceAccountName: default  # Ensure this has S3 access via IAM
+      containers:
+      - name: data-processing-container
+        image: <YOUR_ECR_IMAGE_URL>
+        command: ["/bin/sh", "-c", "python3 /app/main.py -b <YOUR_S3_BUCKET> -i <YOUR_S3_INPUT_FILE> -o <YOUR_S3_OUTPUT_FILE>"]
+        env:
+        - name: S3_BUCKET
+          value: "<YOUR_S3_BUCKET>"
+        - name: S3_INPUT_FILE
+          value: "<YOUR_S3_INPUT_FILE>"
+        - name: S3_OUTPUT_FILE
+          value: "<YOUR_S3_OUTPUT_FILE>"
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"
+        volumeMounts:
+        - name: tmp-storage
+          mountPath: /tmp
+      restartPolicy: Never
+      volumes:
+      - name: tmp-storage
+        emptyDir: {}
