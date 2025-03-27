@@ -1,0 +1,24 @@
+"EKS-Preprocessing-Job": {
+  "Type": "Job:Kubernetes",
+  "Job Spec Yaml": "apiVersion: batch/v1\r\nkind: Job\r\nmetadata:\r\n  name: s3-data-processing-job\r\nspec:\r\n  template:\r\n    spec:\r\n      serviceAccountName: default  # Ensure this has S3 access via IAM\r\n      containers:\r\n      - name: data-processing-container\r\n        image: <YOUR_ECR_IMAGE_URL>\r\n        command: [\"/bin/sh\", \"-c\", \"python3 /app/main.py -b <YOUR_S3_BUCKET> -i <YOUR_S3_INPUT_FILE> -o <YOUR_S3_OUTPUT_FILE>\"]\r\n        env:\r\n        - name: S3_BUCKET\r\n          value: \"<YOUR_S3_BUCKET>\"\r\n        - name: S3_INPUT_FILE\r\n          value: \"<YOUR_S3_INPUT_FILE>\"\r\n        - name: S3_OUTPUT_FILE\r\n          value: \"<YOUR_S3_OUTPUT_FILE>\"\r\n        resources:\r\n          requests:\r\n            memory: \"2Gi\"\r\n            cpu: \"1\"\r\n          limits:\r\n            memory: \"4Gi\"\r\n            cpu: \"2\"\r\n        volumeMounts:\r\n        - name: tmp-storage\r\n          mountPath: /tmp\r\n      restartPolicy: Never\r\n      volumes:\r\n      - name: tmp-storage\r\n        emptyDir: {}\r\n\r\n",
+  "ConnectionProfile": "<YOUR_K8S_CONNECTION_PROFILE>",
+  "Get Pod Logs": "Get Logs",
+  "Job Cleanup": "Delete Job",
+  "Host": "<<HOST_DETAILS>>",
+  "CreatedBy": "<<CREATOR_EMAIL>>",
+  "RunAs": "<YOUR_K8S_CONNECTION_PROFILE>",
+  "Application": "<YOUR_APPLICATION_NAME>",
+  "When": {
+    "WeekDays": ["NONE"],
+    "MonthDays": ["ALL"],
+    "DaysRelation": "OR"
+  },
+  "eventsToAdd": {
+    "Type": "AddEvents",
+    "Events": [
+      {
+        "Event": "<YOUR_NEXT_EVENT>"
+      }
+    ]
+  }
+}

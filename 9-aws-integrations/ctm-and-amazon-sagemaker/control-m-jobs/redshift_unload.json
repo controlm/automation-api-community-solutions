@@ -1,0 +1,20 @@
+"Redshift_Unload": {
+    "Type": "Job:Database:SQLScript",
+    "ConnectionProfile": "<YOUR_REDSHIFT_CONNECTION>",
+    "SQLScript": "/home/ctmagent/redshift_sql/copy_into_s3.sql",
+    "Host": "<<REDSHIFT_HOST_DETAILS>>",
+    "CreatedBy": "<<CREATOR_EMAIL>>",
+    "RunAs": "<YOUR_REDSHIFT_CONNECTION>",
+    "Application": "<YOUR_APPLICATION_NAME>",
+    "When": {
+        "WeekDays": ["NONE"],
+        "MonthDays": ["ALL"],
+        "DaysRelation": "OR"
+    },
+    "eventsToAdd": {
+        "Type": "AddEvents",
+        "Events": [{
+            "Event": "Copy_into_bucket-TO-S3_to_S3_MFT-262"
+        }]
+    }
+}

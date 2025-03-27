@@ -1,0 +1,97 @@
+"S3_to_S3_Transfer": {
+  "Type": "Job:FileTransfer",
+  "ConnectionProfileSrc": "<YOUR_S3_CONNECTION_PROFILE>",
+  "ConnectionProfileDest": "<YOUR_S3_CONNECTION_PROFILE>",
+  "S3BucketNameSrc": "<YOUR_SOURCE_S3_BUCKET>",
+  "S3BucketNameDest": "<YOUR_DESTINATION_S3_BUCKET>",
+  "Host": "<<HOST_DETAILS>>",
+  "CreatedBy": "<<CREATOR_EMAIL>>",
+  "RunAs": "<YOUR_RUN_AS_USER>",
+  "Application": "<YOUR_APPLICATION_NAME>",
+  "Variables": [
+    {
+      "FTP-LOSTYPE": "Unix"
+    },
+    {
+      "FTP-CONNTYPE1": "S3"
+    },
+    {
+      "FTP-ROSTYPE": "Unix"
+    },
+    {
+      "FTP-CONNTYPE2": "S3"
+    },
+    {
+      "FTP-CM_VER": "9.0.00"
+    },
+    {
+      "FTP-OVERRIDE_WATCH_INTERVAL1": "0"
+    },
+    {
+      "FTP-DEST_NEWNAME1": "<YOUR_DESTINATION_FILENAME>"
+    }
+  ],
+  "FileTransfers": [
+    {
+      "TransferType": "Binary",
+      "TransferOption": "SrcToDestFileWatcher",
+      "Src": "<YOUR_SOURCE_FILE_PATH>",
+      "Dest": "<YOUR_DESTINATION_PATH>",
+      "ABSTIME": "0",
+      "TIMELIMIT": "0",
+      "UNIQUE": "0",
+      "SRCOPT": "0",
+      "IF_EXIST": "0",
+      "DSTOPT": "1",
+      "FailJobOnSourceActionFailure": false,
+      "RECURSIVE": "0",
+      "EXCLUDE_WILDCARD": "0",
+      "TRIM": "1",
+      "NULLFLDS": "0",
+      "VERNUM": "0",
+      "CASEIFS": "0",
+      "FileWatcherOptions": {
+        "VariableType": "Global",
+        "MinDetectedSizeInBytes": "200000000",
+        "UnitsOfTimeLimit": "Minutes"
+      },
+      "IncrementalTransfer": {
+        "IncrementalTransferEnabled": false,
+        "MaxModificationAgeForFirstRunEnabled": false,
+        "MaxModificationAgeForFirstRunInHours": "1"
+      },
+      "DestinationFilename": {
+        "ModifyCase": "No"
+      }
+    }
+  ],
+  "When": {
+    "WeekDays": ["NONE"],
+    "MonthDays": ["ALL"],
+    "DaysRelation": "OR"
+  },
+  "eventsToWaitFor": {
+    "Type": "WaitForEvents",
+    "Events": [
+      {
+        "Event": "<YOUR_TRIGGER_EVENT>"
+      }
+    ]
+  },
+  "eventsToAdd": {
+    "Type": "AddEvents",
+    "Events": [
+      {
+        "Event": "<YOUR_NEXT_EVENT>"
+      }
+    ]
+  },
+  "eventsToDelete": {
+    "Type": "DeleteEvents",
+    "Events": [
+      {
+        "Event": "<YOUR_EVENT_TO_REMOVE>"
+      }
+    ]
+  }
+}

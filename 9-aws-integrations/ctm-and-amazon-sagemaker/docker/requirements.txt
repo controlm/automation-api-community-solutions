@@ -1,0 +1,5 @@
+pandas
+boto3
+scikit-learn
+numpy
+s3fs

@@ -1,0 +1,35 @@
+"Amazon_SageMaker_TE_Pipeline": {
+  "Type": "Job:AWS SageMaker",
+  "ConnectionProfile": "<YOUR_SAGEMAKER_CONNECTION>",
+  "Add Parameters": "unchecked",
+  "Retry Pipeline Execution": "unchecked",
+  "Pipeline Name": "<YOUR_SAGEMAKER_PIPELINE>",
+  "Host": "<<HOST_DETAILS>>",
+  "CreatedBy": "<<CREATOR_EMAIL>>",
+  "RunAs": "<YOUR_SAGEMAKER_CONNECTION>",
+  "Application": "<YOUR_APPLICATION_NAME>",
+  "When": {
+    "WeekDays": ["NONE"],
+    "MonthDays": ["ALL"],
+    "DaysRelation": "OR"
+  },
+  "eventsToWaitFor": {
+    "Type": "WaitForEvents",
+    "Events": [
+      {
+        "Event": "<YOUR_TRIGGER_EVENT>"
+      }
+    ]
+  },
+  "eventsToDelete": {
+    "Type": "DeleteEvents",
+    "Events": [
+      {
+        "Event": "<YOUR_EVENT_TO_REMOVE>"
+      },
+      {
+        "Event": "<YOUR_SECOND_EVENT_TO_REMOVE>"
+      }
+    ]
+  }
+}
