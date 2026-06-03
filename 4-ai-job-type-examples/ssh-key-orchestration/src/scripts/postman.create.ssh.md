@@ -4,7 +4,7 @@
 
 | Variable | Value | Mapped Parameter | Default |
 | ---- | ---- | ---- | ---- |
-| baseUrl | https://ctm.shytwr.net/automation-api | baseUrl | Yes | 
+| baseUrl | https://ctm-em/automation-api | baseUrl | Yes | 
 | SSH_USER_NAME | planets | :user | Yes | 
 | SSH_KEY_NAME |  |  | No | 
 | SSH_KEY_PASSPHRASE | W3lcome |  | Yes | 
