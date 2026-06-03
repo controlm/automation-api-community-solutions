@@ -23,6 +23,12 @@ This is part of a broader modernization pattern:
 
 The outcome is change without disruption. SSH key rotation becomes repeatable, auditable, and safe to delegate, without weakening the Control-M job administration model.
 
+### Outcome‑focused Demo 
+
+- This is a short, [outcome‑focused demo](https://play.goconsensus.com/b7e88f5d1) — not a feature walkthrough.
+- It is about how Control‑M can move from being an upgrade bottleneck to a platform the business can confidently change.
+
+
 ## Index
 
 - [Vision](#vision)
@@ -77,6 +83,7 @@ This example rotates or updates the SSH key configuration after the base agentle
 | `src/jobs/ssh.key.orchestration.simple.json` | Deployment Control-M folder that performs SSH key orchestration. |
 | `postman/SSH.Orchestration.Postman.Collection.json` | Educational Postman collection that shows the underlying Automation API calls. Not used by Control-M. |
 | `src/scripts/postman.create.ssh.md` | Educational notes for Postman variables and API payloads. Not used by Control-M. |
+| `ctmai/VFSCTMSSH.ctmai` | Control-M Application Integrator Job | 
 | `images/` | Screenshots from the local lab setup. |
 
 ## Lab Values To Replace
@@ -101,8 +108,11 @@ Deploy the Control-M Application Integrator job type for this use case before im
 The folders expect an Application Integrator job type named:
 
 ```text
-AI SSH Key Orchestration
+SSH Key Orchestration
 ```
+
+File: [VFSCTMSSH.ctmai](src/ctmai/VFSCTMSSH.ctmai)
+
 
 The job type must include these operations:
 
