@@ -78,7 +78,6 @@ This example rotates or updates the SSH key configuration after the base agentle
 | `postman/SSH.Orchestration.Postman.Collection.json` | Educational Postman collection that shows the underlying Automation API calls. Not used by Control-M. |
 | `src/scripts/postman.create.ssh.md` | Educational notes for Postman variables and API payloads. Not used by Control-M. |
 | `images/` | Screenshots from the local lab setup. |
-| `internal/` | Demo talk track and presenter notes. Not required for implementation. |
 
 ## Lab Values To Replace
 
