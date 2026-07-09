@@ -1,5 +1,7 @@
 # Control-M SSH Key Orchestration
 
+[![](https://badgen.net/github/release/controlm/automation-api-community-solutions/stable)]() [![](https://badgen.net/github/tag/controlm/automation-api-community-solutions)]() [![](https://badgen.net/github/status/controlm/automation-api-community-solutions)]() [![](https://badgen.net/github/stars/controlm/automation-api-community-solutions)]() [![](https://badgen.net/github/label-issues/controlm/automation-api-community-solutions/help-wanted/open)]() [![](https://badgen.net/github/commits/controlm/automation-api-community-solutions)]() [![](https://badgen.net/github/releases/controlm/automation-api-community-solutions)]() [![](https://badgen.net/github/license/controlm/automation-api-community-solutions)]() [![](https://badgen.net/github/contributors/controlm/automation-api-community-solutions)]() 
+
 This repository contains an example implementation for orchestrating SSH key rotation with Control-M, Control-M Application Integrator, Control-M Automation API, agentless hosts, RunAs users, host groups, resource pools, and Self-Service.
 
 The screenshots in this README are from a local lab. Names such as `ctm-lin-srv`, `LUMBERJACK`, `SSH_KEY_MANAGER`, `SSH_KEY_TARGET`, `planets`, and `remote-host-01` must be changed to match the customer environment.
