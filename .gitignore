@@ -17,5 +17,6 @@ launch.json
 6-ide-integrations/integration-via-marketplace/vscode/src/samples/ctm.basic.json
 1-general-examples/workload-preflight-check/src/.engineer/config/.env
 1-general-examples/workload-preflight-check/src/.engineer/logs/
+1-general-examples/workload-preflight-check/src/.engineer/inventory/
 
 .gitignore
