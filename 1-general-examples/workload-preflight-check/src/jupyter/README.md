@@ -397,9 +397,9 @@ All API responses are in JSON format with appropriate HTTP status codes:
 - **Notebook Problems**: Check Jupyter logs and Python environment
 
 ### Version Information
-- **Author**: Control-M Engineering Team
+- **Author**: Control-M Software Engineering Team - SIGMA
 - **Email**: orchestrator@bmc.com  
-- **Version**: 1.0.0
+- **Version**: 1.10.0
 - **License**: Apache 2.0
 
 ### Warranty Disclaimer
