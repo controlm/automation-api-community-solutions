@@ -33,23 +33,23 @@ can be fully enumerated up front without seeing more real agent data.
 Usage: -n/--nodeid takes the agent name (Control-M's own term for it - see
 the "nodeid" field in CtmClient.get_agents()'s results).
 
-    python agent_config_baseline.py capture -n ctm-lin-agt.shytwr.net
+    python agent_config_baseline.py capture -n ctm-lin-agt.werkstatt.local
         Detects the agent's platform (from its reported operatingSystem) and
         saves its live config as that platform's golden baseline. Refuses to
         overwrite an existing golden unless --force is passed.
 
-    python agent_config_baseline.py capture -n ctm-lin-agt.shytwr.net --platform linux --force
-    python agent_config_baseline.py capture -n ctm-mfte-agt.shytwr.net -t mfte
+    python agent_config_baseline.py capture -n ctm-lin-agt.werkstatt.local --platform linux --force
+    python agent_config_baseline.py capture -n ctm-mfte-agt.werkstatt.local -t mfte
         Saves as linux_mfte.json (or windows_mfte.json) instead of the
         platform's general baseline.
 
-    python agent_config_baseline.py compare -n ctm-lin-agt.shytwr.net
+    python agent_config_baseline.py compare -n ctm-lin-agt.werkstatt.local
         Compares the agent's live config against its platform's golden
         baseline and reports missing/different/extra parameters (ignoring
         node-specific ones). Exit code 1 if anything is missing or
         different; extra parameters and ignored ones don't affect it.
 
-    python agent_config_baseline.py compare -n ctm-lin-agt.shytwr.net --output json
+    python agent_config_baseline.py compare -n ctm-lin-agt.werkstatt.local --output json
         --output also takes "file" (prints only the report's path). Regardless
         of --output, a JSON report is always written to LOG_FOLDER (matching
         ctm_engineer.py --folder's behavior) - console output is a view onto
@@ -386,7 +386,7 @@ def main():
         "-t sap -> linux_sap.json. Left empty, the filename is just {platform}.json."
     )
 
-    nodeid_help = "Agent nodeid (Control-M's term for its hostname), e.g. -n ctm-lin-agt.shytwr.net"
+    nodeid_help = "Agent nodeid (Control-M's term for its hostname), e.g. -n ctm-lin-agt.werkstatt.local"
 
     capture_parser = subparsers.add_parser("capture", help="Pull an agent's live config and save it as the golden baseline for its platform")
     capture_parser.add_argument("-n", "--nodeid", dest="agent", required=True, metavar="NODEID", help=nodeid_help)
