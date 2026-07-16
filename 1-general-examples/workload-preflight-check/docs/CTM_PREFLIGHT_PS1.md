@@ -1,16 +1,14 @@
-# Running the pre-flight check
+# ctm-preflight.ps1
 
-For the "why" behind this tool, see the [project README](../README.md). This README covers the "how" — running either implementation.
+PowerShell 7 implementation of the workload preflight check — see the [project README](../README.md) for the "why". Best suited to scheduling before a run, wiring into CI/CD or an orchestrator, or any scripted/automated use: it produces a JSON report and a script-friendly exit code.
 
-## PowerShell script (`ctm-preflight.ps1`)
-
-### Prerequisites
+## Prerequisites
 
 - PowerShell 7+ (`pwsh`)
 - Network access to the Control-M Automation API Gateway, plus outbound ICMP/TCP if you want SFTP endpoints network-tested
 - An Automation API key with read access to Deploy and Configuration services
 
-### Configuration
+## Configuration
 
 Create `.engineer/config/.env` next to the script (a `.env.sample` is provided), or pass `-EnvFile` to point elsewhere:
 
@@ -24,7 +22,7 @@ Create `.engineer/config/.env` next to the script (a `.env.sample` is provided),
 | `MFT_PORT` | No (default `1222`) | Reserved for future use |
 | `LOG_FOLDER` | No (default `.engineer/logs`) | Where the JSON report is written, relative to the script's location |
 
-### Usage
+## Usage
 
 ```bash
 ./ctm-preflight.ps1 -Folder ZZM_UC_MULTIPATH_CLOUD
@@ -34,7 +32,7 @@ Create `.engineer/config/.env` next to the script (a `.env.sample` is provided),
 ./ctm-preflight.ps1 -Folder ZZM_UC_MULTIPATH_CLOUD -EnvFile /path/to/other.env
 ```
 
-### Output modes
+## Output modes
 
 The `-Output` parameter controls what's printed to the console. The JSON report file is **always** written to `LOG_FOLDER`, in every mode.
 
@@ -49,7 +47,7 @@ The `-Output` parameter controls what's printed to the console. The JSON report 
 ./ctm-preflight.ps1 -Folder ZZM_UC_MULTIPATH_CLOUD -Output file
 ```
 
-### JSON report schema
+## JSON report schema
 
 Written to `{LOG_FOLDER}/ctm_preflight_{Folder}_{yyyyMMdd_HHmmss}.json`:
 
@@ -66,7 +64,7 @@ Written to `{LOG_FOLDER}/ctm_preflight_{Folder}_{yyyyMMdd_HHmmss}.json`:
 
 Status values are one of `OK`, `ERROR`, or `SKIPPED`.
 
-### Exit codes
+## Exit codes
 
 | Code | Meaning |
 |---|---|
@@ -74,7 +72,3 @@ Status values are one of `OK`, `ERROR`, or `SKIPPED`.
 | `1` | At least one agent or connection-profile failure, or the initial job retrieval from Control-M failed |
 
 SFTP network-test failures do **not** affect the exit code, since that check is informational only — check `NetEndpointFailures` in the JSON report if you need to gate on it separately.
-
-## Postman collection
-
-Import [`postman/Workload PreFlight Check.postman_collection.json`](postman/Workload%20PreFlight%20Check.postman_collection.json) into Postman, set `baseUrl`, `apiKey`, `CTM_FOLDER`, and `CTM_SERVER` as collection/environment variables, and run the requests under `resources` in order (jobs → servers → agents → connection profile) to walk through the same checks call-by-call. It's the fastest way to see exactly what the API is doing before you commit to the scripted version.
