@@ -2,6 +2,8 @@
 
 A comprehensive toolkit for operations teams to interact with Control-M automation API for inventory management and testing.
 
+Scope note: unlike [`ctm-preflight.ps1`](CTM_PREFLIGHT_PS1.md)/[`ctm_engineer.py`](CTM_ENGINEER.md), which check one specific folder's jobs before a run, these notebooks give broader, whole-environment visibility — inventorying every server/agent/connection profile/hostgroup and letting you spot-check any of them interactively, without needing a folder to inspect.
+
 ## Overview
 
 This project provides Jupyter notebooks that expose Control-M automation API functionality to operations teams, enabling them to:
@@ -65,9 +67,9 @@ Required packages:
 
 ### Step 1: Copy Notebooks to Jupyter Environment
 1. Copy the notebook files from the development server to your Jupyter working directory:
-   - Copy `src/01_ctm-config.ipynb` → `01_ctm-config.ipynb`
-   - Copy `src/02_ctm.ipynb` → `02_ctm.ipynb`
-   - Copy `src/03_ctm-monitoring.ipynb` → `03_ctm-monitoring.ipynb`
+   - Copy `src/jupyter/01_ctm-config.ipynb` → `01_ctm-config.ipynb`
+   - Copy `src/jupyter/02_ctm.ipynb` → `02_ctm.ipynb`
+   - Copy `src/jupyter/03_ctm-monitoring.ipynb` → `03_ctm-monitoring.ipynb`
    - Copy `src/requirements.txt` → `requirements.txt`
 2. Install required Python packages in your Jupyter environment:
    ```bash
@@ -409,4 +411,4 @@ This software is provided "AS IS" without warranty of any kind. Use at your own 
 
 ## License
 
-Licensed under the Apache License, Version 2.0. See the [LICENSE](LICENSE) file for details.
+Licensed under the Apache License, Version 2.0. See the [LICENSE](../../../LICENSE) file for details.

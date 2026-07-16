@@ -18,5 +18,6 @@ launch.json
 1-general-examples/workload-preflight-check/src/.engineer/config/.env
 1-general-examples/workload-preflight-check/src/.engineer/logs/
 1-general-examples/workload-preflight-check/src/.engineer/inventory/
+1-general-examples/workload-preflight-check/src/archive/
 
 .gitignore

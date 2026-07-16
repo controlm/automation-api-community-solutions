@@ -1,0 +1,5 @@
+# Control-M Automation API - ctm-engineer.py talks to the REST API directly
+# (requests + x-api-key header), the same way ctm-preflight.ps1 and the
+# Postman collection do. No controlm_py SDK dependency.
+requests>=2.31.0
+python-dotenv>=1.0.1

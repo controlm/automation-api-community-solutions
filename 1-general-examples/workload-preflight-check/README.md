@@ -55,14 +55,16 @@ Take a SQL/Database job as an example — testing its connection profile and DB 
 
 No new API calls and no new test primitives — just one more mapping from job type to which connection-profile field(s) it has.
 
-## Two ways to run this check
+## Four ways to run this check
 
-| Implementation | Best for |
-|---|---|
-| [`src/ctm-preflight.ps1`](src/ctm-preflight.ps1) (PowerShell 7) | Scheduling before a run, wiring into CI/CD or an orchestrator, scripted/automated use — produces a JSON report and a script-friendly exit code |
-| [`src/postman/Workload PreFlight Check.postman_collection.json`](src/postman/Workload%20PreFlight%20Check.postman_collection.json) | Manual, ad hoc checks; exploring or demoing the underlying API calls one at a time without writing any code |
+| Implementation | Best for | What it teaches you |
+|---|---|---|
+| [`src/ctm-preflight.ps1`](src/ctm-preflight.ps1) (PowerShell 7) | Scheduling before a run, wiring into CI/CD or an orchestrator, scripted/automated use | A JSON report + script-friendly exit code: exactly which jobs would fail, and why, before you order the folder |
+| [`src/ctm_engineer.py`](src/ctm_engineer.py) + [`src/agent_config_baseline.py`](src/agent_config_baseline.py) (Python) | The same preflight check as the PS1 script, plus a reusable `CtmClient` module for other Python tooling and notebooks, plus a separate agent-config drift check | The same failure detail as the PS1 script, color-coded, with added outside-of-Control-M signals (SSL cert expiry, SSH host key, network reachability); `agent_config_baseline.py` separately shows whether an agent's (or a whole hostgroup's) live configuration has drifted from an approved baseline |
+| [`src/postman/Workload PreFlight Check.postman_collection.json`](src/postman/Workload%20PreFlight%20Check.postman_collection.json) | Manual, ad hoc checks; exploring or demoing the underlying API calls one at a time without writing any code | Exactly which Automation API calls the automated checks make, one request and response at a time — the fastest way to see what's happening under the hood |
+| [`src/jupyter/*.ipynb`](src/jupyter/) (Jupyter notebooks) | Operations teams who want an interactive, no-code way to inventory a whole Control-M environment and spot-check specific agents/connection profiles | Broader environment visibility — every server/agent/connection profile/hostgroup, exported to JSON/CSV, plus interactive agent-ping and connection-profile testing — rather than one folder's preflight result |
 
-Both implementations call the same underlying Control-M Automation API endpoints — the PowerShell script simply chains them together, adds memoization, and adds the optional SFTP network test on top. Setup and usage details for each live in [`src/README.md`](src/README.md).
+All four call the same underlying Control-M Automation API endpoints (see below) — they differ in packaging: a scheduled/scripted check, a reusable module + compliance check, a manual call-by-call walkthrough, or an interactive whole-environment inventory. Setup and usage details for each live in [`docs/README.md`](docs/README.md).
 
 ## Control-M Automation API calls used
 
@@ -80,4 +82,4 @@ None of these mutate a Control-M object — every call is a read or a built-in t
 
 ## Getting started
 
-See [`src/README.md`](src/README.md) for prerequisites, `.env` configuration, usage examples, output modes, the JSON report schema, and exit codes.
+See [`docs/README.md`](docs/README.md) for prerequisites, `.env` configuration, usage examples, output modes, the JSON report schema, and exit codes.
