@@ -1,0 +1,33 @@
+{
+  "VERSION": "20.26.07.10",
+  "GROUP": {
+    "name": "controlm",
+    "id": "5001",
+    "purpose": "control-m",
+    "note": "Must already exist on the host before setup.mftgpg.sh runs -- however this environment provisions its shared groups (setup.user.sh / data.json GROUPS.OS in deployments that use it, a pre-baked image, or a manual groupadd in ones that don't). setup.mftgpg.sh never creates or resizes it -- gid ownership of the shared controlm group is decided once, centrally, not per service account."
+  },
+  "USER": {
+    "name": "mftgpg",
+    "base": "/home",
+    "shell": "/sbin/nologin",
+    "id": "6101",
+    "group": "controlm",
+    "purpose": "control-m mfte gpg demo",
+    "title": "Control-M MFTE Privacy Guard Demo"
+  },
+  "GPG": {
+    "home_dir": ".gnupg",
+    "home_mode": "700",
+    "agent_loopback_conf": true,
+    "meta_dir": "mfte-gpg-meta",
+    "meta_mode": "755",
+    "passphrase_dir": "mfte-gpg-passphrases",
+    "passphrase_mode": "700",
+    "note": "home_dir/meta_dir/passphrase_dir are the only mftgpg-private paths -- all three live under USER.base/USER.name (e.g. /home/mftgpg). Output/exchange/onboarding/receive-staging dirs are NOT subdirs of the mftgpg home anymore (env moved them under MFTE_OPS_HOME so both root and mftgpg can reach them); setup.mftgpg.sh provisions those directly from the resolved MFTE_GPG_OUTPUT_DIR / MFTE_GPG_EXCHANGE_DIR / MFTE_GPG_ONBOARDING_PRIVACY_DIR / MFTE_GPG_RECEIVE_STAGING_DIR env vars instead of from keys here."
+  },
+  "SUDO": {
+    "deny_all": true,
+    "file": "/etc/sudoers.d/zzm-mftgpg-deny",
+    "note": "mftgpg's primary group (controlm) already carries NOPASSWD ALL via /etc/sudoers.d/controlm on any host where setup.user.sh has run. deny_all writes an explicit 'mftgpg ALL=(ALL) !ALL' override -- sudoers.d processes files in ASCII order and is last-match-wins across the combined set, so this file's name matters: it must sort AFTER every other file that might grant mftgpg sudo via group membership. 'zz-' beats a bare 'controlm' (digits/lowercase compare fine here, but don't rename this to something starting 0-9 -- e.g. a '90-' prefix sorts BEFORE 'controlm' in plain ASCII and would silently lose)."
+  }
+}
