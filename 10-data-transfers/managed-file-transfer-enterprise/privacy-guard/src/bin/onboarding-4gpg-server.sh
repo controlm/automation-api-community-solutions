@@ -8,7 +8,7 @@ umask 002
 #           step: generate a fresh keypair for them, then export both
 #           halves to where the rest of the workflow expects to find them
 #             - PRIVATE key + its passphrase file -> $MFTE_GPG_ONBOARDING_PRIVACY_DIR
-#               (shared NFS, /opt/werkstatt/... by default) for
+#               (shared NFS, /mnt/mfte/... by default) for
 #               onboarding-4gpg-cluster.sh to pick up on every hub
 #             - PUBLIC key only               -> $MFTE_GPG_ONBOARDING_B2B_DIR/<email>/
 #               (/mnt/ftshome/... by default) for the customer to collect
@@ -89,6 +89,7 @@ umask 002
 #      hit this code -- see "resume" above.
 
 SCRIPT_NAME="$(basename "$0")"
+SCRIPT_VERSION="1.0.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 export MFTE_OPS_HOME="${MFTE_OPS_HOME:-$(cd "${SCRIPT_DIR}/.." && pwd)}"

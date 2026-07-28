@@ -2,7 +2,7 @@
 set -o pipefail
 umask 002
 
-# file name: werkstatt.gpg.receive.file.sh
+# file name: werkstatt.gpg.vault.receive.file.sh
 # purpose : Given an inbound encrypted file, figure out which of possibly
 #           many keys in this keyring it was encrypted to, decrypt it with
 #           that one, and record a full audit entry for the attempt --
@@ -114,6 +114,35 @@ umask 002
 #           record (same one written to the audit log). -q = nothing.
 #           Mutually exclusive; -q wins if both given.
 #
+# vault   : Vault-sourced sibling of werkstatt.gpg.receive.file.sh -- same
+#           relationship as werkstatt.gpg.decrypt.file.sh has to
+#           werkstatt.gpg.vault.decrypt.file.sh. Every part of this script
+#           is identical to the plain version -- recipient discovery
+#           (--list-packets), resolving which key ID this keyring holds
+#           the secret half of, the full JSONL audit record, the -R/-K
+#           return-path relocation -- EXCEPT how the passphrase for the
+#           matched key is obtained. The plain version reads a local
+#           mode-600 file; this version fetches the passphrase from Vault
+#           fresh on every run and hands it to gpg via --passphrase-fd +
+#           process substitution, never writing it to disk. See
+#           mfte.gpg.vault.sh's header for the fd-survival-through-runuser
+#           verification this depends on, and
+#           werkstatt.gpg.vault.decrypt.file.sh's header for the same
+#           Vault-reachability trade-off stated there (this script has no
+#           functioning fallback if Vault is unreachable/sealed at run
+#           time -- that's the cost of never materializing the passphrase
+#           locally).
+#
+#           A given customer's key needs its passphrase actually PRESENT
+#           in Vault (via werkstatt.gpg.vault.export.passphrase.sh) before
+#           a file encrypted to that key can be received through this
+#           script -- if the recipient resolves to a key this keyring
+#           holds the secret half of, but Vault has no passphrase filed
+#           for it yet, this fails with GPG_REASON=vault_passphrase_not_found,
+#           EXIT_CODE=1 -- distinct from "not onboarded at all" (exit 3,
+#           unchanged from the plain version), because the key DOES exist
+#           here; only its Vault-side passphrase is missing.
+#
 ###############################################################################
 # WHY THE ARGUMENT PARSING LOOKS LIKE THIS (read before templating this script)
 ###############################################################################
@@ -129,7 +158,7 @@ umask 002
 SCRIPT_NAME="$(basename "$0")"
 SCRIPT_VERSION="1.0.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SCHEMA="controlm_mfte_gpg_receive_v1"
+SCHEMA="controlm_mfte_gpg_vault_receive_v1"
 
 export MFTE_OPS_HOME="${MFTE_OPS_HOME:-$(cd "${SCRIPT_DIR}/.." && pwd)}"
 MFTE_LIB_DIR="${MFTE_LIB_DIR:-${MFTE_OPS_HOME}/lib}"
@@ -146,6 +175,11 @@ fi
 # shellcheck source=/dev/null
 if ! source "${MFTE_LIB_DIR}/bash/mfte.gpg.sh"; then
   echo "ERROR: could not source ${MFTE_LIB_DIR}/bash/mfte.gpg.sh" >&2
+  exit 1
+fi
+# shellcheck source=/dev/null
+if ! source "${MFTE_LIB_DIR}/bash/mfte.gpg.vault.sh"; then
+  echo "ERROR: could not source ${MFTE_LIB_DIR}/bash/mfte.gpg.vault.sh" >&2
   exit 1
 fi
 
@@ -249,6 +283,12 @@ failure does NOT change the exit code (the decrypt/receive step already
 determined it) -- see "return" in the JSON record and the ERROR lines on
 stderr if a relocation itself fails.
 
+Vault env vars (required -- this is the Vault-sourced sibling of
+werkstatt.gpg.receive.file.sh; see this file's own "vault" header section):
+  VAULT_ADDR
+  VAULT_TOKEN                 or:
+  VAULT_ROLE_ID / VAULT_SECRET_ID
+
 Output:
   -j  json        print the full JSON record to stdout instead of the
                    short status line
@@ -350,9 +390,9 @@ QUIET="false"
 
 ARGV_DUMP="$(mfte_dump_argv "$@")"
 ARGV_COUNT="$#"
-log_system INFO "argv[$#]: ${ARGV_DUMP}"
+log_system INFO "version=${SCRIPT_VERSION} argv[$#]: ${ARGV_DUMP}"
 
-while getopts ':p:a:d:D:n:N:e:E:x:X:y:Y:z:u:c:v:m:t:s:g:G:r:A:k:w:R:K:o:l:jqh' opt; do
+while getopts ':p:a:d:D:n:N:e:E:x:X:y:Y:z:u:c:v:m:t:s:g:G:r:A:k:w:R:K:o:l:jqVh' opt; do
   case "$opt" in
     p) FILE_PATH="$(mfte_unquote "$OPTARG")" ;;
     a) FILE_ABS_PATH="$(mfte_unquote "$OPTARG")" ;;
@@ -389,6 +429,7 @@ while getopts ':p:a:d:D:n:N:e:E:x:X:y:Y:z:u:c:v:m:t:s:g:G:r:A:k:w:R:K:o:l:jqh' o
       ;;
     j) JSON_OUT="true" ;;
     q) QUIET="true" ;;
+    V) printf '%s %s\n' "$SCRIPT_NAME" "$SCRIPT_VERSION"; exit 0 ;;
     h) usage; exit 0 ;;
     :) log_system ERROR "missing value for -$OPTARG"; echo "Missing value for -$OPTARG" >&2; usage; exit 2 ;;
     \?) log_system ERROR "unknown option -$OPTARG"; echo "Unknown option: -$OPTARG" >&2; usage; exit 2 ;;
@@ -450,6 +491,7 @@ KEY_FP=""
 MATCHED_UID=""
 DEC_OUTPUT=""
 CHECKSUM=""
+VAULT_PATH=""
 
 do_receive() {
   if [[ ! -f "$OPERATE_PATH" || ! -r "$OPERATE_PATH" ]]; then
@@ -462,6 +504,17 @@ do_receive() {
   if ! mfte_gpg_preflight; then
     log_system ERROR "preflight failed"
     GPG_REASON="preflight_failed"; EXIT_CODE=1
+    return
+  fi
+
+  if ! mfte_gpg_vault_preflight; then
+    log_system ERROR "vault preflight failed"
+    GPG_REASON="vault_preflight_failed"; EXIT_CODE=1
+    return
+  fi
+  if ! mfte_gpg_vault_login_if_needed; then
+    log_system ERROR "vault auth failed"
+    GPG_REASON="vault_auth_failed"; EXIT_CODE=1
     return
   fi
 
@@ -532,13 +585,26 @@ do_receive() {
 
   IFS='|' read -r MATCHED_KEYID KEY_FP MATCHED_UID <<< "${candidates[0]}"
 
-  # Step 3: decrypt
-  local passphrase_file
-  passphrase_file="$(mfte_gpg_passphrase_file "$KEY_FP")"
-  if ! mfte_gpg_require_locked_down "$passphrase_file" 600; then
-    log_system ERROR "passphrase file failed lockdown check for key=${KEY_FP} file=${OPERATE_PATH}"
-    echo "ERROR: passphrase file for key ${KEY_FP} is missing or not properly locked down." >&2
-    GPG_REASON="passphrase_not_locked_down"; EXIT_CODE=1
+  # Step 3: decrypt -- passphrase fetched from Vault fresh for this run,
+  # never a local file. VAULT_PATH is captured here (rather than only
+  # inside the log line) so it can also go into the JSON audit record's
+  # "gpg" block below.
+  VAULT_PATH="$(mfte_gpg_vault_passphrase_path "$KEY_FP")"
+
+  # Explicit presence check BEFORE attempting decrypt -- distinguishes
+  # "this key is in the keyring but Vault has no passphrase filed for it
+  # yet" (a distinct, actionable condition -- the customer WAS onboarded
+  # into the keyring, someone just hasn't run
+  # werkstatt.gpg.vault.export.passphrase.sh for them yet) from a genuine
+  # decrypt failure. Same existence-check idiom
+  # werkstatt.gpg.vault.status.sh already uses: the value is tested for
+  # non-emptiness inside this one conditional and never assigned to a
+  # variable that persists or gets logged.
+  if [[ -z "$(mfte_gpg_vault_get_passphrase "$KEY_FP")" ]]; then
+    log_system ERROR "no passphrase found in vault for key=${KEY_FP} vault_path=${VAULT_PATH} file=${OPERATE_PATH}"
+    echo "ERROR: key ${KEY_FP} is in this keyring, but no passphrase is filed in Vault at ${VAULT_PATH}." >&2
+    echo "Run werkstatt.gpg.vault.export.passphrase.sh -k ${KEY_FP} first." >&2
+    GPG_REASON="vault_passphrase_not_found"; EXIT_CODE=1
     return
   fi
 
@@ -555,11 +621,15 @@ do_receive() {
     DEC_OUTPUT="$(mfte_increment_filename "${MFTE_GPG_OUTPUT_DIR}/${base_name}")"
   fi
 
+  # Process substitution: the passphrase is read by gpg directly off fd 3,
+  # never written to disk, never this script's (or gpg's) own CLI argument
+  # -- same mechanism werkstatt.gpg.vault.decrypt.file.sh uses.
   local dec_output_log
-  if ! dec_output_log="$(mfte_gpg_run --batch --yes --pinentry-mode loopback --passphrase-file "$passphrase_file" --output "$DEC_OUTPUT" --decrypt "$OPERATE_PATH" 2>&1)"; then
-    log_system ERROR "decryption failed file=${OPERATE_PATH} key=${KEY_FP}"
+  if ! dec_output_log="$(mfte_gpg_run --batch --yes --pinentry-mode loopback --passphrase-fd 3 --output "$DEC_OUTPUT" --decrypt "$OPERATE_PATH" 3< <(mfte_gpg_vault_get_passphrase "$KEY_FP") 2>&1)"; then
+    log_system ERROR "decryption failed file=${OPERATE_PATH} key=${KEY_FP} vault_path=${VAULT_PATH}"
     log_system DEBUG "gpg output: ${dec_output_log}"
     echo "ERROR: decryption failed. See ${SYSTEM_LOG_FILE} for details." >&2
+    echo "If no passphrase exists yet at ${VAULT_PATH}, run werkstatt.gpg.vault.export.passphrase.sh for this key first." >&2
     GPG_REASON="decrypt_failed"; EXIT_CODE=1
     return
   fi
@@ -569,7 +639,7 @@ do_receive() {
     [[ -z "$CHECKSUM" ]] && CHECKSUM="$(shasum -a 256 "$DEC_OUTPUT" 2>/dev/null | awk '{print $1}')"
   fi
 
-  log_system INFO "complete file=${OPERATE_PATH} recipient_keyid=${MATCHED_KEYID} key=${KEY_FP} uid=\"${MATCHED_UID}\" output=${DEC_OUTPUT} sha256=${CHECKSUM}"
+  log_system INFO "complete file=${OPERATE_PATH} recipient_keyid=${MATCHED_KEYID} key=${KEY_FP} vault_path=${VAULT_PATH} uid=\"${MATCHED_UID}\" output=${DEC_OUTPUT} sha256=${CHECKSUM}"
   GPG_STATUS="decrypted"; GPG_REASON=""; EXIT_CODE=0
 }
 
@@ -703,6 +773,8 @@ build_json() {
   printf ','; mfte_json_kv_string recipient_keyid "$MATCHED_KEYID"
   printf ','; mfte_json_kv_string fingerprint "$KEY_FP"
   printf ','; mfte_json_kv_string uid "$MATCHED_UID"
+  printf ','; mfte_json_kv_string passphrase_source "vault"
+  printf ','; mfte_json_kv_string vault_path "$VAULT_PATH"
   printf ','; mfte_json_kv_string output "$DEC_OUTPUT"
   printf ','; mfte_json_kv_string sha256 "$CHECKSUM"
   printf '}'

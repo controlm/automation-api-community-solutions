@@ -17,6 +17,7 @@ umask 002
 #           file, never passed as a flag value or printed.
 
 SCRIPT_NAME="$(basename "$0")"
+SCRIPT_VERSION="1.0.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 export MFTE_OPS_HOME="${MFTE_OPS_HOME:-$(cd "${SCRIPT_DIR}/.." && pwd)}"

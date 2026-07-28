@@ -1,0 +1,10 @@
+[Unit]
+Description=Re-check and unseal lab Vault every 5 minutes (safety net)
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+Unit=vault-unseal.service
+
+[Install]
+WantedBy=timers.target

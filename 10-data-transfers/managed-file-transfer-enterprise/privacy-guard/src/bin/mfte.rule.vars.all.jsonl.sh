@@ -84,6 +84,7 @@ umask 002
 ###############################################################################
 
 SCRIPT_NAME="$(basename "$0")"
+SCRIPT_VERSION="1.0.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SCHEMA="controlm_mfte_processing_rule_variables_v1"
 

@@ -2,27 +2,33 @@
 set -o pipefail
 umask 002
 
-# file name: werkstatt.gpg.decrypt.file.sh
-# purpose : Decrypt a file using a private key held by the mftgpg
-#           service account.
+# file name: werkstatt.gpg.vault.decrypt.file.sh
+# purpose : Decrypt a file using a private key held by the mftgpg service
+#           account, with the passphrase fetched from Vault fresh on every
+#           run -- the Vault-aware sibling of werkstatt.gpg.decrypt.
+#           file.sh, kept as its own script rather than a flag on that one
+#           so the plain file-based path never has a Vault dependency
+#           forced onto it.
 #
-# origin  : Hardened, production-like-demo version of a training script
-#           that took a passphrase as a CLI argument and printed it in
-#           cleartext via display_project_details() -- deliberately, so a
-#           student could see exactly what value was driving the decrypt.
-#           That was reasonable for its original purpose; it is not
-#           reasonable for a script invoked unattended from a Control-M
-#           Run Command, where the "terminal" a passphrase would print to
-#           is a job log that persists indefinitely. This version resolves
-#           the passphrase only from a locked-down file (mode 600, owned
-#           by mftgpg) via --passphrase-file, and never accepts it as a
-#           flag or writes it anywhere.
+# mechanism: The passphrase goes from Vault to gpg via --passphrase-fd and
+#           process substitution -- it is never written to disk at any
+#           point, never a CLI argument to gpg or to this script, and never
+#           echoed or logged. Unlike werkstatt.gpg.vault.import.passphrase.
+#           sh, nothing is filed locally; this script re-fetches from Vault
+#           every single run. Trade-off, stated plainly: this decrypt now
+#           depends on Vault being reachable and unsealed at the moment of
+#           the run -- a local passphrase file has no such dependency. If
+#           that trade-off is wrong for a given host, use
+#           werkstatt.gpg.vault.import.passphrase.sh once to file the
+#           passphrase locally, then use the plain
+#           werkstatt.gpg.decrypt.file.sh from then on.
 #
-# default : If -k isn't given, falls back to the fingerprint recorded in
-#           default-key.json (written by werkstatt.gpg.generate.key.sh /
-#           werkstatt.gpg.export.key.sh) -- same "default key" concept the
-#           original dsse.gpg.info.json served, just without a passphrase
-#           field in it.
+# fd note : Depends on a file descriptor opened by process substitution
+#           surviving mfte_gpg_run's internal `runuser -u ${MFTE_GPG_USER}`
+#           identity switch. See mfte.gpg.vault.sh's header for how this
+#           was verified (2026-07-27, ctm-mfte-hub-03) -- re-verify on any
+#           host where MFTE_GPG_USER's account type or the runuser/PAM
+#           build differs.
 
 SCRIPT_NAME="$(basename "$0")"
 SCRIPT_VERSION="1.0.0"
@@ -34,15 +40,16 @@ MFTE_LIB_DIR="${MFTE_LIB_DIR:-${MFTE_OPS_HOME}/lib}"
 # shellcheck source=/dev/null
 if ! source "${MFTE_LIB_DIR}/bash/mfte.sh"; then
   echo "ERROR: could not source ${MFTE_LIB_DIR}/bash/mfte.sh" >&2
-  echo "If MFTE_OPS_HOME/MFTE_LIB_DIR were already exported in this shell (e.g. from an earlier" >&2
-  echo "'source .env' in the same session), they override this script's own location-based" >&2
-  echo "derivation -- a stale value from a different host/mount can point here at nothing." >&2
-  echo "Try: unset MFTE_OPS_HOME MFTE_LIB_DIR" >&2
   exit 1
 fi
 # shellcheck source=/dev/null
 if ! source "${MFTE_LIB_DIR}/bash/mfte.gpg.sh"; then
   echo "ERROR: could not source ${MFTE_LIB_DIR}/bash/mfte.gpg.sh" >&2
+  exit 1
+fi
+# shellcheck source=/dev/null
+if ! source "${MFTE_LIB_DIR}/bash/mfte.gpg.vault.sh"; then
+  echo "ERROR: could not source ${MFTE_LIB_DIR}/bash/mfte.gpg.vault.sh" >&2
   exit 1
 fi
 
@@ -63,11 +70,19 @@ Optional:
   -q  quiet
   -h  help
 
-The passphrase is never a flag on this script. It is read directly from a
-600-permission file owned by \$MFTE_GPG_USER (see
-\$MFTE_GPG_PASSPHRASE_DIR/<fingerprint>.passphrase) via gpg's own
---passphrase-file, and is never echoed to stdout or written to a log line
-by this script.
+Env (required):
+  VAULT_ADDR
+  VAULT_TOKEN                 or:
+  VAULT_ROLE_ID / VAULT_SECRET_ID
+
+The passphrase is fetched from Vault fresh on every run and handed to gpg
+via --passphrase-fd + process substitution -- never written to disk,
+never a flag on this script or on gpg, never echoed or logged. This
+script has no local passphrase file dependency at all; it also has no
+functioning fallback if Vault is unreachable or sealed at run time --
+that's the trade-off for never materializing the passphrase locally. See
+the header comment in this file for the alternative if that's wrong for a
+given host.
 
 Recommended Run Command:
   $SCRIPT_NAME -f "\$\$FILE_ABS_PATH\$\$" -q
@@ -117,7 +132,15 @@ if [[ ! -f "$FILE" || ! -r "$FILE" ]]; then
 fi
 
 if ! mfte_gpg_preflight; then
-  log_system ERROR "preflight failed"
+  log_system ERROR "gpg preflight failed"
+  exit 1
+fi
+if ! mfte_gpg_vault_preflight; then
+  log_system ERROR "vault preflight failed"
+  exit 1
+fi
+if ! mfte_gpg_vault_login_if_needed; then
+  log_system ERROR "vault auth failed"
   exit 1
 fi
 
@@ -131,14 +154,8 @@ if [[ -z "$KEY_FP" ]]; then
   exit 1
 fi
 
-PASSPHRASE_FILE="$(mfte_gpg_passphrase_file "$KEY_FP")"
-if ! mfte_gpg_require_locked_down "$PASSPHRASE_FILE" 600; then
-  log_system ERROR "passphrase file failed lockdown check for key=${KEY_FP}"
-  echo "ERROR: passphrase file for key ${KEY_FP} is missing or not properly locked down." >&2
-  exit 1
-fi
-
-log_system INFO "start file=${FILE} key=${KEY_FP}"
+VAULT_PATH="$(mfte_gpg_vault_passphrase_path "$KEY_FP")"
+log_system INFO "start file=${FILE} key=${KEY_FP} vault_path=${VAULT_PATH}"
 
 if [[ -z "$OUTPUT" ]]; then
   mkdir -p "${MFTE_GPG_OUTPUT_DIR}"
@@ -152,9 +169,12 @@ else
   mkdir -p "$(dirname "$OUTPUT")"
 fi
 
-if ! DEC_OUTPUT="$(mfte_gpg_run --batch --yes --pinentry-mode loopback --passphrase-file "$PASSPHRASE_FILE" --output "$OUTPUT" --decrypt "$FILE" 2>&1)"; then
-  log_system ERROR "decryption failed file=${FILE} key=${KEY_FP}"
+# Process substitution: the passphrase is read by gpg directly off fd 3,
+# never written to disk, never this script's (or gpg's) own CLI argument.
+if ! DEC_OUTPUT="$(mfte_gpg_run --batch --yes --pinentry-mode loopback --passphrase-fd 3 --output "$OUTPUT" --decrypt "$FILE" 3< <(mfte_gpg_vault_get_passphrase "$KEY_FP") 2>&1)"; then
+  log_system ERROR "decryption failed file=${FILE} key=${KEY_FP} vault_path=${VAULT_PATH}"
   echo "ERROR: decryption failed. See ${SYSTEM_LOG_FILE} for details." >&2
+  echo "If no passphrase exists yet at ${VAULT_PATH}, run werkstatt.gpg.vault.export.passphrase.sh first." >&2
   log_system DEBUG "gpg output: ${DEC_OUTPUT}"
   exit 1
 fi
@@ -165,13 +185,14 @@ if [[ -f "$OUTPUT" ]]; then
   [[ -z "$CHECKSUM" ]] && CHECKSUM="$(shasum -a 256 "$OUTPUT" 2>/dev/null | awk '{print $1}')"
 fi
 
-log_system INFO "complete file=${FILE} key=${KEY_FP} output=${OUTPUT} sha256=${CHECKSUM}"
+log_system INFO "complete file=${FILE} key=${KEY_FP} vault_path=${VAULT_PATH} output=${OUTPUT} sha256=${CHECKSUM}"
 
 if [[ "$QUIET" != "true" ]]; then
   cat <<REPORT
-GPG decryption complete
+GPG decryption complete (passphrase source: Vault)
   input             : $FILE
   key fingerprint   : $KEY_FP
+  vault path        : $VAULT_PATH
   output            : $OUTPUT
   output sha256     : $CHECKSUM
 REPORT

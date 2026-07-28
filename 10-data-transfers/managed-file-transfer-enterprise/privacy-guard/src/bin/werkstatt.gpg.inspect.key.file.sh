@@ -26,6 +26,7 @@ umask 002
 #           the file is a public or private key).
 
 SCRIPT_NAME="$(basename "$0")"
+SCRIPT_VERSION="1.0.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 export MFTE_OPS_HOME="${MFTE_OPS_HOME:-$(cd "${SCRIPT_DIR}/.." && pwd)}"

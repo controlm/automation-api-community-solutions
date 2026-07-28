@@ -1,0 +1,39 @@
+version: "3.9"
+
+volumes:
+  hashicorp_data:
+    external: true
+  hashicorp_config:
+    external: true
+
+networks:
+  prod:
+    external: true
+
+services:
+  vault:
+    image: hashicorp/vault:1.15.2
+    container_name: hashicorp-vault
+    hostname: hashicorp.werkstatt.local
+    restart: unless-stopped
+    cap_add:
+      - IPC_LOCK
+    command: ["vault", "server", "-config=/vault/config/vault.hcl"]
+    environment:
+      VAULT_ADDR: "http://0.0.0.0:8200"
+    volumes:
+      - hashicorp_data:/vault/data
+      - hashicorp_config:/vault/config
+    networks:
+      - prod
+    logging:
+      driver: gelf
+      options:
+        gelf-address: "udp://172.16.0.230:12201"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vault.rule=Host(`hashicorp.werkstatt.local`)"
+      - "traefik.http.routers.vault.entrypoints=https-external"
+      - "traefik.http.routers.vault.tls=true"
+      - "traefik.http.services.vault.loadbalancer.server.port=8200"
+      - "traefik.docker.network=prod"

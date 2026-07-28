@@ -116,12 +116,12 @@ A write failure to either the event log or the per-run JSON file is fatal (`exit
 
 ## Permissions
 
-`cluster.jsonl` is a shared, multi-writer file — different rules, actions, and hub nodes append to it, sometimes as root, sometimes as a service account. The script sets `umask 002` so everything it creates is group-writable (664/775). Directories should additionally have the setgid bit (`chmod 2775`) so files inherit the directory's group regardless of the creating user's primary group:
+`cluster.jsonl` is a shared, multi-writer file — different rules, actions, and hub nodes append to it, sometimes as root, sometimes as a service account. The script sets `umask 002` so everything it creates is group-writable (664/775). Directories should additionally have the setgid bit (`chmod 2775`) so files inherit the directory's group regardless of the creating user's primary group. Substitute `$MFTE_OPS_HOME` for wherever this deployment's `src/` actually lives (`/mnt/mfte/ops` on a shared-NFS cluster, `/opt/werkstatt/ops` on a single standalone hub — see the main [README](../README.md)'s Layout section) — don't run these against a hardcoded guess:
 
-```
-chgrp -R controlm /opt/werkstatt/ops/logs/processing /opt/werkstatt/ops/logs/system
-find /opt/werkstatt/ops/logs/processing /opt/werkstatt/ops/logs/system -type d -exec chmod 2775 {} \;
-find /opt/werkstatt/ops/logs/processing /opt/werkstatt/ops/logs/system -type f -exec chmod 664 {} \;
+```bash
+chgrp -R controlm "${MFTE_OPS_HOME}/logs/processing" "${MFTE_OPS_HOME}/logs/system"
+find "${MFTE_OPS_HOME}/logs/processing" "${MFTE_OPS_HOME}/logs/system" -type d -exec chmod 2775 {} \;
+find "${MFTE_OPS_HOME}/logs/processing" "${MFTE_OPS_HOME}/logs/system" -type f -exec chmod 664 {} \;
 ```
 
 ## Exit codes

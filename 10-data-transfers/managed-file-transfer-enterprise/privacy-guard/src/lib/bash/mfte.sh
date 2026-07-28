@@ -17,6 +17,8 @@
 #           second script (werkstatt.gpg.receive.file.sh) needed the exact
 #           same logic mfte.rule.vars.all.jsonl.sh already had.
 
+MFTE_LIB_VERSION="1.0.0"
+
 require_command() {
     local cmd="$1"
     if ! command -v "${cmd}" >/dev/null 2>&1; then
@@ -29,7 +31,21 @@ require_command sha256sum
 require_command file
 require_command hostname
 require_command flock
-CONFIG_FILE="/opt/werkstatt/ops/config/.env"
+
+# Every bin/werkstatt.*.sh script already resolves MFTE_OPS_HOME relative
+# to its OWN location (SCRIPT_DIR/..) before sourcing this file -- so by
+# the time we get here, MFTE_OPS_HOME already correctly points at ops/
+# regardless of where the whole framework is actually deployed (/mnt/mfte,
+# or anywhere else). No need to hardcode or re-guess that path here; just
+# use what the caller already computed. The hardcoded /mnt/mfte/ops
+# fallback below only matters if this file is ever sourced directly,
+# outside that normal bin-script pattern (e.g. manual testing from a
+# shell), where MFTE_OPS_HOME wouldn't be pre-set.
+#
+# MFTE_CONFIG_FILE remains the explicit full override, taking precedence
+# over both.
+CONFIG_FILE="${MFTE_CONFIG_FILE:-${MFTE_OPS_HOME:-/mnt/mfte/ops}/config/.env}"
+
 if [[ -r "${CONFIG_FILE}" ]]; then
     set -a
     source "${CONFIG_FILE}"
@@ -37,9 +53,10 @@ if [[ -r "${CONFIG_FILE}" ]]; then
 else
     echo "ERROR: ${CONFIG_FILE} not found or not readable -- every MFTE_* variable" >&2
     echo "this script needs (MFTE_SYSTEM_LOG_DIR, MFTE_GPG_*, etc.) comes from that" >&2
-    echo "file, so nothing downstream will work without it. Deploy your .env to" >&2
-    echo "exactly that path (a locally-named copy like vse.env must be placed there" >&2
-    echo "AS .env, not under its working-copy name) and re-run." >&2
+    echo "file, so nothing downstream will work without it." >&2
+    echo "Resolved via MFTE_OPS_HOME=${MFTE_OPS_HOME:-<not set -- was this file sourced outside a bin/*.sh script?>}." >&2
+    echo "If this host's .env genuinely lives somewhere else, set MFTE_CONFIG_FILE" >&2
+    echo "before this script runs." >&2
     exit 1
 fi
 

@@ -32,6 +32,8 @@
 #           owned and readable only by mftgpg, never exposed to root's
 #           broader reach than that one operation requires.
 
+MFTE_GPG_LIB_VERSION="1.0.0"
+
 require_command gpg
 require_command runuser
 require_command openssl

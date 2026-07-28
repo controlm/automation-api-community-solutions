@@ -1,0 +1,13 @@
+[Unit]
+Description=Unseal lab HashiCorp Vault using locally-stored Shamir key shares
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=mftgpg
+Group=controlm
+ExecStart=/opt/werkstatt/vault-unseal/unseal.sh
+
+[Install]
+WantedBy=multi-user.target
