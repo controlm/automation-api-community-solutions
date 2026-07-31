@@ -19,5 +19,13 @@ launch.json
 1-general-examples/workload-preflight-check/src/.engineer/logs/
 1-general-examples/workload-preflight-check/src/.engineer/inventory/
 1-general-examples/workload-preflight-check/src/archive/
+10-data-transfers/managed-file-transfer-enterprise/site-connection-test/src/config/.env
+
+# Python artifacts
+__pycache__/
+*.pyc
+
+# OS cruft
+.DS_Store
 
 .gitignore
