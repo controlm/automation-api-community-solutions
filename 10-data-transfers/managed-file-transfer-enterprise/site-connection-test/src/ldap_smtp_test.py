@@ -48,9 +48,17 @@ except ImportError:
     print("If you have the deployment zip, make sure you extracted it fully (script + vendor/ together).")
     sys.exit(1)
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
-DEFAULT_PROPS_PATH = "hub_config.properties"
+_CONTROLM_ENV = os.environ.get("CONTROLM", "").strip()
+if _CONTROLM_ENV:
+    # Live hub path — hub_config.properties lives under $CONTROLM, not next
+    # to this script.
+    DEFAULT_PROPS_PATH = str(Path(_CONTROLM_ENV) / "cm" / "AFT" / "data" / "hub_config.properties")
+else:
+    # No CONTROLM env var on this host (likely not the hub) — fall back to
+    # the old relative default so a copy placed next to the script still works.
+    DEFAULT_PROPS_PATH = "hub_config.properties"
 DEFAULT_ENV_PATH = str(_SCRIPT_DIR / "config" / ".env")
 
 # Keys we will NEVER accept from a file, no matter what it's named.
@@ -137,7 +145,6 @@ def prompt_if_missing(value, label):
     return input(f"{label} (not found in config — enter manually): ").strip()
 
 
-_CONTROLM_ENV = os.environ.get("CONTROLM", "").strip()
 if _CONTROLM_ENV:
     DEFAULT_TEMPLATE_PATH = str(Path(_CONTROLM_ENV) / "cm" / "AFT" / "data" / "templates" / "user_onboarding_template.ftl")
     # Live hub path — show it in full, it's meaningful as-is.
