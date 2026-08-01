@@ -201,21 +201,28 @@ LDAP_PREFIX_MAP = {
 # used to validate that each configured attribute name is a real attribute
 # type defined in the LDAP server's schema. Blank values in the properties
 # file are skipped, not treated as errors.
+#
+# Each entry is (logical .env name, hub_config.properties key). The
+# logical name is bash-safe (no dots/hyphens) so it can be sourced from
+# the same shared config/.env that mfte.sh reads on the hub — see
+# privacy-guard/src/config/sample.env. The dotted properties-style key is
+# still checked as a fallback, so a whole LDAP block pasted verbatim from
+# hub_config.properties keeps working unchanged.
 LDAP_ATTR_MAP = {
-    "password-attribute-name": "hub.ldap.password-attribute-name",
-    "first-name-attribute-name": "hub.ldap.first-name-attribute-name",
-    "last-name-attribute-name": "hub.ldap.last-name-attribute-name",
-    "company-name-attribute-name": "hub.ldap.company-name-attribute-name",
-    "email-attribute-name": "hub.ldap.email-attribute-name",
-    "phone-attribute-name": "hub.ldap.phone-attribute-name",
-    "group-name-attribute-name": "hub.ldap.group-name-attribute-name",
-    "member-attribute-name": "hub.ldap.member-attribute-name",
-    "member-of-attribute-name": "hub.ldap.member-of-attribute-name",
-    "description-attribute-name": "hub.ldap.description-attribute-name",
-    "ssh-public-key-attribute-name": "hub.ldap.ssh-public-key-attribute-name",
-    "as2-id-attribute-name": "hub.ldap.as2-id-attribute-name",
-    "as2-certificate-alias-attribute-name": "hub.ldap.as2-certificate-alias-attribute-name",
-    "as2-target-folder-attribute-name": "hub.ldap.as2-target-folder-attribute-name",
+    "password-attribute-name": ("LDAP_ATTR_PASSWORD", "hub.ldap.password-attribute-name"),
+    "first-name-attribute-name": ("LDAP_ATTR_FIRST_NAME", "hub.ldap.first-name-attribute-name"),
+    "last-name-attribute-name": ("LDAP_ATTR_LAST_NAME", "hub.ldap.last-name-attribute-name"),
+    "company-name-attribute-name": ("LDAP_ATTR_COMPANY_NAME", "hub.ldap.company-name-attribute-name"),
+    "email-attribute-name": ("LDAP_ATTR_EMAIL", "hub.ldap.email-attribute-name"),
+    "phone-attribute-name": ("LDAP_ATTR_PHONE", "hub.ldap.phone-attribute-name"),
+    "group-name-attribute-name": ("LDAP_ATTR_GROUP_NAME", "hub.ldap.group-name-attribute-name"),
+    "member-attribute-name": ("LDAP_ATTR_MEMBER", "hub.ldap.member-attribute-name"),
+    "member-of-attribute-name": ("LDAP_ATTR_MEMBER_OF", "hub.ldap.member-of-attribute-name"),
+    "description-attribute-name": ("LDAP_ATTR_DESCRIPTION", "hub.ldap.description-attribute-name"),
+    "ssh-public-key-attribute-name": ("LDAP_ATTR_SSH_PUBLIC_KEY", "hub.ldap.ssh-public-key-attribute-name"),
+    "as2-id-attribute-name": ("LDAP_ATTR_AS2_ID", "hub.ldap.as2-id-attribute-name"),
+    "as2-certificate-alias-attribute-name": ("LDAP_ATTR_AS2_CERT_ALIAS", "hub.ldap.as2-certificate-alias-attribute-name"),
+    "as2-target-folder-attribute-name": ("LDAP_ATTR_AS2_TARGET_FOLDER", "hub.ldap.as2-target-folder-attribute-name"),
 }
 
 SMTP_PREFIX_MAP = {
@@ -238,13 +245,17 @@ SMTP_PREFIX_MAP = {
 def get_ldap_config(properties, env):
     cfg = merge_config(properties, env, LDAP_PREFIX_MAP)
 
-    # Attribute-name mappings. Check properties first, then fall back to
-    # the same dotted key pasted directly into .env (e.g.
-    # hub.ldap.password-attribute-name=userPassword) — so the whole LDAP
-    # block from hub_config.properties can be copied verbatim into .env.
+    # Attribute-name mappings. Check properties first, then the logical
+    # bash-safe .env name (e.g. LDAP_ATTR_PASSWORD), then finally the raw
+    # dotted key pasted directly into .env (e.g.
+    # hub.ldap.password-attribute-name=userPassword) — so either the
+    # shared config/.env or a block copied verbatim from
+    # hub_config.properties works.
     attr_map = {}
-    for label, props_key in LDAP_ATTR_MAP.items():
+    for label, (logical_name, props_key) in LDAP_ATTR_MAP.items():
         val = properties.get(props_key, "").strip()
+        if not val:
+            val = env.get(logical_name, "").strip()
         if not val:
             val = env.get(props_key, "").strip()
         if val:

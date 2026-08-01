@@ -55,7 +55,7 @@ umask 022
 #           might be sitting in tools/.
 
 SCRIPT_NAME="$(basename "$0")"
-SCRIPT_VERSION="1.2.2"
+SCRIPT_VERSION="1.2.4"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TOOLS_DIR="${SCRIPT_DIR}/tools"
 MANIFEST_FILE="${TOOLS_DIR}/.collector-manifest.txt"

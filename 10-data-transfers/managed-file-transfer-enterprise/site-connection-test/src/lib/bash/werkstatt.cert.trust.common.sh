@@ -6,8 +6,13 @@
 #           fetching a server's TLS certificate via openssl, checking whether
 #           it's already trusted, and importing it into the RHEL system trust
 #           store. Deliberately standalone: this tool tree (site-connection-test)
-#           is not part of the privacy-guard MFTE_OPS_HOME framework, so this
-#           does not source mfte.sh or assume any of its config/.env variables.
+#           does not source mfte.sh or depend on any of privacy-guard's bash
+#           logic, so it still runs on a host without that framework deployed.
+#           It does share config/.env's *path and key-naming convention*
+#           (bash-safe LDAP_*/SMTP_* vars) with privacy-guard, so the same
+#           file can be sourced by mfte.sh once both tool trees are merged
+#           onto a hub -- see the "Site Connection Test" section in
+#           privacy-guard/src/config/sample.env.
 #
 # scope   : RHEL/Fedora-family only -- relies on update-ca-trust and the
 #           /etc/pki/ca-trust/source/anchors/ layout. Other distros use a
