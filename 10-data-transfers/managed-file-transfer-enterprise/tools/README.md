@@ -18,12 +18,25 @@ cd ..
 Add `-n` for a dry run (prints what would change, writes nothing), `-T` to
 collect without building the tarball, or `-h` for the full flag list.
 
-Each run also builds `../package/tools-v<version>.tar.gz` — a tarball of
+Each run also builds `../package/mfte-tools-<version>.tar.gz` — a tarball of
 this whole folder, versioned off `collect-tools.sh`'s own
 `SCRIPT_VERSION` (bump that when the packaging changes, independent of
 any individual tool's own version). Extracting it produces a `tools/`
 folder identical to this one, minus the internal
 `.collector-manifest.txt` bookkeeping file.
+
+`../package/mfte-tools-latest.tar.gz` is a plain copy of that same
+tarball under a stable filename, updated on every run — so a download
+URL doesn't need to know the current version:
+
+```bash
+wget https://raw.githubusercontent.com/controlm/automation-api-community-solutions/master/10-data-transfers/managed-file-transfer-enterprise/package/mfte-tools-latest.tar.gz
+```
+
+It's a real copy, not a symlink — GitHub's raw-content endpoint serves a
+symlink as the literal text of its target path, not the target file's
+actual bytes, which would silently break `wget`/`curl` downloads of
+`latest`.
 
 ## Layout
 

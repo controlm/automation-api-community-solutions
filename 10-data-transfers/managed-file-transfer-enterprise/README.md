@@ -20,7 +20,7 @@ both toolsets available in the same place.
 ```
 managed-file-transfer-enterprise/
 ├── README.md              this file
-├── collect-tools.sh        merges every subproject's tools into tools/ + package/tools-v<version>.tar.gz
+├── collect-tools.sh        merges every subproject's tools into tools/ + package/mfte-tools-<version>.tar.gz
 ├── privacy-guard/           GPG encryption + rule-variable auditing (see table above)
 │   └── src/                 bin/, lib/bash/, config/ — no packaging script of its own
 ├── site-connection-test/    LDAP/SMTP connectivity test + cert-trust scripts (see table above)
@@ -43,7 +43,7 @@ the repo-level layer below.
 **Repo-level** — `./collect-tools.sh`, run from this directory, merges
 **every** subproject's `src/{bin,lib/bash,config,vendor,data}` (plus any
 top-level entry script) into one flat `tools/` folder and a versioned
-`package/tools-v<version>.tar.gz`. This is what actually gets copied onto
+`package/mfte-tools-<version>.tar.gz`. This is what actually gets copied onto
 a hub in practice — an operator `cd`s into one `tools` directory and runs
 whatever script is needed, rather than juggling separate per-project
 deploy zips. New subprojects are picked up automatically as long as they
@@ -52,10 +52,19 @@ follow the same `<project>/src/` layout — see the header comment in
 for the collision-handling and exclusion rules.
 
 ```bash
-./collect-tools.sh          # collect + build package/tools-v<version>.tar.gz
+./collect-tools.sh          # collect + build package/mfte-tools-<version>.tar.gz
 ./collect-tools.sh -n       # dry run -- show what would change, write nothing
 ./collect-tools.sh -T       # collect into tools/, skip the tarball
 ./collect-tools.sh -h       # full flag list
+```
+
+`package/mfte-tools-latest.tar.gz` is a plain copy of that tarball under
+a stable filename, refreshed on every run, so it can be downloaded
+without knowing the current version — once committed and pushed, GitHub
+serves it directly via `wget`/`curl`:
+
+```bash
+curl -LO https://raw.githubusercontent.com/controlm/automation-api-community-solutions/master/10-data-transfers/managed-file-transfer-enterprise/package/mfte-tools-latest.tar.gz
 ```
 
 ## Adding a new subproject

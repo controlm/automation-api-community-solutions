@@ -59,8 +59,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TOOLS_DIR="${SCRIPT_DIR}/tools"
 MANIFEST_FILE="${TOOLS_DIR}/.collector-manifest.txt"
 PACKAGE_DIR="${SCRIPT_DIR}/package"
-TAR_NAME="tools-v${SCRIPT_VERSION}.tar.gz"
+TAR_NAME="mfte-tools-${SCRIPT_VERSION}.tar.gz"
 TAR_PATH="${PACKAGE_DIR}/${TAR_NAME}"
+# A real copy, not a symlink: GitHub's raw-content endpoint serves a
+# symlink as the literal text of its target path, not the target file's
+# actual bytes, so a symlink here would break "latest" for wget/curl.
+LATEST_PATH="${PACKAGE_DIR}/mfte-tools-latest.tar.gz"
 
 require_command() {
   local cmd="$1"
@@ -101,8 +105,10 @@ Collects from:
   see "discovery" in the header comment for what a new project needs.
 
 into:
-  tools/                              (this script's sibling directory)
-  package/tools-v<SCRIPT_VERSION>.tar.gz   (tarball of the above, unless -n or -T)
+  tools/                                       (this script's sibling directory)
+  package/mfte-tools-<SCRIPT_VERSION>.tar.gz    (tarball of the above, unless -n or -T)
+  package/mfte-tools-latest.tar.gz              (a copy of the above, same condition --
+                                                  stable filename for wget/curl)
 USAGE
 }
 
@@ -294,6 +300,9 @@ if [[ "$NO_TAR" != "true" ]]; then
   tar -czf "$TAR_PATH" --exclude=".collector-manifest.txt" -C "$SCRIPT_DIR" tools
   size_kb=$(( $(wc -c < "$TAR_PATH") / 1024 ))
   echo "Built: ${TAR_PATH} (${size_kb} KB)"
+
+  cp -p "$TAR_PATH" "$LATEST_PATH"
+  echo "Updated: ${LATEST_PATH} -> ${TAR_NAME}"
 fi
 
 exit 0
