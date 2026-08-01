@@ -1,6 +1,6 @@
-# Function Reference — `ldap_smtp_test.py`
+# Function Reference — `werkstatt.ldap.smtp.test.py`
 
-This document describes every function in `src/ldap_smtp_test.py`: what it
+This document describes every function in `src/werkstatt.ldap.smtp.test.py`: what it
 does, its parameters, its return value, and any side effects. It's aimed at
 someone maintaining or extending the script — for usage instructions, see
 the top-level `README.md` instead.

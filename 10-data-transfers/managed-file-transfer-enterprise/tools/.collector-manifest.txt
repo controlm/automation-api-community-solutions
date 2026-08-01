@@ -1,9 +1,7 @@
-bin/ldaps-import-cert.sh
 bin/mfte.rule.vars.all.jsonl.sh
 bin/onboarding-4gpg-cluster.sh
 bin/onboarding-4gpg-server.sh
 bin/setup.mftgpg.sh
-bin/smtp-tls-import-cert.sh
 bin/werkstatt.gpg.decrypt.file.sh
 bin/werkstatt.gpg.delete.key.sh
 bin/werkstatt.gpg.encrypt.file.sh
@@ -29,15 +27,16 @@ bin/werkstatt.gpg.vault.import.passphrase.sh
 bin/werkstatt.gpg.vault.receive.file.sh
 bin/werkstatt.gpg.vault.status.sh
 bin/werkstatt.gpg.version.sh
+bin/werkstatt.ldaps.cert.import.sh
+bin/werkstatt.smtp.cert.import.sh
 config/data.mftgpg.json
 config/privacy-guard.sample.env
 config/site-connection-test.sample.env
 data/user_onboarding_template.ftl
-ldap_smtp_test.py
-lib/bash/cert_trust_common.sh
 lib/bash/mfte.gpg.sh
 lib/bash/mfte.gpg.vault.sh
 lib/bash/mfte.sh
+lib/bash/werkstatt.cert.trust.common.sh
 vendor/ldap3-2.9.1.dist-info/COPYING.LESSER.txt
 vendor/ldap3-2.9.1.dist-info/COPYING.txt
 vendor/ldap3-2.9.1.dist-info/INSTALLER
@@ -198,3 +197,4 @@ vendor/pyasn1/type/tag.py
 vendor/pyasn1/type/tagmap.py
 vendor/pyasn1/type/univ.py
 vendor/pyasn1/type/useful.py
+werkstatt.ldap.smtp.test.py

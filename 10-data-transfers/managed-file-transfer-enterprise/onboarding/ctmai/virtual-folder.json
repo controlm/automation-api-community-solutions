@@ -1,0 +1,47 @@
+{
+    "name": "{{MFTE_EXT_USER}}",
+    "authorizedInternalUsers": [
+      "*"
+    ],
+    "deleteFilesAfterDownload": false,
+    "notifyByEmailWhenFileArrive": true,
+    "retentionPolicy": 24,
+    "sizeLimit": 100,
+    "allowedFilePattern": "",
+    "blockedFilePattern":  "*.exe, *.mp3, *.mp4, *.avi",
+    "accessType": "Limited",
+    "accessLevel": "Full control",
+    "deleteFilesAfterDownloadByExternalUsers": false,
+    "fixedSubFolders": [
+      {
+        "name": "incoming",
+        "accessLevel": "Full control",
+        "operation": "",
+        "originalName": ""
+      },
+      {
+        "name": "outgoing",
+        "accessLevel": "Read only",
+        "operation": "",
+        "originalName": ""
+      },
+      {
+        "name": "onboarding",
+        "accessLevel": "Read only",
+        "operation": "",
+        "originalName": ""
+      },
+      {
+        "name": "{{MFTE_VFOLDER}}",
+        "accessLevel": "Full control",
+        "operation": "",
+        "originalName": ""
+      }
+    ],
+    "authorizedExternalUsersAndGroupsExtended": [
+      {
+        "name": "{{MFTE_EXT_USER}}",
+        "accessLevel": "Full control"
+      }
+    ]
+ }

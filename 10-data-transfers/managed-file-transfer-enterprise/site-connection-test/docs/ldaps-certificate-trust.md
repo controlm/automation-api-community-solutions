@@ -1,6 +1,6 @@
 # Trusting an LDAPS server's certificate on RHEL
 
-If `ldap_smtp_test.py` (or anything else on the hub) fails an LDAPS bind
+If `werkstatt.ldap.smtp.test.py` (or anything else on the hub) fails an LDAPS bind
 with a certificate-trust error (e.g. `unable to get local issuer
 certificate`, `self-signed certificate`), the fix is to export the LDAP
 server's certificate and add it to the hub's system trust store. No Java
@@ -53,10 +53,19 @@ sudo cp <ldap-host>.pem /etc/pki/ca-trust/source/anchors/
 sudo update-ca-trust extract
 ```
 
-That's it — no restart needed for most tools that read the system trust
-store fresh per connection (this includes the `ssl`/`ldap3` Python
-libraries `ldap_smtp_test.py` uses). Re-run the LDAPS test to confirm the
-trust error is gone.
+That's it — no restart needed for `werkstatt.ldap.smtp.test.py` itself:
+it's a fresh `python3` process each run, and the `ssl`/`ldap3` libraries
+it uses read the system trust store at process start, so a new
+invocation picks up the update immediately. Re-run the LDAPS test to
+confirm the trust error is gone.
+
+**The Control-M hub service itself is a different story** — see the
+same caveat in
+[smtp-tls-certificate-trust.md](smtp-tls-certificate-trust.md#2-trust-it-system-wide).
+It's a long-running process that loads the trust store into memory once
+at startup, so if the hub service itself does an LDAP bind (not just
+this test script), a newly-trusted cert may not take effect until that
+service is restarted, not just re-run.
 
 To remove it later, delete the file from
 `/etc/pki/ca-trust/source/anchors/` and re-run
@@ -64,20 +73,20 @@ To remove it later, delete the file from
 
 ## Scripted version
 
-[`bin/ldaps-import-cert.sh`](../src/bin/ldaps-import-cert.sh) wraps both
+[`bin/werkstatt.ldaps.cert.import.sh`](../src/bin/werkstatt.ldaps.cert.import.sh) wraps both
 steps above into one command, for repeatable/unattended use (e.g. a
 Control-M Run Command):
 
 ```bash
 # Fetch only (steps 1 above), saved to ./<host>.pem:
-src/bin/ldaps-import-cert.sh -s ldaps://<ldap-host>:636
+src/bin/werkstatt.ldaps.cert.import.sh -s ldaps://<ldap-host>:636
 
 # Fetch + trust system-wide (steps 1 and 2), no prompts:
-src/bin/ldaps-import-cert.sh -s ldaps://<ldap-host>:636 -i -y
+src/bin/werkstatt.ldaps.cert.import.sh -s ldaps://<ldap-host>:636 -i -y
 ```
 
 With no `-s`, it auto-detects `hub.ldap.ldap-url` from
-`hub_config.properties` (or `.env`), same as `ldap_smtp_test.py`. It
+`hub_config.properties` (or `.env`), same as `werkstatt.ldap.smtp.test.py`. It
 skips the `-i` import if a certificate with the same SHA-256 fingerprint
 is already in `/etc/pki/ca-trust/source/anchors/`. Run it with `-h` for
 the full flag list. It's still just `openssl` + `update-ca-trust` under

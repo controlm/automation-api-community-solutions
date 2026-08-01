@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ldap_smtp_test.py
+werkstatt.ldap.smtp.test.py
 
 Interactive console tool for MFTE hub environments.
 Reads hub_config.properties for non-secret connection details,

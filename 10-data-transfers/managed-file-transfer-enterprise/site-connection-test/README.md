@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This is a single interactive console script, `ldap_smtp_test.py`, that
+This is a single interactive console script, `werkstatt.ldap.smtp.test.py`, that
 answers one operational question for an MFT Enterprise hub: **are LDAP and
 SMTP actually reachable and correctly configured, right now, with these
 credentials?** It performs a real LDAP/LDAPS bind + search, validates every
@@ -34,26 +34,26 @@ report directory-specific operational attributes as `NOT FOUND` (see
 
 ```
 site-connection-test/
-├── README.md              this file
+├── README.md   this file
 ├── docs/
-│   ├── README.md          function-by-function reference for ldap_smtp_test.py
+│   ├── README.md   function-by-function reference for werkstatt.ldap.smtp.test.py
 │   ├── ldaps-certificate-trust.md   how to trust an LDAPS server's cert on RHEL (if the bind fails on trust)
 │   └── smtp-tls-certificate-trust.md   same, for the SMTP/STARTTLS server's cert
-├── package/               build_package.py's output — not committed source, rebuild via src/build_package.py
-│   └── mfte_ldap_smtp_test-vX.Y.Z.zip
+├── package/   werkstatt.build.package.py's output — not committed source, rebuild via src/werkstatt.build.package.py
+│   └── werkstatt.ldap.smtp.test-vX.Y.Z.zip
 └── src/
-    ├── README.txt          short deploy notes bundled *inside* the zip itself
-    ├── build_package.py    packages everything below into package/
-    ├── ldap_smtp_test.py    the script
+    ├── README.txt   short deploy notes bundled *inside* the zip itself
+    ├── werkstatt.build.package.py   packages everything below into package/
+    ├── werkstatt.ldap.smtp.test.py   the script
     ├── bin/
-    │   ├── ldaps-import-cert.sh       fetch + trust an LDAPS server's cert (RHEL)
-    │   └── smtp-tls-import-cert.sh    same, for the SMTP/STARTTLS server
+    │   ├── werkstatt.ldaps.cert.import.sh   fetch + trust an LDAPS server's cert (RHEL)
+    │   └── werkstatt.smtp.cert.import.sh   same, for the SMTP/STARTTLS server
     ├── lib/
     │   └── bash/
-    │       └── cert_trust_common.sh   helpers shared by the two scripts above
-    ├── vendor/              bundled pure-Python deps (ldap3, pyasn1) — no compiled binaries
+    │       └── werkstatt.cert.trust.common.sh   helpers shared by the two scripts above
+    ├── vendor/   bundled pure-Python deps (ldap3, pyasn1) — no compiled binaries
     ├── config/
-    │   └── sample.env       template for non-hub hosts (copy to config/.env, fill in)
+    │   └── sample.env   template for non-hub hosts (copy to config/.env, fill in)
     └── data/
         └── user_onboarding_template.ftl   portable snapshot of the HTML email template
 ```
@@ -62,10 +62,10 @@ site-connection-test/
 
 | Script | Purpose |
 | --- | --- |
-| [ldap_smtp_test.py](docs/README.md) | The tool itself — LDAP/LDAPS bind + search + schema validation, and an SMTP send test using the real onboarding template. Function-by-function reference in [docs/README.md](docs/README.md). |
-| [build_package.py](src/build_package.py) | Zips `ldap_smtp_test.py` + `vendor/` + `config/` + `data/` + `README.md` into `package/mfte_ldap_smtp_test-v<version>.zip`, ready to copy to a hub. Standard library only — no dependencies of its own. |
-| [bin/ldaps-import-cert.sh](src/bin/ldaps-import-cert.sh) | Fetches an LDAPS server's certificate via `openssl` and optionally trusts it system-wide (`-i`). See [Certificate trust errors](#certificate-trust-errors-ldaps--smtp-tls) below. |
-| [bin/smtp-tls-import-cert.sh](src/bin/smtp-tls-import-cert.sh) | Same, for the SMTP server (STARTTLS or implicit TLS). |
+| [werkstatt.ldap.smtp.test.py](docs/README.md) | The tool itself — LDAP/LDAPS bind + search + schema validation, and an SMTP send test using the real onboarding template. Function-by-function reference in [docs/README.md](docs/README.md). |
+| [werkstatt.build.package.py](src/werkstatt.build.package.py) | Zips `werkstatt.ldap.smtp.test.py` + `vendor/` + `config/` + `data/` + `README.md` into `package/werkstatt.ldap.smtp.test-v<version>.zip`, ready to copy to a hub. Standard library only — no dependencies of its own. |
+| [bin/werkstatt.ldaps.cert.import.sh](src/bin/werkstatt.ldaps.cert.import.sh) | Fetches an LDAPS server's certificate via `openssl` and optionally trusts it system-wide (`-i`). See [Certificate trust errors](#certificate-trust-errors-ldaps--smtp-tls) below. |
+| [bin/werkstatt.smtp.cert.import.sh](src/bin/werkstatt.smtp.cert.import.sh) | Same, for the SMTP server (STARTTLS or implicit TLS). |
 
 ## Getting started
 
@@ -73,19 +73,19 @@ site-connection-test/
 
    ```bash
    cd src
-   python3 build_package.py
+   python3 werkstatt.build.package.py
    ```
 
-   This writes `package/mfte_ldap_smtp_test-v<version>.zip`, where
-   `<version>` is read straight out of `ldap_smtp_test.py`'s own
+   This writes `package/werkstatt.ldap.smtp.test-v<version>.zip`, where
+   `<version>` is read straight out of `werkstatt.ldap.smtp.test.py`'s own
    `__version__` — the two always stay in sync.
 2. Copy that zip to the target host and unzip it:
 
    ```bash
-   unzip mfte_ldap_smtp_test-vX.Y.Z.zip && cd deploy
+   unzip werkstatt.ldap.smtp.test-vX.Y.Z.zip && cd deploy
    ```
 
-   Keep `vendor/` and `data/` next to `ldap_smtp_test.py` — they're
+   Keep `vendor/` and `data/` next to `werkstatt.ldap.smtp.test.py` — they're
    resolved relative to the script's own location, not your current
    directory, so it works no matter where you `cd` from.
 3. Run it.
@@ -95,7 +95,7 @@ site-connection-test/
 
      ```bash
      cd /opt/ctmag/ctm/cm/AFT/data
-     python3 /path/to/extracted/ldap_smtp_test.py
+     python3 /path/to/extracted/werkstatt.ldap.smtp.test.py
      ```
 
    - **From a non-hub machine:**
@@ -103,7 +103,7 @@ site-connection-test/
      ```bash
      cp config/sample.env config/.env
      # edit config/.env with real values
-     python3 ldap_smtp_test.py
+     python3 werkstatt.ldap.smtp.test.py
      ```
 
      `config/.env` uses the **same key names as `hub_config.properties`**
@@ -113,7 +113,7 @@ site-connection-test/
      from the hub file — `SMTP_TEST_RECIPIENT=your-test-inbox@example.com`
      pre-fills the recipient prompt so a one-off test only needs Enter.
 4. Check the version of what you're running at any time with
-   `python3 ldap_smtp_test.py --version`.
+   `python3 werkstatt.ldap.smtp.test.py --version`.
 
 ## What the script does
 

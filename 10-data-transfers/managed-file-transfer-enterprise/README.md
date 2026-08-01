@@ -25,7 +25,7 @@ managed-file-transfer-enterprise/
 │   └── src/                 bin/, lib/bash/, config/ — no packaging script of its own
 ├── site-connection-test/    LDAP/SMTP connectivity test + cert-trust scripts (see table above)
 │   └── src/
-│       ├── build_package.py     per-project packaging -> site-connection-test/package/*.zip
+│       ├── werkstatt.build.package.py     per-project packaging -> site-connection-test/package/*.zip
 │       └── bin/, lib/bash/, config/, vendor/, data/
 ├── tools/                   generated -- merged output of collect-tools.sh, see tools/README.md
 └── package/                 generated -- collect-tools.sh's tarball output
@@ -33,9 +33,9 @@ managed-file-transfer-enterprise/
 
 ## Packaging: two layers
 
-**Per-project** — `site-connection-test/src/build_package.py` zips just
-that one tool (`ldap_smtp_test.py` + its `vendor/`/`config/`/`data/`/
-`bin/`/`lib/`) into `site-connection-test/package/mfte_ldap_smtp_test-v<version>.zip`.
+**Per-project** — `site-connection-test/src/werkstatt.build.package.py` zips just
+that one tool (`werkstatt.ldap.smtp.test.py` + its `vendor/`/`config/`/`data/`/
+`bin/`/`lib/`) into `site-connection-test/package/werkstatt.ldap.smtp.test-v<version>.zip`.
 Use this when you only need the connectivity-test tool standalone.
 `privacy-guard` has no equivalent of its own — its only packaging path is
 the repo-level layer below.
@@ -65,6 +65,19 @@ serves it directly via `wget`/`curl`:
 
 ```bash
 curl -LO https://raw.githubusercontent.com/controlm/automation-api-community-solutions/master/10-data-transfers/managed-file-transfer-enterprise/package/mfte-tools-latest.tar.gz
+```
+
+On the target host, extract directly onto your `MFTE_OPS_HOME` (e.g.
+`/mnt/mfte/ops`) with `--strip-components=1` so the archive's top-level
+`tools/` folder is dropped, not nested one level deep. Same command for
+the first deploy and every later upgrade — it only touches the paths the
+archive actually contains, never anything else already on that host
+(`config/.env` included — see [tools/README.md](tools/README.md#deploying--upgrading-in-place)
+for the full guarantee):
+
+```bash
+mkdir -p /mnt/mfte/ops   # first deploy only; a no-op if it already exists
+tar -xzf mfte-tools-latest.tar.gz --strip-components=1 -C /mnt/mfte/ops
 ```
 
 ## Adding a new subproject

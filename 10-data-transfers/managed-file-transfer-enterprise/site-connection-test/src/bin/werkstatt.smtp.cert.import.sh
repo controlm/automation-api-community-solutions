@@ -2,14 +2,14 @@
 set -o pipefail
 umask 022
 
-# file name: smtp-tls-import-cert.sh
+# file name: werkstatt.smtp.cert.import.sh
 # purpose : Fetch the TLS certificate an SMTP server presents (via STARTTLS
 #           on the submission port, or implicit TLS on 465), save it as a
 #           PEM file, and optionally trust it system-wide on RHEL via
 #           update-ca-trust -- the shell-script equivalent of the manual
 #           steps in ../../docs/smtp-tls-certificate-trust.md.
 #
-# origin  : Companion to ldaps-import-cert.sh. The only real difference
+# origin  : Companion to werkstatt.ldaps.cert.import.sh. The only real difference
 #           from the LDAPS case is that SMTP negotiates TLS in-band
 #           (STARTTLS) rather than being encrypted from the first byte, so
 #           this needs to know which mode the target port speaks.
@@ -20,8 +20,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 # shellcheck source=/dev/null
-if ! source "${SRC_DIR}/lib/bash/cert_trust_common.sh"; then
-  echo "ERROR: could not source ${SRC_DIR}/lib/bash/cert_trust_common.sh" >&2
+if ! source "${SRC_DIR}/lib/bash/werkstatt.cert.trust.common.sh"; then
+  echo "ERROR: could not source ${SRC_DIR}/lib/bash/werkstatt.cert.trust.common.sh" >&2
   exit 1
 fi
 
@@ -101,8 +101,8 @@ require_command openssl
 require_command timeout
 
 # Auto-detect SERVER (and, if -I wasn't given explicitly, the STARTTLS
-# setting) from hub_config.properties / .env -- same keys ldap_smtp_test.py
-# reads via its SMTP_PREFIX_MAP.
+# setting) from hub_config.properties / .env -- same keys
+# werkstatt.ldap.smtp.test.py reads via its SMTP_PREFIX_MAP.
 if [[ -z "$SERVER" && -f "$PROPS_FILE" ]]; then
   P_HOST="$(grep -E '^spring\.mail\.host[[:space:]]*=' "$PROPS_FILE" | head -1 | cut -d'=' -f2- | sed 's/^ *//;s/ *$//')"
   P_PORT="$(grep -E '^spring\.mail\.port[[:space:]]*=' "$PROPS_FILE" | head -1 | cut -d'=' -f2- | sed 's/^ *//;s/ *$//')"

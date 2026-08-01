@@ -23,7 +23,8 @@ umask 022
 #           tools/vendor/, tools/data/ each hold files from every
 #           discovered project side by side. bin/ and lib/bash/
 #           filenames don't collide today (werkstatt.gpg.*.sh / mfte*.sh
-#           vs ldaps-import-cert.sh / cert_trust_common.sh), but
+#           vs werkstatt.ldaps.cert.import.sh / werkstatt.smtp.cert.import.sh
+#           / werkstatt.cert.trust.common.sh), but
 #           config/ does -- both current projects ship a
 #           config/sample.env with entirely unrelated keys. Collisions
 #           are detected generically (by content, not a hardcoded
@@ -35,9 +36,9 @@ umask 022
 # scope   : Only pulls each project's actual tool-suite (top-level entry
 #           script + bin/ + lib/bash/ + vendor/ + config/ + data/).
 #           Deliberately excludes:
-#             - build_package.py / build_package.py's own outputs --
-#               dev-time packaging tooling, not something an operator
-#               runs from tools/
+#             - werkstatt.build.package.py / its own outputs -- dev-time
+#               packaging tooling, not something an operator runs from
+#               tools/
 #             - anything outside a project's src/ tree (e.g.
 #               privacy-guard/vault/**, a separate systemd-deployed
 #               subsystem for the Vault/DB host) -- excluded naturally
@@ -54,7 +55,7 @@ umask 022
 #           might be sitting in tools/.
 
 SCRIPT_NAME="$(basename "$0")"
-SCRIPT_VERSION="1.1.0"
+SCRIPT_VERSION="1.2.0"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TOOLS_DIR="${SCRIPT_DIR}/tools"
 MANIFEST_FILE="${TOOLS_DIR}/.collector-manifest.txt"
@@ -77,13 +78,13 @@ require_command() {
 # Files that must never end up in a shipped tarball, by basename,
 # regardless of which project's src/ tree they live in or which
 # collection loop below would otherwise pick them up:
-#   - build_package.py: dev-only packaging tooling, not something an
-#     operator runs from tools/
+#   - werkstatt.build.package.py: dev-only packaging tooling, not
+#     something an operator runs from tools/
 #   - mfte.ftevent.sh: production-only today (not yet in this repo), but
 #     excluded proactively so it's never shipped even if it lands in
 #     privacy-guard/src/lib/bash/ later without this list being revisited
 EXCLUDE_BASENAMES=(
-  "build_package.py"
+  "werkstatt.build.package.py"
   "mfte.ftevent.sh"
 )
 
@@ -204,7 +205,7 @@ collect_project() {
   local project="$1" src_root="$2"
   [[ -d "$src_root" ]] || { log "SKIP: ${project} (no ${src_root})"; return 0; }
 
-  # Top-level entry scripts (e.g. ldap_smtp_test.py) -> tools/ root.
+  # Top-level entry scripts (e.g. werkstatt.ldap.smtp.test.py) -> tools/ root.
   local f base
   for f in "$src_root"/*.py "$src_root"/*.sh; do
     base="$(basename "$f")"

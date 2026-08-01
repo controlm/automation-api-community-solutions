@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
-build_package.py
+werkstatt.build.package.py
 
-Packages everything needed to deploy ldap_smtp_test.py onto a hub or any
-other host into a single zip file under ../package/, relative to this
-script's location (i.e. run from src/, writes to site-connection-test/package/).
+Packages everything needed to deploy werkstatt.ldap.smtp.test.py onto a
+hub or any other host into a single zip file under ../package/, relative
+to this script's location (i.e. run from src/, writes to
+site-connection-test/package/).
 
 Usage:
-    python3 build_package.py
+    python3 werkstatt.build.package.py
 
 No third-party dependencies — uses only the standard library, so this can
 run on a machine that doesn't have ldap3/pyasn1 installed either.
@@ -27,9 +28,9 @@ PACKAGE_DIR = SRC_DIR.parent / "package"
 
 
 def _get_script_version():
-    """Read ldap_smtp_test.py's __version__ as plain text (avoids importing
-    it, since that module needs vendor/ldap3 on the path to succeed)."""
-    source = (SRC_DIR / "ldap_smtp_test.py").read_text(encoding="utf-8")
+    """Read werkstatt.ldap.smtp.test.py's __version__ as plain text (avoids
+    importing it, since that module needs vendor/ldap3 on the path to succeed)."""
+    source = (SRC_DIR / "werkstatt.ldap.smtp.test.py").read_text(encoding="utf-8")
     for line in source.splitlines():
         if line.startswith("__version__"):
             return line.split("=", 1)[1].strip().strip('"').strip("'")
@@ -37,13 +38,13 @@ def _get_script_version():
 
 
 SCRIPT_VERSION = _get_script_version()
-ZIP_NAME = f"mfte_ldap_smtp_test-v{__version__}.zip"
+ZIP_NAME = f"werkstatt.ldap.smtp.test-v{__version__}.zip"
 
 # Top-level items in src/ to include in the package. Directories are
 # included recursively. Anything not listed here (e.g. README.txt, this
 # build script itself, __pycache__) is intentionally left out.
 INCLUDE_ITEMS = [
-    "ldap_smtp_test.py",
+    "werkstatt.ldap.smtp.test.py",
     "vendor",
     "config",
     "data",
@@ -114,8 +115,8 @@ def build_zip():
 
     size_kb = zip_path.stat().st_size / 1024
     print(f"Built: {zip_path}")
-    print(f"build_package.py version: {__version__}")
-    print(f"ldap_smtp_test.py version: {SCRIPT_VERSION}")
+    print(f"werkstatt.build.package.py version: {__version__}")
+    print(f"werkstatt.ldap.smtp.test.py version: {SCRIPT_VERSION}")
     print(f"Size: {size_kb:.1f} KB")
     print(f"Files packaged: {len(files)}")
     print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")

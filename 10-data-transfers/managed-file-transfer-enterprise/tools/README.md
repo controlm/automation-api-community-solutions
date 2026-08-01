@@ -42,30 +42,30 @@ actual bytes, which would silently break `wget`/`curl` downloads of
 
 ```
 tools/
-├── README.md                              this file
-├── .collector-manifest.txt                internal bookkeeping — don't edit
-├── ldap_smtp_test.py                       site-connection-test
+├── README.md   this file
+├── .collector-manifest.txt   internal bookkeeping — don't edit
+├── werkstatt.ldap.smtp.test.py   site-connection-test
 ├── bin/
-│   ├── ldaps-import-cert.sh                site-connection-test
-│   ├── smtp-tls-import-cert.sh             site-connection-test
-│   └── werkstatt.*.sh (28 scripts)         privacy-guard
+│   ├── werkstatt.ldaps.cert.import.sh   site-connection-test
+│   ├── werkstatt.smtp.cert.import.sh   site-connection-test
+│   └── werkstatt.gpg.*.sh (28 scripts)   privacy-guard
 ├── lib/bash/
-│   ├── cert_trust_common.sh                site-connection-test
-│   └── mfte*.sh (3 files)                  privacy-guard
+│   ├── werkstatt.cert.trust.common.sh   site-connection-test
+│   └── mfte*.sh (3 files)   privacy-guard
 ├── config/
-│   ├── site-connection-test.sample.env     site-connection-test's config/sample.env, renamed
-│   ├── privacy-guard.sample.env            privacy-guard's config/sample.env, renamed
-│   └── data.mftgpg.json                    privacy-guard
-├── vendor/                                 site-connection-test — bundled ldap3/pyasn1
+│   ├── site-connection-test.sample.env   site-connection-test's config/sample.env, renamed
+│   ├── privacy-guard.sample.env   privacy-guard's config/sample.env, renamed
+│   └── data.mftgpg.json   privacy-guard
+├── vendor/   site-connection-test — bundled ldap3/pyasn1
 └── data/
-    └── user_onboarding_template.ftl        site-connection-test
+    └── user_onboarding_template.ftl   site-connection-test
 ```
 
 ## Why two `sample.env` files, renamed
 
 Both subprojects ship a `config/sample.env`, but they configure completely
 unrelated things — `hub.ldap.*`/`spring.mail.*` keys for
-`ldap_smtp_test.py` vs. `MFTE_HOME`/`MFTE_GPG_*` framework keys for the
+`werkstatt.ldap.smtp.test.py` vs. `MFTE_HOME`/`MFTE_GPG_*` framework keys for the
 `werkstatt.gpg.*.sh` scripts. `collect-tools.sh` detects this automatically
 (by content, not a hardcoded filename list) and renames **both** files with
 their project name rather than letting one silently overwrite the other.
@@ -73,7 +73,7 @@ their project name rather than letting one silently overwrite the other.
 ## Known limitation: both tools want the same `config/.env`
 
 Because everything is now flattened into one `config/` folder,
-`ldap_smtp_test.py`'s default `.env` path and `mfte.sh`'s default `.env`
+`werkstatt.ldap.smtp.test.py`'s default `.env` path and `mfte.sh`'s default `.env`
 path (sourced by every `werkstatt.gpg.*.sh` script) both resolve to the
 exact same file: `tools/config/.env`. That's fine if you only use one
 toolset at a time, but you can't populate `config/.env` for both
@@ -86,7 +86,7 @@ files instead of the shared default:
 # site-connection-test
 cp config/site-connection-test.sample.env config/site-connection-test.env
 # edit config/site-connection-test.env, then:
-python3 ldap_smtp_test.py -e config/site-connection-test.env
+python3 werkstatt.ldap.smtp.test.py -e config/site-connection-test.env
 
 # privacy-guard
 cp config/privacy-guard.sample.env config/privacy-guard.env
@@ -94,7 +94,7 @@ cp config/privacy-guard.sample.env config/privacy-guard.env
 MFTE_CONFIG_FILE=config/privacy-guard.env bin/werkstatt.gpg.list.keys.sh
 ```
 
-(`ldap_smtp_test.py` running directly on the hub doesn't need any of this —
+(`werkstatt.ldap.smtp.test.py` running directly on the hub doesn't need any of this —
 it auto-detects the real `hub_config.properties` and never touches
 `config/.env` at all in that case.)
 
@@ -127,7 +127,7 @@ that the archive doesn't mention. Concretely, this means an upgrade:
 - **Does overwrite** every file the archive *does* contain —
   `bin/*.sh`, `lib/bash/*.sh`, `config/*.sample.env`,
   `config/data.mftgpg.json`, `vendor/**`, `data/*.ftl`,
-  `ldap_smtp_test.py` — that's the actual point of an upgrade.
+  `werkstatt.ldap.smtp.test.py` — that's the actual point of an upgrade.
 
 **Caution on `config/data.mftgpg.json`:** unlike the `sample.env` files,
 this one isn't a template — `setup.mftgpg.sh` reads it directly, and
@@ -144,8 +144,8 @@ this to get the same "never ship a real one" treatment.
 
 | Tool | Needs |
 |---|---|
-| `ldap_smtp_test.py` | `python3` only — `vendor/` bundles `ldap3`/`pyasn1`, no `pip install` |
-| `bin/ldaps-import-cert.sh`, `bin/smtp-tls-import-cert.sh` | `bash`, `openssl`; `sudo` + `update-ca-trust` for `-i` (RHEL) |
+| `werkstatt.ldap.smtp.test.py` | `python3` only — `vendor/` bundles `ldap3`/`pyasn1`, no `pip install` |
+| `bin/werkstatt.ldaps.cert.import.sh`, `bin/werkstatt.smtp.cert.import.sh` | `bash`, `openssl`; `sudo` + `update-ca-trust` for `-i` (RHEL) |
 | `bin/werkstatt.gpg.*.sh` | `bash`, `jq`, `sha256sum`, `file`, `hostname`, `flock`, `gpg` — all standard on RHEL. Also needs `MFTE_OPS_HOME`-style config: see `config/privacy-guard.sample.env` and the override note above. |
 
 ## Full documentation
@@ -153,13 +153,13 @@ this to get the same "never ship a real one" treatment.
 This folder is a packaging convenience, not a replacement for each
 subproject's own docs:
 
-- `ldap_smtp_test.py`: [../site-connection-test/README.md](../site-connection-test/README.md), function reference in [../site-connection-test/docs/README.md](../site-connection-test/docs/README.md)
+- `werkstatt.ldap.smtp.test.py`: [../site-connection-test/README.md](../site-connection-test/README.md), function reference in [../site-connection-test/docs/README.md](../site-connection-test/docs/README.md)
 - Cert-trust scripts: [../site-connection-test/docs/ldaps-certificate-trust.md](../site-connection-test/docs/ldaps-certificate-trust.md), [../site-connection-test/docs/smtp-tls-certificate-trust.md](../site-connection-test/docs/smtp-tls-certificate-trust.md)
 - `werkstatt.gpg.*.sh`: [../privacy-guard/docs/](../privacy-guard/docs/)
 
 ## What's deliberately excluded
 
-- `build_package.py` and its own `package/*.zip` output — dev-time
+- `werkstatt.build.package.py` and its own `package/*.zip` output — dev-time
   packaging tooling for `site-connection-test`, not something an operator
   runs from `tools/`.
 - `privacy-guard/vault/**` — a separate systemd-deployed subsystem for the

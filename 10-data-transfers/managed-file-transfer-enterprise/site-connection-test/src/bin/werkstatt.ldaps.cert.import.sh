@@ -2,7 +2,7 @@
 set -o pipefail
 umask 022
 
-# file name: ldaps-import-cert.sh
+# file name: werkstatt.ldaps.cert.import.sh
 # purpose : Fetch the TLS certificate an LDAPS server presents during the
 #           handshake, save it as a PEM file, and optionally trust it
 #           system-wide on RHEL via update-ca-trust -- the shell-script
@@ -21,8 +21,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 # shellcheck source=/dev/null
-if ! source "${SRC_DIR}/lib/bash/cert_trust_common.sh"; then
-  echo "ERROR: could not source ${SRC_DIR}/lib/bash/cert_trust_common.sh" >&2
+if ! source "${SRC_DIR}/lib/bash/werkstatt.cert.trust.common.sh"; then
+  echo "ERROR: could not source ${SRC_DIR}/lib/bash/werkstatt.cert.trust.common.sh" >&2
   exit 1
 fi
 
@@ -95,7 +95,7 @@ require_command openssl
 require_command timeout
 
 # Auto-detect SERVER from hub_config.properties / .env if not given on the
-# command line -- same key hub_smtp_test.py's LDAP_PREFIX_MAP reads.
+# command line -- same key werkstatt.ldap.smtp.test.py's LDAP_PREFIX_MAP reads.
 if [[ -z "$SERVER" && -f "$PROPS_FILE" ]]; then
   SERVER="$(grep -E '^hub\.ldap\.ldap-url[[:space:]]*=' "$PROPS_FILE" | head -1 | cut -d'=' -f2- | sed 's/^ *//;s/ *$//')"
   [[ -n "$SERVER" ]] && log INFO "using LDAP URL from ${PROPS_FILE}: ${SERVER}"

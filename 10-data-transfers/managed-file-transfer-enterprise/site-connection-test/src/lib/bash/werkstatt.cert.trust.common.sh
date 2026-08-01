@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-# file name: cert_trust_common.sh
-# purpose : Shared helpers for ldaps-import-cert.sh and smtp-tls-import-cert.sh --
+# file name: werkstatt.cert.trust.common.sh
+# purpose : Shared helpers for werkstatt.ldaps.cert.import.sh and
+#           werkstatt.smtp.cert.import.sh --
 #           fetching a server's TLS certificate via openssl, checking whether
 #           it's already trusted, and importing it into the RHEL system trust
 #           store. Deliberately standalone: this tool tree (site-connection-test)

@@ -2,18 +2,17 @@
 set -o pipefail
 umask 022
 
-# file name: ldaps-import-cert.sh
-# purpose : Fetch the TLS certificate an LDAPS server presents during the
-#           handshake, save it as a PEM file, and optionally trust it
-#           system-wide on RHEL via update-ca-trust -- the shell-script
-#           equivalent of the manual steps in
-#           ../../docs/ldaps-certificate-trust.md.
+# file name: werkstatt.smtp.cert.import.sh
+# purpose : Fetch the TLS certificate an SMTP server presents (via STARTTLS
+#           on the submission port, or implicit TLS on 465), save it as a
+#           PEM file, and optionally trust it system-wide on RHEL via
+#           update-ca-trust -- the shell-script equivalent of the manual
+#           steps in ../../docs/smtp-tls-certificate-trust.md.
 #
-# origin  : Follows the "no Java truststore/keytool needed on RHEL" finding
-#           in that doc -- openssl is the only dependency, and
-#           update-ca-trust already assumes it's present. Fetch-only by
-#           default; -i is required to actually touch the system trust
-#           store, since that's a shared/system-wide change.
+# origin  : Companion to werkstatt.ldaps.cert.import.sh. The only real difference
+#           from the LDAPS case is that SMTP negotiates TLS in-band
+#           (STARTTLS) rather than being encrypted from the first byte, so
+#           this needs to know which mode the target port speaks.
 
 SCRIPT_NAME="$(basename "$0")"
 SCRIPT_VERSION="1.0.0"
@@ -21,8 +20,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 # shellcheck source=/dev/null
-if ! source "${SRC_DIR}/lib/bash/cert_trust_common.sh"; then
-  echo "ERROR: could not source ${SRC_DIR}/lib/bash/cert_trust_common.sh" >&2
+if ! source "${SRC_DIR}/lib/bash/werkstatt.cert.trust.common.sh"; then
+  echo "ERROR: could not source ${SRC_DIR}/lib/bash/werkstatt.cert.trust.common.sh" >&2
   exit 1
 fi
 
@@ -40,9 +39,13 @@ Usage:
   $SCRIPT_NAME [-s host[:port]] [options]
 
 Optional:
-  -s  server      LDAPS target: host, host:port, or ldaps://host:port.
-                   Default port: 636. If omitted, looked up as
-                   hub.ldap.ldap-url in -f/-e, then prompted for.
+  -s  server      SMTP target: host, host:port. Default port: 587
+                   (STARTTLS). If omitted, looked up as spring.mail.host /
+                   spring.mail.port in -f/-e, then prompted for.
+  -I  implicit    use implicit TLS (no STARTTLS negotiation) -- the usual
+                   mode for port 465. Default is STARTTLS, unless
+                   spring.mail.properties.mail.smtp.starttls.enable=false
+                   is found while auto-detecting -s from config.
   -f  file        hub_config.properties path for -s auto-detection
                    (default: ${DEFAULT_PROPS_PATH})
   -e  env-file    .env path for -s auto-detection (default: ${DEFAULT_ENV_PATH})
@@ -57,7 +60,7 @@ Optional:
   -h  help
 
 Recommended Run Command (fetch + import, unattended):
-  $SCRIPT_NAME -s "\$\$hub.ldap.ldap-url\$\$" -i -y -q
+  $SCRIPT_NAME -s "\$\$spring.mail.host\$\$" -i -y -q
 USAGE
 }
 
@@ -68,14 +71,17 @@ OUTPUT=""
 DO_IMPORT="false"
 ASSUME_YES="false"
 QUIET="false"
+IMPLICIT_TLS="false"
+IMPLICIT_TLS_EXPLICIT="false"
 
-while getopts ':s:f:e:o:iyqVh' opt; do
+while getopts ':s:f:e:o:iIyqVh' opt; do
   case "$opt" in
     s) SERVER="$OPTARG" ;;
     f) PROPS_FILE="$OPTARG" ;;
     e) ENV_FILE="$OPTARG" ;;
     o) OUTPUT="$OPTARG" ;;
     i) DO_IMPORT="true" ;;
+    I) IMPLICIT_TLS="true"; IMPLICIT_TLS_EXPLICIT="true" ;;
     y) ASSUME_YES="true" ;;
     q) QUIET="true" ;;
     V) printf '%s %s\n' "$SCRIPT_NAME" "$SCRIPT_VERSION"; exit 0 ;;
@@ -94,28 +100,49 @@ fi
 require_command openssl
 require_command timeout
 
-# Auto-detect SERVER from hub_config.properties / .env if not given on the
-# command line -- same key hub_smtp_test.py's LDAP_PREFIX_MAP reads.
+# Auto-detect SERVER (and, if -I wasn't given explicitly, the STARTTLS
+# setting) from hub_config.properties / .env -- same keys
+# werkstatt.ldap.smtp.test.py reads via its SMTP_PREFIX_MAP.
 if [[ -z "$SERVER" && -f "$PROPS_FILE" ]]; then
-  SERVER="$(grep -E '^hub\.ldap\.ldap-url[[:space:]]*=' "$PROPS_FILE" | head -1 | cut -d'=' -f2- | sed 's/^ *//;s/ *$//')"
-  [[ -n "$SERVER" ]] && log INFO "using LDAP URL from ${PROPS_FILE}: ${SERVER}"
+  P_HOST="$(grep -E '^spring\.mail\.host[[:space:]]*=' "$PROPS_FILE" | head -1 | cut -d'=' -f2- | sed 's/^ *//;s/ *$//')"
+  P_PORT="$(grep -E '^spring\.mail\.port[[:space:]]*=' "$PROPS_FILE" | head -1 | cut -d'=' -f2- | sed 's/^ *//;s/ *$//')"
+  if [[ -n "$P_HOST" ]]; then
+    SERVER="${P_HOST}${P_PORT:+:${P_PORT}}"
+    log INFO "using SMTP host from ${PROPS_FILE}: ${SERVER}"
+  fi
+  if [[ "$IMPLICIT_TLS_EXPLICIT" != "true" ]]; then
+    P_STARTTLS="$(grep -E '^spring\.mail\.properties\.mail\.smtp\.starttls\.enable[[:space:]]*=' "$PROPS_FILE" | head -1 | cut -d'=' -f2- | sed 's/^ *//;s/ *$//')"
+    if [[ "$(printf '%s' "$P_STARTTLS" | tr '[:upper:]' '[:lower:]')" == "false" ]]; then
+      IMPLICIT_TLS="true"
+      log INFO "starttls.enable=false in ${PROPS_FILE} -- using implicit TLS"
+    fi
+  fi
 fi
 if [[ -z "$SERVER" && -f "$ENV_FILE" ]]; then
-  SERVER="$(grep -E '^(LDAP_URL|hub\.ldap\.ldap-url)[[:space:]]*=' "$ENV_FILE" | head -1 | cut -d'=' -f2- | sed 's/^ *//;s/ *$//;s/^"//;s/"$//')"
-  [[ -n "$SERVER" ]] && log INFO "using LDAP URL from ${ENV_FILE}: ${SERVER}"
+  E_HOST="$(grep -E '^(SMTP_HOST|spring\.mail\.host)[[:space:]]*=' "$ENV_FILE" | head -1 | cut -d'=' -f2- | sed 's/^ *//;s/ *$//;s/^"//;s/"$//')"
+  E_PORT="$(grep -E '^(SMTP_PORT|spring\.mail\.port)[[:space:]]*=' "$ENV_FILE" | head -1 | cut -d'=' -f2- | sed 's/^ *//;s/ *$//;s/^"//;s/"$//')"
+  if [[ -n "$E_HOST" ]]; then
+    SERVER="${E_HOST}${E_PORT:+:${E_PORT}}"
+    log INFO "using SMTP host from ${ENV_FILE}: ${SERVER}"
+  fi
 fi
 if [[ -z "$SERVER" ]]; then
-  read -r -p "LDAPS server (host, host:port, or ldaps://host:port): " SERVER
+  read -r -p "SMTP server (host or host:port): " SERVER
 fi
 if [[ -z "$SERVER" ]]; then
-  echo "ERROR: no LDAPS target given." >&2
+  echo "ERROR: no SMTP target given." >&2
   exit 2
 fi
 
-read -r HOST PORT < <(ct_parse_host_port "$SERVER" 636) || exit 1
+read -r HOST PORT < <(ct_parse_host_port "$SERVER" 587) || exit 1
 
-log INFO "connecting to ${HOST}:${PORT}"
-PEM="$(ct_fetch_cert "$HOST" "$PORT")" || exit 1
+STARTTLS_PROTO=""
+if [[ "$IMPLICIT_TLS" != "true" ]]; then
+  STARTTLS_PROTO="smtp"
+fi
+
+log INFO "connecting to ${HOST}:${PORT} ($( [[ -n "$STARTTLS_PROTO" ]] && echo "STARTTLS" || echo "implicit TLS" ))"
+PEM="$(ct_fetch_cert "$HOST" "$PORT" "$STARTTLS_PROTO")" || exit 1
 
 TMP_PEM="$(mktemp)"
 trap 'rm -f "$TMP_PEM"' EXIT
@@ -159,8 +186,9 @@ fi
 if [[ "$QUIET" != "true" ]]; then
   cat <<REPORT
 
-LDAPS certificate export complete
+SMTP TLS certificate export complete
   server            : ${HOST}:${PORT}
+  mode              : $( [[ -n "$STARTTLS_PROTO" ]] && echo "STARTTLS" || echo "implicit TLS" )
   saved to          : ${OUTPUT}
   sha256 fingerprint: ${FINGERPRINT}
   system trust store: ${IMPORTED_PATH:-not imported (use -i to import)}
