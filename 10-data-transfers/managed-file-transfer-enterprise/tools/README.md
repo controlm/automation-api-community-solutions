@@ -98,6 +98,48 @@ MFTE_CONFIG_FILE=config/privacy-guard.env bin/werkstatt.gpg.list.keys.sh
 it auto-detects the real `hub_config.properties` and never touches
 `config/.env` at all in that case.)
 
+## Deploying / upgrading in place
+
+The tarball extracts to a top-level `tools/` folder — on the target host
+this typically becomes your `MFTE_OPS_HOME` (e.g. `/mnt/mfte/ops`).
+Extract **directly onto** that existing directory with
+`--strip-components=1` rather than extracting somewhere fresh and
+swapping directories:
+
+```bash
+mkdir -p /mnt/mfte/ops   # first deploy only; a no-op if it already exists
+tar -xzf mfte-tools-latest.tar.gz --strip-components=1 -C /mnt/mfte/ops
+```
+
+This same command works for the first deploy and every later upgrade.
+`tar` extraction only ever overwrites paths that actually exist in the
+archive and adds new ones — it never deletes anything already on disk
+that the archive doesn't mention. Concretely, this means an upgrade:
+
+- **Never touches `config/.env`** — the archive never contains one (only
+  `*.sample.env` templates), so there's nothing in it to overwrite your
+  real config with.
+- **Never touches anything outside what this repo manages** — e.g. a
+  hand-added `lib/bash/mfte.ftevent.sh` or `bin/werkstatt.ftevent.send.sh`
+  that isn't part of either subproject here, `docs/`, `logs/`, `privacy/`
+  (real keys/passphrases live there), `tmp/`, or any other directory the
+  target host has beyond what this tarball ships.
+- **Does overwrite** every file the archive *does* contain —
+  `bin/*.sh`, `lib/bash/*.sh`, `config/*.sample.env`,
+  `config/data.mftgpg.json`, `vendor/**`, `data/*.ftl`,
+  `ldap_smtp_test.py` — that's the actual point of an upgrade.
+
+**Caution on `config/data.mftgpg.json`:** unlike the `sample.env` files,
+this one isn't a template — `setup.mftgpg.sh` reads it directly, and
+`MFTE_GPG_USER` gets re-derived from it via `jq` on *every* script
+invocation (see `mfte.sh`), not just at initial setup. If a target
+host's copy was ever hand-customized (different service-account name,
+uid/gid, etc. for that host), an upgrade **will** silently overwrite it
+with this repo's version, unlike `.env`. There's currently no mechanism
+here to protect it the way `.env` is protected — if that's a real risk
+for your environment, back up the live copy before upgrading, or ask for
+this to get the same "never ship a real one" treatment.
+
 ## Requirements
 
 | Tool | Needs |
