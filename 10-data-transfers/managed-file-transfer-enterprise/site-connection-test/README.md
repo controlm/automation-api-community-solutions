@@ -36,13 +36,21 @@ report directory-specific operational attributes as `NOT FOUND` (see
 site-connection-test/
 ├── README.md              this file
 ├── docs/
-│   └── README.md          function-by-function reference for ldap_smtp_test.py
+│   ├── README.md          function-by-function reference for ldap_smtp_test.py
+│   ├── ldaps-certificate-trust.md   how to trust an LDAPS server's cert on RHEL (if the bind fails on trust)
+│   └── smtp-tls-certificate-trust.md   same, for the SMTP/STARTTLS server's cert
 ├── package/               build_package.py's output — not committed source, rebuild via src/build_package.py
 │   └── mfte_ldap_smtp_test-vX.Y.Z.zip
 └── src/
     ├── README.txt          short deploy notes bundled *inside* the zip itself
     ├── build_package.py    packages everything below into package/
     ├── ldap_smtp_test.py    the script
+    ├── bin/
+    │   ├── ldaps-import-cert.sh       fetch + trust an LDAPS server's cert (RHEL)
+    │   └── smtp-tls-import-cert.sh    same, for the SMTP/STARTTLS server
+    ├── lib/
+    │   └── bash/
+    │       └── cert_trust_common.sh   helpers shared by the two scripts above
     ├── vendor/              bundled pure-Python deps (ldap3, pyasn1) — no compiled binaries
     ├── config/
     │   └── sample.env       template for non-hub hosts (copy to config/.env, fill in)
@@ -56,6 +64,8 @@ site-connection-test/
 | --- | --- |
 | [ldap_smtp_test.py](docs/README.md) | The tool itself — LDAP/LDAPS bind + search + schema validation, and an SMTP send test using the real onboarding template. Function-by-function reference in [docs/README.md](docs/README.md). |
 | [build_package.py](src/build_package.py) | Zips `ldap_smtp_test.py` + `vendor/` + `config/` + `data/` + `README.md` into `package/mfte_ldap_smtp_test-v<version>.zip`, ready to copy to a hub. Standard library only — no dependencies of its own. |
+| [bin/ldaps-import-cert.sh](src/bin/ldaps-import-cert.sh) | Fetches an LDAPS server's certificate via `openssl` and optionally trusts it system-wide (`-i`). See [Certificate trust errors](#certificate-trust-errors-ldaps--smtp-tls) below. |
+| [bin/smtp-tls-import-cert.sh](src/bin/smtp-tls-import-cert.sh) | Same, for the SMTP server (STARTTLS or implicit TLS). |
 
 ## Getting started
 
@@ -190,6 +200,18 @@ always override the path manually at the prompt.
 Note: the bundled copy in `data/` is a **snapshot**. If the real template
 on the hub changes, re-sync this copy manually — it isn't kept in sync
 automatically.
+
+## Certificate trust errors (LDAPS / SMTP TLS)
+
+If either test fails with a certificate-trust error (e.g. `unable to get
+local issuer certificate`, `self-signed certificate`), that's a system
+trust issue, not a bug in the script:
+
+- LDAPS bind: [docs/ldaps-certificate-trust.md](docs/ldaps-certificate-trust.md)
+- SMTP STARTTLS/TLS: [docs/smtp-tls-certificate-trust.md](docs/smtp-tls-certificate-trust.md)
+
+Both cover exporting the server's certificate with `openssl` and trusting
+it system-wide via `update-ca-trust` on RHEL.
 
 ## Known limitations
 

@@ -16,13 +16,13 @@ Before any function runs, the module:
 1. Computes `_SCRIPT_DIR` (the script's own directory via `Path(__file__).resolve().parent`) and `_VENDOR_DIR` (`_SCRIPT_DIR / "vendor"`).
 2. If `vendor/` exists next to the script, prepends it to `sys.path` — so the bundled pure-Python `ldap3`/`pyasn1` are found before (or instead of) any system install.
 3. Imports `ldap3`. If that fails, prints a diagnostic pointing at `_VENDOR_DIR` and exits with status 1.
-4. Resolves `_CONTROLM_ENV` (`os.environ.get("CONTROLM", "").strip()`) and, based on whether it's set, computes `DEFAULT_TEMPLATE_PATH` and `DISPLAY_TEMPLATE_PATH` (see [`_build_template_message`](#_build_template_message) below).
+4. Resolves `_CONTROLM_ENV` (`os.environ.get("CONTROLM", "").strip()`) and, based on whether it's set, computes `DEFAULT_PROPS_PATH`, `DEFAULT_TEMPLATE_PATH`, and `DISPLAY_TEMPLATE_PATH` (see `_build_template_message` below).
 
 Key module-level constants:
 
 | Name | Purpose |
 |---|---|
-| `DEFAULT_PROPS_PATH` | `"hub_config.properties"` — looked for in the current working directory |
+| `DEFAULT_PROPS_PATH` | If `$CONTROLM` is set: `$CONTROLM/cm/AFT/data/hub_config.properties` (the live hub path). Otherwise: `"hub_config.properties"`, looked for in the current working directory (e.g. a copy placed next to the script on a non-hub host). |
 | `DEFAULT_ENV_PATH` | `config/.env`, resolved **relative to the script**, not the caller's cwd |
 | `FORBIDDEN_KEY_PATTERNS` | Suffixes (`password`, `passwd`, `secret`, `pwd`) that mark a config key as holding a secret |
 | `LDAP_PREFIX_MAP` | Logical name → `hub.ldap.*` properties key, for connection parameters |
@@ -221,7 +221,7 @@ Computes a timeout in seconds from `cfg["connection_timeout"]` (stored in millis
 **Params:** none
 **Returns:** `None`
 
-1. Parses CLI args: `-f/--file` (properties path, default `hub_config.properties` in cwd) and `-e/--env-file` (`.env` path, default `DEFAULT_ENV_PATH`, resolved relative to the script).
+1. Parses CLI args: `-f/--file` (properties path, default `DEFAULT_PROPS_PATH`) and `-e/--env-file` (`.env` path, default `DEFAULT_ENV_PATH`, resolved relative to the script).
 2. Loads both files via `load_properties` / `load_env`, printing which were found.
 3. Prints a reminder that passwords are never read from either file.
 4. If `confirm("Run LDAP/LDAPS bind + search test?")`, builds LDAP config via `get_ldap_config` and calls `run_ldap_test`.

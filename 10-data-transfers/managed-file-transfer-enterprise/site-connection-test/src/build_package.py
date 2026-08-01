@@ -18,7 +18,7 @@ import zipfile
 from pathlib import Path
 from datetime import datetime
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 # This script lives in src/. The package output goes to ../package/,
 # i.e. a sibling of src/ under site-connection-test/.
@@ -37,7 +37,7 @@ def _get_script_version():
 
 
 SCRIPT_VERSION = _get_script_version()
-ZIP_NAME = f"mfte_ldap_smtp_test-v{SCRIPT_VERSION}.zip"
+ZIP_NAME = f"mfte_ldap_smtp_test-v{__version__}.zip"
 
 # Top-level items in src/ to include in the package. Directories are
 # included recursively. Anything not listed here (e.g. README.txt, this
@@ -47,6 +47,8 @@ INCLUDE_ITEMS = [
     "vendor",
     "config",
     "data",
+    "bin",
+    "lib",
     "README.md",
 ]
 
