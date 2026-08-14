@@ -6,6 +6,8 @@ Captures **every** BMC Control-M MFT Enterprise Processing Rule Action variable 
 
 Sources [mfte.sh](mfte.sh.md) — inherits its hard command requirements (`jq`, `sha256sum`, `file`, `hostname`, `flock`) and its `.env` loading. Fails loudly if `MFTE_LOG_DIR`, `MFTE_JSONL_FILE`, or `MFTE_JSON_DIR` aren't set by the `.env`.
 
+Also requires `curl` on its own — not part of `mfte.sh`'s shared requirements, since it's only needed by this script's optional Graylog forwarding (see below). Other scripts that source `mfte.sh` don't pick up `curl` as a dependency just because this one needs it.
+
 Optional, only needed for Tika enrichment: `java` + a Tika CLI jar (`tika-app-*.jar`, tested against 3.3.1).
 
 ## Usage
@@ -67,6 +69,12 @@ The script also tolerates exactly one trailing empty argument after all real fla
 | `MFTE_TIKA_JAR` | *(unset — Tika skipped)* | Path to `tika-app-*.jar` |
 | `MFTE_TIKA_ENABLED` | `true` | Persistent Tika on/off. Does **not** affect sha256 — that's controlled only by `-T` |
 | `MFTE_HOST_FQDN` | `hostname -f` at runtime | Recorded as `host` in every JSON record |
+| `MFTE_GRAYLOG_ENABLED` | `false` | Turns on GELF-over-HTTP forwarding to Graylog — see [Graylog forwarding](#graylog-forwarding-optional) below. Independent of `MFTE_LOG_FORMAT`: runs in addition to whichever local sink(s) that selects, not instead of them |
+| `MFTE_GRAYLOG_URL` | *(unset)* | GELF HTTP input endpoint, e.g. `http://graylog.example.net:12201/gelf`. Required if `MFTE_GRAYLOG_ENABLED=true`; the script logs an error and fails the Graylog step (not the whole run, unless `MFTE_GRAYLOG_FAIL_MODE=hard`) if it's unset |
+| `MFTE_GRAYLOG_TIMEOUT` | `5` | Seconds before the `curl` POST to Graylog gives up (`--max-time`) |
+| `MFTE_GRAYLOG_FAIL_MODE` | `soft` | `soft`: log the failure and let the run still succeed if the local sink(s) wrote. `hard`: treat a failed Graylog post the same as a failed local write — the whole run exits `1` |
+
+Template: [`graylog-sample.env`](../src/config/graylog-sample.env) — a standalone file, not merged into `sample.env`, since none of these variables are used by anything else in privacy-guard. Copy its contents into the deployed `MFTE_OPS_HOME/config/.env` alongside the rest of this script's config to turn Graylog forwarding on.
 
 ## Output schema
 
@@ -108,11 +116,45 @@ Runs only when the file is actually reachable on this host and `-T` wasn't passe
 
 `-T` always wins over `MFTE_TIKA_ENABLED=false` if both are in play. Each Tika invocation is a JVM cold start (~1-3s+); this script makes up to three per file when Tika is enabled.
 
+Tika execution is traced in the system log: `tika start`/`tika complete` (the latter with `mime`, `version`, `metadata`, and `elapsed_s`) bracket a successful run. `tika unavailable` (`WARN`) fires instead if `MFTE_TIKA_ENABLED=true` but `java` or the jar isn't actually usable — previously this failed completely silently. `tika detect returned no mime` / `tika metadata not valid JSON` / `tika metadata call returned nothing` (all `WARN`) flag a Tika call that ran but didn't produce a usable result.
+
 ## Logging
 
 Two separate logs: the **event log** (`MFTE_JSONL_FILE`) is business data, shared across every rule/action/hub node; the **system log** (`MFTE_SYSTEM_LOG_DIR/mfte.rule.vars.all.jsonl.sh.log`) is this script's own execution trace. Never mix the two.
 
 A write failure to either the event log or the per-run JSON file is fatal (`exit 1`) — this script never reports "capture complete" with exit `0` if the write didn't actually succeed, since Control-M only sees the exit code.
+
+## Graylog forwarding (optional)
+
+Set `MFTE_GRAYLOG_ENABLED=true` (see [Configuration](#configuration-env) above) to also POST a GELF-formatted copy of every record to a Graylog GELF HTTP input, via `curl`. This is an independent toggle layered on top of whichever local sink(s) `MFTE_LOG_FORMAT`/`-o` already write — it is not a fourth `-o` mode, and disabling it (the default) leaves the script's behavior completely unchanged.
+
+Only a small, deliberately curated subset of fields is promoted to individually queryable GELF custom fields — chosen for a specific set of Graylog dashboard widgets (files per node/rule/direction/company, file size, files by type, transfers over time), not an exhaustive mirror of the local record:
+
+| GELF field (as stored/queried in Graylog) | Source in the local JSON record |
+|---|---|
+| `host` | `.host` (GELF standard field — Graylog also exposes this as `source`) |
+| `timestamp` | `.timestamp` (the event's own `RUN_TS_ISO`, not the wall-clock moment the Graylog POST happens — enrichment can take a few seconds) |
+| `run_id` | `.run_id` — correlates a Graylog message back to its full local audit record (`cluster.jsonl`/per-run JSON) |
+| `rule_name` | `.rule_name` |
+| `action_name` | `.action_name` |
+| `company` | `.actor.company` |
+| `event_source` | `.source` (a hardcoded constant, `controlm_mfte_processing_rule`, always — not per-node or per-rule) |
+| `file_name` | `.file.name` |
+| `file_abs_path` | `.file.abs_path` |
+| `file_size_bytes` | `.file.size_bytes` |
+| `tika_mime` | `.tika.mime` — assumes Tika stays enabled; if `-T`/`MFTE_TIKA_ENABLED=false` is ever used routinely, this arrives empty and any "files by type" widget needs a null-handling bucket |
+| `mfte_raw_payload` | the entire local JSON record, stringified — see below |
+
+Everything else in the local record — `schema`, `checksum.*`, `tika.version`/`tika.metadata`, every raw BMC `variables.*`, etc. — is **not** promoted to its own field. It's still fully present inside `mfte_raw_payload` (full-text searchable, e.g. by a known checksum value), just not as a clean structured/aggregatable field.
+
+**`mfte_raw_payload` is kept in Graylog deliberately, with a PII tradeoff attached.** Tika's metadata (`tika.metadata`, folded into this payload when enrichment runs) can carry real people's names from a file's own embedded document properties (e.g. `meta:last-author`, `dc:creator` from an Office file) — confirmed from a live event. Keeping the raw payload in Graylog means that PII now lives in Graylog too, not only in the local audit files. If Graylog's Enterprise features support field- or stream-level access control in this deployment, use them to restrict who can see this field, rather than treating Graylog as a wider-access copy of data that used to be local-only.
+
+GELF fields are sent with a leading underscore (`_rule_name`, `_company`, etc.) — Graylog strips that underscore on ingest, so they're queried without it (`rule_name`, `company`). This is standard GELF behavior, not specific to this script.
+
+Failure handling is controlled by `MFTE_GRAYLOG_FAIL_MODE`:
+
+- **`soft` (default)**: a failed post (non-`202` response, timeout, or missing `MFTE_GRAYLOG_URL`) is logged via `log_system ERROR` and otherwise ignored — the run still succeeds if the local sink(s) wrote successfully.
+- **`hard`**: a failed post is treated exactly like a failed local write — the whole run exits `1`, same as the [Exit codes](#exit-codes) table below describes for write failures.
 
 ## Permissions
 
@@ -144,3 +186,4 @@ find "${MFTE_OPS_HOME}/logs/processing" "${MFTE_OPS_HOME}/logs/system" -type f -
 
 - **`flock` is a hard dependency of `mfte.sh` but is never actually called** by this script. Given `cluster.jsonl` is an explicitly shared, multi-writer file, this suggests the framework's original design intended lock-protected appends that never got wired in. A single JSON line write is normally atomic on Linux under `PIPE_BUF` (4096 bytes), which most records here fit — but that's an implicit assumption, not an enforced guarantee.
 - **Historical bad records**: any `cluster.jsonl` entries written before the quoting/unquoting fixes went in may have quote-polluted fields or be near-empty. Not automatically detectable after the fact except heuristically (e.g. `FILE_NAME` empty but `FILE_PATH` present).
+- **Graylog forwarding makes one attempt, no retry.** A transient network blip or a momentarily-unreachable Graylog input is treated the same as any other failure — logged (and fatal, under `MFTE_GRAYLOG_FAIL_MODE=hard`) rather than retried. The local sink(s) (`cluster.jsonl`/per-run JSON) remain the durable record regardless of Graylog's reachability; Graylog is a forwarded copy, not the source of truth.

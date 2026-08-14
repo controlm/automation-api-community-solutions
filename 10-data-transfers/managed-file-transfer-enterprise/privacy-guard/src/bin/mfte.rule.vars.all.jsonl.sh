@@ -108,6 +108,13 @@ if ! source "${MFTE_LIB_DIR}/bash/mfte.sh"; then
   exit 1
 fi
 
+# curl is only needed by this script's optional Graylog forwarding
+# (write_graylog_report below), not by anything else mfte.sh sources for --
+# scoped here rather than added to mfte.sh's own require_command list so
+# other MFTE scripts that don't forward to Graylog don't pick up a new
+# hard dependency they don't need.
+require_command curl
+
 # LOG_DIR is owned by the framework .env (MFTE_LOG_DIR) — no local fallback
 # tiers. If mfte.sh didn't load MFTE_LOG_DIR, fail loudly instead of silently
 # writing somewhere the .env doesn't say.
@@ -361,12 +368,18 @@ if [[ "$SKIP_ENRICH" != "true" && -n "$FILE_ABS_PATH" && -f "$FILE_ABS_PATH" && 
   TIKA_AVAILABLE="false"
   if [[ "$TIKA_ENABLED" == "true" ]] && command -v java >/dev/null 2>&1 && [[ -n "$TIKA_JAR" && -f "$TIKA_JAR" && -r "$TIKA_JAR" ]]; then
     TIKA_AVAILABLE="true"
+  elif [[ "$TIKA_ENABLED" == "true" ]]; then
+    log_system WARN "tika unavailable jar=${TIKA_JAR:-unset} java=$(command -v java 2>/dev/null || printf missing)"
   fi
 
   if [[ "${TIKA_AVAILABLE}" == "true" ]]; then
+    _tika_start="$SECONDS"
+    log_system INFO "tika start jar=${TIKA_JAR} file=${FILE_ABS_PATH}"
+
     MIME_TYPE="$(java -jar "${TIKA_JAR}" --detect "${FILE_ABS_PATH}" 2>/dev/null)"
     TIKA_VERSION="$(java -jar "${TIKA_JAR}" --version 2>/dev/null)"
     [[ -n "$MIME_TYPE" ]] && ENRICH_TIKA="true"
+    [[ -z "$MIME_TYPE" ]] && log_system WARN "tika detect returned no mime file=${FILE_ABS_PATH}"
 
     # -j/--metadata gives document metadata (author, title, created/modified
     # dates embedded in the file itself, page counts, etc.) -- a different,
@@ -382,9 +395,17 @@ if [[ "$SKIP_ENRICH" != "true" && -n "$FILE_ABS_PATH" && -f "$FILE_ABS_PATH" && 
       if [[ -n "$_tika_metadata_compact" && "$_tika_metadata_compact" != "null" ]]; then
         TIKA_METADATA_JSON="$_tika_metadata_compact"
         ENRICH_TIKA_METADATA="true"
+      else
+        log_system WARN "tika metadata not valid JSON file=${FILE_ABS_PATH}"
       fi
+    else
+      log_system WARN "tika metadata call returned nothing file=${FILE_ABS_PATH}"
     fi
     unset _tika_metadata_raw _tika_metadata_compact
+
+    _tika_elapsed=$((SECONDS - _tika_start))
+    log_system INFO "tika complete mime=${MIME_TYPE:-none} version=${TIKA_VERSION:-none} metadata=${ENRICH_TIKA_METADATA} elapsed_s=${_tika_elapsed}"
+    unset _tika_start _tika_elapsed
   fi
 fi
 
@@ -542,6 +563,59 @@ write_json_file_report() {
   printf '%s\n' "$JSON_PAYLOAD" > "$JSON_FILE"
 }
 
+# write_graylog_report — independent toggle, layered on top of whichever
+# local sink OUTPUT_MODE already selected (see the MFTE_GRAYLOG_ENABLED
+# dispatch below, which runs regardless of OUTPUT_MODE). Graylog strips the
+# leading underscore from GELF custom fields on ingest, so _rule_name etc.
+# below are stored/queried as rule_name with no underscore -- expected GELF
+# behavior, not a bug.
+write_graylog_report() {
+  [[ "${MFTE_GRAYLOG_ENABLED:-false}" == "true" ]] || return 0
+  local url="${MFTE_GRAYLOG_URL:-}"
+  if [[ -z "$url" ]]; then
+    log_system ERROR "MFTE_GRAYLOG_ENABLED=true but MFTE_GRAYLOG_URL is not set"
+    return 1
+  fi
+
+  local short_msg="file_rule_action rule=${RULE_NAME:-none} action=${ACTION_NAME:-none} file=${FILE_NAME:-none}"
+
+  local gelf_payload
+  gelf_payload="$(jq -c \
+    --arg host "$HOST_FQDN" \
+    --arg short_message "$short_msg" \
+    '{
+      version: "1.1",
+      host: $host,
+      short_message: $short_message,
+      timestamp: (.timestamp | fromdateiso8601),
+      _run_id: .run_id,
+      _rule_name: .rule_name,
+      _action_name: .action_name,
+      _company: .actor.company,
+      _event_source: .source,
+      _file_name: .file.name,
+      _file_abs_path: .file.abs_path,
+      _file_size_bytes: .file.size_bytes,
+      _tika_mime: .tika.mime,
+      _mfte_raw_payload: (. | tostring)
+    }' <<<"$JSON_PAYLOAD"
+  )"
+
+  local http_code
+  http_code="$(curl -sS -o /dev/null -w '%{http_code}' \
+    --max-time "${MFTE_GRAYLOG_TIMEOUT:-5}" \
+    -H 'Content-Type: application/json' \
+    -X POST "$url" -d "$gelf_payload" \
+    2>>"${MFTE_SYSTEM_LOG_DIR}/${SCRIPT_NAME}.log")"
+
+  if [[ "$http_code" == "202" ]]; then
+    log_system INFO "graylog post ok url=${url}"
+    return 0
+  fi
+  log_system ERROR "graylog post failed url=${url} http_code=${http_code}"
+  return 1
+}
+
 # Track write success explicitly. The write redirect failing (e.g.
 # permission denied) must not be allowed to silently fall through to a
 # "capture complete" report and exit 0 — that would tell Control-M the job
@@ -555,6 +629,16 @@ case "$OUTPUT_MODE" in
     write_json_file_report || WRITE_OK="false"
     ;;
 esac
+
+# Graylog forwarding is independent of OUTPUT_MODE -- it runs in addition to
+# whichever local sink(s) the case above already wrote, not instead of them.
+if [[ "${MFTE_GRAYLOG_ENABLED:-false}" == "true" ]]; then
+  write_graylog_report || {
+    if [[ "${MFTE_GRAYLOG_FAIL_MODE:-soft}" == "hard" ]]; then
+      WRITE_OK="false"
+    fi
+  }
+fi
 
 if [[ "$WRITE_OK" != "true" ]]; then
   log_system ERROR "write failed mode=${OUTPUT_MODE} jsonl=${JSONL_FILE} json_dir=${JSON_DIR}"

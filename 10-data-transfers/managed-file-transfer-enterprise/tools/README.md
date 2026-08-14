@@ -147,6 +147,7 @@ this to get the same "never ship a real one" treatment.
 | `werkstatt.ldap.smtp.test.py` | `python3` only — `vendor/` bundles `ldap3`/`pyasn1`, no `pip install` |
 | `bin/werkstatt.ldaps.cert.import.sh`, `bin/werkstatt.smtp.cert.import.sh` | `bash`, `openssl`; `sudo` + `update-ca-trust` for `-i` (RHEL) |
 | `bin/werkstatt.gpg.*.sh` | `bash`, `jq`, `sha256sum`, `file`, `hostname`, `flock`, `gpg` — all standard on RHEL. Also needs `MFTE_OPS_HOME`-style config: see `config/privacy-guard.sample.env` and the override note above. |
+| `bin/mfte.rule.vars.all.jsonl.sh` | Same base requirements as above, plus `curl` (only for optional Graylog forwarding — see `config/graylog-sample.env` and [../privacy-guard/docs/mfte.rule.vars.all.jsonl.sh.md](../privacy-guard/docs/mfte.rule.vars.all.jsonl.sh.md)). `java` + a Tika jar are optional, for enrichment only. |
 
 ## Full documentation
 

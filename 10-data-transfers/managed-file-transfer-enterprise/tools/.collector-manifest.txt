@@ -30,6 +30,7 @@ bin/werkstatt.gpg.version.sh
 bin/werkstatt.ldaps.cert.import.sh
 bin/werkstatt.smtp.cert.import.sh
 config/data.mftgpg.json
+config/graylog-sample.env
 config/privacy-guard.sample.env
 config/site-connection-test.sample.env
 data/user_onboarding_template.ftl

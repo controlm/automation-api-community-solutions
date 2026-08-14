@@ -5,7 +5,7 @@
 Privacy Guard is a set of hardened bash scripts that add GPG encryption/decryption and BMC Control-M MFT Enterprise (MFTE) rule-variable auditing to a Control-M Managed File Transfer Enterprise deployment. It exists to answer two operational needs that MFTE doesn't handle natively:
 
 1. **Encrypt/decrypt files in flight**, using a dedicated GPG service account (`mftgpg`) and a keyring management workflow — key generation, import/export, a "one dedicated key per customer" onboarding pattern, and an inbound "receive" script that figures out which of many keys a file was encrypted to and decrypts it automatically.
-2. **Capture every BMC MFT Enterprise Processing Rule Action variable** (`$$FILE_PATH$$`, `$$FILE_SIZE$$`, etc.) as a structured JSON record, with optional sha256 and Apache Tika enrichment, so file-transfer events are auditable outside of Control-M's own job log.
+2. **Capture every BMC MFT Enterprise Processing Rule Action variable** (`$$FILE_PATH$$`, `$$FILE_SIZE$$`, etc.) as a structured JSON record, with optional sha256 and Apache Tika enrichment, so file-transfer events are auditable outside of Control-M's own job log — optionally forwarded to Graylog in real time alongside the local record.
 
 Everything here runs as a **Control-M Run Command** invoked by a Processing Rule/Action, on the MFT Hub (except the setup script, run once per host). All scripts share one `.env`, one shared `lib/bash` library, and the same Control-M-specific argument-parsing defenses (see [mfte.sh](docs/mfte.sh.md)) — these scripts are called with raw, sometimes-unquoted `$$VAR$$` substitutions, and several production incidents shaped how that parsing works.
 
@@ -57,6 +57,7 @@ privacy-guard/
     ├── lib/bash/           shared libraries, sourced by every script in bin/
     └── config/
         ├── sample.env      template for the framework's single .env
+        ├── graylog-sample.env  optional add-on block: Graylog forwarding vars, not merged into sample.env
         └── data.mftgpg.json  input data for setup.mftgpg.sh
 ```
 
@@ -78,7 +79,7 @@ Deploy `src/` to a fixed path on every MFT Hub node — `/mnt/mfte/ops` (shared 
 
 | Script | Purpose |
 |---|---|
-| [mfte.rule.vars.all.jsonl.sh](docs/mfte.rule.vars.all.jsonl.sh.md) | Captures every BMC MFTE Processing Rule Action variable as one JSON record per file event, with optional sha256/Tika enrichment. |
+| [mfte.rule.vars.all.jsonl.sh](docs/mfte.rule.vars.all.jsonl.sh.md) | Captures every BMC MFTE Processing Rule Action variable as one JSON record per file event, with optional sha256/Tika enrichment and optional Graylog forwarding. |
 
 ### Diagnostics
 
@@ -175,3 +176,4 @@ See [HashiCorp Vault — Install, Setup & MFTE Integration](docs/hashicorp.vault
 4. Generate or import a key ([werkstatt.gpg.generate.key.sh](docs/werkstatt.gpg.generate.key.sh.md)), or start onboarding customers ([onboarding-4gpg-server.sh](docs/onboarding-4gpg-server.sh.md) + [onboarding-4gpg-cluster.sh](docs/onboarding-4gpg-cluster.sh.md)).
 5. Wire the relevant script into a Control-M Processing Rule's Run Command — every script's own `-h` output includes a recommended Run Command line; the per-script docs reproduce it and explain the `$$VAR$$` quoting requirement.
 6. Optional: stand up Vault and add its `.env` variables ([HashiCorp Vault integration](#hashicorp-vault-integration-optional)) if passphrases should be centrally stored rather than (or in addition to) local mode-600 files.
+7. Optional: copy [`src/config/graylog-sample.env`](src/config/graylog-sample.env) into the deployed `.env` and set `MFTE_GRAYLOG_ENABLED=true` if [mfte.rule.vars.all.jsonl.sh](docs/mfte.rule.vars.all.jsonl.sh.md)'s rule-variable captures should also be forwarded to Graylog — see that script's [Graylog forwarding](docs/mfte.rule.vars.all.jsonl.sh.md#graylog-forwarding-optional) section.
