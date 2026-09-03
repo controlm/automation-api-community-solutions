@@ -1,0 +1,206 @@
+{
+  "info": {
+    "_postman_id": "c7d1f2a3-4b5c-4d6e-8f90-1a2b3c4d5e6f",
+    "name": "Control-M Automation API",
+    "description": "Every Control-M Automation API (AAPI) call this project makes, as stand-alone requests - the five calls implemented in `src/ctm_client.py` and used by the job report pipeline (`src/ctm_job_report.py`).\n\nThe ServiceNow side of this project is a separate API - see the collection shipped with `4-ai-job-type-examples/service-now-incident` and `docs/snow_api_calls.md`.\n\n## Auth\n\nEvery request sends the AAPI token as the `x-api-key` header (collection-level API-key auth). There is no login/logout session call - a persistent AAPI token is used directly. Generate the token in the Control-M Automation API UI.\n\n## Setup\n\n1. Open the collection **Variables** tab (or an environment) and fill in `controlm_url` (base URL **including** the `/automation-api` path) and `controlm_api_key`.\n2. Set `ctm_server` + `order_id` to a real finished job (they come from a Control-M alert's `data_center` / `order_id` fields). A collection pre-request script builds `job_id` = `<ctm_server>:<order_id>` and percent-encodes the `:` to `%3A`, matching `ctm_client._job_id()`.\n3. For the alert calls, set `alert_id` (the alert's `alert_id` field).\n\n## Folders\n\n- **1. Job detail** - `get_job_status()` / `get_job_output()` / `get_job_log()`, the three reads `build_job_report()` runs per job alert. Each is independent and allowed to fail on its own.\n- **2. Alert mark-as-read** - `update_alert()` + `set_alert_status()`, run by `mark_alert_read()` once the job log has been captured.\n\nSee `docs/ctm_client.md` and `docs/ctm_alert_order.md` for the field-by-field notes and real captured responses.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      { "key": "key", "value": "x-api-key", "type": "string" },
+      { "key": "value", "value": "{{controlm_api_key}}", "type": "string" },
+      { "key": "in", "value": "header", "type": "string" }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Build job_id = '<ctm_server>:<order_id>' with the ':' percent-encoded,",
+          "// matching quote(ctm_client._job_id(), safe='') in src/ctm_client.py.",
+          "const server = pm.variables.get('ctm_server');",
+          "const order = pm.variables.get('order_id');",
+          "if (server && order) {",
+          "  pm.collectionVariables.set('job_id', encodeURIComponent(server + ':' + order));",
+          "}"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Job detail",
+      "description": "The three read-only AAPI calls build_job_report() makes for a job alert (src/ctm_job_report.py). Order matches docs/ctm_alert_order.md: status, then output, then log.",
+      "item": [
+        {
+          "name": "Get Job Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+                  "const b = pm.response.json();",
+                  "pm.test(\"has a status field\", () => pm.expect(b.status).to.be.a(\"string\"));",
+                  "console.log(b.name, \"->\", b.status, \"| start\", b.startTime, \"end\", b.endTime || \"(still running)\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{controlm_url}}/run/job/{{job_id}}/status",
+              "host": ["{{controlm_url}}"],
+              "path": ["run", "job", "{{job_id}}", "status"]
+            },
+            "description": "`ctm_client.get_job_status()`. Single-job endpoint (`/run/job/<jobId>/status`), **not** the bulk `/run/jobs/status?jobid=` list - the bulk list only covers Control-M's active pipeline and returns nothing once a job has finished, which is the common case here (alerts fire after a job has already ended). Returns the full job-status object as-is.\n\nSample response (from docs/ctm_alert_order.md):\n```json\n{\n  \"jobId\": \"ctm-lin-srv:003i7\",\n  \"name\": \"ZZM PreFlight Check\",\n  \"folder\": \"ZZM_UC_MULTIPATH_CLOUD\",\n  \"status\": \"Ended Not OK\",\n  \"startTime\": \"20260814235859\",\n  \"endTime\": \"20260814235859\",\n  \"ctm\": \"ctm-lin-srv\",\n  \"host\": \"ctm-lin-agt.werkstatt.local\",\n  \"outputURI\": \"https://.../run/job/ctm-lin-srv:003i7/output\",\n  \"logURI\": \"https://.../run/job/ctm-lin-srv:003i7/log\"\n}\n```\nA non-200 raises in `ctm_client`; `build_job_report()` catches it and sets `job_status` to `null`."
+          }
+        },
+        {
+          "name": "Get Job Output",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+                  "console.log(\"output length:\", pm.response.text().length, \"chars\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{controlm_url}}/run/job/{{job_id}}/output?runNo={{run_no}}",
+              "host": ["{{controlm_url}}"],
+              "path": ["run", "job", "{{job_id}}", "output"],
+              "query": [{ "key": "runNo", "value": "{{run_no}}" }]
+            },
+            "description": "`ctm_client.get_job_output()` - job stdout/sysout for one run. `ctm_job_report.py` passes the alert's own `run_counter` as `runNo` with leading zeros stripped (`\"00003\"` -> `3`); a job that has been rerun has more than one run's output, and the wrong `runNo` returns the wrong run. `run_no=0` (the default here) gets the most recent run.\n\nResponse is plain text, e.g.:\n```\n20260814235859 Failed to submit job.\n20260814235859 Found empty sysout file.\n...\n```"
+          }
+        },
+        {
+          "name": "Get Job Log",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+                  "console.log(\"log length:\", pm.response.text().length, \"chars\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{controlm_url}}/run/job/{{job_id}}/log",
+              "host": ["{{controlm_url}}"],
+              "path": ["run", "job", "{{job_id}}", "log"]
+            },
+            "description": "`ctm_client.get_job_log()` - Control-M's own run log (submit / start / state-change / rerun events), **not** job stdout (that is Get Job Output). The log covers every run of the job. Response is plain text.\n\nCapturing this successfully is what gates `mark_alert_read()` in folder 2 - the alert is only marked read once there is actually a log to point at."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Alert mark-as-read",
+      "description": "ctm_job_report.py's mark_alert_read() runs both of these once the job log has been captured, so anyone looking at the alert in Control-M can see where the report landed. Both are best-effort - a failure on either is logged, not fatal.",
+      "item": [
+        {
+          "name": "Update Alert (set comment)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+                  "console.log(pm.response.text());",
+                  "// NOTE: the AAPI has been seen to return 200 with a \\\"successfully modified\\\"",
+                  "// message WITHOUT the change taking effect. A 200 here is not proof the",
+                  "// alert was updated - re-read the alert to confirm. See docs/ctm_client.md."
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alertIds\": [\"{{alert_id}}\"],\n  \"comment\": \"{{alert_comment}}\"\n}"
+            },
+            "url": {
+              "raw": "{{controlm_url}}/run/alerts",
+              "host": ["{{controlm_url}}"],
+              "path": ["run", "alerts"]
+            },
+            "description": "`ctm_client.update_alert()`. Sets the alert's own comment/text field (and optionally `urgency` - add `\"urgency\": \"...\"` to the body). `ctm_job_report.py` sets the comment to the saved report's filename, e.g. `Job log saved: 2256.json`.\n\n`alertIds` is a list - the AAPI takes more than one, this project always passes exactly one.\n\nSample response:\n```json\n{ \"message\": \"[2256] The alert was successfully modified\" }\n```"
+          }
+        },
+        {
+          "name": "Set Alert Status (mark Reviewed)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+                  "console.log(pm.response.text());",
+                  "// Same caveat as Update Alert: a 200 does not guarantee the status",
+                  "// actually changed. ctm_job_report.py persists the raw response body",
+                  "// to data/job_report_tracking.json for exactly this reason."
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alertIds\": [\"{{alert_id}}\"],\n  \"status\": \"{{alert_status}}\"\n}"
+            },
+            "url": {
+              "raw": "{{controlm_url}}/run/alerts/status",
+              "host": ["{{controlm_url}}"],
+              "path": ["run", "alerts", "status"]
+            },
+            "description": "`ctm_client.set_alert_status()`. `ctm_job_report.py` calls this with `status=\"Reviewed\"` to mark the alert as read once its log has been captured.\n\nControl-M/EM re-emits this same alert back through the alert action as a `call_type='U'` update when the status changes - `ctm_alerts.sh`'s early-exit filter is what stops that echo from re-triggering either pipeline (see docs/ctm_alerts_sh.md).\n\nSample response:\n```json\n{ \"message\": \"[2256] The alert status was successfully modified\" }\n```"
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "controlm_url", "value": "https://your-ctm-em-host:8443/automation-api", "type": "string" },
+    { "key": "controlm_api_key", "value": "", "type": "string" },
+    { "key": "ctm_server", "value": "ctm-lin-srv", "type": "string" },
+    { "key": "order_id", "value": "003i7", "type": "string" },
+    { "key": "job_id", "value": "", "type": "string" },
+    { "key": "run_no", "value": "0", "type": "string" },
+    { "key": "alert_id", "value": "2256", "type": "string" },
+    { "key": "alert_comment", "value": "Job log saved: 2256.json", "type": "string" },
+    { "key": "alert_status", "value": "Reviewed", "type": "string" }
+  ]
+}

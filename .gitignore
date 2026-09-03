@@ -20,6 +20,10 @@ launch.json
 1-general-examples/workload-preflight-check/src/.engineer/inventory/
 1-general-examples/workload-preflight-check/src/archive/
 10-data-transfers/managed-file-transfer-enterprise/site-connection-test/src/config/.env
+1-general-examples/send-alerts-to-snow/src/config/.env
+1-general-examples/send-alerts-to-snow/src/config/mapping.json
+1-general-examples/send-alerts-to-snow/src/data/
+1-general-examples/send-alerts-to-snow/src/.venv/
 
 # Python artifacts
 __pycache__/
@@ -29,3 +33,4 @@ __pycache__/
 .DS_Store
 .vscode/settings.json
 .gitignore
+

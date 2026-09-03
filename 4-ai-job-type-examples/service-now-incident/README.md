@@ -169,6 +169,15 @@ from an On-Do/Notification, a Control-M/EM alert script, an external
 trigger, or a REST call to the Automation API - the job type itself does
 not care how it was started.
 
+The **Control-M/EM alert script** route is worked out in full in
+[`1-general-examples/send-alerts-to-snow`](../../1-general-examples/send-alerts-to-snow):
+a script EM calls for every alert that classifies it, routes it to an
+assignment group / Configuration Item from an editable mapping table, and
+creates or resolves the incident itself. It drives the **same ServiceNow
+Table API** documented below - see its
+[`docs/snow_api_calls.md`](../../1-general-examples/send-alerts-to-snow/docs/snow_api_calls.md)
+for the same calls from the script side.
+
 ## The job type
 
 The definitions imported from `ctmai/VFSSNOW.ctmai`.
@@ -358,6 +367,14 @@ a live instance.
 Every call below is also in
 [`postman/ServiceNow Incident Integration.postman_collection.json`](postman/ServiceNow%20Incident%20Integration.postman_collection.json)
 as a runnable request.
+
+The script-based
+[`1-general-examples/send-alerts-to-snow`](../../1-general-examples/send-alerts-to-snow)
+example calls the same Table API - its
+[`docs/snow_api_calls.md`](../../1-general-examples/send-alerts-to-snow/docs/snow_api_calls.md)
+documents these calls as its scripts issue them (routed `assignment_group` /
+`cmdb_ci`, `work_notes` worklog appends, correlation-ID lookup, agent-back
+resolve).
 
 Conventions used below:
 

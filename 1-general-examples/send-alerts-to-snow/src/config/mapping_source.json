@@ -1,0 +1,16 @@
+[
+  {
+    "_comment": "This is the ONLY file you should need to edit. Use plain ServiceNow names below - no IDs, no codes. After editing, run: python3 setup_resolve_mapping.py",
+
+    "service_name": "Secure Data Transfer Service",
+    "pattern": "ZZM*",
+    "assignment_group_name": "Secure Data Transfer",
+    "cmdb_ci_name": "Secure Data Transfer Service"
+  },
+  {
+    "service_name": "",
+    "pattern": "*",
+    "assignment_group_name": "Control-M",
+    "cmdb_ci_name": ""
+  }
+]
