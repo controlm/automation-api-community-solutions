@@ -1,0 +1,196 @@
+{
+  "Alerting" : {
+    "Type" : "Folder",
+    "Variables" : [ {
+      "INCIDENT" : ""
+    }, {
+      "SNOW_CCP" : "SNOW_DEV_CCP"
+    }, {
+      "SNOW_SHORT_DESCRIPTION" : "Short Test"
+    }, {
+      "SNOW_DESCRIPTION" : "PreFlight Check"
+    }, {
+      "SNOW_WORKLOG_ENTRY" : "Demo and Test on %%$DATE at %%TIME"
+    }, {
+      "SNOW_ASSIGNMENT_GROUP" : "{{DMEO_ASSIGNMENT_GROUP}}"
+    }, {
+      "SNOW_BUSINESS_SERVICE" : "{{DMEO_BUSINESS_SERVICE}}"
+    } ],
+    "ControlmServer" : "{{CONTROL_M_SERVER}}",
+    "Description" : "Biz Service: Secure Data Transfer Service\\nAssignment Group: Control-M",
+    "OrderMethod" : "Manual",
+    "ActiveRetentionPolicy" : "CleanEndedOK",
+    "RunAs" : "{{CONTROL_M_USER}}",
+    "SubApplication" : "Alerting",
+    "CreatedBy" : "orchestrator@bmc.com",
+    "Application" : "Housekeeping",
+    "When" : {
+      "RuleBasedCalendars" : {
+        "Included" : [ "EVERYDAY" ],
+        "EVERYDAY" : {
+          "Type" : "Calendar:RuleBased",
+          "When" : {
+            "DaysRelation" : "OR",
+            "WeekDays" : [ "NONE" ],
+            "MonthDays" : [ "ALL" ]
+          }
+        }
+      }
+    },
+    "Close Incident" : {
+      "Type" : "Job:ApplicationIntegrator:AI ServiceNOW",
+      "ConnectionProfile" : "%%SNOW_CCP",
+      "AI-Operation" : "Resolve",
+      "AI-Impact" : "3 - Low",
+      "AI-Urgency" : "3 - Low",
+      "AI-Resolution Status" : "7 - Closed",
+      "AI-Incident Number" : "%%INCIDENT",
+      "AI-Resolution Notes" : "Closeure on %%$DATE at %%TIME",
+      "SubApplication" : "Alerting",
+      "Host" : "SNOW",
+      "CreatedBy" : "orchestrator@bmc.com",
+      "RunAs" : "%%SNOW_CCP",
+      "Application" : "Housekeeping",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "DaysRelation" : "OR"
+      },
+      "eventsToWaitFor" : {
+        "Type" : "WaitForEvents",
+        "Events" : [ {
+          "Event" : "Resolve_Incident-TO-Close_Incident_%%SMART_ORDERID"
+        } ]
+      },
+      "eventsToDelete" : {
+        "Type" : "DeleteEvents",
+        "Events" : [ {
+          "Event" : "Resolve_Incident-TO-Close_Incident_%%SMART_ORDERID"
+        } ]
+      }
+    },
+    "Create Incident" : {
+      "Type" : "Job:ApplicationIntegrator:AI ServiceNOW",
+      "ConnectionProfile" : "%%SNOW_CCP",
+      "AI-Business Service" : "%%SNOW_ASSIGNMENT_GROUP",
+      "AI-Assignment Group" : "%%SNOW_BUSINESS_SERVICE",
+      "AI-Operation" : "Create",
+      "AI-Short Description" : "%%SNOW_SHORT_DESCRIPTION",
+      "AI-Description" : "%%SNOW_DESCRIPTION",
+      "AI-Impact" : "3 - Low",
+      "AI-Urgency" : "3 - Low",
+      "AI-Worklog Entry" : "Demo and Test on %%$DATE at %%TIME",
+      "SubApplication" : "Alerting",
+      "Host" : "SNOW",
+      "CreatedBy" : "orchestrator@bmc.com",
+      "Description" : "Create SNOW Incident",
+      "RunAs" : "%%SNOW_CCP",
+      "Application" : "Housekeeping",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "DaysRelation" : "OR"
+      },
+      "CaptureOutput_0" : {
+        "Type" : "Action:CaptureOutput",
+        "Capture" : "UpToEndOfLine",
+        "Search" : "Incident:",
+        "VariableName" : "\\\\INCIDENT",
+        "ForwardBy" : {
+          "ColumnsOption" : "Characters"
+        }
+      },
+      "eventsToAdd" : {
+        "Type" : "AddEvents",
+        "Events" : [ {
+          "Event" : "Create_Incident-TO-Create_Worklog_Entry_%%SMART_ORDERID"
+        } ]
+      }
+    },
+    "Create Worklog Entry" : {
+      "Type" : "Job:ApplicationIntegrator:AI ServiceNOW",
+      "ConnectionProfile" : "%%SNOW_CCP",
+      "AI-Operation" : "Update",
+      "AI-Impact" : "3 - Low",
+      "AI-Urgency" : "3 - Low",
+      "AI-Resolution Status" : "6 - Resolved",
+      "AI-Incident Number" : "%%INCIDENT",
+      "SubApplication" : "Alerting",
+      "Host" : "SNOW",
+      "CreatedBy" : "orchestrator@bmc.com",
+      "RunAs" : "%%SNOW_CCP",
+      "Application" : "Housekeeping",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "DaysRelation" : "OR"
+      },
+      "eventsToWaitFor" : {
+        "Type" : "WaitForEvents",
+        "Events" : [ {
+          "Event" : "Create_Incident-TO-Create_Worklog_Entry_%%SMART_ORDERID"
+        } ]
+      },
+      "eventsToAdd" : {
+        "Type" : "AddEvents",
+        "Events" : [ {
+          "Order" : "2",
+          "Event" : "Create_Worklog_Entry-TO-Resolve_Incident_%%SMART_ORDERID"
+        } ]
+      },
+      "eventsToDelete" : {
+        "Type" : "DeleteEvents",
+        "Events" : [ {
+          "Order" : "1",
+          "Event" : "Create_Incident-TO-Create_Worklog_Entry_%%SMART_ORDERID"
+        } ]
+      }
+    },
+    "Resolve Incident" : {
+      "Type" : "Job:ApplicationIntegrator:AI ServiceNOW",
+      "ConnectionProfile" : "%%SNOW_CCP",
+      "AI-Operation" : "Resolve",
+      "AI-Impact" : "3 - Low",
+      "AI-Urgency" : "3 - Low",
+      "AI-Resolution Status" : "6 - Resolved",
+      "AI-Incident Number" : "%%INCIDENT",
+      "AI-Resolution Notes" : "EOL on %%$DATE at %%TIME",
+      "SubApplication" : "Alerting",
+      "Host" : "SNOW",
+      "CreatedBy" : "orchestrator@bmc.com",
+      "RunAs" : "%%SNOW_CCP",
+      "Application" : "Housekeeping",
+      "When" : {
+        "WeekDays" : [ "NONE" ],
+        "MonthDays" : [ "ALL" ],
+        "DaysRelation" : "OR"
+      },
+      "eventsToWaitFor" : {
+        "Type" : "WaitForEvents",
+        "Events" : [ {
+          "Event" : "Create_Worklog_Entry-TO-Resolve_Incident_%%SMART_ORDERID"
+        } ]
+      },
+      "eventsToAdd" : {
+        "Type" : "AddEvents",
+        "Events" : [ {
+          "Order" : "2",
+          "Event" : "Resolve_Incident-TO-Close_Incident_%%SMART_ORDERID"
+        } ]
+      },
+      "eventsToDelete" : {
+        "Type" : "DeleteEvents",
+        "Events" : [ {
+          "Order" : "1",
+          "Event" : "Create_Worklog_Entry-TO-Resolve_Incident_%%SMART_ORDERID"
+        } ]
+      }
+    },
+    "eventsToAdd" : {
+      "Type" : "AddEvents",
+      "Events" : [ {
+        "Event" : "HOUSEKEEPING_%%JOBNAME_START_%%DATE_%%TIME"
+      } ]
+    }
+  }
+}

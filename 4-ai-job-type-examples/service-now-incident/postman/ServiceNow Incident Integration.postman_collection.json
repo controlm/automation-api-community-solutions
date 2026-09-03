@@ -1,0 +1,387 @@
+{
+  "info": {
+    "_postman_id": "b1e7c0a2-5f3d-4a1b-9c2e-0a1b2c3d4e5f",
+    "name": "ServiceNow Incident Integration",
+    "description": "Every ServiceNow REST call the Control-M \"AI ServiceNOW\" Application Integrator job type makes, as stand-alone requests.\n\nAll of it is plain REST against a standard instance: the OAuth token endpoint plus the Table API (`/api/now/table/...`). No scripted REST resource, no Import Set.\n\n## Setup\n\n1. Open the collection **Variables** tab (or create an environment) and fill in `instance`, `client_id`, `client_secret`, `caller_id`.\n2. Run **1. Auth > Get OAuth Token** first - its test script stores `access_token` as a collection variable that every other request uses as a Bearer token.\n3. Use **2. Load-button lookups** to find `assignment_group_sys_id` and `business_service_sys_id`, then paste them into the variables.\n4. **3. Incident > Create Incident** stores `incident_sys_id` and `ticket_number`; the update / worklog / resolve requests reuse them.\n\nSee the repo README (`## ServiceNow API calls`) for the field-by-field notes.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{access_token}}", "type": "string" }
+    ]
+  },
+  "item": [
+    {
+      "name": "1. Auth",
+      "item": [
+        {
+          "name": "Get OAuth Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+                  "const body = pm.response.json();",
+                  "pm.test(\"has access_token\", () => pm.expect(body.access_token).to.be.a(\"string\").and.not.empty);",
+                  "pm.collectionVariables.set(\"access_token\", body.access_token);",
+                  "console.log(\"token stored, expires_in\", body.expires_in);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "grant_type", "value": "client_credentials" },
+                { "key": "client_id", "value": "{{client_id}}" },
+                { "key": "client_secret", "value": "{{client_secret}}" }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/oauth_token.do",
+              "host": ["{{base_url}}"],
+              "path": ["oauth_token.do"]
+            },
+            "description": "Client-credentials grant. No Authorization header - the client id/secret in the form body ARE the credential. Only `access_token` is used; it is sent as `Authorization: Bearer` on every other request. Default lifetime ~30 min, not refreshed within a run."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Load-button lookups",
+      "description": "The two \"Text Box with load button\" attributes populate their pickers from these. Design-time only - they do not run at job execution.",
+      "item": [
+        {
+          "name": "List Assignment Groups",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+                  "const rows = pm.response.json().result || [];",
+                  "console.log(rows.length + \" group(s)\");",
+                  "rows.slice(0, 20).forEach(r => console.log(r.name, r.sys_id));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/now/table/sys_user_group?sysparm_query=active=true&sysparm_fields=name,sys_id&sysparm_limit=100",
+              "host": ["{{base_url}}"],
+              "path": ["api", "now", "table", "sys_user_group"],
+              "query": [
+                { "key": "sysparm_query", "value": "active=true" },
+                { "key": "sysparm_fields", "value": "name,sys_id" },
+                { "key": "sysparm_limit", "value": "100" }
+              ]
+            },
+            "description": "Feeds the `ASSIGNMENT_GROUP` attribute. Copy the `sys_id` of the group you want into the `assignment_group_sys_id` collection variable. Needs the `itil` role (or any authenticated account with read on `sys_user_group`)."
+          }
+        },
+        {
+          "name": "List Business Services",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+                  "const rows = pm.response.json().result || [];",
+                  "console.log(rows.length + \" service(s)\");",
+                  "rows.slice(0, 20).forEach(r => console.log(r.name, r.sys_id));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/now/table/cmdb_ci_service?sysparm_query=active=true&sysparm_fields=name,sys_id&sysparm_limit=100",
+              "host": ["{{base_url}}"],
+              "path": ["api", "now", "table", "cmdb_ci_service"],
+              "query": [
+                { "key": "sysparm_query", "value": "active=true" },
+                { "key": "sysparm_fields", "value": "name,sys_id" },
+                { "key": "sysparm_limit", "value": "100" }
+              ]
+            },
+            "description": "Feeds the `BUSINESS_SERVICE` attribute; its sys_id goes into the incident's `business_service` field. Copy the `sys_id` into the `business_service_sys_id` collection variable. Needs the `service_viewer` role - without it this returns an empty result set rather than a 403.\n\nThe reference implementation instead queries `cmdb_ci_service_business` and writes to `cmdb_ci` - swap the table/field if that is what your incident process keys on."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Incident",
+      "item": [
+        {
+          "name": "Create Incident",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"201 Created\", () => pm.response.to.have.status(201));",
+                  "const r = pm.response.json().result;",
+                  "pm.collectionVariables.set(\"incident_sys_id\", r.sys_id);",
+                  "pm.collectionVariables.set(\"ticket_number\", r.number);",
+                  "pm.test(\"caller_id resolved\", () => pm.expect(r.caller_id).to.not.equal(\"\"));",
+                  "pm.test(\"business_service resolved\", () => pm.expect(r.business_service).to.not.equal(\"\"));",
+                  "console.log(\"created\", r.number, r.sys_id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"caller_id\": \"{{caller_id}}\",\n  \"short_description\": \"{{short_description}}\",\n  \"description\": \"{{description}}\",\n  \"impact\": \"{{impact}}\",\n  \"urgency\": \"{{urgency}}\",\n  \"assignment_group\": \"{{assignment_group_sys_id}}\",\n  \"business_service\": \"{{business_service_sys_id}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/now/table/incident",
+              "host": ["{{base_url}}"],
+              "path": ["api", "now", "table", "incident"]
+            },
+            "description": "`caller_id` is a `sys_user` sys_id (the incident's Caller) - NOT the OAuth `client_id`. Reference fields accept a bare sys_id on write and come back as `{link, value}` on read. Omit `assignment_group` / `business_service` entirely if you have no value (do not send an empty string with the load-button attributes).\n\nDefaults if omitted: `impact` / `urgency` = `3`. Response is the full ~90-field incident record; the test script keeps `sys_id` and `number`.\n\nNote: `business_service`, `assignment_group` and `description` are not on the incident's Self Service form view - use \"Get Incident\" or the Default view to confirm the write."
+          }
+        },
+        {
+          "name": "Find Incident by Number",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+                  "const rows = pm.response.json().result || [];",
+                  "if (rows.length) {",
+                  "  pm.collectionVariables.set(\"incident_sys_id\", rows[0].sys_id);",
+                  "  console.log(\"resolved\", pm.collectionVariables.get(\"ticket_number\"), \"->\", rows[0].sys_id);",
+                  "} else {",
+                  "  console.warn(\"no incident with that number\");",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/now/table/incident?sysparm_query=number={{ticket_number}}&sysparm_fields=sys_id,number&sysparm_limit=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "now", "table", "incident"],
+              "query": [
+                { "key": "sysparm_query", "value": "number={{ticket_number}}" },
+                { "key": "sysparm_fields", "value": "sys_id,number" },
+                { "key": "sysparm_limit", "value": "1" }
+              ]
+            },
+            "description": "The Table API PATCHes by sys_id only, so a job given just an `INC...` number resolves it here first (call 4a). Stores `incident_sys_id`."
+          }
+        },
+        {
+          "name": "Get Incident (verify)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/now/table/incident/{{incident_sys_id}}?sysparm_fields=number,state,caller_id,assignment_group,business_service,cmdb_ci,description,short_description,close_code,close_notes,resolved_at&sysparm_display_value=all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "now", "table", "incident", "{{incident_sys_id}}"],
+              "query": [
+                { "key": "sysparm_fields", "value": "number,state,caller_id,assignment_group,business_service,cmdb_ci,description,short_description,close_code,close_notes,resolved_at" },
+                { "key": "sysparm_display_value", "value": "all" }
+              ]
+            },
+            "description": "View-independent read of the fields the job sets - useful because the Self Service form view hides most of them. `sysparm_display_value=all` returns both the raw value and the display label for reference fields."
+          }
+        },
+        {
+          "name": "Add Worklog Entry",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+                  "console.log(\"sys_mod_count\", pm.response.json().result.sys_mod_count);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"work_notes\": \"{{work_notes}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/now/table/incident/{{incident_sys_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "now", "table", "incident", "{{incident_sys_id}}"]
+            },
+            "description": "`work_notes` is a journal field - each PATCH APPENDS one entry, it never overwrites. Run it more than once to add more entries. Use `comments` instead for a customer-visible (\"Additional comments\") entry. The input is not echoed back in the response; check `sys_mod_count` incremented."
+          }
+        },
+        {
+          "name": "Update Incident",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"short_description\": \"{{short_description}}\",\n  \"description\": \"{{description}}\",\n  \"impact\": \"{{impact}}\",\n  \"urgency\": \"{{urgency}}\",\n  \"assignment_group\": \"{{assignment_group_sys_id}}\",\n  \"business_service\": \"{{business_service_sys_id}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/now/table/incident/{{incident_sys_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "now", "table", "incident", "{{incident_sys_id}}"]
+            },
+            "description": "Same field set as Create. Only the keys you send are changed; every other field on the incident is left untouched. Drop any key you do not want to overwrite."
+          }
+        },
+        {
+          "name": "Resolve / Close Incident",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"200 OK\", () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json().result;",
+                  "console.log(\"state\", r.state, \"close_code\", r.close_code, \"resolved_at\", r.resolved_at);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"state\": \"{{close_state}}\",\n  \"close_code\": \"{{close_code}}\",\n  \"close_notes\": \"{{close_notes}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/now/table/incident/{{incident_sys_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "now", "table", "incident", "{{incident_sys_id}}"]
+            },
+            "description": "`state`: 3 On Hold / 6 Resolved / 7 Closed / 8 Canceled. `close_code` AND `close_notes` are both mandatory for state 6 or 7. `close_notes` is a plain field - running this again OVERWRITES it (unlike `work_notes`). A stock instance allows New -> Resolved and Resolved -> Closed directly."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Reference data",
+      "description": "Choice lists - values are per-instance configurable, so check yours rather than assuming the defaults.",
+      "item": [
+        {
+          "name": "List incident states",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/now/table/sys_choice?sysparm_query=name=incident^element=state^inactive=false&sysparm_fields=value,label,sequence&sysparm_display_value=all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "now", "table", "sys_choice"],
+              "query": [
+                { "key": "sysparm_query", "value": "name=incident^element=state^inactive=false" },
+                { "key": "sysparm_fields", "value": "value,label,sequence" },
+                { "key": "sysparm_display_value", "value": "all" }
+              ]
+            },
+            "description": "The `state` choice list for the incident table."
+          }
+        },
+        {
+          "name": "List close codes",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/now/table/sys_choice?sysparm_query=name=incident^element=close_code^inactive=false&sysparm_fields=value,label,sequence&sysparm_display_value=all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "now", "table", "sys_choice"],
+              "query": [
+                { "key": "sysparm_query", "value": "name=incident^element=close_code^inactive=false" },
+                { "key": "sysparm_fields", "value": "value,label,sequence" },
+                { "key": "sysparm_display_value", "value": "all" }
+              ]
+            },
+            "description": "The `close_code` choice list. The field stores the label as its value, so send the string verbatim (e.g. `Solution provided`)."
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "instance", "value": "dev00000", "type": "string" },
+    { "key": "base_url", "value": "https://{{instance}}.service-now.com", "type": "string" },
+    { "key": "client_id", "value": "", "type": "string" },
+    { "key": "client_secret", "value": "", "type": "string" },
+    { "key": "access_token", "value": "", "type": "string" },
+    { "key": "caller_id", "value": "", "type": "string" },
+    { "key": "assignment_group_sys_id", "value": "", "type": "string" },
+    { "key": "business_service_sys_id", "value": "", "type": "string" },
+    { "key": "incident_sys_id", "value": "", "type": "string" },
+    { "key": "ticket_number", "value": "", "type": "string" },
+    { "key": "short_description", "value": "Short Test", "type": "string" },
+    { "key": "description", "value": "PreFlight Check", "type": "string" },
+    { "key": "impact", "value": "3", "type": "string" },
+    { "key": "urgency", "value": "3", "type": "string" },
+    { "key": "work_notes", "value": "Automated worklog test from Control-M preflight tooling", "type": "string" },
+    { "key": "close_state", "value": "6", "type": "string" },
+    { "key": "close_code", "value": "Solution provided", "type": "string" },
+    { "key": "close_notes", "value": "Resolved by Control-M", "type": "string" }
+  ]
+}
