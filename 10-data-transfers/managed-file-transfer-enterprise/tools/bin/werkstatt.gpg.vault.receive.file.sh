@@ -253,18 +253,35 @@ GPG / audit options:
                              \$MFTE_JSONL_FILE / \$MFTE_JSON_DIR (from .env)
 
 \$MFTE_GPG_RETURN_DIR (.env, optional) is a single path used for both -R
-and -K's defaults, in either of two forms:
-  MFTE_GPG_RETURN_DIR="/mnt/ftshome/b2bhome/secureTransport/{TYPE}"
+and -K's defaults. Two placeholders, both optional and independent of
+each other (not shell syntax -- plain string substitution this script
+does itself, NOT a \$VARIABLE the .env's own source step would try to
+expand):
+  {TYPE}     -> "encrypted" or "decrypted", whichever file is being
+                placed. Omit it and that subfolder is appended
+                automatically instead -- either way the two file types
+                always land in separate subfolders, never dumped
+                together, and the subfolder doesn't need to pre-exist
+                (created on first use).
+  {VFOLDER}  -> this file's \$VIRTUAL_FOLDER (BMC's -v value, e.g.
+                "HighSec"). PREFER a form that includes this: it scopes
+                the return path to the SAME per-customer virtual folder
+                MFT Enterprise itself provisions during onboarding, so
+                the external customer can actually browse their own
+                returned files there. A shared top-level directory
+                (e.g. a literal "secureTransport" folder created by
+                hand, outside MFTE's own onboarding) is invisible to
+                MFTE's own ACLs -- files land there but the customer can
+                never see them.
+
+Recommended:
+  MFTE_GPG_RETURN_DIR="/mnt/ftshome/b2bhome/{VFOLDER}/{TYPE}"
+Also valid (shared across every customer -- only use this if that's
+actually what you want, e.g. an internal-only archive, not a customer
+deliverable):
   MFTE_GPG_RETURN_DIR="/mnt/ftshome/b2bhome/secureTransport"
-With the literal text "{TYPE}" included (not shell syntax -- this is a
-plain string substitution this script does itself, NOT a \$VARIABLE the
-.env's own source step would try to expand), it's replaced with
-"encrypted" or "decrypted" depending on which file is being placed.
-Without it, the value is treated as a base directory and "/encrypted" or
-"/decrypted" is appended automatically -- either form always lands the
-two file types in separate subfolders, never dumped together into the
-same directory, and the subfolder doesn't need to pre-exist (created on
-first use). Neither -R/-K nor this variable are required -- if nothing is
+
+Neither -R/-K nor this variable are required -- if nothing is
 configured, both files are left exactly where earlier flags/defaults
 already put them, matching this script's original behavior before this
 feature existed.
@@ -677,30 +694,47 @@ RETURN_MOVE_OK="true"
 # the override nor $MFTE_GPG_RETURN_DIR is set -- callers treat that as
 # "skip this file, nothing configured."
 #
-# $MFTE_GPG_RETURN_DIR supports two forms:
-#   - contains the literal token "{TYPE}"       -> substituted with
-#     "encrypted"/"decrypted" wherever it appears, e.g.
-#     ".../secureTransport/{TYPE}" -> ".../secureTransport/encrypted"
-#   - does NOT contain "{TYPE}"                 -> treated as a base
-#     directory, with "/encrypted" or "/decrypted" appended as a
-#     subfolder automatically, e.g. ".../secureTransport" ->
-#     ".../secureTransport/encrypted"
-# Either way the two file types always end up in separate subfolders --
-# never dumped together into one shared directory -- even if whoever set
-# $MFTE_GPG_RETURN_DIR forgot the "{TYPE}" placeholder. The subfolder
-# itself doesn't need to pre-exist: the caller's mkdir -p creates it on
-# first use.
+# $MFTE_GPG_RETURN_DIR supports two independent placeholders, both
+# optional and order-independent within the string:
+#   - "{TYPE}"    -> substituted with "encrypted"/"decrypted". If absent,
+#     that subfolder is appended automatically instead (see below) --
+#     either way the two file types always end up in separate
+#     subfolders, never dumped together, even if whoever set
+#     $MFTE_GPG_RETURN_DIR forgot the placeholder.
+#   - "{VFOLDER}" -> substituted with this file's $VIRTUAL_FOLDER (the
+#     BMC -v value, e.g. "HighSec"). Scopes the return path to the SAME
+#     per-customer virtual folder MFT Enterprise itself provisions
+#     (onboarding/ctmai/virtual-folder.json's fixedSubFolders) -- unlike
+#     a shared top-level directory (e.g. a literal "secureTransport"
+#     folder created by hand outside MFTE's own onboarding), a path
+#     under the customer's own virtual folder is one MFTE already knows
+#     about and the external customer can actually browse. Empty/unset
+#     $VIRTUAL_FOLDER substitutes to an empty string (not an error) --
+#     same "trust BMC's value as given" approach as the rest of this
+#     script.
+#
+# Examples:
+#   "${MFTE_B2B_HOME}/{VFOLDER}/{TYPE}" -> ".../b2bhome/HighSec/encrypted"
+#   "${MFTE_B2B_HOME}/{VFOLDER}"        -> ".../b2bhome/HighSec/encrypted"
+#     (no "{TYPE}" -> "/encrypted"/"/decrypted" appended automatically)
+#   "${MFTE_B2B_HOME}/secureTransport"  -> ".../b2bhome/secureTransport/encrypted"
+#     (no "{VFOLDER}" -> shared across every customer, not MFTE-visible --
+#     this is what bit HighSec in the demo lab; prefer a {VFOLDER} form)
+#
+# The subfolder itself doesn't need to pre-exist: the caller's mkdir -p
+# creates it on first use.
 mfte_gpg_resolve_return_path() {
-  local override="$1" type="$2" filename="$3"
+  local override="$1" type="$2" filename="$3" resolved
   if [[ -n "$override" ]]; then
     printf '%s' "$override"
     return 0
   fi
   [[ -z "$MFTE_GPG_RETURN_DIR" ]] && return 1
-  if [[ "$MFTE_GPG_RETURN_DIR" == *'{TYPE}'* ]]; then
-    printf '%s/%s' "${MFTE_GPG_RETURN_DIR//\{TYPE\}/$type}" "$filename"
+  resolved="${MFTE_GPG_RETURN_DIR//\{VFOLDER\}/$VIRTUAL_FOLDER}"
+  if [[ "$resolved" == *'{TYPE}'* ]]; then
+    printf '%s/%s' "${resolved//\{TYPE\}/$type}" "$filename"
   else
-    printf '%s/%s/%s' "$MFTE_GPG_RETURN_DIR" "$type" "$filename"
+    printf '%s/%s/%s' "$resolved" "$type" "$filename"
   fi
 }
 

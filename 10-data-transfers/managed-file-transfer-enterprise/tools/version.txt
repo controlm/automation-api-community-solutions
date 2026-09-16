@@ -1,4 +1,4 @@
-VERSION:      1.2.9
+VERSION:      1.2.10
 PLATFORM:     Linux-noarch
 PACKAGE-DATE: Sep-16-2026
-COMMENTS:     Fix -h Recommended Run Command: substitute the real MFTE_GPG_RECEIVE_STAGING_DIR value live instead of printing an unexpanded shell-variable placeholder (werkstatt.gpg.receive.file.sh, werkstatt.gpg.vault.receive.file.sh)
+COMMENTS:     Add {VFOLDER} placeholder to MFTE_GPG_RETURN_DIR so returned files land in the customer's own MFTE-managed virtual folder instead of a shared, non-onboarded folder like secureTransport (werkstatt.gpg.receive.file.sh, werkstatt.gpg.vault.receive.file.sh); update sample.env default accordingly

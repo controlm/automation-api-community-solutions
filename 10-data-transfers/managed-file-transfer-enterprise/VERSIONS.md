@@ -16,3 +16,4 @@ don't contain one.
 | 1.2.7 | Linux-noarch | Sep-16-2026 | PATCH | Fix SCHILY.fflags PAX header warning on GNU tar extraction (RHEL/Ubuntu) |
 | 1.2.8 | Linux-noarch | Sep-16-2026 | PATCH | Add version.txt + VERSIONS.md release ledger; exclude .DS_Store from tarball |
 | 1.2.9 | Linux-noarch | Sep-16-2026 | PATCH | Fix -h Recommended Run Command: substitute the real MFTE_GPG_RECEIVE_STAGING_DIR value live instead of printing an unexpanded shell-variable placeholder (werkstatt.gpg.receive.file.sh, werkstatt.gpg.vault.receive.file.sh) |
+| 1.2.10 | Linux-noarch | Sep-16-2026 | PATCH | Add {VFOLDER} placeholder to MFTE_GPG_RETURN_DIR so returned files land in the customer's own MFTE-managed virtual folder instead of a shared, non-onboarded folder like secureTransport (werkstatt.gpg.receive.file.sh, werkstatt.gpg.vault.receive.file.sh); update sample.env default accordingly |
