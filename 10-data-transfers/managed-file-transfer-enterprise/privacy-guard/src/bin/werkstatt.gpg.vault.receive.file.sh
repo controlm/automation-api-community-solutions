@@ -310,13 +310,18 @@ not rely on mfte.rule.vars.all.jsonl.sh ever having run. See the header
 comment's "scope" section.
 
 Recommended Run Command with all BMC variables:
-  $SCRIPT_NAME -r "<rule_name>" -A "<action_name>" -p "\$\$FILE_PATH\$\$" -a "\${MFTE_GPG_RECEIVE_STAGING_DIR}/\$\$FILE_NAME\$\$" -d "\$\$FILE_DIR\$\$" -D "\$\$FILE_ABS_DIR\$\$" -n "\$\$FILE_NAME\$\$" -N "\$\$FILE_NAME_NO_EXT\$\$" -e "\$\$FILE_EXT\$\$" -E "\$\$FILE_EXT_NO_DOT\$\$" -x "\$\$FILE_DATE\$\$" -X "\$\$FILE_DATE_LOCAL\$\$" -y "\$\$FILE_TIME\$\$" -Y "\$\$FILE_TIME_LOCAL\$\$" -z "\$\$FILE_SIZE\$\$" -u "\$\$USER\$\$" -c "\$\$COMPANY\$\$" -v "\$\$VIRTUAL_FOLDER\$\$" -m "\$\$EMAIL\$\$" -t "\$\$PHONE_NUMBER\$\$" -s "\$\$SUB_DIR_PATH\$\$" -g "\$\$STAGING_FILE_NAME\$\$" -G "\$\$STAGING_FILE_PATH\$\$" -q
+  $SCRIPT_NAME -r "<rule_name>" -A "<action_name>" -p "\$\$FILE_PATH\$\$" -a "${MFTE_GPG_RECEIVE_STAGING_DIR:-<MFTE_GPG_RECEIVE_STAGING_DIR not set in .env>}/\$\$FILE_NAME\$\$" -d "\$\$FILE_DIR\$\$" -D "\$\$FILE_ABS_DIR\$\$" -n "\$\$FILE_NAME\$\$" -N "\$\$FILE_NAME_NO_EXT\$\$" -e "\$\$FILE_EXT\$\$" -E "\$\$FILE_EXT_NO_DOT\$\$" -x "\$\$FILE_DATE\$\$" -X "\$\$FILE_DATE_LOCAL\$\$" -y "\$\$FILE_TIME\$\$" -Y "\$\$FILE_TIME_LOCAL\$\$" -z "\$\$FILE_SIZE\$\$" -u "\$\$USER\$\$" -c "\$\$COMPANY\$\$" -v "\$\$VIRTUAL_FOLDER\$\$" -m "\$\$EMAIL\$\$" -t "\$\$PHONE_NUMBER\$\$" -s "\$\$SUB_DIR_PATH\$\$" -g "\$\$STAGING_FILE_NAME\$\$" -G "\$\$STAGING_FILE_PATH\$\$" -q
 
-\${MFTE_GPG_RECEIVE_STAGING_DIR} above is a shell/.env variable reference,
-not a BMC \$\$VAR\$\$ token -- substitute its actual resolved value (.env
-default: \$MFTE_TMP_DIR/mfte-gpg-receive-staging) when building the real
-Run Command, since Control-M's agent does not expand plain shell variables
-itself.
+The staging path spliced into -a above is this host's OWN resolved
+\$MFTE_GPG_RECEIVE_STAGING_DIR (.env default: \$MFTE_TMP_DIR/mfte-gpg-receive-staging),
+substituted live when this help text is printed -- paste the command above
+into the Run Command as-is, nothing left to hand-substitute. Only
+\$\$FILE_NAME\$\$ (and the rest of the \$\$...\$\$ tokens) stay literal, since
+those are BMC's own to fill in, not this script's or the .env's -- see
+"WHY THE ARGUMENT PARSING LOOKS LIKE THIS" above for why every one of them
+must stay quoted. If MFTE_GPG_RECEIVE_STAGING_DIR changes later (a
+different .env, a different host), rerun -h to get the updated path --
+don't hand-edit an old copy.
 
 NOTE on -a above: this is deliberately NOT "\$\$FILE_ABS_PATH\$\$". If a
 prior action in the same rule moves the inbound file (e.g. a native

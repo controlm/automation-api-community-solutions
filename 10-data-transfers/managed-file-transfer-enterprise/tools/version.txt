@@ -1,4 +1,4 @@
-VERSION:      1.2.8
+VERSION:      1.2.9
 PLATFORM:     Linux-noarch
 PACKAGE-DATE: Sep-16-2026
-COMMENTS:     Add version.txt + VERSIONS.md release ledger; exclude .DS_Store from tarball
+COMMENTS:     Fix -h Recommended Run Command: substitute the real MFTE_GPG_RECEIVE_STAGING_DIR value live instead of printing an unexpanded shell-variable placeholder (werkstatt.gpg.receive.file.sh, werkstatt.gpg.vault.receive.file.sh)

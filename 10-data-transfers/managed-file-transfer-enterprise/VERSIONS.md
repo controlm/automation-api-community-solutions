@@ -15,3 +15,4 @@ don't contain one.
 | 1.2.6 | Linux-noarch | Aug-14-2026 | PATCH | Script/package update |
 | 1.2.7 | Linux-noarch | Sep-16-2026 | PATCH | Fix SCHILY.fflags PAX header warning on GNU tar extraction (RHEL/Ubuntu) |
 | 1.2.8 | Linux-noarch | Sep-16-2026 | PATCH | Add version.txt + VERSIONS.md release ledger; exclude .DS_Store from tarball |
+| 1.2.9 | Linux-noarch | Sep-16-2026 | PATCH | Fix -h Recommended Run Command: substitute the real MFTE_GPG_RECEIVE_STAGING_DIR value live instead of printing an unexpanded shell-variable placeholder (werkstatt.gpg.receive.file.sh, werkstatt.gpg.vault.receive.file.sh) |
