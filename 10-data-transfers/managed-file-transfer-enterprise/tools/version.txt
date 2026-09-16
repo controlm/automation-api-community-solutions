@@ -1,0 +1,4 @@
+VERSION:      1.2.8
+PLATFORM:     Linux-noarch
+PACKAGE-DATE: Sep-16-2026
+COMMENTS:     Add version.txt + VERSIONS.md release ledger; exclude .DS_Store from tarball

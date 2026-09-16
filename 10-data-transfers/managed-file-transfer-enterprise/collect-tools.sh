@@ -55,7 +55,7 @@ umask 022
 #           might be sitting in tools/.
 
 SCRIPT_NAME="$(basename "$0")"
-SCRIPT_VERSION="1.2.7"
+SCRIPT_VERSION="1.2.8"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TOOLS_DIR="${SCRIPT_DIR}/tools"
 MANIFEST_FILE="${TOOLS_DIR}/.collector-manifest.txt"
@@ -66,12 +66,55 @@ TAR_PATH="${PACKAGE_DIR}/${TAR_NAME}"
 # symlink as the literal text of its target path, not the target file's
 # actual bytes, so a symlink here would break "latest" for wget/curl.
 LATEST_PATH="${PACKAGE_DIR}/mfte-tools-latest.tar.gz"
+VERSION_TXT_PATH="${TOOLS_DIR}/version.txt"
+VERSIONS_FILE="${SCRIPT_DIR}/VERSIONS.md"
 
 require_command() {
   local cmd="$1"
   if ! command -v "$cmd" >/dev/null 2>&1; then
     echo "ERROR: required command not found: $cmd" >&2
     exit 1
+  fi
+}
+
+# last_recorded_version: prints the VERSION column of VERSIONS.md's last
+# data row, or nothing if the file doesn't exist yet (first-ever release).
+# Matched by "starts with a digit" rather than a fixed line count, since
+# data rows sit after a multi-line preamble plus a table header/separator
+# -- a version number is always digits, so it can't collide with either.
+last_recorded_version() {
+  [[ -f "$VERSIONS_FILE" ]] || return 0
+  grep -E '^\| [0-9]' "$VERSIONS_FILE" | tail -1 | awk -F'|' '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}'
+}
+
+# version_already_recorded VERSION: true if VERSION already has a row in
+# VERSIONS.md. A version number is a released artifact's identity -- once
+# recorded, its tarball must never be silently rebuilt under the same
+# name (see the .tar.gz-in-place mistake this replaces).
+version_already_recorded() {
+  local v="$1"
+  [[ -f "$VERSIONS_FILE" ]] || return 1
+  grep -E '^\| [0-9]' "$VERSIONS_FILE" | awk -F'|' -v v="$v" '{gsub(/^[ \t]+|[ \t]+$/, "", $2); if ($2 == v) found=1} END{exit !found}'
+}
+
+# install_type_for VERSION: NEW if VERSIONS.md has no prior entry, PATCH
+# if only the third (Z) component differs from the last recorded version,
+# UPGRADE otherwise (X or Y differs). This is this repo's own convention
+# for a 3-component X.Y.Z version, not a replica of any external scheme.
+install_type_for() {
+  local v="$1" prev
+  prev="$(last_recorded_version)"
+  if [[ -z "$prev" ]]; then
+    echo "NEW"
+    return
+  fi
+  local px py pz vx vy vz
+  IFS='.' read -r px py pz <<<"$prev"
+  IFS='.' read -r vx vy vz <<<"$v"
+  if [[ "$vx" == "$px" && "$vy" == "$py" ]]; then
+    echo "PATCH"
+  else
+    echo "UPGRADE"
   fi
 }
 
@@ -117,6 +160,8 @@ Optional:
   -n  dry-run     show what would be collected/removed, write nothing
                    (implies no tarball either)
   -T  no-tar      collect into tools/ but skip building the tarball
+  -m  comment     one-line COMMENTS field recorded in VERSIONS.md for this
+                   release (default: "N/A")
   -q  quiet       suppress per-file output, keep the summary
   -V  version
   -h  help
@@ -128,20 +173,26 @@ Collects from:
 
 into:
   tools/                                       (this script's sibling directory)
+  tools/version.txt                            (this build's VERSION/PLATFORM/
+                                                  PACKAGE-DATE/COMMENTS, unless -n or -T)
   package/mfte-tools-<SCRIPT_VERSION>.tar.gz    (tarball of the above, unless -n or -T)
   package/mfte-tools-latest.tar.gz              (a copy of the above, same condition --
                                                   stable filename for wget/curl)
+  VERSIONS.md                                   (one row appended per release build,
+                                                  unless -n or -T)
 USAGE
 }
 
 DRY_RUN="false"
 QUIET="false"
 NO_TAR="false"
+COMMENT="N/A"
 
-while getopts ':nTqVh' opt; do
+while getopts ':nTm:qVh' opt; do
   case "$opt" in
     n) DRY_RUN="true" ;;
     T) NO_TAR="true" ;;
+    m) COMMENT="$OPTARG" ;;
     q) QUIET="true" ;;
     V) printf '%s %s\n' "$SCRIPT_NAME" "$SCRIPT_VERSION"; exit 0 ;;
     h) usage; exit 0 ;;
@@ -323,6 +374,16 @@ echo "Collected ${#STAGE_DEST[@]} file(s) into ${TOOLS_DIR}"
 
 if [[ "$NO_TAR" != "true" ]]; then
   require_command tar
+
+  if version_already_recorded "$SCRIPT_VERSION"; then
+    echo "ERROR: ${SCRIPT_VERSION} is already recorded in ${VERSIONS_FILE} -- a released version's tarball is never rebuilt under the same number. Bump SCRIPT_VERSION first." >&2
+    exit 1
+  fi
+
+  PACKAGE_DATE="$(date +'%b-%d-%Y')"
+  INSTALL_TYPE="$(install_type_for "$SCRIPT_VERSION")"
+  PLATFORM="Linux-noarch"
+
   mkdir -p "$PACKAGE_DIR"
   # macOS's bsdtar embeds Apple/BSD-specific metadata three different ways
   # that all cause trouble when the archive is later extracted with GNU
@@ -344,12 +405,40 @@ if [[ "$NO_TAR" != "true" ]]; then
   # metadata in the first place.
   # --exclude the manifest -- it's local bookkeeping for this script's own
   # stale-cleanup, not something a host unpacking the tarball needs.
-  COPYFILE_DISABLE=1 tar --no-xattrs --no-fflags -czf "$TAR_PATH" --exclude=".collector-manifest.txt" -C "$SCRIPT_DIR" tools
+  # --exclude .DS_Store -- Finder litters these into tools/ just from
+  # being browsed locally; tar archives the whole directory as it sits on
+  # disk, not just what collect_project staged, so this is the only place
+  # to keep it out of what RHEL/Ubuntu users actually download.
+  # version.txt IS meant to ship -- it's how `cat tools/version.txt` on a
+  # host answers "what did I extract" without cross-referencing VERSIONS.md.
+  cat > "$VERSION_TXT_PATH" <<VERSIONTXT
+VERSION:      ${SCRIPT_VERSION}
+PLATFORM:     ${PLATFORM}
+PACKAGE-DATE: ${PACKAGE_DATE}
+COMMENTS:     ${COMMENT}
+VERSIONTXT
+
+  COPYFILE_DISABLE=1 tar --no-xattrs --no-fflags -czf "$TAR_PATH" --exclude=".collector-manifest.txt" --exclude=".DS_Store" -C "$SCRIPT_DIR" tools
   size_kb=$(( $(wc -c < "$TAR_PATH") / 1024 ))
   echo "Built: ${TAR_PATH} (${size_kb} KB)"
 
   cp -p "$TAR_PATH" "$LATEST_PATH"
   echo "Updated: ${LATEST_PATH} -> ${TAR_NAME}"
+
+  if [[ ! -f "$VERSIONS_FILE" ]]; then
+    cat > "$VERSIONS_FILE" <<HEADER
+# mfte-tools release history
+
+One row per \`collect-tools.sh\` release build. INSTALL-TYPE is this
+repo's own convention for the X.Y.Z \`SCRIPT_VERSION\`: NEW is the first
+ever release, PATCH is a Z-only bump, UPGRADE is an X or Y bump.
+
+| VERSION | PLATFORM | PACKAGE-DATE | INSTALL-TYPE | COMMENTS |
+|---|---|---|---|---|
+HEADER
+  fi
+  printf '| %s | %s | %s | %s | %s |\n' "$SCRIPT_VERSION" "$PLATFORM" "$PACKAGE_DATE" "$INSTALL_TYPE" "$COMMENT" >> "$VERSIONS_FILE"
+  echo "Recorded ${SCRIPT_VERSION} (${INSTALL_TYPE}) in ${VERSIONS_FILE}"
 fi
 
 exit 0
