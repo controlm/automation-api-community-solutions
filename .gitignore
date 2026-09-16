@@ -21,3 +21,4 @@ launch.json
 1-general-examples/workload-preflight-check/src/archive/
 
 .gitignore
+10-data-transfers/managed-file-transfer-enterprise/site-connection-test/src/config/.env
