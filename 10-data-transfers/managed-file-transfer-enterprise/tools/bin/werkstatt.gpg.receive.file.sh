@@ -577,11 +577,29 @@ do_receive() {
     DEC_OUTPUT="$(mfte_increment_filename "${MFTE_GPG_OUTPUT_DIR}/${base_name}")"
   fi
 
+  # --skip-verify: this script's whole job (see the header comment) is
+  # recipient-key resolution + decrypt, never signature-based trust --
+  # without it, a file that's ALSO signed (e.g. a sender's mail client
+  # auto-signing, or a stray "Sign" checkbox in a GPG client, using a key
+  # this keyring has no reason to hold) fails signature verification and
+  # gpg exits non-zero even though the decrypt itself is perfectly fine,
+  # producing a false "decrypt_failed" for a file that was actually
+  # recoverable the whole time. Confirmed as a real occurrence, not
+  # hypothetical: a QA test upload signed with an unrelated personal key.
   local dec_output_log
-  if ! dec_output_log="$(mfte_gpg_run --batch --yes --pinentry-mode loopback --passphrase-file "$passphrase_file" --output "$DEC_OUTPUT" --decrypt "$OPERATE_PATH" 2>&1)"; then
+  if ! dec_output_log="$(mfte_gpg_run --batch --yes --pinentry-mode loopback --skip-verify --passphrase-file "$passphrase_file" --output "$DEC_OUTPUT" --decrypt "$OPERATE_PATH" 2>&1)"; then
     log_system ERROR "decryption failed file=${OPERATE_PATH} key=${KEY_FP}"
-    log_system DEBUG "gpg output: ${dec_output_log}"
-    echo "ERROR: decryption failed. See ${SYSTEM_LOG_FILE} for details." >&2
+    # ERROR, not DEBUG -- this is the one piece of information an operator
+    # actually needs to diagnose a decrypt failure (bad passphrase, no
+    # secret key on this node, corrupted ciphertext, etc.), and DEBUG is
+    # filtered out of the log at the default MFTE_LOG_LEVEL=INFO. Burying
+    # it meant every real decrypt failure required manually reproducing
+    # the exact gpg invocation by hand just to see what gpg actually said.
+    log_system ERROR "gpg output: ${dec_output_log}"
+    echo "ERROR: decryption failed for ${FILE_NAME:-$(basename "$OPERATE_PATH")} (key ${KEY_FP})." >&2
+    echo "gpg said:" >&2
+    printf '%s\n' "$dec_output_log" | sed 's/^/  /' >&2
+    echo "Full detail also logged to ${SYSTEM_LOG_FILE}." >&2
     GPG_REASON="decrypt_failed"; EXIT_CODE=1
     return
   fi

@@ -11,8 +11,9 @@ umask 002
 #               (shared NFS, /mnt/mfte/... by default) for
 #               onboarding-4gpg-cluster.sh to pick up on every hub
 #             - PUBLIC key only               -> $MFTE_GPG_ONBOARDING_B2B_DIR/<email>/
-#               (/mnt/ftshome/... by default) for the customer to collect
-#               and use to encrypt files back to us
+#               (/mnt/ftshome/.../{VFOLDER}/onboarding by default -- see -v
+#               below) for the customer to collect and use to encrypt
+#               files back to us
 #
 # NOT a replacement for werkstatt.gpg.generate.key.sh / export.key.sh --
 # this script duplicates their core gpg sequences inline rather than
@@ -50,6 +51,17 @@ umask 002
 #   (root, per Control-M's invocation model / however this is actually
 #   run) -- no new mftgpg permission grant needed on /mnt/ftshome, exactly
 #   the same reasoning as receive.file.sh's return-path relocation.
+#
+#   The default's "{VFOLDER}" placeholder (required -v flag, no BMC
+#   Processing Rule context to pull it from automatically the way
+#   werkstatt.gpg.receive.file.sh's own {VFOLDER} support does) scopes
+#   this to the SAME per-customer virtual folder MFT Enterprise itself
+#   provisions during onboarding -- a shared top-level directory (e.g. a
+#   literal "secureTransport" folder sitting outside MFTE's own
+#   onboarding) is invisible to MFTE's ACLs, so the customer could never
+#   actually browse to their own delivered public key there. See
+#   werkstatt.gpg.receive.file.sh's doc, "Virtual Folder configuration",
+#   for the matching MFT Enterprise UI screenshots.
 #
 # risk    : $MFTE_GPG_ONBOARDING_PRIVACY_DIR ends up holding a private key
 #           AND its passphrase together, unencrypted-at-rest beyond
@@ -129,7 +141,14 @@ fi
 # path and any other B2B-rooted path in your own .env share one base
 # instead of repeating the literal /mnt/ftshome/b2bhome).
 MFTE_GPG_ONBOARDING_PRIVACY_DIR="${MFTE_GPG_ONBOARDING_PRIVACY_DIR:-${MFTE_GPG_EXCHANGE_DIR}/onboarding}"
-MFTE_GPG_ONBOARDING_B2B_DIR="${MFTE_GPG_ONBOARDING_B2B_DIR:-${MFTE_B2B_HOME:-/mnt/ftshome/b2bhome}/secureTransport/onboarding}"
+# Built in two steps, not inline as "${MFTE_GPG_ONBOARDING_B2B_DIR:-.../{VFOLDER}/onboarding}"
+# -- an unescaped "}" inside a ${var:-word} default terminates the
+# expansion right there (bash only tracks nested "${"/"}" pairs, not
+# bare braces), so "{VFOLDER}"'s own closing brace would end the
+# expansion early and silently corrupt the result. A plain assignment
+# (no ":-") isn't parsed that way, so the placeholder survives intact.
+_MFTE_GPG_ONBOARDING_B2B_DIR_DEFAULT="${MFTE_B2B_HOME:-/mnt/ftshome/b2bhome}/{VFOLDER}/onboarding"
+MFTE_GPG_ONBOARDING_B2B_DIR="${MFTE_GPG_ONBOARDING_B2B_DIR:-$_MFTE_GPG_ONBOARDING_B2B_DIR_DEFAULT}"
 
 usage() {
   cat <<USAGE
@@ -142,6 +161,15 @@ Required:
                    -- also used as a directory segment under the B2B
                    export path, so it's validated as a plain email
                    (no "/", no whitespace) before anything happens
+  -v  vfolder     the customer's MFT Enterprise Virtual Folder name, e.g.
+                   "HighSec" -- substituted into \$MFTE_GPG_ONBOARDING_B2B_DIR's
+                   "{VFOLDER}" placeholder (see below) so the delivered
+                   public key lands somewhere MFTE itself provisioned and
+                   the customer can actually browse to. Also validated as
+                   a plain directory segment (no "/", no whitespace).
+                   Required even if you're passing -B with a literal path
+                   that doesn't use "{VFOLDER}" -- harmless if unused in
+                   that case.
 
 Optional:
   -t  key type      default: rsa4096
@@ -157,7 +185,12 @@ Optional:
   -P  dir           override \$MFTE_GPG_ONBOARDING_PRIVACY_DIR
                      default: \$MFTE_GPG_EXCHANGE_DIR/onboarding
   -B  dir           override \$MFTE_GPG_ONBOARDING_B2B_DIR
-                     default: \${MFTE_B2B_HOME:-/mnt/ftshome/b2bhome}/secureTransport/onboarding
+                     default: \${MFTE_B2B_HOME:-/mnt/ftshome/b2bhome}/{VFOLDER}/onboarding
+                     "{VFOLDER}" here (or in an override you pass) is
+                     substituted with -v's value the same way "{TYPE}"/
+                     "{VFOLDER}" work in werkstatt.gpg.receive.file.sh's
+                     \$MFTE_GPG_RETURN_DIR -- plain string substitution
+                     this script does itself, not shell expansion.
   -q  quiet
   -h  help
 
@@ -172,12 +205,13 @@ run it on this one; it will just skip an already-present key) before this
 customer's files can be decrypted anywhere else in the cluster.
 
 Recommended Run Command:
-  $SCRIPT_NAME -n "ACME Finance" -m "finance@acme.example.com" -q
+  $SCRIPT_NAME -n "ACME Finance" -m "finance@acme.example.com" -v "ACMEFinance" -q
 USAGE
 }
 
 NAME=""
 EMAIL=""
+VFOLDER=""
 KEY_TYPE="rsa4096"
 EXPIRE="0"
 FORCE="false"
@@ -187,10 +221,11 @@ ARGV_DUMP="$(mfte_dump_argv "$@")"
 ARGV_COUNT="$#"
 log_system INFO "argv[$#]: ${ARGV_DUMP}"
 
-while getopts ':n:m:t:x:P:B:Fqh' opt; do
+while getopts ':n:m:v:t:x:P:B:Fqh' opt; do
   case "$opt" in
     n) NAME="$(mfte_unquote "$OPTARG")" ;;
     m) EMAIL="$(mfte_unquote "$OPTARG")" ;;
+    v) VFOLDER="$(mfte_unquote "$OPTARG")" ;;
     t) KEY_TYPE="$(mfte_unquote "$OPTARG")" ;;
     x) EXPIRE="$(mfte_unquote "$OPTARG")" ;;
     P) MFTE_GPG_ONBOARDING_PRIVACY_DIR="$(mfte_unquote "$OPTARG")" ;;
@@ -230,6 +265,30 @@ if [[ ! "$EMAIL" =~ ^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$ ]]; then
   echo "segment under the B2B export path, so no '/' or whitespace is accepted)." >&2
   exit 2
 fi
+
+if [[ -z "$VFOLDER" ]]; then
+  log_system ERROR "missing required -v (vfolder)"
+  echo "ERROR: -v vfolder is required (the customer's MFT Enterprise Virtual Folder name," >&2
+  echo "e.g. \"HighSec\") -- see -h. Required even when -B fully overrides the B2B export" >&2
+  echo "path with a literal path that doesn't use \"{VFOLDER}\"." >&2
+  usage
+  exit 2
+fi
+
+if [[ "$VFOLDER" == *[/[:space:]]* ]]; then
+  log_system ERROR "invalid -v vfolder: ${VFOLDER}"
+  echo "ERROR: -v '${VFOLDER}' contains '/' or whitespace -- it's substituted directly into a" >&2
+  echo "directory path (\$MFTE_GPG_ONBOARDING_B2B_DIR's \"{VFOLDER}\" placeholder), so it must be" >&2
+  echo "a plain single path segment, e.g. \"HighSec\"." >&2
+  exit 2
+fi
+
+# Plain string substitution (not shell expansion) -- same "{TYPE}"/
+# "{VFOLDER}" mechanism as werkstatt.gpg.receive.file.sh's own
+# $MFTE_GPG_RETURN_DIR. Applies whether MFTE_GPG_ONBOARDING_B2B_DIR came
+# from its .env/built-in default or from -B -- a no-op if whatever value
+# is in play doesn't contain the literal token.
+MFTE_GPG_ONBOARDING_B2B_DIR="${MFTE_GPG_ONBOARDING_B2B_DIR//\{VFOLDER\}/$VFOLDER}"
 
 if ! mfte_gpg_preflight; then
   log_system ERROR "preflight failed"

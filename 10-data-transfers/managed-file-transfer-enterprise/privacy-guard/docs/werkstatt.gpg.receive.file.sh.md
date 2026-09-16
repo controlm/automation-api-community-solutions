@@ -10,6 +10,10 @@ gpg itself already auto-selects the matching secret key from a file's own packet
 
 This script does **not** handle onboarding (matching an inbound sender to a customer record, provisioning a new customer's keypair). It only ever looks at what's already in the keyring against what the file itself needs — see [onboarding-4gpg-server.sh](onboarding-4gpg-server.sh.md) for provisioning.
 
+**Signature-based trust is deliberately out of scope.** The `--decrypt` call passes `--skip-verify`: if an inbound file happens to also be signed (a sender's mail client auto-signing, a leftover "Sign" checkbox in whatever GPG client they used), verifying that signature isn't this script's job — the recipient-key match above is the only trust decision it makes. Without `--skip-verify`, a signature `gpg` can't verify (the signer's public key was never one this keyring needs to hold) makes `gpg --decrypt` exit non-zero *even though the decrypt itself fully succeeded*, which this script would otherwise misreport as `decrypt_failed` for a file that was actually recoverable the whole time. Confirmed as a real occurrence during initial demo-lab testing, not a hypothetical: a QA test upload signed with the tester's own personal key, which `mftgpg`'s keyring naturally never imported.
+
+**On a genuine decrypt failure**, `gpg`'s actual stderr — not just "decryption failed, see the log" — is both logged at `ERROR` (not `DEBUG`, which is filtered out of the log at the default `MFTE_LOG_LEVEL=INFO`) and printed directly to the Control-M action's own error output, so the real cause (bad passphrase, no secret key on this node, corrupted ciphertext) is visible from the Control-M console alone, without needing to reproduce the `gpg` call by hand or raise the log level first.
+
 ## Usage
 
 ```
