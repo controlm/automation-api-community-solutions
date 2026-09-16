@@ -39,16 +39,29 @@ There is deliberately **no** `-k` for "which key to decrypt with" — `-k` here 
 
 ### `$MFTE_GPG_RETURN_DIR`
 
-A single `.env` path used for both `-R` and `-K`'s defaults, in either form:
+A single `.env` path used for both `-R` and `-K`'s defaults, with two independent, optional placeholders (plain string substitution this script does itself, not shell expansion):
+
+- `{TYPE}` → `encrypted`/`decrypted`, whichever file is being placed. Omit it and that subfolder is appended automatically instead — either way the two file types always land in separate subfolders, created on first use.
+- `{VFOLDER}` → the file's `$VIRTUAL_FOLDER` (BMC's `-v` value, e.g. `HighSec`). **Prefer a form that includes this.** It scopes the return path to the *same* per-customer virtual folder MFT Enterprise itself provisions during onboarding (see "Virtual Folder configuration" below) — unlike a shared top-level directory sitting outside MFTE's own onboarding, a path under the customer's own virtual folder is one MFTE already knows about and the external customer can actually browse.
 
 ```
-MFTE_GPG_RETURN_DIR="/mnt/ftshome/b2bhome/secureTransport/{TYPE}"
-MFTE_GPG_RETURN_DIR="/mnt/ftshome/b2bhome/secureTransport"
+MFTE_GPG_RETURN_DIR="/mnt/ftshome/b2bhome/{VFOLDER}/{TYPE}"   # recommended
+MFTE_GPG_RETURN_DIR="/mnt/ftshome/b2bhome/secureTransport"    # shared across every customer — not MFTE-visible
 ```
 
-With the literal text `{TYPE}` (a plain string substitution this script does itself, not shell expansion), it's replaced with `encrypted`/`decrypted`; without it, `/encrypted` or `/decrypted` is appended automatically. Either way the two file types always land in separate subfolders, created on first use. Neither `-R`/`-K` nor this variable is required — unset means both files are left exactly where earlier flags/defaults already put them.
+Neither `-R`/`-K` nor this variable is required — unset means both files are left exactly where earlier flags/defaults already put them.
 
 **The encrypted original moves on every outcome**, not just a successful decrypt — staging is only reachable by `mftgpg`/root, and leaving a file there after a `no_key`/`skipped`/error outcome would strand it somewhere the admin can never reach again. The **decrypted** output only moves when the decrypt actually succeeded (there's nothing to move otherwise). This final move runs as whatever this script is already running as (root), not via `runuser -u mftgpg` — deliberate, since this environment's NFS exports have `no_root_squash` set (root already has unrestricted access across every export), so the move works without requesting a new `mftgpg` permission grant on the return destination. Retention of files at the return destinations is **not** this script's job — once landed there, cleanup is on whoever owns that filesystem.
+
+### Virtual Folder configuration
+
+A `{VFOLDER}`-scoped `$MFTE_GPG_RETURN_DIR` only actually works if the customer's Virtual Folder has `encrypted`/`decrypted` sub-folders for it to land in — MFT Enterprise doesn't create them on the fly. In **MFT Enterprise → Virtual Folders → *(customer)* → Structure and Authorizations**, add both alongside the standard `onboarding`/`incoming`/`outgoing` set, with **Full control** access (matching `incoming`) so the external customer can retrieve their own returned files:
+
+![Edit Virtual Folder — Structure and Authorizations, showing HighSec's sub-folders (onboarding, incoming, encrypted, decrypted, outgoing) each with their access level](../images/privacy_guard_vfolder_config_01.png)
+
+The **Policies** tab on the same Virtual Folder governs retention and what external users can drop into `incoming` — worth setting alongside the sub-folder change, not specific to `{VFOLDER}` routing itself: a size cap, whether files auto-delete after download, and an allowed file pattern scoped to what this pipeline actually expects (`*.asc, *.gpg, *.pgp`):
+
+![Edit Virtual Folder — Policies, showing a 100GB folder size limit and an Allowed File Pattern of *.asc, *.gpg, *.pgp](../images/privacy_guard_vfolder_config_02.png)
 
 ### Recommended Run Command
 
