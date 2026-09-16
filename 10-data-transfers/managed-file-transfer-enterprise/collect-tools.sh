@@ -55,7 +55,7 @@ umask 022
 #           might be sitting in tools/.
 
 SCRIPT_NAME="$(basename "$0")"
-SCRIPT_VERSION="1.2.6"
+SCRIPT_VERSION="1.2.7"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TOOLS_DIR="${SCRIPT_DIR}/tools"
 MANIFEST_FILE="${TOOLS_DIR}/.collector-manifest.txt"
@@ -324,9 +324,9 @@ echo "Collected ${#STAGE_DEST[@]} file(s) into ${TOOLS_DIR}"
 if [[ "$NO_TAR" != "true" ]]; then
   require_command tar
   mkdir -p "$PACKAGE_DIR"
-  # macOS's bsdtar embeds Apple-specific metadata two different ways that
-  # both cause trouble when the archive is later extracted with GNU tar
-  # on RHEL:
+  # macOS's bsdtar embeds Apple/BSD-specific metadata three different ways
+  # that all cause trouble when the archive is later extracted with GNU
+  # tar on RHEL/Ubuntu:
   #   - AppleDouble "._filename" sidecar entries (COPYFILE_DISABLE=1
   #     stops these) -- GNU tar doesn't recognize the format and
   #     extracts them as literal junk files alongside the real ones.
@@ -334,11 +334,17 @@ if [[ "$NO_TAR" != "true" ]]; then
   #     header on the real file's own entry (--no-xattrs stops this) --
   #     GNU tar warns "Ignoring unknown extended header keyword" for
   #     each one, even though it still extracts the file fine.
-  # Both flags are no-ops on Linux, where GNU tar never writes this
+  #   - BSD file flags (e.g. uchg/nodump), written as a PAX
+  #     "SCHILY.fflags" header on the real file's own entry -- this is a
+  #     SEPARATE channel from xattrs and is bsdtar's default in create
+  #     mode even with --no-xattrs set, so it needs its own --no-fflags
+  #     to stop. Same "Ignoring unknown extended header keyword" warning
+  #     otherwise.
+  # All three flags are no-ops on Linux, where GNU tar never writes this
   # metadata in the first place.
   # --exclude the manifest -- it's local bookkeeping for this script's own
   # stale-cleanup, not something a host unpacking the tarball needs.
-  COPYFILE_DISABLE=1 tar --no-xattrs -czf "$TAR_PATH" --exclude=".collector-manifest.txt" -C "$SCRIPT_DIR" tools
+  COPYFILE_DISABLE=1 tar --no-xattrs --no-fflags -czf "$TAR_PATH" --exclude=".collector-manifest.txt" -C "$SCRIPT_DIR" tools
   size_kb=$(( $(wc -c < "$TAR_PATH") / 1024 ))
   echo "Built: ${TAR_PATH} (${size_kb} KB)"
 
