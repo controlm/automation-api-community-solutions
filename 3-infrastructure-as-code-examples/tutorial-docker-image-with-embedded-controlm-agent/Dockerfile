@@ -3,28 +3,28 @@
 # The docker host is an AWS Linux machine
 #-----------------------------------------------------------------------
 
-FROM centos:7
+FROM almalinux:8.7
 MAINTAINER Joe Goldberg <joe_goldberg@bmc.com>
 
 ARG CTMHOST
 ARG CTMENV
 
 # install basic packages
-RUN yum -y update \
-	&& yum -y install wget \
-	&& yum -y install unzip \
-	&& yum -y install sudo \
-	&& yum -y install net-tools \
-	&& yum -y install psmisc
+RUN rpm --import https://repo.almalinux.org/almalinux/RPM-GPG-KEY-AlmaLinux \
+	&& yum -y update \
+	&& yum -y install -q wget \
+	&& yum -y install -q unzip \
+	&& yum -y install -q sudo \
+	&& yum -y install -q net-tools \
+	&& yum -y install -q psmisc
 
 # install nodejs
-RUN curl --silent --location https://rpm.nodesource.com/setup_6.x | bash - \
-	&& yum -y install nodejs \
+RUN yum -y install -q nodejs \
 	&& node -v \
 	&& npm -v
 
-# install java 8 
-RUN yum -y install java-1.8.0-openjdk \
+# install java 11
+RUN yum -y install -q java-11-openjdk \
 	&& java -version
 
 # install ctm-automation-api kit
@@ -54,7 +54,7 @@ RUN ctm env set myctm
 
 # provision controlm agent image
 RUN cd \
-	&& ctm provision image Agent.Linux
+	&& ctm provision image Agent_Alma.Linux
 
 # enable controlm agent utilities
 RUN echo "source /home/ec2-user/.bash_profile" >> /home/ec2-user/.bashrc
